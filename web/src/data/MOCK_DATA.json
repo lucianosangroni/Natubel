@@ -1,0 +1,46 @@
+
+[
+    {
+        "nombreCompleto": "Franco Gamarra",
+        "cuit/cuil": 938452158,
+        "direccion": "Brown 234",
+        "cp": 9200,
+        "telefono": 34202687,
+        "dni": 30484752,
+        "ciudad/provincia": "Esquel Chubut",
+        "envio": "Via cargo",
+        "email": "franco@gmail.com",
+        "tipo": "Mayorista"
+
+
+    },
+    {
+        "nombreCompleto": "Lucho San",
+        "cuit/cuil": 938452158,
+        "direccion": "Brown dfijiaejfiasjefd 234",
+        "cp": 9200,
+        "telefono": 34202687,
+        "dni": 30484752,
+        "ciudad/provincia": "Esquel Chubut",
+        "envio": "Via cargo",
+        "email": "luchosangjgjgjgjgjgjgj@gmail.com",
+        "tipo": "Mayorista"
+
+
+    },
+    {
+        "nombreCompleto": "Walter San",
+        "cuit/cuil": 938452158,
+        "direccion": "Brown 234",
+        "cp": 9200,
+        "telefono": 34202687,
+        "dni": 30484752,
+        "ciudad/provincia": "Esquel Chubut",
+        "envio": "Via cargo",
+        "email": "franco@gmail.com",
+        "tipo": "Mayorista"
+
+
+    }
+
+]
