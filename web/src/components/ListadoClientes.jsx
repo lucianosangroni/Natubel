@@ -1,44 +1,66 @@
 import React, { useMemo } from "react";
-import { useTable } from "react-table";
+import { useTable, useSortBy, useGlobalFilter } from "react-table";
 import MOCK_DATA from "../data/MOCK_DATA.json";
 import { COLUMNS } from "./columnsListaClientes";
+import GlobalFilter from "./GlobalFilter";
 
 const ListadoClientes = () => {
   const columns = useMemo(() => COLUMNS, []);
   const data = useMemo(() => MOCK_DATA, []);
 
-  const tableInstance = useTable({
-    columns,
-    data,
-  });
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state,
+    setGlobalFilter,
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    useGlobalFilter,
+    useSortBy
+  );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    tableInstance;
+  const { globalFilter } = state;
 
   return (
-    <table {...getTableProps()} className="tableContainer">
-      <thead>
-        {headerGroups.map((headerGroups) => (
-          <tr {...headerGroups.getHeaderGroupProps()}>
-            {headerGroups.headers.map((columns) => (
-              <th {...columns.getHeaderProps()}>{columns.render("Header")}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => {
-                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
-              })}
+    <>
+      <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+      <table {...getTableProps()} className="tableContainer">
+        <thead>
+          {headerGroups.map((headerGroups) => (
+            <tr {...headerGroups.getHeaderGroupProps()}>
+              {headerGroups.headers.map((columns) => (
+                <th {...columns.getHeaderProps(columns.getSortByToggleProps())}>
+                  {columns.render("Header")}
+                  <span>
+                    {columns.isSorted ? (columns.isSortedDesc ? "🠻" : "🠹") : ""}
+                  </span>
+                </th>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => {
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </>
   );
 };
 

@@ -49,3 +49,16 @@
   padding: 8px;
   text-align: left;
 }
+
+/* FILTRO GLOBAL */
+
+.globalFilter {
+  margin-top: 2rem;
+  
+}
+
+.search-icon {
+  margin-right: 0.5rem;
+  margin-left: 1rem;
+  
+}
