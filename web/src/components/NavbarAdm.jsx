@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 function NavbarAdm() {
   return (
     <>
-      <Navbar bg="light" data-bs-theme="light" className="nav">
+      <Navbar data-bs-theme="light" className="nav">
         <Container>
           <Navbar.Brand className="navContainer">Natubel Adm</Navbar.Brand>
           <Nav className="me-auto">

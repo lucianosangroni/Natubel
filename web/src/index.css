@@ -11,6 +11,7 @@
 .nav {
   border: 1px solid black;
   margin: 1rem;
+  background-color: #d1f7d1;
   
 }
 
@@ -20,7 +21,6 @@
     
 }
 .botonNav {
-  
   margin-right: 2rem;
 
 }
@@ -60,5 +60,32 @@
 .search-icon {
   margin-right: 0.5rem;
   margin-left: 1rem;
-  
+
+}
+
+/* PAGINACION BOTONES */
+
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.paginacion span {
+  margin: 0 10px; 
+}
+
+.paginacion button {
+  background-color: #FBCCD2; 
+  color: #000000; 
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 5px; 
+}
+.paginacion button:disabled {
+  background-color: #ffffff; 
+  cursor: not-allowed;
 }
