@@ -4,10 +4,12 @@ import {
   useSortBy,
   useGlobalFilter,
   usePagination,
+  useRowSelect,
 } from "react-table";
 import MOCK_DATA from "../data/MOCK_DATA.json";
 import { COLUMNS } from "./columnsListaClientes";
 import GlobalFilter from "./GlobalFilter";
+import Checkbox from "./Checkbox";
 // import ColumnFilter from "./ColumnFilter";
 
 const ListadoClientes = () => {
@@ -27,6 +29,7 @@ const ListadoClientes = () => {
     prepareRow,
     state,
     setGlobalFilter,
+    selectedFlatRows,
   } = useTable(
     {
       columns,
@@ -35,7 +38,24 @@ const ListadoClientes = () => {
     // useFilters,
     useGlobalFilter,
     useSortBy,
-    usePagination
+    usePagination,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => {
+        return [
+          {
+            id: "selection",
+            Header: ({ getToggleAllRowsSelectedProps }) => (
+              <Checkbox {...getToggleAllRowsSelectedProps()} />
+            ),
+            Cell: ({ row }) => (
+              <Checkbox {...row.getToggleRowSelectedProps()} />
+            ),
+          },
+          ...columns,
+        ];
+      });
+    }
   );
 
   const { globalFilter } = state;
@@ -77,6 +97,18 @@ const ListadoClientes = () => {
           })}
         </tbody>
       </table>
+      {/* ESTE CODIGO ME MUESTRA EN LA INTERFAZ DE USUARIO EL ARRAY QUE SELECCIONO CON LA CASILLA, NO SE COMO ESCONDERLO */}
+      <pre>
+        <code>
+          {JSON.stringify(
+            {
+              selectedFlatRows: selectedFlatRows.map((row) => row.original),
+            },
+            null,
+            2
+          )}
+        </code>
+      </pre>
       <div className="paginacion">
         <span>
           Page{" "}

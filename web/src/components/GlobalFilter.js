@@ -7,7 +7,7 @@ const GlobalFilter = ({ filter, setFilter}) => {
 
       const onChange = useAsyncDebounce(value => {
         setFilter(value || undefined)
-      }, 1000)
+      }, 300)
 
   return (
     <div className='globalFilter'>
