@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   useTable,
   useSortBy,
@@ -10,11 +10,28 @@ import MOCK_DATA from "../data/MOCK_DATA.json";
 import { COLUMNS } from "./columnsListaClientes";
 import GlobalFilter from "./GlobalFilter";
 import Checkbox from "./Checkbox";
+
 // import ColumnFilter from "./ColumnFilter";
 
 const ListadoClientes = () => {
   const columns = useMemo(() => COLUMNS, []);
-  const data = useMemo(() => MOCK_DATA, []);
+  const initialData = useMemo(() => MOCK_DATA, []);
+  const [data, setData] = useState(initialData);
+
+  // Función para eliminar una fila
+  const handleDeleteRow = (row) => {
+    const shouldDelete = window.confirm(
+      "¿Estas seguro que deseas eliminar el cliente?"
+    );
+    if (shouldDelete) {
+      const rowIndex = data.indexOf(row.original);
+      if (rowIndex > -1) {
+        const newData = [...data];
+        newData.splice(rowIndex, 1);
+        setData(newData);
+      }
+    }
+  };
 
   const {
     getTableProps,
@@ -89,7 +106,18 @@ const ListadoClientes = () => {
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    <td {...cell.getCellProps()}>
+                      {cell.column.id === "eliminar" ? (
+                        <button
+                          onClick={() => handleDeleteRow(row)}
+                          className="botonEliminar"
+                        >
+                          Eliminar
+                        </button>
+                      ) : (
+                        cell.render("Cell")
+                      )}
+                    </td>
                   );
                 })}
               </tr>

@@ -10,7 +10,7 @@ export const COLUMNS = [
 },
 {
     Header: "Cuit/Cuil",
-    accessor:"cuit/cuil",
+    accessor:"cuitcuil",
     // Filter: ColumnFilter,
 },
 {
@@ -51,6 +51,16 @@ export const COLUMNS = [
 {
     Header: "Tipo",
     accessor:"tipo",
+    // Filter: ColumnFilter,
+},
+{
+    Header: "Editar",
+    accessor:"editar",
+    // Filter: ColumnFilter,
+},
+{
+    Header: "Eliminar",
+    accessor:"eliminar",
     // Filter: ColumnFilter,
 }
 

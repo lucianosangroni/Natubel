@@ -89,3 +89,15 @@
   background-color: #ffffff; 
   cursor: not-allowed;
 }
+
+/* BOTON DE ELIMINAR EN CLIENTES */
+
+.botonEliminar {
+  background-color: #FBCCD2; 
+  color: #000000; 
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 5px; 
+}
