@@ -1,68 +1,54 @@
 // ESTA ES LA ESTRUCTURA DE COLUMNAS DEL LISTADO DE CLIENTES
 
-//  import {ColumnFilter} from "./ColumnFilter"
-
 export const COLUMNS = [
 {
     Header: "Nombre Completo",
-    accessor: "nombreCompleto",
-    // Filter: ColumnFilter,
+    accessor: "nombreCompleto"
+    
 },
 {
     Header: "Cuit/Cuil",
-    accessor:"cuitcuil",
-    // Filter: ColumnFilter,
+    accessor:"cuitcuil"
 },
 {
     Header: "Direccion",
-    accessor:"direccion",
-    // Filter: ColumnFilter,
+    accessor:"direccion"
 },
 {
     Header: "CP",
-    accessor: "cp",
-    // Filter: ColumnFilter,
+    accessor: "cp"
 },
 {
     Header: "Telefono",
-    accessor:"telefono",
-    // Filter: ColumnFilter,
+    accessor:"telefono"
 },
 {
     Header: "DNI",
-    accessor: "dni",
-    // Filter: ColumnFilter,
+    accessor: "dni"
 },
 {
     Header: "Ciudad/Provincia",
-    accessor:"ciudad/provincia",
-    // Filter: ColumnFilter,
+    accessor:"ciudadprovincia"
 },
 {
     Header: "Envio",
-    accessor:"envio",
-    // Filter: ColumnFilter,
+    accessor:"envio"
 },
 {
     Header: "Email",
-    accessor: "email",
-    // Filter: ColumnFilter,
+    accessor: "email"
 },
 {
     Header: "Tipo",
-    accessor:"tipo",
-    // Filter: ColumnFilter,
+    accessor:"tipo"
 },
 {
     Header: "Editar",
-    accessor:"editar",
-    // Filter: ColumnFilter,
+    accessor:"editar"
 },
 {
     Header: "Eliminar",
-    accessor:"eliminar",
-    // Filter: ColumnFilter,
-}
-
+    accessor:"eliminar"
+},
 
 ]

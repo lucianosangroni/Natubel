@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {
   useTable,
-  useSortBy,
   useGlobalFilter,
   usePagination,
   useRowSelect,
@@ -9,14 +8,20 @@ import {
 import MOCK_DATA from "../data/MOCK_DATA.json";
 import { COLUMNS } from "./columnsListaClientes";
 import GlobalFilter from "./GlobalFilter";
-import Checkbox from "./Checkbox";
+import ModalCliente from "./ModalCliente";
 
+// import Checkbox from "./Checkbox";
 // import ColumnFilter from "./ColumnFilter";
 
 const ListadoClientes = () => {
   const columns = useMemo(() => COLUMNS, []);
   const initialData = useMemo(() => MOCK_DATA, []);
   const [data, setData] = useState(initialData);
+
+  const handleAddClient = (newClient) => {
+    // Agregar el nuevo cliente a la tabla
+    setData((prevData) => [...prevData, newClient]);
+  };
 
   // Función para eliminar una fila
   const handleDeleteRow = (row) => {
@@ -54,25 +59,24 @@ const ListadoClientes = () => {
     },
     // useFilters,
     useGlobalFilter,
-    useSortBy,
     usePagination,
-    useRowSelect,
-    (hooks) => {
-      hooks.visibleColumns.push((columns) => {
-        return [
-          {
-            id: "selection",
-            Header: ({ getToggleAllRowsSelectedProps }) => (
-              <Checkbox {...getToggleAllRowsSelectedProps()} />
-            ),
-            Cell: ({ row }) => (
-              <Checkbox {...row.getToggleRowSelectedProps()} />
-            ),
-          },
-          ...columns,
-        ];
-      });
-    }
+    useRowSelect
+    // (hooks) => {
+    //   hooks.visibleColumns.push((columns) => {
+    //     return [
+    //       {
+    //         id: "selection",
+    //         Header: ({ getToggleAllRowsSelectedProps }) => (
+    //           <Checkbox {...getToggleAllRowsSelectedProps()} />
+    //         ),
+    //         Cell: ({ row }) => (
+    //           <Checkbox {...row.getToggleRowSelectedProps()} />
+    //         ),
+    //       },
+    //       ...columns,
+    //     ];
+    //   });
+    // }
   );
 
   const { globalFilter } = state;
@@ -86,14 +90,8 @@ const ListadoClientes = () => {
           {headerGroups.map((headerGroups) => (
             <tr {...headerGroups.getHeaderGroupProps()}>
               {headerGroups.headers.map((columns) => (
-                <th {...columns.getHeaderProps(columns.getSortByToggleProps())}>
+                <th {...columns.getHeaderProps(columns)}>
                   {columns.render("Header")}
-                  {/* <div>
-                    {columns.canFilter ? columns.render("Filter") : null}
-                  </div> */}
-                  <span>
-                    {columns.isSorted ? (columns.isSortedDesc ? "🠻" : "🠹") : ""}
-                  </span>
                 </th>
               ))}
             </tr>
@@ -126,7 +124,7 @@ const ListadoClientes = () => {
         </tbody>
       </table>
       {/* ESTE CODIGO ME MUESTRA EN LA INTERFAZ DE USUARIO EL ARRAY QUE SELECCIONO CON LA CASILLA, NO SE COMO ESCONDERLO */}
-      <pre>
+      {/* <pre>
         <code>
           {JSON.stringify(
             {
@@ -136,7 +134,7 @@ const ListadoClientes = () => {
             2
           )}
         </code>
-      </pre>
+      </pre> */}
       <div className="paginacion">
         <span>
           Page{" "}
@@ -151,6 +149,7 @@ const ListadoClientes = () => {
           Siguiente
         </button>
       </div>
+      <ModalCliente onAddClient={handleAddClient} />
     </>
   );
 };

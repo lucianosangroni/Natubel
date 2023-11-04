@@ -16,11 +16,11 @@ function App() {
           <NavbarAdm />
 
         <Routes>
-                  <Route path="/clientestableadm" element={<ClientesTableAdm/>}/>
-                  <Route path="/pedidosproveedoresadm" element={<PedidoProveedoresAdm />}/>
-                  <Route path="/listadoclientes" element={<ListadoClientes />}/>
-                  <Route path="/listaproductos" element={<ListadoProductos />}/>
-                  <Route path="/historialpedidos" element={<HistorialPedidos />}/>
+                  <Route path="adm/pedidoclientes" element={<ClientesTableAdm/>}/>
+                  <Route path="adm/pedidosproveedores" element={<PedidoProveedoresAdm />}/>
+                  <Route path="adm/clientes" element={<ListadoClientes />}/>
+                  <Route path="adm/listadodeproductos" element={<ListadoProductos />}/>
+                  <Route path="adm/historialdepedidos" element={<HistorialPedidos />}/>
 
         </Routes>
 

@@ -7,22 +7,24 @@
 }
 
 
+
 /* NAVBAR DEL ADM */
 .nav {
   border: 1px solid black;
   margin: 1rem;
   background-color: #d1f7d1;
-  
+
 }
 
 .navContainer {
     padding: 2rem;
     border: 1px solid black;
     
+    
 }
 .botonNav {
   margin-right: 2rem;
-
+  
 }
 .botonNav:hover { 
   background-color: #FBCCD2; 
@@ -35,6 +37,12 @@
   border: 1px solid #000000;
   border-collapse: collapse;
   margin: 1rem;
+  width: 100%;
+  overflow-x: auto; 
+}
+
+.tableContainer table {
+  min-width: 100%;
 }
 
 .tableContainer th {
@@ -42,12 +50,20 @@
   border: 1px solid #000000;
   padding: 8px;
   text-align: left;
+  max-width: 200px; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
 }
 
 .tableContainer td {
   border: 1px solid #000000;
   padding: 8px;
   text-align: left;
+  max-width: 200px; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
 }
 
 /* FILTRO GLOBAL */

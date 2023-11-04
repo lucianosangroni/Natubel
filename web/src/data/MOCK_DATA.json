@@ -2,12 +2,12 @@
 [
     {
         "nombreCompleto": "Franco Gamarra",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 34202687,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Via cargo",
         "email": "franco@gmail.com",
         "tipo": "Minorista"
@@ -16,12 +16,12 @@
     },
     {
         "nombreCompleto": "Lucho San",
-        "cuit/cuil": 12597468,
+        "cuitcuil": 12597468,
         "direccion": "Brown dfijiaejfiasjefd 234",
         "cp": 9200,
         "telefono": 34202687,
         "dni": 30888752,
-        "ciudad/provincia": "Merlo San Luis",
+        "ciudadprovincia": "Merlo San Luis",
         "envio": "Via cargo",
         "email": "luchosangjgjgjgjgjgjgj@gmail.com",
         "tipo": "Mayorista"
@@ -30,12 +30,12 @@
     },
     {
         "nombreCompleto": "Walter San",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -44,12 +44,12 @@
     },
     {
         "nombreCompleto": "Walter San",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -58,12 +58,12 @@
     },
     {
         "nombreCompleto": "Walter San",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -72,12 +72,12 @@
     },
     {
         "nombreCompleto": "Walter San",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -86,12 +86,12 @@
     },
     {
         "nombreCompleto": "Walter San",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -100,12 +100,12 @@
     },
     {
         "nombreCompleto": "Walter San",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -114,12 +114,12 @@
     },
     {
         "nombreCompleto": "WsgsergergregergergfSan",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -128,12 +128,12 @@
     },
     {
         "nombreCompleto": "sgsgsegsergSan",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -142,12 +142,12 @@
     },
     {
         "nombreCompleto": "Wsrgsgsgfesgfer San",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -156,12 +156,12 @@
     },
     {
         "nombreCompleto": "efgeefefefan",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -170,12 +170,12 @@
     },
     {
         "nombreCompleto": "sergkuyyir San",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -184,12 +184,12 @@
     },
     {
         "nombreCompleto": "Wafefefefef",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -198,12 +198,12 @@
     },
     {
         "nombreCompleto": "zdfetnnthyzf",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -212,12 +212,12 @@
     },
     {
         "nombreCompleto": "Wmjmyjmyrjmnza",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -226,12 +226,12 @@
     },
     {
         "nombreCompleto": "arawrawwareaw",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -240,12 +240,12 @@
     },
     {
         "nombreCompleto": "xcvvcxvcvbxbv",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -254,12 +254,12 @@
     },
     {
         "nombreCompleto": "utkutkutkutk",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
@@ -268,12 +268,12 @@
     },
     {
         "nombreCompleto": "dsffd",
-        "cuit/cuil": 938452158,
+        "cuitcuil": 938452158,
         "direccion": "Brown 234",
         "cp": 9200,
         "telefono": 65754587,
         "dni": 30484752,
-        "ciudad/provincia": "Esquel Chubut",
+        "ciudadprovincia": "Esquel Chubut",
         "envio": "Chilecito",
         "email": "franco@gmail.com",
         "tipo": "Mayorista"
