@@ -20,6 +20,7 @@ const ListadoClientes = () => {
 
   const handleAddClient = (newClient) => {
     // Agregar el nuevo cliente a la tabla
+    console.log(newClient);
     setData((prevData) => [...prevData, newClient]);
   };
 

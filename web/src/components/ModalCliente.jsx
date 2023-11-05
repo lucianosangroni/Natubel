@@ -7,7 +7,7 @@ function ModalCliente({ onAddClient }) {
   const [show, setShow] = useState(false);
   const [newClient, setNewClient] = useState({
     nombre: "",
-    cuitCuil: "",
+    cuitcuil: "",
     direccion: "",
     cp: "",
     telefono: "",
@@ -24,7 +24,7 @@ function ModalCliente({ onAddClient }) {
   const handleSave = () => {
     if (
       newClient.nombre &&
-      newClient.cuitCuil &&
+      newClient.cuitcuil &&
       newClient.direccion &&
       newClient.cp &&
       newClient.telefono &&
@@ -37,7 +37,7 @@ function ModalCliente({ onAddClient }) {
       onAddClient(newClient);
       setNewClient({
         nombre: "",
-        cuitCuil: "",
+        cuitcuil: "",
         direccion: "",
         cp: "",
         telefono: "",
@@ -85,9 +85,9 @@ function ModalCliente({ onAddClient }) {
               <Form.Label>CUIT CUIL</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.cuitCuil}
+                value={newClient.cuitcuil}
                 onChange={(e) => {
-                  setNewClient({ ...newClient, cuitCuil: e.target.value });
+                  setNewClient({ ...newClient, cuitcuil: e.target.value });
                   console.log("cuit:", e.target.value);
                 }}
               />
