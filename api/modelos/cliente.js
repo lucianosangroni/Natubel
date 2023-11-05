@@ -1,12 +1,16 @@
 const { sequelize } = require("../config/dbConnect")
 const { DataTypes } = require("sequelize")
+const Persona = require("./persona")
 
-const Cliente_O_Proveedor = sequelize.define(
-    "cliente_o_proveedor",
+const Cliente = sequelize.define(
+    "cliente",
     {
-        nombre: {
-          type: DataTypes.STRING,
-          allowNull: false,
+        persona_id: {
+          type: DataTypes.INTEGER,
+          references: {
+            model: Persona,
+            key: "id",
+          }
         },
         dni: {
             type: DataTypes.STRING,
@@ -14,25 +18,11 @@ const Cliente_O_Proveedor = sequelize.define(
         cuit_cuil: {
             type: DataTypes.STRING,
         },
-        email: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        telefono: {
-          type: DataTypes.STRING,
-        },
         tipo_cliente: {
             type: DataTypes.ENUM('MAYORISTA', 'MINORISTA'),
         },
-        es_proveedor: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-        },
         forma_de_envio: {
             type: DataTypes.STRING,
-        },
-        direccion: {
-          type: DataTypes.STRING,
         },
         codigo_postal: {
           type: DataTypes.STRING,
@@ -45,8 +35,10 @@ const Cliente_O_Proveedor = sequelize.define(
         },
       },
       {
-        tableName: "cliente_o_proveedor"
+        tableName: "cliente"
       }
 )
 
-module.exports = Cliente_O_Proveedor;
+Cliente.belongsTo(Persona, {foreignKey: "persona_id",})
+
+module.exports = Cliente;

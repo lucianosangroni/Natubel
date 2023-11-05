@@ -1,4 +1,4 @@
-const { clientesModel } = require("../modelos");
+const { clienteModel, personaModel } = require("../modelos");
 
 const getItems = (req, res) => {
     console.log("get clientes");
@@ -8,8 +8,32 @@ const getItems = (req, res) => {
 const createItem = async (req, res) => {
     try {
         //req = matchedData(req);
-        console.log(req.body)
-        const data = await clientesModel.create(req.body)
+        const { nombre, email, telefono, direccion, es_proveedor, dni, cuit_cuil, tipo_cliente, forma_de_envio, codigo_postal, ciudad, provincia } = req.body
+
+        const nuevaPersona = await personaModel.create(
+            {
+                nombre,
+                email,
+                telefono,
+                direccion,
+                es_proveedor,
+            }
+        )
+        
+        const nuevoCliente = await clienteModel.create(
+            {
+                persona_id: nuevaPersona.id,
+                dni,
+                cuit_cuil,
+                tipo_cliente,
+                forma_de_envio,
+                codigo_postal,
+                ciudad,
+                provincia
+            }
+        )
+        
+        const data = {nuevaPersona, nuevoCliente}
         res.status(201).send({data})
     } catch(e) {
         console.log("Error al crear el cliente: ", e)
