@@ -5,13 +5,6 @@ const Persona = require("./persona")
 const Cliente = sequelize.define(
     "cliente",
     {
-        persona_id: {
-          type: DataTypes.INTEGER,
-          references: {
-            model: Persona,
-            key: "id",
-          }
-        },
         dni: {
             type: DataTypes.STRING,
         },
@@ -20,6 +13,7 @@ const Cliente = sequelize.define(
         },
         tipo_cliente: {
             type: DataTypes.ENUM('MAYORISTA', 'MINORISTA'),
+            allowNull: false,
         },
         forma_de_envio: {
             type: DataTypes.STRING,
@@ -39,6 +33,6 @@ const Cliente = sequelize.define(
       }
 )
 
-Cliente.belongsTo(Persona, {foreignKey: "persona_id",})
+Cliente.belongsTo(Persona, {foreignKey: "persona_id"})
 
 module.exports = Cliente;
