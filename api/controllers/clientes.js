@@ -1,14 +1,19 @@
 const { clienteModel, personaModel } = require("../modelos");
 
-const getItems = (req, res) => {
-    console.log("get clientes");
-    res.send("clientes")
+const getItems = async (req, res) => {
+    try {
+        const clientes = await clienteModel.findAll({include: [{model: personaModel}]})
+        res.status(200).send(clientes)
+    } catch (e) {
+        console.log("Error al buscar los cliente: ", e)
+        res.status(500).send("ERROR")
+    }
 };
 
 const createItem = async (req, res) => {
     try {
         //req = matchedData(req);
-        const { nombre, email, telefono, direccion, es_proveedor, dni, cuit_cuil, tipo_cliente, forma_de_envio, codigo_postal, ciudad, provincia } = req.body
+        const { nombre, email, telefono, direccion, dni, cuit_cuil, tipo_cliente, forma_de_envio, codigo_postal, ciudad, provincia } = req.body
 
         const nuevaPersona = await personaModel.create(
             {
@@ -16,7 +21,7 @@ const createItem = async (req, res) => {
                 email,
                 telefono,
                 direccion,
-                es_proveedor,
+                es_proveedor: false,
             }
         )
         
