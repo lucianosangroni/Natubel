@@ -6,7 +6,7 @@ const modelos = {
     personaModel: require("./persona"),
     clienteModel: require("./cliente"),
     pedidoModel: require("./pedido"),
-    productosXPedidoModel: require("./productos_x_pedido"),
+    productoXPedidoModel: require("./producto_x_pedido"),
 }
 
 module.exports = modelos

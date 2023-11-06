@@ -16,8 +16,8 @@ const Producto = sequelize.define(
     }
 )
 
-Producto.belongsTo(Articulo, {foreignKey: "articulo_id"})
-Producto.belongsTo(Talle, {foreignKey: "talle_id"})
-Producto.belongsTo(Color, {foreignKey: "color_id"})
+Articulo.hasMany(Producto, {foreignKey: "articulo_id"})
+Talle.hasMany(Producto, {foreignKey: "talle_id"})
+Color.hasMany(Producto, {foreignKey: "color_id"})
 
 module.exports = Producto;

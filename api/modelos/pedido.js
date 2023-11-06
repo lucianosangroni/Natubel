@@ -29,6 +29,6 @@ const Pedido = sequelize.define(
     }
 )
 
-Pedido.belongsTo(Persona, {foreignKey: "persona_id",})
+Persona.hasMany(Pedido, { foreignKey: "persona_id" });
 
 module.exports = Pedido;

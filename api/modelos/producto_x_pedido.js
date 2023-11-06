@@ -18,7 +18,14 @@ const Producto_X_Pedido = sequelize.define(
     }
 )
 
-Producto_X_Pedido.belongsTo(Producto, {foreignKey: "producto_id"})
-Producto_X_Pedido.belongsTo(Pedido, {foreignKey: "pedido_id"})
+Producto.belongsToMany(Pedido, {
+    through: Producto_X_Pedido,
+    foreignKey: "producto_id",
+});
+
+Pedido.belongsToMany(Producto, {
+    through: Producto_X_Pedido,
+    foreignKey: "pedido_id",
+});
 
 module.exports = Producto_X_Pedido;

@@ -5,8 +5,8 @@ const getItems = async (req, res) => {
         const clientes = await clienteModel.findAll({include: [{model: personaModel}]})
         res.status(200).send(clientes)
     } catch (e) {
-        console.log("Error al buscar los cliente: ", e)
-        res.status(500).send("ERROR")
+        console.log("Error al buscar los clientes: ", e)
+        res.status(500).json({ message: 'Error al buscar los clientes' });
     }
 };
 
@@ -15,7 +15,8 @@ const createItem = async (req, res) => {
         //req = matchedData(req);
         const { nombre, email, telefono, direccion, dni, cuit_cuil, tipo_cliente, forma_de_envio, codigo_postal, ciudad, provincia } = req.body
 
-        const nuevaPersona = await personaModel.create(
+        const nuevaPersona = await personaModel.create
+        (
             {
                 nombre,
                 email,
@@ -25,7 +26,8 @@ const createItem = async (req, res) => {
             }
         )
         
-        const nuevoCliente = await clienteModel.create(
+        const nuevoCliente = await clienteModel.create
+        (
             {
                 persona_id: nuevaPersona.id,
                 dni,
@@ -39,16 +41,64 @@ const createItem = async (req, res) => {
         )
         
         const data = {nuevaPersona, nuevoCliente}
-        res.status(201).send({data})
+        res.status(201).json({ message: 'Cliente creado con éxito' });
     } catch(e) {
         console.log("Error al crear el cliente: ", e)
-        res.status(500).send("ERROR")
+        res.status(500).json({ message: 'Error al crear el cliente' });
     }
 };
 
-const updateItem = (req, res) => {
-    console.log("put clientes");
-    res.send("clientes")
+const updateItem = async (req, res) => {
+    try {
+        cliente_id = req.params.id
+        const { nombre, email, telefono, direccion, persona_id, dni, cuit_cuil, tipo_cliente, forma_de_envio, codigo_postal, ciudad, provincia } = req.body
+        
+        // Validar si la persona existe antes de intentar actualizarla
+        const personaExiste = await personaModel.findByPk(persona_id);
+        if (!personaExiste) {
+            return res.status(404).json({ message: 'Persona no encontrada' });
+        }
+
+        // Validar si el cliente existe antes de intentar actualizarlo
+        const clienteExiste = await clienteModel.findByPk(cliente_id);
+        if (!clienteExiste) {
+            return res.status(404).json({ message: 'Cliente no encontrado' });
+        }
+
+        await personaModel.update
+        (
+            {
+                nombre,
+                email,
+                telefono,
+                direccion
+            }, 
+            {
+            where: { id: persona_id }
+            }
+        )
+
+        await clienteModel.update
+        (
+            {
+                dni,
+                cuit_cuil,
+                tipo_cliente,
+                forma_de_envio,
+                codigo_postal,
+                ciudad,
+                provincia
+            },
+            {
+                where: { id: cliente_id }
+            }
+        )
+
+        res.status(200).json({ message: 'Cliente editado con éxito' });
+    } catch(e) {
+        console.log("Error al editar el cliente: ", e)
+        res.status(500).json({ message: 'Error al editar el cliente' });
+    }
 };
 
 const deleteItem = (req, res) => {
