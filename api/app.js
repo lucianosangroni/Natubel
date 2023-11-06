@@ -1,12 +1,20 @@
 require("dotenv").config()
 const express = require("express")
 const cors = require("cors")
+const { dbConnect } = require("./config/dbConnect")
+const { dbSync } = require("./config/dbSync")
 const app = express()
 
 app.use(cors())
+app.use(express.json())
 
-const puerto = process.env.PUERTO || 3000
+const puerto = process.env.PUERTO || 3001
+
+app.use("/api", require("./rutas"));
 
 app.listen(puerto, () => {
-    console.log("hola")
+    console.log(`Inicio Servidor en: http://localhost:${puerto}`)
 })
+
+dbConnect();
+dbSync(); //TODO comentar para el despliegue
