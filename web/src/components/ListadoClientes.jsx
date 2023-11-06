@@ -42,9 +42,10 @@ const ListadoClientes = () => {
     }
   };
 
-  const handleEditRow = (dato) => {
-    const editData = dato.values
-    editData.index = dato.index
+  const handleEditRow = (row) => {
+    console.log(row)
+    const editData = row.values
+    editData.index = row.index
     setEditingData(editData);
     setIsEditModalOpen(true);
   };
@@ -130,20 +131,7 @@ const ListadoClientes = () => {
                         >
                           Eliminar
                         </button>
-                      ) : // {isEditModalOpen && (
-                      //   <ModalClienteEditar
-                      //     data={editingData}
-                      //     onClose={() => setIsEditModalOpen(false)}
-                      //     onSave={(editedData) => {
-                      //       // Aquí puedes guardar los datos editados en tu estado de datos o realizar cualquier otra acción necesaria.
-                      //       // Por ejemplo, puedes llamar a una función para actualizar los datos en el estado.
-                      //       // handleSaveEditedData(editedData);
-                      //       // Cierra el modal de edición.
-                      //       setIsEditModalOpen(false);
-                      //     }}
-                      //   />
-                      //   })
-
+                      ) : 
                       cell.column.id === "editar" ? (
                         <button
                           onClick={() => handleEditRow(row)}

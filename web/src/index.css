@@ -146,7 +146,7 @@
 
   /* BOTON DE NUEVO  */
 
-  .botonNuevoCliente {
+  #botonNuevoCliente {
     background-color: #FBCCD2; /* Color de fondo */
     color: #fff; /* Color del texto */
     border: none; /* Sin borde */

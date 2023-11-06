@@ -47,7 +47,7 @@ function ModalCliente({ onAddClient }) {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button id="botonNuevoCliente" variant="primary" onClick={handleShow}>
         Nuevo cliente
       </Button>
 
