@@ -22,10 +22,10 @@ const Pedido = sequelize.define(
         },
         razon_cancelado: {
             type: DataTypes.STRING,
-        }
+        },
     },
     {
-        tableName: "pedido"
+        tableName: "pedido",
     }
 )
 

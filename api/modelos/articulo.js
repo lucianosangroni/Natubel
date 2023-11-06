@@ -17,10 +17,10 @@ const Articulo = sequelize.define(
         precio_unitario: {
             type: DataTypes.FLOAT,
             allowNull: false,
-        }
+        },
     },
     {
-        tableName: "articulo"
+        tableName: "articulo",
     }
 )
 

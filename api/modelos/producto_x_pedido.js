@@ -14,7 +14,7 @@ const Producto_X_Pedido = sequelize.define(
         }
     },
     {
-        tableName: "producto_x_pedido"
+        tableName: "producto_x_pedido",
     }
 )
 

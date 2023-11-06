@@ -7,10 +7,10 @@ const Color = sequelize.define(
         descripcion: {
             type: DataTypes.STRING,
             allowNull: false,
-        }
+        },
     },
     {
-        tableName: "color"
+        tableName: "color",
     }
 )
 

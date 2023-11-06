@@ -101,9 +101,35 @@ const updateItem = async (req, res) => {
     }
 };
 
-const deleteItem = (req, res) => {
-    console.log("delete clientes");
-    res.send("clientes")
+const deleteItem = async (req, res) => {
+    try {
+        cliente_id = req.params.id
+
+        // Validar si el cliente existe antes de intentar actualizarlo
+        const clienteExiste = await clienteModel.findByPk(cliente_id);
+        if (!clienteExiste) {
+            return res.status(404).json({ message: 'Cliente no encontrado' });
+        }
+
+        await clienteModel.update
+        (
+            { 
+                flag_activo: false 
+            },
+            { 
+                where: { id: cliente_id } 
+            }
+        );
+
+        res.status(200).json({ message: 'Cliente eliminado con éxito' });
+    } catch(e) {
+        console.log("Error al eliminar el cliente: ", e)
+        res.status(500).json({ message: 'Error al eliminar el cliente' });
+    }
+    
+    
+
+
 };
 
 

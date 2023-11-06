@@ -22,9 +22,15 @@ const Persona = sequelize.define(
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
+        flag_activo: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+        },
     },
     {
-        tableName: "persona"
+        tableName: "persona",
+        paranoid: true,
+        deletedAt: "flag_activo",
     }
 )
 

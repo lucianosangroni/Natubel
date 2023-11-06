@@ -27,9 +27,15 @@ const Cliente = sequelize.define(
         provincia: {
           type: DataTypes.STRING,
         },
+        flag_activo: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: true,
+        },
       },
       {
-        tableName: "cliente"
+        tableName: "cliente",
+        paranoid: true,
+        deletedAt: "flag_activo",
       }
 )
 
