@@ -9,6 +9,7 @@ import MOCK_DATA from "../data/MOCK_DATA.json";
 import { COLUMNS } from "./columnsListaClientes";
 import GlobalFilter from "./GlobalFilter";
 import ModalCliente from "./ModalCliente";
+import ModalClienteEditar from "./ModalClienteEditar";
 
 // import Checkbox from "./Checkbox";
 // import ColumnFilter from "./ColumnFilter";
@@ -17,9 +18,12 @@ const ListadoClientes = () => {
   const columns = useMemo(() => COLUMNS, []);
   const initialData = useMemo(() => MOCK_DATA, []);
   const [data, setData] = useState(initialData);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingData, setEditingData] = useState(null);
 
   const handleAddClient = (newClient) => {
     // Agregar el nuevo cliente a la tabla
+    console.log(newClient);
     setData((prevData) => [...prevData, newClient]);
   };
 
@@ -38,6 +42,29 @@ const ListadoClientes = () => {
     }
   };
 
+  const handleEditRow = (dato) => {
+    setEditingData(dato);
+    setIsEditModalOpen(true);
+    // let contador = 0;
+    // let arreglo = [...data];
+    // arreglo.map((registro) => {
+    //   if (dato.id == registro.id) {
+    //     arreglo[contador].nombreCompleto = dato.nombreCompleto;
+    //     arreglo[contador].cuitcuil = dato.cuitcuil;
+    //     arreglo[contador].direccion = dato.direccion;
+    //     arreglo[contador].cp = dato.cp;
+    //     arreglo[contador].telefono = dato.telefono;
+    //     arreglo[contador].dni = dato.dni;
+    //     arreglo[contador].ciudadprovincia = dato.ciudadprovincia;
+    //     arreglo[contador].envio = dato.envio;
+    //     arreglo[contador].email = dato.email;
+    //     arreglo[contador].tipo = dato.tipo;
+    //   }
+    //   return registro;
+    // });
+    // setData(arreglo);
+  };
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -51,7 +78,6 @@ const ListadoClientes = () => {
     prepareRow,
     state,
     setGlobalFilter,
-    selectedFlatRows,
   } = useTable(
     {
       columns,
@@ -111,6 +137,27 @@ const ListadoClientes = () => {
                           className="botonEliminar"
                         >
                           Eliminar
+                        </button>
+                      ) : // {isEditModalOpen && (
+                      //   <ModalClienteEditar
+                      //     data={editingData}
+                      //     onClose={() => setIsEditModalOpen(false)}
+                      //     onSave={(editedData) => {
+                      //       // Aquí puedes guardar los datos editados en tu estado de datos o realizar cualquier otra acción necesaria.
+                      //       // Por ejemplo, puedes llamar a una función para actualizar los datos en el estado.
+                      //       // handleSaveEditedData(editedData);
+                      //       // Cierra el modal de edición.
+                      //       setIsEditModalOpen(false);
+                      //     }}
+                      //   />
+                      //   })
+
+                      cell.column.id === "editar" ? (
+                        <button
+                          onClick={() => handleEditRow(row)}
+                          className="botonEditar"
+                        >
+                          Editar
                         </button>
                       ) : (
                         cell.render("Cell")

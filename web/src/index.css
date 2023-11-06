@@ -6,14 +6,23 @@
     sans-serif;
 }
 
+.react-table {
+  width: 100%;
+  overflow: auto;
+}
 
+.react-table th, .react-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* NAVBAR DEL ADM */
 .nav {
   border: 1px solid black;
   margin: 1rem;
   background-color: #d1f7d1;
-
+  
 }
 
 .navContainer {
@@ -35,15 +44,10 @@
 
 .tableContainer {
   border: 1px solid #000000;
-  border-collapse: collapse;
   margin: 1rem;
-  width: 100%;
-  overflow-x: auto; 
+  
 }
 
-.tableContainer table {
-  min-width: 100%;
-}
 
 .tableContainer th {
   background-color: #FBCCD2;
@@ -117,3 +121,41 @@
   cursor: pointer;
   margin: 0 5px; 
 }
+
+/* BOTON DE EDITAR CLIENTE */
+
+.botonEditar {
+  background-color: #FBCCD2; 
+  color: #000000; 
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 5px; 
+}
+
+.botonGuardar {
+  background-color: #FBCCD2; 
+  color: #000000; 
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 5px; 
+}
+
+  /* BOTON DE NUEVO  */
+
+  .botonNuevoCliente {
+    background-color: #FBCCD2; /* Color de fondo */
+    color: #fff; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    padding: 10px 20px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+  }
+  
+  .botonNuevoCliente:hover {
+    background-color: #0056b3; /* Cambiar el color de fondo al pasar el mouse */
+  }

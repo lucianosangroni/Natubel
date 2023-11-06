@@ -16,9 +16,9 @@ function NavbarAdm() {
             <Nav.Link
               className="botonNav"
               as={Link}
-              to="adm/pedidosproveedores"
+              to="adm/listadoproveedores"
             >
-              Pedido proveedores
+              Proveedores
             </Nav.Link>
             <Nav.Link className="botonNav" as={Link} to="adm/clientes">
               Clientes

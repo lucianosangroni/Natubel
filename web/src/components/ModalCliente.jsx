@@ -7,12 +7,12 @@ function ModalCliente({ onAddClient }) {
   const [show, setShow] = useState(false);
   const [newClient, setNewClient] = useState({
     nombre: "",
-    cuitCuil: "",
+    cuitcuil: "",
     direccion: "",
     cp: "",
     telefono: "",
     dni: "",
-    ciudadProvincia: "",
+    ciudadprovincia: "",
     envio: "",
     email: "",
     tipo: "",
@@ -23,26 +23,26 @@ function ModalCliente({ onAddClient }) {
 
   const handleSave = () => {
     if (
-      newClient.nombre &&
-      newClient.cuitCuil &&
-      newClient.direccion &&
-      newClient.cp &&
-      newClient.telefono &&
-      newClient.dni &&
-      newClient.ciudadProvincia &&
-      newClient.envio &&
-      newClient.email &&
+      newClient.nombreCompleto &&
+      // newClient.cuitcuil &&
+      // newClient.direccion &&
+      // newClient.cp &&
+      // newClient.telefono &&
+      // newClient.dni &&
+      // newClient.ciudadProvincia &&
+      // newClient.envio &&
+      // newClient.email &&
       newClient.tipo
     ) {
       onAddClient(newClient);
       setNewClient({
-        nombre: "",
-        cuitCuil: "",
+        nombreCompleto: "",
+        cuitcuil: "",
         direccion: "",
         cp: "",
         telefono: "",
         dni: "",
-        ciudadProvincia: "",
+        ciudadprovincia: "",
         envio: "",
         email: "",
         tipo: "",
@@ -74,10 +74,12 @@ function ModalCliente({ onAddClient }) {
               <Form.Label>Nombre completo</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.nombre}
+                value={newClient.nombreCompleto}
                 onChange={(e) => {
-                  setNewClient({ ...newClient, nombre: e.target.value });
-                  console.log("nombre:", e.target.value);
+                  setNewClient({
+                    ...newClient,
+                    nombreCompleto: e.target.value,
+                  });
                 }}
               />
             </Form.Group>
@@ -85,9 +87,9 @@ function ModalCliente({ onAddClient }) {
               <Form.Label>CUIT CUIL</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.cuitCuil}
+                value={newClient.cuitcuil}
                 onChange={(e) => {
-                  setNewClient({ ...newClient, cuitCuil: e.target.value });
+                  setNewClient({ ...newClient, cuitcuil: e.target.value });
                   console.log("cuit:", e.target.value);
                 }}
               />
@@ -140,11 +142,11 @@ function ModalCliente({ onAddClient }) {
               <Form.Label>Ciudad Provincia</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.ciudadProvincia}
+                value={newClient.ciudadprovincia}
                 onChange={(e) => {
                   setNewClient({
                     ...newClient,
-                    ciudadProvincia: e.target.value,
+                    ciudadprovincia: e.target.value,
                   });
                   console.log("ciudad:", e.target.value);
                 }}
