@@ -23,12 +23,12 @@ const ListadoClientes = () => {
 
   const handleAddClient = (newClient) => {
     // Agregar el nuevo cliente a la tabla
-    console.log(newClient);
     setData((prevData) => [...prevData, newClient]);
   };
 
   // Función para eliminar una fila
   const handleDeleteRow = (row) => {
+    //TODO fetch delete
     const shouldDelete = window.confirm(
       "¿Estas seguro que deseas eliminar el cliente?"
     );
@@ -43,26 +43,18 @@ const ListadoClientes = () => {
   };
 
   const handleEditRow = (dato) => {
-    setEditingData(dato);
+    const editData = dato.values
+    editData.index = dato.index
+    setEditingData(editData);
     setIsEditModalOpen(true);
-    // let contador = 0;
-    // let arreglo = [...data];
-    // arreglo.map((registro) => {
-    //   if (dato.id == registro.id) {
-    //     arreglo[contador].nombreCompleto = dato.nombreCompleto;
-    //     arreglo[contador].cuitcuil = dato.cuitcuil;
-    //     arreglo[contador].direccion = dato.direccion;
-    //     arreglo[contador].cp = dato.cp;
-    //     arreglo[contador].telefono = dato.telefono;
-    //     arreglo[contador].dni = dato.dni;
-    //     arreglo[contador].ciudadprovincia = dato.ciudadprovincia;
-    //     arreglo[contador].envio = dato.envio;
-    //     arreglo[contador].email = dato.email;
-    //     arreglo[contador].tipo = dato.tipo;
-    //   }
-    //   return registro;
-    // });
-    // setData(arreglo);
+  };
+
+  const updateTableRow = (index, newData) => {
+    setData((prevData) => {
+      const updatedData = [...prevData];
+      updatedData[index] = newData;
+      return updatedData;
+    });
   };
 
   const {
@@ -170,6 +162,16 @@ const ListadoClientes = () => {
           })}
         </tbody>
       </table>
+      {isEditModalOpen && (
+        <ModalClienteEditar
+          data={editingData}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={(editedData) => {
+            updateTableRow(editedData.index, editedData)
+            setIsEditModalOpen(false);
+          }}
+        />
+      )}
       {/* ESTE CODIGO ME MUESTRA EN LA INTERFAZ DE USUARIO EL ARRAY QUE SELECCIONO CON LA CASILLA, NO SE COMO ESCONDERLO */}
       {/* <pre>
         <code>

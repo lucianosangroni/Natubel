@@ -24,14 +24,6 @@ function ModalCliente({ onAddClient }) {
   const handleSave = () => {
     if (
       newClient.nombreCompleto &&
-      // newClient.cuitcuil &&
-      // newClient.direccion &&
-      // newClient.cp &&
-      // newClient.telefono &&
-      // newClient.dni &&
-      // newClient.ciudadProvincia &&
-      // newClient.envio &&
-      // newClient.email &&
       newClient.tipo
     ) {
       onAddClient(newClient);
