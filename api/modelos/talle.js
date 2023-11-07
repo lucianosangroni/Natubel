@@ -7,10 +7,16 @@ const Talle = sequelize.define(
         descripcion: {
             type: DataTypes.STRING,
             allowNull: false,
-        }
+        },
+        flag_activo: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+        },
     },
     {
-        tableName: "talle"
+        tableName: "talle",
+        paranoid: true,
+        deletedAt: "flag_activo",
     }
 )
 

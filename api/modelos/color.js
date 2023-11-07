@@ -8,9 +8,15 @@ const Color = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        flag_activo: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+        },
     },
     {
         tableName: "color",
+        paranoid: true,
+        deletedAt: "flag_activo",
     }
 )
 
