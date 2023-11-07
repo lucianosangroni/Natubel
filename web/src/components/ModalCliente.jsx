@@ -12,7 +12,8 @@ function ModalCliente({ onAddClient }) {
     cp: "",
     telefono: "",
     dni: "",
-    ciudadprovincia: "",
+    ciudad: "",
+    provincia: "",
     envio: "",
     email: "",
     tipo: "",
@@ -22,10 +23,7 @@ function ModalCliente({ onAddClient }) {
   const handleShow = () => setShow(true);
 
   const handleSave = () => {
-    if (
-      newClient.nombreCompleto &&
-      newClient.tipo
-    ) {
+    if (newClient.nombreCompleto && newClient.tipo) {
       onAddClient(newClient);
       setNewClient({
         nombreCompleto: "",
@@ -34,14 +32,15 @@ function ModalCliente({ onAddClient }) {
         cp: "",
         telefono: "",
         dni: "",
-        ciudadprovincia: "",
+        ciudad: "",
+        provincia: "",
         envio: "",
         email: "",
         tipo: "",
       });
       handleClose();
     } else {
-      console.log("Por favor, complete todos los campos.");
+      console.log("Por favor, complete nombre y tipo.");
     }
   };
 
@@ -82,7 +81,6 @@ function ModalCliente({ onAddClient }) {
                 value={newClient.cuitcuil}
                 onChange={(e) => {
                   setNewClient({ ...newClient, cuitcuil: e.target.value });
-                  console.log("cuit:", e.target.value);
                 }}
               />
             </Form.Group>
@@ -93,7 +91,6 @@ function ModalCliente({ onAddClient }) {
                 value={newClient.direccion}
                 onChange={(e) => {
                   setNewClient({ ...newClient, direccion: e.target.value });
-                  console.log("dire:", e.target.value);
                 }}
               />
             </Form.Group>
@@ -104,7 +101,6 @@ function ModalCliente({ onAddClient }) {
                 value={newClient.cp}
                 onChange={(e) => {
                   setNewClient({ ...newClient, cp: e.target.value });
-                  console.log("cp:", e.target.value);
                 }}
               />
             </Form.Group>
@@ -115,7 +111,6 @@ function ModalCliente({ onAddClient }) {
                 value={newClient.telefono}
                 onChange={(e) => {
                   setNewClient({ ...newClient, telefono: e.target.value });
-                  console.log("tel:", e.target.value);
                 }}
               />
             </Form.Group>
@@ -126,21 +121,32 @@ function ModalCliente({ onAddClient }) {
                 value={newClient.dni}
                 onChange={(e) => {
                   setNewClient({ ...newClient, dni: e.target.value });
-                  console.log("dni:", e.target.value);
                 }}
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Ciudad Provincia</Form.Label>
+              <Form.Label>Ciudad</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.ciudadprovincia}
+                value={newClient.ciudad}
                 onChange={(e) => {
                   setNewClient({
                     ...newClient,
-                    ciudadprovincia: e.target.value,
+                    ciudad: e.target.value,
                   });
-                  console.log("ciudad:", e.target.value);
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Provincia</Form.Label>
+              <Form.Control
+                type="text"
+                value={newClient.provincia}
+                onChange={(e) => {
+                  setNewClient({
+                    ...newClient,
+                    provincia: e.target.value,
+                  });
                 }}
               />
             </Form.Group>
@@ -151,7 +157,6 @@ function ModalCliente({ onAddClient }) {
                 value={newClient.envio}
                 onChange={(e) => {
                   setNewClient({ ...newClient, envio: e.target.value });
-                  console.log("envio:", e.target.value);
                 }}
               />
             </Form.Group>
@@ -162,7 +167,6 @@ function ModalCliente({ onAddClient }) {
                 value={newClient.email}
                 onChange={(e) => {
                   setNewClient({ ...newClient, email: e.target.value });
-                  console.log("email:", e.target.value);
                 }}
               />
             </Form.Group>
@@ -173,18 +177,21 @@ function ModalCliente({ onAddClient }) {
                 value={newClient.tipo}
                 onChange={(e) => {
                   setNewClient({ ...newClient, tipo: e.target.value });
-                  console.log("tipo:", e.target.value);
                 }}
               />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button
+            id="botonNuevoCliente"
+            variant="secondary"
+            onClick={handleClose}
+          >
             Cerrar
           </Button>
-          <Button variant="primary" onClick={handleSave}>
-            Agregar cliente
+          <Button id="botonNuevoCliente" variant="primary" onClick={handleSave}>
+            Agregar
           </Button>
         </Modal.Footer>
       </Modal>

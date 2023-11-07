@@ -49,14 +49,130 @@ function ModalClienteEditar({ data, onClose, onSave }) {
               }
             />
           </Form.Group>
-          {/* Agrega aquí los campos restantes de acuerdo a tus necesidades */}
+          <Form.Group>
+            <Form.Label>Direccion</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.direccion}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  direccion: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>CP</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.cp}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  cp: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Telefono</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.telefono}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  telefono: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>DNI</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.dni}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  dni: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Ciudad</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.ciudad}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  ciudad: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Provincia</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.provincia}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  provincia: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Formas de envio</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.envio}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  envio: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.email}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  email: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Tipo</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.tipo}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  tipo: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
+        <Button id="botonNuevoCliente" variant="secondary" onClick={onClose}>
           Cerrar
         </Button>
-        <Button variant="primary" onClick={handleSave}>
+        <Button id="botonNuevoCliente" variant="primary" onClick={handleSave}>
           Guardar cambios
         </Button>
       </Modal.Footer>

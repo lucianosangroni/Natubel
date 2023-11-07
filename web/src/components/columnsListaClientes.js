@@ -27,8 +27,12 @@ export const COLUMNS = [
     accessor: "dni"
 },
 {
-    Header: "Ciudad/Provincia",
-    accessor:"ciudadprovincia"
+    Header: "Ciudad",
+    accessor:"ciudad"
+},
+{
+    Header: "Provincia",
+    accessor:"provincia"
 },
 {
     Header: "Envio",

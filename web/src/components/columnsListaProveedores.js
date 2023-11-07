@@ -1,8 +1,5 @@
 export const COLUMNSPROVE = [
-    // {
-    //     Header:"Id",
-    //     accessor:"id"
-    // },
+
     {
         Header:"Nombre Completo",
         accessor:"nombreCompleto"
@@ -18,6 +15,14 @@ export const COLUMNSPROVE = [
     {
         Header:"Email",
         accessor:"email"
+    },
+    {
+        Header: "Editar",
+        accessor:"editar"
+    },
+    {
+        Header: "Eliminar",
+        accessor:"eliminar"
     }
 
 ]
