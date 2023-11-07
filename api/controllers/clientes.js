@@ -26,7 +26,7 @@ const createItem = async (req, res) => {
             }
         )
         
-        const nuevoCliente = await clienteModel.create
+        await clienteModel.create
         (
             {
                 persona_id: nuevaPersona.id,
@@ -40,7 +40,6 @@ const createItem = async (req, res) => {
             }
         )
         
-        const data = {nuevaPersona, nuevoCliente}
         res.status(201).json({ message: 'Cliente creado con éxito' });
     } catch(e) {
         console.log("Error al crear el cliente: ", e)
