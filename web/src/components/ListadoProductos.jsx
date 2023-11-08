@@ -69,24 +69,28 @@ const initialProducts = [
     articulo: "4",
     talles: ["s"],
     colores: ["blanco", "amarillo", "negro"],
+    datosPorTalleYColor: {}
   },
   {
     id: 5,
     articulo: "5",
     talles: ["s", "m", "xl"],
     colores: ["blanco", "amarillo", "negro"],
+    datosPorTalleYColor: {}
   },
   {
     id: 6,
     articulo: "6",
     talles: ["s", "m", "xl"],
     colores: ["blanco", "amarillo", "negro"],
+    datosPorTalleYColor: {}
   },
   {
     id: 7,
     articulo: "7",
     talles: ["s", "m", "xl"],
     colores: ["blanco", "amarillo", "negro"],
+    datosPorTalleYColor: {}
   },
 ];
 
@@ -97,9 +101,13 @@ const ListadoProductos = () => {
 
   const [newProduct, setNewProduct] = useState({
     articulo: "",
-    talle: "",
-    color: "",
+    talles: [""],
+    colores: [""],
+    datosPorTalleYColor: {}
   });
+
+  const [newTalle, setNewTalle] = useState("")
+  const [newColor, setNewColor] = useState("")
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -122,7 +130,52 @@ const ListadoProductos = () => {
     })
   };
 
+  const handleNewTalleChange = (event) => {
+    const { value } = event.target;
+
+    setNewTalle(value)
+  }
+
+  const handleNewColorChange = (event) => {
+    const { value } = event.target;
+
+    setNewColor(value)
+  }
+
+  const handleKeyDownTalle = (event) => {
+    if (event.key === "Enter") {
+      // Realiza la acción que deseas cuando se presiona Enter
+      setNewProduct({
+        ...newProduct,
+        talles: [...newProduct.talles, newTalle]
+      })
+      //QUE NO PUEDAS VOLVER A ESCRIBIR EL ANTERIOR INPUT Y LE APAREZCA EL ICONO DE TACHO DE BASURA
+      //QUE APAREZCA UN NUEVO INPUT PARA ESCRIBIR
+    }
+  }
+
+  const handleKeyDownColor = (event) => {
+    if (event.key === "Enter") {
+      // Realiza la acción que deseas cuando se presiona Enter
+      setNewProduct({
+        ...newProduct,
+        colores: [...newProduct.colores, newColor]
+      })
+      //QUE NO PUEDAS VOLVER A ESCRIBIR EL ANTERIOR INPUT Y LE APAREZCA EL ICONO DE TACHO DE BASURA
+      //QUE APAREZCA UN NUEVO INPUT PARA ESCRIBIR
+    }
+  }
+
   const handleSaveProduct = () => {
+    const tallesNoVacios = newProduct.talles.filter(talle => talle !== "")
+    const coloresNoVacios = newProduct.colores.filter(color => color !== "")
+
+    setNewProduct({
+      ...newProduct,
+      talles: tallesNoVacios,
+      colores: coloresNoVacios
+    })
+
     // Crea un nuevo objeto con los datos del nuevo producto
     const newProductData = {
       id: products.length + 1, // Asigna un nuevo ID
@@ -230,19 +283,19 @@ const ListadoProductos = () => {
                   <Form.Group controlId="talle">
                     <Form.Label>Talle</Form.Label>
                     <Form.Control
-                      type="text"
-                      name="talle"
-                      value={newProduct.talle}
-                      onChange={handleNewProductChange}
+                        type="text"
+                        value={newTalle}
+                        onChange={handleNewTalleChange}
+                        onKeyDown={handleKeyDownTalle}
                     />
                   </Form.Group>
                   <Form.Group controlId="color">
                     <Form.Label>Color</Form.Label>
                     <Form.Control
                       type="text"
-                      name="color"
-                      value={newProduct.color}
-                      onChange={handleNewProductChange}
+                      value={newColor}
+                      onChange={handleNewColorChange}
+                      onKeyDown={handleKeyDownColor}
                     />
                   </Form.Group>
                 </Form>
