@@ -1,14 +1,20 @@
 const { sequelize } = require("../config/dbConnect")
 const { DataTypes } = require("sequelize")
 const Articulo = require("./articulo")
-const Talle = require("./talle")
-const Color = require("./color")
 
 const Producto = sequelize.define(
     "producto",
     {
         stock: {
             type: DataTypes.INTEGER,
+        },
+        talle: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        color: {
+            type: DataTypes.STRING,
+            allowNull: false
         },
         flag_activo: {
             type: DataTypes.BOOLEAN,
@@ -23,7 +29,5 @@ const Producto = sequelize.define(
 )
 
 Articulo.hasMany(Producto, {foreignKey: "articulo_id"})
-Talle.hasMany(Producto, {foreignKey: "talle_id"})
-Color.hasMany(Producto, {foreignKey: "color_id"})
 
 module.exports = Producto;

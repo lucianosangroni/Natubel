@@ -35,8 +35,6 @@ const createItem = async (req, res) => {
             }
         )
 
-        console.log(talles)
-
         talles.forEach(talle => {
             colores.forEach(async color => {
                 await productoModel.create
@@ -44,8 +42,8 @@ const createItem = async (req, res) => {
                     {
                         stock: 0,
                         articulo_id: nuevoArticulo.id,
-                        talle_id: talle.talle_id,
-                        color_id: color.color_id
+                        talle: talle,
+                        color: color
                     }
                 )
             });
@@ -84,21 +82,17 @@ const updateItem = async (req, res) => {
         )
 
         const productosViejos = productos.map(producto => ({ ...producto, eliminar: true }));
-        const talles_ids = talles.map(talle => talle.talle_id)
-        const colores_ids = colores.map(color => color.color_id)
 
         const productosTotales = [];
-        talles_ids.forEach(talle_id => {
-            colores_ids.forEach(color_id => {
-                productosTotales.push({ talle_id, color_id, yaExiste: false });
+        talles.forEach(talle => {
+            colores.forEach(color => {
+                productosTotales.push({ talle, color, yaExiste: false });
             });
         });
 
-        console.log(productosTotales)
-
         productosTotales.forEach(productoNuevo => {
             productosViejos.forEach(productoViejo => {
-                if(productoViejo.talle_id == productoNuevo.talle_id && productoViejo.color_id == productoNuevo.color_id) {
+                if(productoViejo.talle == productoNuevo.talle && productoViejo.color == productoNuevo.color) {
                     productoNuevo.yaExiste = true
                     productoViejo.eliminar = false
                 }
@@ -115,8 +109,8 @@ const updateItem = async (req, res) => {
                     {
                         stock: 0,
                         articulo_id: articulo_id,
-                        talle_id: producto.talle_id,
-                        color_id: producto.color_id
+                        talle: producto.talle,
+                        color: producto.color
                     }
                 )
         })
