@@ -9,10 +9,16 @@ const Producto = sequelize.define(
     {
         stock: {
             type: DataTypes.INTEGER,
-        }
+        },
+        flag_activo: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+        },
     },
     {
-        tableName: "producto"
+        tableName: "producto",
+        paranoid: true,
+        deletedAt: "flag_activo",
     }
 )
 

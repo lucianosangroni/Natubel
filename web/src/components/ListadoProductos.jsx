@@ -115,10 +115,11 @@ const ListadoProductos = () => {
 
   const handleNewProductChange = (event) => {
     const { name, value } = event.target;
+
     setNewProduct({
       ...newProduct,
       [name]: value,
-    });
+    })
   };
 
   const handleSaveProduct = () => {
@@ -136,6 +137,7 @@ const ListadoProductos = () => {
   };
 
   const renderGrilla = (product) => {
+    console.log(product)
     if (product && product.talles && product.colores) {
       if (product.datosPorTalleYColor) {
         return (
@@ -205,7 +207,6 @@ const ListadoProductos = () => {
             <span className="close" onClick={closeModal}>
               &times;
             </span>
-            <Button variant="primary" onClick={openModal}></Button>
             <Modal
               show={isModalOpen}
               onHide={closeModal}

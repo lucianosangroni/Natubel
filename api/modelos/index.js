@@ -6,6 +6,7 @@ const modelos = {
     personaModel: require("./persona"),
     clienteModel: require("./cliente"),
     pedidoModel: require("./pedido"),
+    pedidoCanceladoModel: require("./pedido_cancelado"),
     productoXPedidoModel: require("./producto_x_pedido"),
 }
 

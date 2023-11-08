@@ -20,9 +20,6 @@ const Pedido = sequelize.define(
             type: DataTypes.ENUM('CANCELADO','PEDIDO','ENVIADO','PAGADO','COMPLETADO'),
             allowNull: false,
         },
-        razon_cancelado: {
-            type: DataTypes.STRING,
-        },
     },
     {
         tableName: "pedido",

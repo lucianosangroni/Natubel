@@ -5,7 +5,7 @@ const Articulo = sequelize.define(
     "articulo",
     {
         numero_articulo: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         nombre: {
@@ -18,9 +18,15 @@ const Articulo = sequelize.define(
             type: DataTypes.FLOAT,
             allowNull: false,
         },
+        flag_activo: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+        },
     },
     {
         tableName: "articulo",
+        paranoid: true,
+        deletedAt: "flag_activo",
     }
 )
 
