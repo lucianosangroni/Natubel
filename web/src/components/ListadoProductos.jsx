@@ -69,28 +69,28 @@ const initialProducts = [
     articulo: "4",
     talles: ["s"],
     colores: ["blanco", "amarillo", "negro"],
-    datosPorTalleYColor: {}
+    datosPorTalleYColor: {},
   },
   {
     id: 5,
     articulo: "5",
     talles: ["s", "m", "xl"],
     colores: ["blanco", "amarillo", "negro"],
-    datosPorTalleYColor: {}
+    datosPorTalleYColor: {},
   },
   {
     id: 6,
     articulo: "6",
     talles: ["s", "m", "xl"],
     colores: ["blanco", "amarillo", "negro"],
-    datosPorTalleYColor: {}
+    datosPorTalleYColor: {},
   },
   {
     id: 7,
     articulo: "7",
     talles: ["s", "m", "xl"],
     colores: ["blanco", "amarillo", "negro"],
-    datosPorTalleYColor: {}
+    datosPorTalleYColor: {},
   },
 ];
 
@@ -103,11 +103,11 @@ const ListadoProductos = () => {
     articulo: "",
     talles: [""],
     colores: [""],
-    datosPorTalleYColor: {}
+    datosPorTalleYColor: {},
   });
 
-  const [newTalle, setNewTalle] = useState("")
-  const [newColor, setNewColor] = useState("")
+  const [newTalle, setNewTalle] = useState("");
+  const [newColor, setNewColor] = useState("");
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -127,70 +127,85 @@ const ListadoProductos = () => {
     setNewProduct({
       ...newProduct,
       [name]: value,
-    })
+    });
   };
 
   const handleNewTalleChange = (event) => {
     const { value } = event.target;
 
-    setNewTalle(value)
-  }
+    setNewTalle(value);
+  };
 
   const handleNewColorChange = (event) => {
     const { value } = event.target;
 
-    setNewColor(value)
-  }
+    setNewColor(value);
+  };
 
-  const handleKeyDownTalle = (event) => {
-    if (event.key === "Enter") {
-      // Realiza la acción que deseas cuando se presiona Enter
+  const [addingAnotherTalle, setAddingAnotherTalle] = useState(false);
+
+  const addTalle = () => {
+    if (newTalle.trim() !== "") {
       setNewProduct({
         ...newProduct,
-        talles: [...newProduct.talles, newTalle]
-      })
-      //QUE NO PUEDAS VOLVER A ESCRIBIR EL ANTERIOR INPUT Y LE APAREZCA EL ICONO DE TACHO DE BASURA
-      //QUE APAREZCA UN NUEVO INPUT PARA ESCRIBIR
+        talles: [
+          ...newProduct.talles.filter((talle) => talle.trim() !== ""),
+          newTalle,
+        ],
+      });
+      setNewTalle("");
+      setAddingAnotherTalle(true);
     }
-  }
+  };
 
-  const handleKeyDownColor = (event) => {
-    if (event.key === "Enter") {
-      // Realiza la acción que deseas cuando se presiona Enter
+  const [addingAnotherColor, setAddingAnotherColor] = useState(false); // Nuevo estado para controlar el botón "Agregar otro"
+
+  const addColor = () => {
+    if (newColor.trim !== "") {
       setNewProduct({
         ...newProduct,
-        colores: [...newProduct.colores, newColor]
-      })
-      //QUE NO PUEDAS VOLVER A ESCRIBIR EL ANTERIOR INPUT Y LE APAREZCA EL ICONO DE TACHO DE BASURA
-      //QUE APAREZCA UN NUEVO INPUT PARA ESCRIBIR
+        colores: [
+          ...newProduct.colores.filter((color) => color.trim() !== ""),
+          newColor,
+        ],
+      });
+      setNewColor("");
+      setAddingAnotherColor(true);
     }
-  }
+  };
 
   const handleSaveProduct = () => {
-    const tallesNoVacios = newProduct.talles.filter(talle => talle !== "")
-    const coloresNoVacios = newProduct.colores.filter(color => color !== "")
+    if (
+      newProduct.articulo.trim() === "" ||
+      newProduct.talles.every((talle) => talle.trim() === "") ||
+      newProduct.colores.every((color) => color.trim() === "")
+    ) {
+      // Validar que los campos requeridos no estén vacíos
+      alert("Todos los campos son obligatorios");
+      return;
+    }
+    const tallesNoVacios = newProduct.talles.filter((talle) => talle !== "");
+    const coloresNoVacios = newProduct.colores.filter((color) => color !== "");
 
-    setNewProduct({
+    const newProductData = {
+      id: products.length + 1,
       ...newProduct,
       talles: tallesNoVacios,
-      colores: coloresNoVacios
-    })
-
-    // Crea un nuevo objeto con los datos del nuevo producto
-    const newProductData = {
-      id: products.length + 1, // Asigna un nuevo ID
-      ...newProduct,
+      colores: coloresNoVacios,
     };
 
-    // Agrega el nuevo producto a la lista de productos
     setProducts([...products, newProductData]);
+    setNewProduct({
+      articulo: "",
+      talles: [""],
+      colores: [""],
+      datosPorTalleYColor: {},
+    });
 
-    // Cierra el modal
     setIsModalOpen(false);
   };
 
   const renderGrilla = (product) => {
-    console.log(product)
     if (product && product.talles && product.colores) {
       if (product.datosPorTalleYColor) {
         return (
@@ -220,15 +235,7 @@ const ListadoProductos = () => {
             </tbody>
           </table>
         );
-      } else {
-        return (
-          <div className="grilla-NoDatos">
-            No hay datos de talle y color disponibles.
-          </div>
-        );
       }
-    } else {
-      return <div className="grilla-NoDatos">Producto no válido.</div>;
     }
   };
 
@@ -282,21 +289,29 @@ const ListadoProductos = () => {
                   </Form.Group>
                   <Form.Group controlId="talle">
                     <Form.Label>Talle</Form.Label>
-                    <Form.Control
+                    <div className="input-with-button">
+                      <Form.Control
                         type="text"
                         value={newTalle}
                         onChange={handleNewTalleChange}
-                        onKeyDown={handleKeyDownTalle}
-                    />
+                      />
+                      <Button id="botonNuevoCliente" onClick={addTalle}>
+                        {addingAnotherTalle ? "Agregar otro" : "Agregar"}
+                      </Button>
+                    </div>
                   </Form.Group>
                   <Form.Group controlId="color">
                     <Form.Label>Color</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={newColor}
-                      onChange={handleNewColorChange}
-                      onKeyDown={handleKeyDownColor}
-                    />
+                    <div className="input-with-button">
+                      <Form.Control
+                        type="text"
+                        value={newColor}
+                        onChange={handleNewColorChange}
+                      />
+                      <Button id="botonNuevoCliente" onClick={addColor}>
+                        {addingAnotherColor ? "Agregar otro" : "Agregar"}
+                      </Button>
+                    </div>
                   </Form.Group>
                 </Form>
               </Modal.Body>
