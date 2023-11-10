@@ -205,35 +205,43 @@ const ListadoProductos = () => {
     setIsModalOpen(false);
   };
 
+  const handleEdit = (product) => {
+    console.log(product)
+    //modal parecido a el de clientes editar
+  }
+
   const renderGrilla = (product) => {
     if (product && product.talles && product.colores) {
       if (product.datosPorTalleYColor) {
         return (
-          <table className="table-grilla">
-            <thead>
-              <tr className="table-header-grilla">
-                <th className="articulo-grilla">{product.articulo}</th>
-                {product.talles.map((talle, index) => (
-                  <th key={index}>Talle {talle}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {product.colores.map((color, index) => (
-                <tr key={index}>
-                  <td className="table-cell-grilla">{color}</td>
-                  {product.talles.map((talle, talleIndex) => (
-                    <td key={talleIndex}>
-                      {/* Aquí puedes mostrar datos específicos para cada combinación de talle y color */}
-                      {selectedProduct.datosPorTalleYColor &&
-                        selectedProduct.datosPorTalleYColor[talle] &&
-                        selectedProduct.datosPorTalleYColor[talle][color]}
-                    </td>
+          <div>
+            <table className="table-grilla">
+              <thead>
+                <tr className="table-header-grilla">
+                  <th className="articulo-grilla">{product.articulo}</th>
+                  {product.talles.map((talle, index) => (
+                    <th key={index}>Talle {talle}</th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {product.colores.map((color, index) => (
+                  <tr key={index}>
+                    <td className="table-cell-grilla">{color}</td>
+                    {product.talles.map((talle, talleIndex) => (
+                      <td key={talleIndex}>
+                        {/* Aquí puedes mostrar datos específicos para cada combinación de talle y color */}
+                        {selectedProduct.datosPorTalleYColor &&
+                          selectedProduct.datosPorTalleYColor[talle] &&
+                          selectedProduct.datosPorTalleYColor[talle][color]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button className="agregar-producto-grilla" onClick={handleEdit(product)}>Editar Producto</button>
+          </div>
         );
       }
     }
@@ -327,7 +335,6 @@ const ListadoProductos = () => {
           </div>
         </div>
       )}
-      <button className="agregar-producto-grilla">Editar Producto</button>
     </>
   );
 };
