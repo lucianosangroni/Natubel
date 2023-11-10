@@ -327,6 +327,7 @@ const ListadoProductos = () => {
           </div>
         </div>
       )}
+      <button className="agregar-producto-grilla">Editar Producto</button>
     </>
   );
 };

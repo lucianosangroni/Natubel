@@ -177,7 +177,7 @@
   border: 1px solid #000000;
   border-collapse: collapse;
   width: 10px;
-  margin: 1rem;
+  margin: 5rem 1rem 1rem 1rem;
   
 }
 
@@ -194,6 +194,8 @@
   border: 1px solid #010101;
   padding: 8px;
   padding: 0.3rem;
+  cursor: pointer;
+  
 }
 
 /* Opcional: Estilo de hover para resaltar las filas */
@@ -204,12 +206,14 @@
 .table-productos-detalle {
   border: 1px solid #000000;
   margin: 1rem;
+  
 }
 
 .table-grilla {
   border-collapse: collapse;
   width: 100%;
-  margin: 1rem;
+  margin: 5rem 1rem 1rem 1rem;
+  
 }
 
 .articulo-grilla{
@@ -226,16 +230,19 @@
   padding: 8px;
   text-align: center;
   font-weight: bold;
+  
 }
 
 .agregar-producto-grilla {
+  height: 5rem;
   background-color: #FBCCD2; 
   color: #000000; 
-  border: none;
-  padding: 5px 10px;
+  font-weight: bold;
+  border: 1px solid #000;
+  padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-  margin: 1rem; 
+  margin: 5rem 1rem 1rem 1rem; 
 }
 
 .grilla-NoDatos {
