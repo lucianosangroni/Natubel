@@ -1,4 +1,4 @@
-import ClientesTableAdm from './components/ClientesTableAdm';
+import CargarPedido from './components/CargarPedido';
 import NavbarAdm from './components/NavbarAdm';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ListadoProveedores from './components/ListadoProveedores';
@@ -18,7 +18,7 @@ function App() {
          
 
         <Routes>
-                  <Route path="adm/pedidoclientes" element={<ClientesTableAdm/>}/>
+                  <Route path="adm/pedidoclientes" element={<CargarPedido/>}/>
                   <Route path="adm/listadoproveedores" element={<ListadoProveedores />}/>
                   <Route path="adm/clientes" element={<ListadoClientes />}/>
                   <Route path="adm/listadodeproductos" element={<ListadoProductos />}/>

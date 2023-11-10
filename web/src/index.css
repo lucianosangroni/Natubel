@@ -250,3 +250,24 @@
   margin: 5rem;
   
 }
+
+/* CARGAR PEDIDO */
+
+.contenedor-principal{
+  display: flex;
+  
+}
+.table-cargarPedido-contenedor {
+  margin: 1rem;
+  border: 1px solid #000;
+}
+
+.titulo-resumenPedido {
+  text-align: center;
+  background-color: #d1f7d1;
+  width: 200px;
+  padding: 0.3rem;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  margin: auto;
+}
