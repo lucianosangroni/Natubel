@@ -10,9 +10,6 @@ const Pedido = sequelize.define(
             primaryKey: true,
             autoIncrement: true,
         },
-        fecha: {
-            type: DataTypes.DATE,
-        },
         precio_total: {
             type: DataTypes.FLOAT,
         },
@@ -20,6 +17,10 @@ const Pedido = sequelize.define(
             type: DataTypes.ENUM('CANCELADO','PEDIDO','ENVIADO','PAGADO','COMPLETADO'),
             allowNull: false,
         },
+        razon_cancelado: {
+            type: DataTypes.STRING,
+            defaultValue: null
+        }
     },
     {
         tableName: "pedido",

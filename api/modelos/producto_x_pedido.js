@@ -9,7 +9,7 @@ const Producto_X_Pedido = sequelize.define(
         cantidad: {
             type: DataTypes.INTEGER,
         },
-        precio: {
+        precio_unitario: {
             type: DataTypes.FLOAT,
         }
     },
