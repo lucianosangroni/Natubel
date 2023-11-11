@@ -2,7 +2,7 @@ export const COLUMNSPROVE = [
 
     {
         Header:"Nombre Completo",
-        accessor:"nombreCompleto"
+        accessor:"nombre"
     },
     {
         Header:"Direccion",

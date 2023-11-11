@@ -15,7 +15,7 @@ const createItem = async (req, res) => {
         //req = matchedData(req);
         const { nombre, email, telefono, direccion } = req.body
 
-        await personaModel.create
+        const nuevaPersona = await personaModel.create
         (
             {
                 nombre,
@@ -25,8 +25,8 @@ const createItem = async (req, res) => {
                 es_proveedor: true,
             }
         )
-        
-        res.status(201).json({ message: 'Proveedor creado con éxito' });
+
+        res.status(201).json({ message: 'Proveedor creado con éxito', id: nuevaPersona.id });
     } catch(e) {
         console.log("Error al crear el proveedor: ", e)
         res.status(500).json({ message: 'Error al crear el proveedor' });
