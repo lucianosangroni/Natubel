@@ -20,13 +20,38 @@ const ListadoProveedores = () => {
   useEffect(() => {
     fetch(`http://localhost:3001/api/proveedores`)
       .then((response) => response.json())
-      .then((result) => setData(result))
-      .catch((error) => console.error("Error en la solicitud GET:", error));
+      .then((result) => {
+        const proveedores = []
+        for (const dataResult of result) {
+          const proveedor =
+          {
+            id: dataResult.id,
+            nombre: dataResult.nombre,
+            direccion: dataResult.direccion,
+            telefono: dataResult.telefono,
+            email: dataResult.email
+          }
+
+          proveedores.push(proveedor)
+        }
+
+        setData(proveedores)
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud GET:", error)
+      });
   }, []);
 
   //AGREGAR PROVEEDOR DB
   const handleAddProveedor = (newProveedor) => {
-    const requestData = {nombre: newProveedor.nombre, direccion: newProveedor.direccion, telefono: newProveedor.telefono, email: newProveedor.email  }
+    const requestData = 
+    {
+      nombre: newProveedor.nombre,
+      direccion: newProveedor.direccion,
+      telefono: newProveedor.telefono,
+      email: newProveedor.email  
+    }
+
     fetch(`http://localhost:3001/api/proveedores`, {
       method: "POST",
       headers: {
@@ -37,13 +62,11 @@ const ListadoProveedores = () => {
     .then((response) => response.json())
     .then((result) => {
       newProveedor.id = result.id
-      console.log(newProveedor)
       setData((prevData) => [...prevData, newProveedor]);
     })
     .catch(error => {
         console.error("Error en la solicitud POST:", error);
     });
-    
   };
 
   //ABRIR MODAL EDITAR
@@ -56,7 +79,14 @@ const ListadoProveedores = () => {
 
   //EDITAR PROVEEDOR DB
   const updateTableRow = (newData) => {
-    const requestData = {nombre: newData.nombre, direccion: newData.direccion, telefono: newData.telefono, email: newData.email  }
+    const requestData = 
+    {
+      nombre: newData.nombre,
+      direccion: newData.direccion,
+      telefono: newData.telefono,
+      email: newData.email  
+    }
+
     fetch(`http://localhost:3001/api/proveedores/${newData.id}`, {
       method: "PUT",
       headers: {

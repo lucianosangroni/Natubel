@@ -3,12 +3,12 @@
 export const COLUMNS = [
 {
     Header: "Nombre Completo",
-    accessor: "nombreCompleto"
+    accessor: "nombre"
     
 },
 {
     Header: "Cuit/Cuil",
-    accessor:"cuitcuil"
+    accessor:"cuit_cuil"
 },
 {
     Header: "Direccion",
@@ -16,7 +16,7 @@ export const COLUMNS = [
 },
 {
     Header: "CP",
-    accessor: "cp"
+    accessor: "codigo_postal"
 },
 {
     Header: "Telefono",
@@ -36,7 +36,7 @@ export const COLUMNS = [
 },
 {
     Header: "Envio",
-    accessor:"envio"
+    accessor:"forma_de_envio"
 },
 {
     Header: "Email",
@@ -44,7 +44,7 @@ export const COLUMNS = [
 },
 {
     Header: "Tipo",
-    accessor:"tipo"
+    accessor:"tipo_cliente"
 },
 {
     Header: "Editar",

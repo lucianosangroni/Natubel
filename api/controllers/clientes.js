@@ -26,7 +26,7 @@ const createItem = async (req, res) => {
             }
         )
         
-        await clienteModel.create
+        const nuevoCliente = await clienteModel.create
         (
             {
                 persona_id: nuevaPersona.id,
@@ -40,7 +40,7 @@ const createItem = async (req, res) => {
             }
         )
         
-        res.status(201).json({ message: 'Cliente creado con éxito' });
+        res.status(201).json({ message: 'Cliente creado con éxito', id: nuevoCliente.id, persona_id: nuevaPersona.id });
     } catch(e) {
         console.log("Error al crear el cliente: ", e)
         res.status(500).json({ message: 'Error al crear el cliente' });
@@ -104,9 +104,11 @@ const deleteItem = async (req, res) => {
     try {
         cliente_id = req.params.id
 
-        // Validar si el cliente existe antes de intentar actualizarlo
-        const clienteExiste = await clienteModel.findByPk(cliente_id);
-        if (!clienteExiste) {
+        const cliente = await clienteModel.findByPk(cliente_id, {
+            include: [{ model: personaModel, attributes: ['id'] }],
+          });
+
+        if (!cliente) {
             return res.status(404).json({ message: 'Cliente no encontrado' });
         }
 
@@ -120,15 +122,21 @@ const deleteItem = async (req, res) => {
             }
         );
 
+        await personaModel.update
+        (
+            {
+                flag_activo: false
+            },
+            {
+                where: { id: cliente.persona_id }
+            }
+        )
+
         res.status(200).json({ message: 'Cliente eliminado con éxito' });
     } catch(e) {
         console.log("Error al eliminar el cliente: ", e)
         res.status(500).json({ message: 'Error al eliminar el cliente' });
     }
-    
-    
-
-
 };
 
 
