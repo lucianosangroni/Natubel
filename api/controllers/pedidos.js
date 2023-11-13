@@ -95,15 +95,16 @@ const updateItem = async (req, res) => {
             }
         )
 
-
-        for (const producto of productos) {
-            const productoAActualizar = await productoModel.findByPk(producto.producto_id);
-            if (productoAActualizar) {
-                const nuevoStock = productoAActualizar.stock + producto.cantidad;
-                await productoModel.update(
-                    { stock: nuevoStock },
-                    { where: { id: productoAActualizar.id } }
-                );
+        if (estado === "CANCELADO") {
+            for (const producto of productos) {
+                const productoAActualizar = await productoModel.findByPk(producto.producto_id);
+                if (productoAActualizar) {
+                    const nuevoStock = productoAActualizar.stock + producto.cantidad;
+                    await productoModel.update(
+                        { stock: nuevoStock },
+                        { where: { id: productoAActualizar.id } }
+                    );
+                }
             }
         }
 
