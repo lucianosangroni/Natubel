@@ -12,6 +12,7 @@ const Pedido = sequelize.define(
         },
         precio_total: {
             type: DataTypes.FLOAT,
+            allowNull: false
         },
         estado: {
             type: DataTypes.ENUM('CANCELADO','PEDIDO','ENVIADO','PAGADO','COMPLETADO'),

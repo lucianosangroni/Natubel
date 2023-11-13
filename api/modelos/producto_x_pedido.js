@@ -8,9 +8,11 @@ const Producto_X_Pedido = sequelize.define(
     {
         cantidad: {
             type: DataTypes.INTEGER,
+            allowNull: false
         },
         precio_unitario: {
             type: DataTypes.FLOAT,
+            allowNull: false
         }
     },
     {
