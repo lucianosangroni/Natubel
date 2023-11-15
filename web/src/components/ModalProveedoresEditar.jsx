@@ -8,7 +8,7 @@ function ModalProveedoresEditar({ data, onClose, onSave }) {
 
   const handleSave = () => {
     // Realiza alguna validación si es necesario antes de guardar los cambios
-    if (editedData.nombreCompleto && editedData.telefono) {
+    if (editedData.nombre && editedData.telefono) {
       onSave(editedData); // Llama a la función onSave pasando los datos editados
       onClose(); // Cierra el modal de edición
     } else {
@@ -27,11 +27,11 @@ function ModalProveedoresEditar({ data, onClose, onSave }) {
             <Form.Label>Nombre completo</Form.Label>
             <Form.Control
               type="text"
-              value={editedData.nombreCompleto}
+              value={editedData.nombre}
               onChange={(e) =>
                 setEditedData({
                   ...editedData,
-                  nombreCompleto: e.target.value,
+                  nombre: e.target.value,
                 })
               }
             />

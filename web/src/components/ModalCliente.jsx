@@ -7,36 +7,36 @@ function ModalCliente({ onAddClient }) {
   const [show, setShow] = useState(false);
   const [newClient, setNewClient] = useState({
     nombre: "",
-    cuitcuil: "",
+    cuit_cuil: "",
     direccion: "",
-    cp: "",
+    codigo_postal: "",
     telefono: "",
     dni: "",
     ciudad: "",
     provincia: "",
-    envio: "",
+    forma_de_envio: "",
     email: "",
-    tipo: "",
+    tipo_cliente: "",
   });
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleSave = () => {
-    if (newClient.nombreCompleto && newClient.tipo) {
+    if (newClient.nombre && newClient.tipo_cliente) {
       onAddClient(newClient);
       setNewClient({
-        nombreCompleto: "",
-        cuitcuil: "",
+        nombre: "",
+        cuit_cuil: "",
         direccion: "",
-        cp: "",
+        codigo_postal: "",
         telefono: "",
         dni: "",
         ciudad: "",
         provincia: "",
-        envio: "",
+        forma_de_envio: "",
         email: "",
-        tipo: "",
+        tipo_cliente: "",
       });
       handleClose();
     } else {
@@ -65,11 +65,11 @@ function ModalCliente({ onAddClient }) {
               <Form.Label>Nombre completo</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.nombreCompleto}
+                value={newClient.nombre}
                 onChange={(e) => {
                   setNewClient({
                     ...newClient,
-                    nombreCompleto: e.target.value,
+                    nombre: e.target.value,
                   });
                 }}
               />
@@ -78,9 +78,9 @@ function ModalCliente({ onAddClient }) {
               <Form.Label>CUIT CUIL</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.cuitcuil}
+                value={newClient.cuit_cuil}
                 onChange={(e) => {
-                  setNewClient({ ...newClient, cuitcuil: e.target.value });
+                  setNewClient({ ...newClient, cuit_cuil: e.target.value });
                 }}
               />
             </Form.Group>
@@ -98,9 +98,9 @@ function ModalCliente({ onAddClient }) {
               <Form.Label>CP</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.cp}
+                value={newClient.codigo_postal}
                 onChange={(e) => {
-                  setNewClient({ ...newClient, cp: e.target.value });
+                  setNewClient({ ...newClient, codigo_postal: e.target.value });
                 }}
               />
             </Form.Group>
@@ -154,9 +154,9 @@ function ModalCliente({ onAddClient }) {
               <Form.Label>Forma de envio</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.envio}
+                value={newClient.forma_de_envio}
                 onChange={(e) => {
-                  setNewClient({ ...newClient, envio: e.target.value });
+                  setNewClient({ ...newClient, forma_de_envio: e.target.value });
                 }}
               />
             </Form.Group>
@@ -174,9 +174,9 @@ function ModalCliente({ onAddClient }) {
               <Form.Label>Tipo</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.tipo}
+                value={newClient.tipo_cliente}
                 onChange={(e) => {
-                  setNewClient({ ...newClient, tipo: e.target.value });
+                  setNewClient({ ...newClient, tipo_cliente: e.target.value });
                 }}
               />
             </Form.Group>

@@ -1,60 +1,132 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   useTable,
   useGlobalFilter,
   usePagination,
   useRowSelect,
 } from "react-table";
-import DATA_PROVEEDORES from "../data/DATA_PROVEEDORES.json";
 import { COLUMNSPROVE } from "./columnsListaProveedores";
 import GlobalFilter from "./GlobalFilter";
 import ModalProveedores from "./ModalProveedores";
 import ModalProveedoresEditar from "./ModalProveedoresEditar";
 
-// import Checkbox from "./Checkbox";
-// import ColumnFilter from "./ColumnFilter";
-
 const ListadoProveedores = () => {
   const columns = useMemo(() => COLUMNSPROVE, []);
-  const initialData = useMemo(() => DATA_PROVEEDORES, []);
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
 
-  const handleAddClient = (newClient) => {
-    // Agregar el nuevo cliente a la tabla
-    setData((prevData) => [...prevData, newClient]);
-  };
+  //OBTENER PROVEEDORES DB
+  useEffect(() => {
+    fetch(`http://localhost:3001/api/proveedores`)
+      .then((response) => response.json())
+      .then((result) => {
+        const proveedores = []
+        for (const dataResult of result) {
+          const proveedor =
+          {
+            id: dataResult.id,
+            nombre: dataResult.nombre,
+            direccion: dataResult.direccion,
+            telefono: dataResult.telefono,
+            email: dataResult.email
+          }
 
-  // Función para eliminar una fila
-  const handleDeleteRow = (row) => {
-    //TODO fetch delete
-    const shouldDelete = window.confirm(
-      "¿Estas seguro que deseas eliminar el proveedor?"
-    );
-    if (shouldDelete) {
-      const rowIndex = data.indexOf(row.original);
-      if (rowIndex > -1) {
-        const newData = [...data];
-        newData.splice(rowIndex, 1);
-        setData(newData);
-      }
+          proveedores.push(proveedor)
+        }
+
+        setData(proveedores)
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud GET:", error)
+      });
+  }, []);
+
+  //AGREGAR PROVEEDOR DB
+  const handleAddProveedor = (newProveedor) => {
+    const requestData = 
+    {
+      nombre: newProveedor.nombre,
+      direccion: newProveedor.direccion,
+      telefono: newProveedor.telefono,
+      email: newProveedor.email  
     }
+
+    fetch(`http://localhost:3001/api/proveedores`, {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData)
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      newProveedor.id = result.id
+      setData((prevData) => [...prevData, newProveedor]);
+    })
+    .catch(error => {
+        console.error("Error en la solicitud POST:", error);
+    });
   };
 
+  //ABRIR MODAL EDITAR
   const handleEditRow = (row) => {
-    const editData = row.values;
+    const editData = row.original;
     editData.index = row.index;
     setEditingData(editData);
     setIsEditModalOpen(true);
   };
 
-  const updateTableRow = (index, newData) => {
-    setData((prevData) => {
-      const updatedData = [...prevData];
-      updatedData[index] = newData;
-      return updatedData;
+  //EDITAR PROVEEDOR DB
+  const updateTableRow = (newData) => {
+    const requestData = 
+    {
+      nombre: newData.nombre,
+      direccion: newData.direccion,
+      telefono: newData.telefono,
+      email: newData.email  
+    }
+
+    fetch(`http://localhost:3001/api/proveedores/${newData.id}`, {
+      method: "PUT",
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData)
+    })
+    .then(() => {
+      setData((prevData) => {
+        const updatedData = [...prevData];
+        updatedData[newData.index] = newData;
+        return updatedData;
+      });
+    })
+    .catch(error => {
+        console.error("Error en la solicitud PUT:", error);
     });
+  };
+
+  //ELIMINAR PROVEEDOR DB
+  const handleDeleteRow = (row) => {
+    const shouldDelete = window.confirm(
+      "¿Estas seguro que deseas eliminar el proveedor?"
+    );
+    if (shouldDelete) {
+      fetch(`http://localhost:3001/api/proveedores/${row.original.id}`, {
+        method: "DELETE",
+      })
+      .then(() => {
+        const rowIndex = data.indexOf(row.original);
+        if (rowIndex > -1) {
+          const newData = [...data];
+          newData.splice(rowIndex, 1);
+          setData(newData);
+        }
+      })
+      .catch(error => {
+          console.error("Error en la solicitud DELETE:", error);
+      });
+    }
   };
 
   const {
@@ -75,26 +147,9 @@ const ListadoProveedores = () => {
       columns,
       data,
     },
-    // useFilters,
     useGlobalFilter,
     usePagination,
     useRowSelect
-    // (hooks) => {
-    //   hooks.visibleColumns.push((columns) => {
-    //     return [
-    //       {
-    //         id: "selection",
-    //         Header: ({ getToggleAllRowsSelectedProps }) => (
-    //           <Checkbox {...getToggleAllRowsSelectedProps()} />
-    //         ),
-    //         Cell: ({ row }) => (
-    //           <Checkbox {...row.getToggleRowSelectedProps()} />
-    //         ),
-    //       },
-    //       ...columns,
-    //     ];
-    //   });
-    // }
   );
 
   const { globalFilter } = state;
@@ -153,23 +208,11 @@ const ListadoProveedores = () => {
           data={editingData}
           onClose={() => setIsEditModalOpen(false)}
           onSave={(editedData) => {
-            updateTableRow(editedData.index, editedData);
+            updateTableRow(editedData);
             setIsEditModalOpen(false);
           }}
         />
       )}
-      {/* ESTE CODIGO ME MUESTRA EN LA INTERFAZ DE USUARIO EL ARRAY QUE SELECCIONO CON LA CASILLA, NO SE COMO ESCONDERLO */}
-      {/* <pre>
-        <code>
-          {JSON.stringify(
-            {
-              selectedFlatRows: selectedFlatRows.map((row) => row.original),
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre> */}
       <div className="paginacion">
         <span>
           Page{" "}
@@ -184,7 +227,7 @@ const ListadoProveedores = () => {
           Siguiente
         </button>
       </div>
-      <ModalProveedores onAddClient={handleAddClient} />
+      <ModalProveedores onAddProveedor={handleAddProveedor} />
     </>
   );
 };

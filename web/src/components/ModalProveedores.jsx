@@ -3,9 +3,9 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 
-function ModalProveedores({ onAddClient }) {
+function ModalProveedores({ onAddProveedor }) {
   const [show, setShow] = useState(false);
-  const [newClient, setNewClient] = useState({
+  const [newProveedor, setNewProveedor] = useState({
     id: "",
     nombreCompleto: "",
     direccion: "",
@@ -17,11 +17,11 @@ function ModalProveedores({ onAddClient }) {
   const handleShow = () => setShow(true);
 
   const handleSave = () => {
-    if (newClient.nombreCompleto && newClient.telefono) {
-      onAddClient(newClient);
-      setNewClient({
+    if (newProveedor.nombre && newProveedor.telefono) {
+      onAddProveedor(newProveedor);
+      setNewProveedor({
         id: "",
-        nombreCompleto: "",
+        nombre: "",
         direccion: "",
         telefono: "",
         email: "",
@@ -53,11 +53,11 @@ function ModalProveedores({ onAddClient }) {
               <Form.Label>Nombre completo</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.nombreCompleto}
+                value={newProveedor.nombre}
                 onChange={(e) => {
-                  setNewClient({
-                    ...newClient,
-                    nombreCompleto: e.target.value,
+                  setNewProveedor({
+                    ...newProveedor,
+                    nombre: e.target.value,
                   });
                 }}
               />
@@ -66,9 +66,9 @@ function ModalProveedores({ onAddClient }) {
               <Form.Label>Dirección</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.direccion}
+                value={newProveedor.direccion}
                 onChange={(e) => {
-                  setNewClient({ ...newClient, direccion: e.target.value });
+                  setNewProveedor({ ...newProveedor, direccion: e.target.value });
                 }}
               />
             </Form.Group>
@@ -76,9 +76,9 @@ function ModalProveedores({ onAddClient }) {
               <Form.Label>Telefono</Form.Label>
               <Form.Control
                 type="text"
-                value={newClient.telefono}
+                value={newProveedor.telefono}
                 onChange={(e) => {
-                  setNewClient({ ...newClient, telefono: e.target.value });
+                  setNewProveedor({ ...newProveedor, telefono: e.target.value });
                 }}
               />
             </Form.Group>
@@ -86,9 +86,9 @@ function ModalProveedores({ onAddClient }) {
               <Form.Label>Email</Form.Label>
               <Form.Control
                 type="email"
-                value={newClient.email}
+                value={newProveedor.email}
                 onChange={(e) => {
-                  setNewClient({ ...newClient, email: e.target.value });
+                  setNewProveedor({ ...newProveedor, email: e.target.value });
                 }}
               />
             </Form.Group>

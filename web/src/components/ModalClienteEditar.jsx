@@ -8,7 +8,7 @@ function ModalClienteEditar({ data, onClose, onSave }) {
 
   const handleSave = () => {
     // Realiza alguna validación si es necesario antes de guardar los cambios
-    if (editedData.nombreCompleto && editedData.tipo) {
+    if (editedData.nombre && editedData.tipo_cliente) {
       onSave(editedData); // Llama a la función onSave pasando los datos editados
       onClose(); // Cierra el modal de edición
     } else {
@@ -27,11 +27,11 @@ function ModalClienteEditar({ data, onClose, onSave }) {
             <Form.Label>Nombre completo</Form.Label>
             <Form.Control
               type="text"
-              value={editedData.nombreCompleto}
+              value={editedData.nombre}
               onChange={(e) =>
                 setEditedData({
                   ...editedData,
-                  nombreCompleto: e.target.value,
+                  nombre: e.target.value,
                 })
               }
             />
@@ -40,11 +40,11 @@ function ModalClienteEditar({ data, onClose, onSave }) {
             <Form.Label>CUIT CUIL</Form.Label>
             <Form.Control
               type="text"
-              value={editedData.cuitcuil}
+              value={editedData.cuit_cuil}
               onChange={(e) =>
                 setEditedData({
                   ...editedData,
-                  cuitcuil: e.target.value,
+                  cuit_cuil: e.target.value,
                 })
               }
             />
@@ -66,11 +66,11 @@ function ModalClienteEditar({ data, onClose, onSave }) {
             <Form.Label>CP</Form.Label>
             <Form.Control
               type="text"
-              value={editedData.cp}
+              value={editedData.codigo_postal}
               onChange={(e) =>
                 setEditedData({
                   ...editedData,
-                  cp: e.target.value,
+                  codigo_postal: e.target.value,
                 })
               }
             />
@@ -131,11 +131,11 @@ function ModalClienteEditar({ data, onClose, onSave }) {
             <Form.Label>Formas de envio</Form.Label>
             <Form.Control
               type="text"
-              value={editedData.envio}
+              value={editedData.forma_de_envio}
               onChange={(e) =>
                 setEditedData({
                   ...editedData,
-                  envio: e.target.value,
+                  forma_de_envio: e.target.value,
                 })
               }
             />
@@ -157,11 +157,11 @@ function ModalClienteEditar({ data, onClose, onSave }) {
             <Form.Label>Tipo</Form.Label>
             <Form.Control
               type="text"
-              value={editedData.tipo}
+              value={editedData.tipo_cliente}
               onChange={(e) =>
                 setEditedData({
                   ...editedData,
-                  tipo: e.target.value,
+                  tipo_cliente: e.target.value,
                 })
               }
             />

@@ -7,6 +7,7 @@ const Producto = sequelize.define(
     {
         stock: {
             type: DataTypes.INTEGER,
+            allowNull: false
         },
         talle: {
             type: DataTypes.STRING,
