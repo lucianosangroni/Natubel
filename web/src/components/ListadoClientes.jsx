@@ -55,17 +55,18 @@ const ListadoClientes = () => {
     const requestData = 
     {
       nombre: newCliente.nombre,
-      cuit_cuil: newCliente.cuit_cuil,
+      cuit_cuil: parseInt(newCliente.cuit_cuil),
       direccion: newCliente.direccion,
       codigo_postal: newCliente.codigo_postal,
       telefono: newCliente.telefono,
-      dni: newCliente.dni,
+      dni: parseInt(newCliente.dni),
       ciudad: newCliente.ciudad,
       provincia: newCliente.provincia,
       forma_de_envio: newCliente.forma_de_envio,
       email: newCliente.email,
       tipo_cliente: newCliente.tipo_cliente
     }
+    console.log(requestData)
 
     fetch(`http://localhost:3001/api/clientes`, {
       method: "POST",
@@ -101,17 +102,17 @@ const ListadoClientes = () => {
     const requestData = 
     {
       nombre: newData.nombre,
-      cuit_cuil: newData.cuit_cuil,
+      cuit_cuil: parseInt(newData.cuit_cuil),
       direccion: newData.direccion,
       codigo_postal: newData.codigo_postal,
       telefono: newData.telefono,
-      dni: newData.dni,
+      dni: parseInt(newData.dni),
       ciudad: newData.ciudad,
       provincia: newData.provincia,
       forma_de_envio: newData.forma_de_envio,
       email: newData.email,
       tipo_cliente: newData.tipo_cliente,
-      persona_id: newData.persona_id
+      persona_id: parseInt(newData.persona_id)
     }
     
     fetch(`http://localhost:3001/api/clientes/${newData.id}`, {
