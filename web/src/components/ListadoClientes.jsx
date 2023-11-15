@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
+import NavbarAdm from '../components/NavbarAdm';
 import {
   useTable,
   useGlobalFilter,
@@ -186,6 +187,7 @@ const ListadoClientes = () => {
 
   return (
     <>
+      <NavbarAdm/>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
       <table {...getTableProps()} className="tableContainer">
         <thead>

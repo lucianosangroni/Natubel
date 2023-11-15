@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import NavbarAdm from '../components/NavbarAdm';
 
 const initialProducts = [
   {
@@ -173,7 +174,8 @@ const renderGrilla = (product) => {
   );
 };
 
-  return (
+  return ( <>
+    <NavbarAdm/>
     <div>
       <button id="botonNuevoCliente">Cliente</button>
       <button id="botonNuevoCliente">Proveedor</button>
@@ -199,6 +201,7 @@ const renderGrilla = (product) => {
       <h5 className="titulo-resumenPedido">Resumen de pedido</h5>
       <button id="botonNuevoCliente">Cargar pedido</button>
     </div>
+    </>
   );
 };
 

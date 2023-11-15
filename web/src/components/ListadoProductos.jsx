@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import NavbarAdm from '../components/NavbarAdm';
 import { Button, Modal, Form } from "react-bootstrap";
 import ListadoProductosEditar from "./ListadoProductosEditar";
 
@@ -293,6 +294,7 @@ setNewColoresList([]);
 
   return (
     <>
+      <NavbarAdm/>
       <div className="table-productos-contenedor">
         <table className="table-productos">
           <thead>

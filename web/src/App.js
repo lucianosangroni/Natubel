@@ -1,33 +1,24 @@
 import CargarPedido from './components/CargarPedido';
-import NavbarAdm from './components/NavbarAdm';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import ListadoProveedores from './components/ListadoProveedores';
 import ListadoClientes from './components/ListadoClientes';
 import ListadoProductos from './components/ListadoProductos';
 import HistorialPedidos from './components/HistorialPedidos';
-
-
-
+import Login from './components/Login';
 
 function App() {
-  return (
+    return (
     <div >
       <BrowserRouter>
-
-          <NavbarAdm />
-         
-
         <Routes>
-                  <Route path="adm/pedidoclientes" element={<CargarPedido/>}/>
-                  <Route path="adm/listadoproveedores" element={<ListadoProveedores />}/>
-                  <Route path="adm/clientes" element={<ListadoClientes />}/>
-                  <Route path="adm/listadodeproductos" element={<ListadoProductos />}/>
-                  <Route path="adm/historialdepedidos" element={<HistorialPedidos />}/>
-
+          <Route path='admin' element={<Navigate to='/admin/login' />}/>
+          <Route path='admin/login' element={<Login/>}/>
+          <Route path="admin/cargarPedido" element={<CargarPedido />} />
+          <Route path="admin/listadoproveedores" element={<ListadoProveedores />} />
+          <Route path="admin/clientes" element={<ListadoClientes />} />
+          <Route path="admin/listadodeproductos" element={<ListadoProductos />} />
+          <Route path="admin/historialdepedidos" element={<HistorialPedidos />} />
         </Routes>
-
-          
-
       </BrowserRouter>
     </div>
   );

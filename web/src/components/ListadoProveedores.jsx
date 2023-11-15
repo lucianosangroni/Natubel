@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
+import NavbarAdm from '../components/NavbarAdm';
 import {
   useTable,
   useGlobalFilter,
@@ -9,6 +10,7 @@ import { COLUMNSPROVE } from "./columnsListaProveedores";
 import GlobalFilter from "./GlobalFilter";
 import ModalProveedores from "./ModalProveedores";
 import ModalProveedoresEditar from "./ModalProveedoresEditar";
+
 
 const ListadoProveedores = () => {
   const columns = useMemo(() => COLUMNSPROVE, []);
@@ -157,6 +159,7 @@ const ListadoProveedores = () => {
 
   return (
     <>
+      <NavbarAdm/>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
       <table {...getTableProps()} className="tableContainer">
         <thead>
