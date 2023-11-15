@@ -1,4 +1,5 @@
 const { clienteModel, personaModel } = require("../modelos");
+const { matchedData } = require("express-validator");
 
 const getItems = async (req, res) => {
     try {
@@ -12,8 +13,9 @@ const getItems = async (req, res) => {
 
 const createItem = async (req, res) => {
     try {
-        //req = matchedData(req);
-        const { nombre, email, telefono, direccion, dni, cuit_cuil, tipo_cliente, forma_de_envio, codigo_postal, ciudad, provincia } = req.body
+        req = matchedData(req);
+
+        const { nombre, email, telefono, direccion, dni, cuit_cuil, tipo_cliente, forma_de_envio, codigo_postal, ciudad, provincia } = req
 
         const nuevaPersona = await personaModel.create
         (
@@ -49,8 +51,10 @@ const createItem = async (req, res) => {
 
 const updateItem = async (req, res) => {
     try {
-        cliente_id = req.params.id
-        const { nombre, email, telefono, direccion, persona_id, dni, cuit_cuil, tipo_cliente, forma_de_envio, codigo_postal, ciudad, provincia } = req.body
+        req = matchedData(req);
+
+        const cliente_id = req.id
+        const { nombre, email, telefono, direccion, persona_id, dni, cuit_cuil, tipo_cliente, forma_de_envio, codigo_postal, ciudad, provincia } = req
         
         // Validar si la persona existe antes de intentar actualizarla
         const personaExiste = await personaModel.findByPk(persona_id);
@@ -102,7 +106,9 @@ const updateItem = async (req, res) => {
 
 const deleteItem = async (req, res) => {
     try {
-        cliente_id = req.params.id
+        req = matchedData(req);
+
+        const cliente_id = req.id
 
         const cliente = await clienteModel.findByPk(cliente_id, {
             include: [{ model: personaModel, attributes: ['id'] }],

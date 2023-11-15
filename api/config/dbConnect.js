@@ -11,7 +11,8 @@ const sequelize = new Sequelize(
     password,
     {
         host,
-        dialect:"mysql"
+        dialect:"mysql",
+        timezone: '-03:00',
     }
 )
 

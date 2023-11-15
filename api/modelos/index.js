@@ -5,6 +5,7 @@ const modelos = {
     clienteModel: require("./cliente"),
     pedidoModel: require("./pedido"),
     productoXPedidoModel: require("./producto_x_pedido"),
+    adminModel: require("./admin")
 }
 
 module.exports = modelos

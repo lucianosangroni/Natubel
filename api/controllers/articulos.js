@@ -1,4 +1,5 @@
 const { articuloModel, productoModel } = require("../modelos");
+const { matchedData } = require("express-validator");
 
 const getItems = async (req, res) => {
     try {
@@ -22,8 +23,9 @@ const getItems = async (req, res) => {
 
 const createItem = async (req, res) => {
     try {
-        //req = matchedData(req);
-        const { numero_articulo, nombre, descripcion, precio_unitario, talles, colores } = req.body
+        req = matchedData(req);
+
+        const { numero_articulo, nombre, descripcion, precio_unitario, talles, colores } = req
 
         const nuevoArticulo = await articuloModel.create
         (
@@ -59,8 +61,10 @@ const createItem = async (req, res) => {
 
 const updateItem = async (req, res) => {
     try {
-        articulo_id = req.params.id
-        const { numero_articulo, nombre, descripcion, precio_unitario, productos, talles, colores } = req.body
+        req = matchedData(req);
+
+        const articulo_id = req.id
+        const { numero_articulo, nombre, descripcion, precio_unitario, productos, talles, colores } = req
         
         // Validar si el articulo existe antes de intentar actualizarla
         const articuloExiste = await articuloModel.findByPk(articulo_id);
@@ -137,7 +141,9 @@ const updateItem = async (req, res) => {
 
 const deleteItem = async (req, res) => {
     try {
-        articulo_id = req.params.id
+        req = matchedData(req);
+
+        const articulo_id = req.id
 
         // Validar si el articulo existe antes de intentar actualizarlo
         const articuloExiste = await articuloModel.findByPk(articulo_id);

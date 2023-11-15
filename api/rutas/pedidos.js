@@ -7,9 +7,10 @@ const {
     } = require("../controllers/pedidos");
 const { validateId } = require("../validators/id")
 const { validatorCreateItem, validatorUpdateItem } = require("../validators/pedidos")
+const { checkAuth } = require("../middlewares/auth")
 
-router.get("/", getItems);
-router.post("/", validatorCreateItem, createItem);
-router.put("/:id", validatorUpdateItem, validateId, updateItem);
+router.get("/", checkAuth, getItems);
+router.post("/", checkAuth, validatorCreateItem, createItem);
+router.put("/:id", checkAuth, validatorUpdateItem, validateId, updateItem);
 
 module.exports = router

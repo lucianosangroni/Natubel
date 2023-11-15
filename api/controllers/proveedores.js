@@ -1,4 +1,5 @@
 const { personaModel } = require("../modelos");
+const { matchedData } = require("express-validator");
 
 const getItems = async (req, res) => {
     try {
@@ -12,8 +13,9 @@ const getItems = async (req, res) => {
 
 const createItem = async (req, res) => {
     try {
-        //req = matchedData(req);
-        const { nombre, email, telefono, direccion } = req.body
+        req = matchedData(req);
+
+        const { nombre, email, telefono, direccion } = req
 
         const nuevaPersona = await personaModel.create
         (
@@ -35,8 +37,10 @@ const createItem = async (req, res) => {
 
 const updateItem = async (req, res) => {
     try {
-        proveedor_id = req.params.id
-        const { nombre, email, telefono, direccion } = req.body
+        req = matchedData(req);
+
+        const proveedor_id = req.id
+        const { nombre, email, telefono, direccion } = req
         
         // Validar si el proveedor existe antes de intentar actualizarla
         const proveedorExiste = await personaModel.findByPk(proveedor_id);
@@ -66,7 +70,9 @@ const updateItem = async (req, res) => {
 
 const deleteItem = async (req, res) => {
     try {
-        proveedor_id = req.params.id
+        req = matchedData(req);
+
+        const proveedor_id = req.id
 
         // Validar si el proveedor existe antes de intentar actualizarlo
         const proveedorExiste = await personaModel.findByPk(proveedor_id);
@@ -89,10 +95,6 @@ const deleteItem = async (req, res) => {
         console.log("Error al eliminar el proveedor: ", e)
         res.status(500).json({ message: 'Error al eliminar el proveedor' });
     }
-    
-    
-
-
 };
 
 

@@ -1,4 +1,5 @@
 const { pedidoModel, productoXPedidoModel, productoModel } = require("../modelos");
+const { matchedData } = require("express-validator");
 
 const getItems = async (req, res) => {
     try {
@@ -22,8 +23,9 @@ const getItems = async (req, res) => {
 
 const createItem = async (req, res) => {
     try {
-        //req = matchedData(req);
-        const { persona_id, precio_total, es_proveedor, productos } = req.body
+        req = matchedData(req);
+
+        const { persona_id, precio_total, es_proveedor, productos } = req
 
         const nuevoPedido = await pedidoModel.create
         (
@@ -75,8 +77,10 @@ const createItem = async (req, res) => {
 
 const updateItem = async (req, res) => {
     try {
-        pedido_id = req.params.id
-        const { estado, razon_cancelado, productos } = req.body
+        req = matchedData(req);
+
+        const pedido_id = req.id
+        const { estado, razon_cancelado, productos } = req
         
         // Validar si el pedido existe antes de intentar actualizarla
         const pedidoExiste = await pedidoModel.findByPk(pedido_id);

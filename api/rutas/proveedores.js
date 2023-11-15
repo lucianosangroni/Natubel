@@ -8,10 +8,11 @@ const {
     } = require("../controllers/proveedores");
 const { validateId } = require("../validators/id")
 const { validatorCreateItem, validatorUpdateItem } = require("../validators/proveedores")
+const { checkAuth } = require("../middlewares/auth")
 
-router.get("/", getItems);
-router.post("/", validatorCreateItem, createItem);
-router.put("/:id", validatorUpdateItem, validateId, updateItem);
-router.delete("/:id", validateId, deleteItem);
+router.get("/", checkAuth, getItems);
+router.post("/", checkAuth, validatorCreateItem, createItem);
+router.put("/:id", checkAuth, validatorUpdateItem, validateId, updateItem);
+router.delete("/:id", checkAuth, validateId, deleteItem);
 
 module.exports = router
