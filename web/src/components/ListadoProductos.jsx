@@ -235,8 +235,7 @@ setNewColoresList([]);
     setIsModalOpen(false);
   };
 
-  const handleEdit = (product) => {
-    setSelectedProduct(product);
+  const handleEdit = () => {
     setIsEditModalOpen(true);
   };
 
@@ -274,12 +273,13 @@ setNewColoresList([]);
               Editar Articulo
             </button>
             {/* EN ESTA PARTE DEL CODIGO HAY UN ERROR QUE NO PUEDO SOLUCIONAR */}
-            {isEditModalOpen && selectedProduct && (
+            {isEditModalOpen && selectedProduct === product && (
               <ListadoProductosEditar
-                product={selectedProduct}
+                product={product}
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 onSave={(editedProduct) => {
+                  console.log(product)
                   // Lógica para guardar el producto editado
                   setIsEditModalOpen(false);
                 }}
@@ -359,7 +359,7 @@ setNewColoresList([]);
                           {newTallesList.map((talle, index) => (
                             <li key={index} className="talles-agregados">
                               {talle}{" "}
-          <button onClick={() => removeTalle(index)} className="boton-eliminar-agregarProducto">Eliminar</button>
+                              <button onClick={() => removeTalle(index)} className="boton-eliminar-agregarProducto">Eliminar</button>
                             </li>
                           ))}
                         </ul>
