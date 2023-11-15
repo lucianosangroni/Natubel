@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
 
 const initialProducts = [
   {
@@ -99,17 +98,48 @@ const CargarPedido = () => {
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
+    console.log("Producto seleccionado:", product);
   };
 
   // Definir la función handleCantidadChange para manejar cambios en las cantidades
-  const handleCantidadChange = (product, talle, color, cantidad) => {
-    // Actualizar el estado o realizar otras acciones según tus necesidades
-    console.log(
-      `Producto: ${product.articulo}, Talle: ${talle}, Color: ${color}, Cantidad: ${cantidad}`
-    );
+  const handleCantidadChange = ( talle, color, cantidad) => {
+    if (selectedProduct) {
+      const updatedProduct = { ...selectedProduct };
+    if (
+      updatedProduct.talles.includes(talle) &&
+      updatedProduct.colores.includes(color)
+    ) {
+      if (!updatedProduct.datosPorTalleYColor[talle]) {
+        updatedProduct.datosPorTalleYColor[talle] = {};
+      }
+      updatedProduct.datosPorTalleYColor[talle][color] =
+      parseInt(cantidad, 10);
+    setSelectedProduct(updatedProduct);
+    } else {
+      console.error("El talle o color no existe en el producto seleccionado");
+    }
+  } else {
+    console.error("Ningún producto seleccionado");
+  }
+};
+
+const renderGrilla = (product) => {
+  // Inicializar los datos en 0 si aún no existen
+  const initializeData = () => {
+    const initializedData = {};
+    product.talles.forEach((talle) => {
+      initializedData[talle] = {};
+      product.colores.forEach((color) => {
+        initializedData[talle][color] = 0;
+        console.log("Cantidades iniciales:", product.datosPorTalleYColor);
+      });
+    });
+    return initializedData;
   };
 
-  const renderGrilla = (product) => (
+  const initializedData = initializeData();
+
+  return (
     <table className="table-grilla">
       <thead>
         <tr className="table-header-grilla">
@@ -125,11 +155,11 @@ const CargarPedido = () => {
             <td className="table-cell-grilla">{color}</td>
             {product.talles.map((talle, talleIndex) => (
               <td key={talleIndex}>
-                {/* Agregar un campo de entrada para la cantidad */}
+                {/* Utilizar initializedData en lugar de selectedProduct.datosPorTalleYColor */}
                 <input
                   type="number"
                   min="0"
-                  value={selectedProduct}
+                  value={initializedData[talle][color].toString()}
                   onChange={(e) =>
                     handleCantidadChange(talle, color, e.target.value)
                   }
@@ -141,6 +171,7 @@ const CargarPedido = () => {
       </tbody>
     </table>
   );
+};
 
   return (
     <div>

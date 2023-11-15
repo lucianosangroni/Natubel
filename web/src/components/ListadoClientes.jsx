@@ -43,9 +43,8 @@ const ListadoClientes = () => {
   };
 
   const handleEditRow = (row) => {
-    console.log(row)
-    const editData = row.values
-    editData.index = row.index
+    const editData = row.values;
+    editData.index = row.index;
     setEditingData(editData);
     setIsEditModalOpen(true);
   };
@@ -131,8 +130,7 @@ const ListadoClientes = () => {
                         >
                           Eliminar
                         </button>
-                      ) : 
-                      cell.column.id === "editar" ? (
+                      ) : cell.column.id === "editar" ? (
                         <button
                           onClick={() => handleEditRow(row)}
                           className="botonEditar"
@@ -155,23 +153,11 @@ const ListadoClientes = () => {
           data={editingData}
           onClose={() => setIsEditModalOpen(false)}
           onSave={(editedData) => {
-            updateTableRow(editedData.index, editedData)
+            updateTableRow(editedData.index, editedData);
             setIsEditModalOpen(false);
           }}
         />
       )}
-      {/* ESTE CODIGO ME MUESTRA EN LA INTERFAZ DE USUARIO EL ARRAY QUE SELECCIONO CON LA CASILLA, NO SE COMO ESCONDERLO */}
-      {/* <pre>
-        <code>
-          {JSON.stringify(
-            {
-              selectedFlatRows: selectedFlatRows.map((row) => row.original),
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre> */}
       <div className="paginacion">
         <span>
           Page{" "}

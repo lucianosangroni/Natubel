@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
+import ListadoProductosEditar from "./ListadoProductosEditar";
 
 const initialProducts = [
   {
@@ -98,6 +99,9 @@ const ListadoProductos = () => {
   const [products, setProducts] = useState(initialProducts);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [newTallesList, setNewTallesList] = useState([]);
+  const [newColoresList, setNewColoresList] = useState([]);
 
   const [newProduct, setNewProduct] = useState({
     articulo: "",
@@ -146,6 +150,7 @@ const ListadoProductos = () => {
 
   const addTalle = () => {
     if (newTalle.trim() !== "") {
+      setNewTallesList([...newTallesList, newTalle]);
       setNewProduct({
         ...newProduct,
         talles: [
@@ -161,7 +166,8 @@ const ListadoProductos = () => {
   const [addingAnotherColor, setAddingAnotherColor] = useState(false); // Nuevo estado para controlar el botón "Agregar otro"
 
   const addColor = () => {
-    if (newColor.trim !== "") {
+    if (newColor.trim() !== "") {
+      setNewColoresList([...newColoresList, newColor]);
       setNewProduct({
         ...newProduct,
         colores: [
@@ -172,6 +178,28 @@ const ListadoProductos = () => {
       setNewColor("");
       setAddingAnotherColor(true);
     }
+  };
+
+  const removeTalle = (index) => {
+    const updatedTalles = [...newTallesList];
+    updatedTalles.splice(index, 1);
+    setNewTallesList(updatedTalles);
+  
+    setNewProduct({
+      ...newProduct,
+      talles: updatedTalles.filter((talle) => talle.trim() !== ""),
+    });
+  };
+
+  const removeColor = (index) => {
+    const updatedColores = [...newColoresList];
+    updatedColores.splice(index, 1);
+    setNewColoresList(updatedColores);
+  
+    setNewProduct({
+      ...newProduct,
+      colores: updatedColores.filter((color) => color.trim() !== ""),
+    });
   };
 
   const handleSaveProduct = () => {
@@ -201,14 +229,16 @@ const ListadoProductos = () => {
       colores: [""],
       datosPorTalleYColor: {},
     });
+    setNewTallesList([]);
+setNewColoresList([]);
 
     setIsModalOpen(false);
   };
 
   const handleEdit = (product) => {
-    console.log(product)
-    //modal parecido a el de clientes editar
-  }
+    setSelectedProduct(product);
+    setIsEditModalOpen(true);
+  };
 
   const renderGrilla = (product) => {
     if (product && product.talles && product.colores) {
@@ -240,7 +270,21 @@ const ListadoProductos = () => {
                 ))}
               </tbody>
             </table>
-            <button className="agregar-producto-grilla" onClick={handleEdit(product)}>Editar Producto</button>
+            <button className="agregar-producto-grilla" onClick={handleEdit}>
+              Editar Articulo
+            </button>
+            {/* EN ESTA PARTE DEL CODIGO HAY UN ERROR QUE NO PUEDO SOLUCIONAR */}
+            {isEditModalOpen && selectedProduct && (
+              <ListadoProductosEditar
+                product={selectedProduct}
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                onSave={(editedProduct) => {
+                  // Lógica para guardar el producto editado
+                  setIsEditModalOpen(false);
+                }}
+              />
+            )}
           </div>
         );
       }
@@ -267,6 +311,7 @@ const ListadoProductos = () => {
         <button onClick={openModal} className="agregar-producto-grilla">
           Agregar Producto
         </button>
+
         {selectedProduct && renderGrilla(selectedProduct)}
       </div>
       {isModalOpen && (
@@ -307,6 +352,19 @@ const ListadoProductos = () => {
                         {addingAnotherTalle ? "Agregar otro" : "Agregar"}
                       </Button>
                     </div>
+                    {newTallesList.length > 0 && (
+                      <div>
+                        <p>Talles Agregados:</p>
+                        <ul>
+                          {newTallesList.map((talle, index) => (
+                            <li key={index} className="talles-agregados">
+                              {talle}{" "}
+          <button onClick={() => removeTalle(index)} className="boton-eliminar-agregarProducto">Eliminar</button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </Form.Group>
                   <Form.Group controlId="color">
                     <Form.Label>Color</Form.Label>
@@ -319,6 +377,19 @@ const ListadoProductos = () => {
                       <Button id="botonNuevoCliente" onClick={addColor}>
                         {addingAnotherColor ? "Agregar otro" : "Agregar"}
                       </Button>
+                      {newColoresList.length > 0 && (
+                        <div>
+                          <p>Colores Agregados:</p>
+                          <ul>
+                            {newColoresList.map((color, index) => (
+                              <li key={index} className="talles-agregados">
+                                {color}{" "}
+          <button onClick={() => removeColor(index)} className="boton-eliminar-agregarProducto">Eliminar</button>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </Form.Group>
                 </Form>
