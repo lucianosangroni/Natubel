@@ -10,32 +10,20 @@ function NavbarAdm() {
         <Container>
           <Navbar.Brand className="navContainer">Natubel Adm</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link className="botonNav" as={Link} to="/admin/cargarPedido">
-              Pedido clientes
+            <Nav.Link className="botonNav" as={Link} to="/admin/cargar-pedido">
+              Cargar Pedido
             </Nav.Link>
-            <Nav.Link
-              className="botonNav"
-              as={Link}
-              to="/admin/listadoproveedores"
-            >
+            <Nav.Link className="botonNav" as={Link} to="/admin/proveedores">
               Proveedores
             </Nav.Link>
             <Nav.Link className="botonNav" as={Link} to="/admin/clientes">
               Clientes
             </Nav.Link>
-            <Nav.Link
-              className="botonNav"
-              as={Link}
-              to="/admin/listadodeproductos"
-            >
-              Listado de productos
+            <Nav.Link className="botonNav" as={Link} to="/admin/productos">
+              Productos
             </Nav.Link>
-            <Nav.Link
-              className="botonNav"
-              as={Link}
-              to="/admin/historialdepedidos"
-            >
-              Historial de pedidos
+            <Nav.Link className="botonNav" as={Link} to="/admin/pedidos">
+              Pedidos
             </Nav.Link>
           </Nav>
         </Container>

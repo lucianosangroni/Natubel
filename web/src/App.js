@@ -5,20 +5,34 @@ import ListadoClientes from './components/ListadoClientes';
 import ListadoProductos from './components/ListadoProductos';
 import HistorialPedidos from './components/HistorialPedidos';
 import Login from './components/Login';
+import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from './components/AuthContext';
 
 function App() {
     return (
     <div >
       <BrowserRouter>
-        <Routes>
-          <Route path='admin' element={<Navigate to='/admin/login' />}/>
-          <Route path='admin/login' element={<Login/>}/>
-          <Route path="admin/cargarPedido" element={<CargarPedido />} />
-          <Route path="admin/listadoproveedores" element={<ListadoProveedores />} />
-          <Route path="admin/clientes" element={<ListadoClientes />} />
-          <Route path="admin/listadodeproductos" element={<ListadoProductos />} />
-          <Route path="admin/historialdepedidos" element={<HistorialPedidos />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path='admin' element={<Navigate to='/admin/login'/>}/>
+            <Route path='admin/login' element={<Login/>}/>
+            <Route element={<ProtectedRoute/>}>
+              <Route path="admin/cargar-pedido" element={<CargarPedido/>} />
+            </Route>
+            <Route element={<ProtectedRoute/>}>
+              <Route path="admin/proveedores" element={<ListadoProveedores/>} />
+            </Route>
+            <Route element={<ProtectedRoute/>}>
+              <Route path="admin/clientes" element={<ListadoClientes/>} />
+            </Route>
+            <Route element={<ProtectedRoute/>}>
+              <Route path="admin/productos" element={<ListadoProductos/>} />
+            </Route>
+            <Route element={<ProtectedRoute/>}>
+              <Route path="admin/pedidos" element={<HistorialPedidos/>} />
+            </Route>
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </div>
   );

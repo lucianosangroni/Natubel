@@ -1,36 +1,38 @@
-import React, { useState } from "react";
-//import { useAuth } from './AuthContext';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    //const { login } = useAuth();
+    const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleLogin = async () => {
-        console.log(username)
-        console.log(password)
+        login("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAwMTcxMTU2LCJleHAiOjE3MDAyMDcxNTZ9.n7uYo1HXo10M4tyoyv11sVJRcFxMz9LBGXW15Yvlkbg")
+        navigate('/admin/cargar-pedido');
         //try {
-        //  // Hacer la solicitud de autenticación al servidor
-        //  const response = await fetch('/api/auth', {
+        //  fetch('http://localhost:3001/api/auth', {
         //    method: 'POST',
         //    headers: {
         //      'Content-Type': 'application/json',
         //    },
-        //    body: JSON.stringify({ username, password }),
-        //  });
-    //
-        //  if (response.ok) {
-        //    const { token } = await response.json();
-        //    // Llamar a la función login para establecer la autenticación
-        //    login(token);
-        //  } else {
-        //    // Manejar errores de autenticación
-        //    console.error('Error de autenticación');
-        //  }
+        //    body: JSON.stringify({ nombre_usuario: username, password }),
+        //  })
+        //  .then((response) => response.json())
+        //  .then((result) => {
+        //    console.log(result)
+        //    if (response.ok) {
+        //      const { token } = result.jwt;
+        //      login(token);
+        //    } else {
+        //      console.error('Error de autenticación');
+        //    }
+        //  })
         //} catch (error) {
         //  console.error('Error de red', error);
         //}
-      };
+    };
 
     return (
         <div>
