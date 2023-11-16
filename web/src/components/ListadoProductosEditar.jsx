@@ -4,25 +4,18 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
 function ListadoProductosEditar({ product, onClose, onSave }) {
-  const [editedproduct, setEditedproduct] = useState({...product});
+  const [editedProduct, setEditedProduct] = useState({...product});
   const [newTallesList, setNewTallesList] = useState(product.talles);
   const [newColoresList, setNewColoresList] = useState(product.colores);
   const [newTalle, setNewTalle] = useState("");
   const [newColor, setNewColor] = useState("");
   const [addingAnotherTalle, setAddingAnotherTalle] = useState(false);
+  const [addingAnotherColor, setAddingAnotherColor] = useState(false);
 
   const handleSave = () => {
-    // Realiza alguna validación si es necesario antes de guardar los cambios
-    console.log(editedproduct)
-    //if (editedproduct.datosPorTalleYColor) {
-    //  onSave({
-    //    ...product,
-    //    datosPorTalleYColor: editedproduct.datosPorTalleYColor,
-    //  }); // Llama a la función onSave pasando los datos editados
-    //  onClose(); // Cierra el modal de edición
-    //} else {
-    //  console.log("Por favor, complete todos los campos.");
-    //}
+    onSave(editedProduct);
+    onClose();
+    console.log(editedProduct)
   };
 
   const handleNewTalleChange = (event) => {
@@ -31,13 +24,19 @@ function ListadoProductosEditar({ product, onClose, onSave }) {
     setNewTalle(value);
   };
 
+  const handleNewColorChange = (event) => {
+    const { value } = event.target;
+
+    setNewColor(value);
+  };
+
   const addTalle = () => {
     if (newTalle.trim() !== "") {
       setNewTallesList([...newTallesList, newTalle]);
-      setEditedproduct({
-        ...editedproduct,
+      setEditedProduct({
+        ...editedProduct,
         talles: [
-          ...editedproduct.talles.filter((talle) => talle.trim() !== ""),
+          ...editedProduct.talles.filter((talle) => talle.trim() !== ""),
           newTalle,
         ],
       });
@@ -51,9 +50,36 @@ function ListadoProductosEditar({ product, onClose, onSave }) {
     updatedTalles.splice(index, 1);
     setNewTallesList(updatedTalles);
   
-    setEditedproduct({
-      ...editedproduct,
+    setEditedProduct({
+      ...editedProduct,
       talles: updatedTalles.filter((talle) => talle.trim() !== ""),
+    });
+  };
+
+
+  const addColor = () => {
+    if (newColor.trim() !== "") {
+      setNewColoresList([...newColoresList, newColor]);
+      setEditedProduct({
+        ...editedProduct,
+        colores: [
+          ...editedProduct.colores.filter((color) => color.trim() !== ""),
+          newColor,
+        ],
+      });
+      setNewColor("");
+      setAddingAnotherColor(true);
+    }
+  };
+
+  const removeColor = (index) => {
+    const updatedColor = [...newColoresList];
+    updatedColor.splice(index, 1);
+    setNewColoresList(updatedColor);
+  
+    setEditedProduct({
+      ...editedProduct,
+      colores: updatedColor.filter((color) => color.trim() !== ""),
     });
   };
 
@@ -91,21 +117,30 @@ function ListadoProductosEditar({ product, onClose, onSave }) {
             )}
           </Form.Group>
           <Form.Group>
-            <Form.Label>color</Form.Label>
+            <Form.Label>Color</Form.Label>
+            <div className="input-with-button">
             <Form.Control
-              type="text"
-              value={"a"/*editedproduct.datosPorTalleYColor[0].color || ""*/}
-              onChange={(e) =>
-                console.log(e)
-                /*setEditedproduct({
-                  ...editedproduct,
-                  datosPorTalleYColor: {
-                    ...editedproduct.datosPorTalleYColor,
-                    color: e.target.value,
-                  },
-                })*/
-              }
-            />
+            type="text"
+            value={newColor}
+                onChange={handleNewColorChange}            
+             />        
+                           <Button id="botonNuevoCliente" onClick={addColor}>
+                {addingAnotherColor ? "Agregar otro" : "Agregar"}
+              </Button>
+              </div>           
+              {newColoresList.length > 0 && (
+              <div>
+                <p>Colores Agregados:</p>
+                <ul>
+                  {newColoresList.map((color, index) => (
+                    <li key={index} className="talles-agregados">
+                      {color}{" "}
+                      <button onClick={() => removeColor(index)} className="boton-eliminar-agregarProducto">Eliminar</button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </Form.Group>
         </Form>
       </Modal.Body>

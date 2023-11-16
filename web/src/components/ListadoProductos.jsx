@@ -103,6 +103,9 @@ const ListadoProductos = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [newTallesList, setNewTallesList] = useState([]);
   const [newColoresList, setNewColoresList] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedProductId, setEditedProductId] = useState(null);
+  
 
   const [newProduct, setNewProduct] = useState({
     articulo: "",
@@ -120,10 +123,12 @@ const ListadoProductos = () => {
 
   const openModal = () => {
     setIsModalOpen(true);
+    
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    
   };
 
   const handleNewProductChange = (event) => {
@@ -203,6 +208,8 @@ const ListadoProductos = () => {
     });
   };
 
+
+
   const handleSaveProduct = () => {
     if (
       newProduct.articulo.trim() === "" ||
@@ -216,6 +223,22 @@ const ListadoProductos = () => {
     const tallesNoVacios = newProduct.talles.filter((talle) => talle !== "");
     const coloresNoVacios = newProduct.colores.filter((color) => color !== "");
 
+    if (isEditing && selectedProduct) {
+      // Editar producto existente
+      const updatedProducts = products.map((product) =>
+        product.id === selectedProduct.id
+          ? {
+              ...product,
+              articulo: newProduct.articulo,
+              talles: tallesNoVacios,
+              colores: coloresNoVacios,
+            }
+          : product
+      );
+      setProducts(updatedProducts);
+      setSelectedProduct(null);
+    } else {
+// Agregar nuevo producto
     const newProductData = {
       id: products.length + 1,
       ...newProduct,
@@ -224,6 +247,8 @@ const ListadoProductos = () => {
     };
 
     setProducts([...products, newProductData]);
+  }
+
     setNewProduct({
       articulo: "",
       talles: [""],
@@ -234,10 +259,13 @@ const ListadoProductos = () => {
 setNewColoresList([]);
 
     setIsModalOpen(false);
+    setIsEditing(false);
   };
 
   const handleEdit = () => {
     setIsEditModalOpen(true);
+    setIsEditing(true);
+    setEditedProductId(selectedProduct.id);
   };
 
   const renderGrilla = (product) => {
@@ -260,7 +288,6 @@ setNewColoresList([]);
                     <td className="table-cell-grilla">{color}</td>
                     {product.talles.map((talle, talleIndex) => (
                       <td key={talleIndex}>
-                        {/* Aquí puedes mostrar datos específicos para cada combinación de talle y color */}
                         {selectedProduct.datosPorTalleYColor &&
                           selectedProduct.datosPorTalleYColor[talle] &&
                           selectedProduct.datosPorTalleYColor[talle][color]}
@@ -276,12 +303,13 @@ setNewColoresList([]);
             {/* EN ESTA PARTE DEL CODIGO HAY UN ERROR QUE NO PUEDO SOLUCIONAR */}
             {isEditModalOpen && selectedProduct === product && (
               <ListadoProductosEditar
-                product={product}
+                product={selectedProduct}
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 onSave={(editedProduct) => {
                   console.log(product)
                   // Lógica para guardar el producto editado
+                  handleSaveProduct();
                   setIsEditModalOpen(false);
                 }}
               />
