@@ -9,29 +9,25 @@ const Login = () => {
     const { login } = useAuth();
 
     const handleLogin = async () => {
-        login("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzAwMTcxMTU2LCJleHAiOjE3MDAyMDcxNTZ9.n7uYo1HXo10M4tyoyv11sVJRcFxMz9LBGXW15Yvlkbg")
-        navigate('/admin/cargar-pedido');
-        //try {
-        //  fetch('http://localhost:3001/api/auth', {
-        //    method: 'POST',
-        //    headers: {
-        //      'Content-Type': 'application/json',
-        //    },
-        //    body: JSON.stringify({ nombre_usuario: username, password }),
-        //  })
-        //  .then((response) => response.json())
-        //  .then((result) => {
-        //    console.log(result)
-        //    if (response.ok) {
-        //      const { token } = result.jwt;
-        //      login(token);
-        //    } else {
-        //      console.error('Error de autenticación');
-        //    }
-        //  })
-        //} catch (error) {
-        //  console.error('Error de red', error);
-        //}
+        try {
+          fetch('http://localhost:3001/api/auth', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ nombre_usuario: username, password }),
+          })
+          .then((response) => response.json())
+          .then((result) => {
+            if(result.jwt) {
+              const token  = result.jwt;
+              login(token);
+              navigate('/admin/cargar-pedido');
+            }
+          })
+        } catch (error) {
+          console.error('Error de red', error);
+        }
     };
 
     return (
