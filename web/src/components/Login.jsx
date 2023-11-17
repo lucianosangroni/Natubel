@@ -31,19 +31,19 @@ const Login = () => {
     };
 
     return (
-        <div>
-          <h2>Iniciar Sesion</h2>
-          <label>
+        <div className="contenedor-login">
+          <h2 className="iniciar-sesion-titulo">Iniciar Sesion</h2>
+          <label className="usuario"> 
             Usuario:
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+            <input className="usuario-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
           </label>
           <br />
-          <label>
+          <label className="password">
             Contraseña:
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input className="password-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </label>
           <br />
-          <button onClick={handleLogin}>Iniciar Sesión</button>
+          <button className="iniciar-sesion-boton" onClick={handleLogin}>Aceptar</button>
         </div>
     );
 }

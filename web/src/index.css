@@ -292,3 +292,59 @@
   border-radius: 0.5rem;
   margin: auto;
 }
+
+/* LOGIN */
+
+.contenedor-login {
+  width: 400px;
+  margin: 2rem;
+  padding: 1.5rem;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+
+}
+
+.iniciar-sesion-titulo {
+  margin: 1rem;
+  padding: 0.5rem;
+  width: 210px;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  background-color: #FBCCD2;
+}
+
+.usuario {
+  margin-left: 1rem;
+  padding: 0.5rem;
+  width: 300px;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  background-color:#d1f7d1;
+}
+
+.usuario-input {
+  margin-left: 0.5rem;
+}
+
+.password {
+  margin-left: 1rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  width: 300px;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  background-color:#d1f7d1;
+}
+
+.password-input {
+  margin-left: 0.5rem;
+}
+
+.iniciar-sesion-boton {
+  margin: 1rem;
+  padding: 0.5rem;
+  width: 120px;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  background-color:#FBCCD2;
+}
