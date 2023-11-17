@@ -46,10 +46,15 @@
 
 /* LISTA DE CLIENTES */
 
+.tableDivContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .tableContainer {
   border: 1px solid #000000;
   margin: 1rem;
-  
 }
 
 
@@ -164,9 +169,15 @@
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
-    margin: 1rem; 
+    margin: 1rem;
   }
   
+  .abajoDerecha {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+  }
+
   /* PRODUCTOS */
 
 .table-productos-contenedor{

@@ -16,7 +16,7 @@ function ModalCliente({ onAddClient }) {
     provincia: "",
     forma_de_envio: "",
     email: "",
-    tipo_cliente: "",
+    tipo_cliente: "MINORISTA",
   });
 
   const handleClose = () => setShow(false);
@@ -36,7 +36,7 @@ function ModalCliente({ onAddClient }) {
         provincia: "",
         forma_de_envio: "",
         email: "",
-        tipo_cliente: "",
+        tipo_cliente: "MINORISTA",
       });
       handleClose();
     } else {
@@ -46,7 +46,7 @@ function ModalCliente({ onAddClient }) {
 
   return (
     <>
-      <Button id="botonNuevoCliente" variant="primary" onClick={handleShow}>
+      <Button id="botonNuevoCliente" className="abajoDerecha" variant="primary" onClick={handleShow}>
         Nuevo cliente
       </Button>
 
@@ -173,12 +173,14 @@ function ModalCliente({ onAddClient }) {
             <Form.Group>
               <Form.Label>Tipo</Form.Label>
               <Form.Control
-                type="text"
+                as="select"
                 value={newClient.tipo_cliente}
                 onChange={(e) => {
                   setNewClient({ ...newClient, tipo_cliente: e.target.value });
-                }}
-              />
+                }}>
+                <option value="MINORISTA">MINORISTA</option>
+                <option value="MAYORISTA">MAYORISTA</option>
+              </Form.Control>
             </Form.Group>
           </Form>
         </Modal.Body>
