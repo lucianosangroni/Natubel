@@ -2,8 +2,21 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
+import { useAuth } from './AuthContext';
 
 function NavbarAdm() {
+
+  const { logout } = useAuth()
+
+  const handleLogout = () => {
+    const shouldLogout = window.confirm(
+      "¿Estas seguro que quieres cerrar sesion?"
+    );
+    if (shouldLogout) {
+      logout()
+    }
+  }
+
   return (
     <>
       <Navbar data-bs-theme="light" className="nav">
@@ -24,6 +37,9 @@ function NavbarAdm() {
             </Nav.Link>
             <Nav.Link className="botonNav" as={Link} to="/admin/pedidos">
               Pedidos
+            </Nav.Link>
+            <Nav.Link className="botonNav" onClick={handleLogout}>
+              Cerrar Sesion
             </Nav.Link>
           </Nav>
         </Container>

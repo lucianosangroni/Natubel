@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { useNavigate, Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const { login, isAuthenticated } = useAuth();
     const navigate = useNavigate();
-    const { login } = useAuth();
-    const { isAuthenticated } = useAuth();
 
     const handleLogin = async () => {
         try {
@@ -22,8 +21,7 @@ const Login = () => {
           .then((response) => response.json())
           .then((result) => {
             if(result.jwt) {
-              const token  = result.jwt;
-              login(token);
+              login(result.jwt);
               navigate('/admin/cargar-pedido');
             }
           })
