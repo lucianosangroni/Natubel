@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const { login, isAuthenticated } = useAuth();
     const navigate = useNavigate();
-    const { login } = useAuth();
 
     const handleLogin = async () => {
         try {
@@ -20,8 +21,7 @@ const Login = () => {
           .then((response) => response.json())
           .then((result) => {
             if(result.jwt) {
-              const token  = result.jwt;
-              login(token);
+              login(result.jwt);
               navigate('/admin/cargar-pedido');
             }
           })
@@ -30,7 +30,7 @@ const Login = () => {
         }
     };
 
-    return (
+    return isAuthenticated ? <Navigate to="/admin/cargar-pedido" /> : (
         <div className="contenedor-login">
           <h2 className="iniciar-sesion-titulo">Iniciar Sesion</h2>
           <label className="usuario"> 

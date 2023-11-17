@@ -10,6 +10,8 @@ import { COLUMNS } from "./columnsListaClientes";
 import GlobalFilter from "./GlobalFilter";
 import ModalCliente from "./ModalCliente";
 import ModalClienteEditar from "./ModalClienteEditar";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const ListadoClientes = () => {
   const columns = useMemo(() => COLUMNS, []);
@@ -17,39 +19,46 @@ const ListadoClientes = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
 
+  const jwt = localStorage.getItem('jwt')
+
   //OBTENER PROVEEDORES DB
   useEffect(() => {
-    fetch(`http://localhost:3001/api/clientes`)
-      .then((response) => response.json())
-      .then((result) => {
-        const clientes = []
-        for (const dataResult of result) {
-          const cliente = 
-          {
-            id: dataResult.id,
-            persona_id: dataResult.persona_id,
-            nombre: dataResult.persona.nombre,
-            cuit_cuil: dataResult.cuit_cuil,
-            direccion: dataResult.persona.direccion,
-            codigo_postal: dataResult.codigo_postal,
-            telefono: dataResult.persona.telefono,
-            dni: dataResult.dni,
-            ciudad: dataResult.ciudad,
-            provincia: dataResult.provincia,
-            forma_de_envio: dataResult.forma_de_envio,
-            email: dataResult.persona.email,
-            tipo_cliente: dataResult.tipo_cliente,
-          }
-
-          clientes.push(cliente)
+    fetch(`http://localhost:3001/api/clientes`, 
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      const clientes = []
+      for (const dataResult of result) {
+        const cliente = 
+        {
+          id: dataResult.id,
+          persona_id: dataResult.persona_id,
+          nombre: dataResult.persona.nombre,
+          cuit_cuil: dataResult.cuit_cuil,
+          direccion: dataResult.persona.direccion,
+          codigo_postal: dataResult.codigo_postal,
+          telefono: dataResult.persona.telefono,
+          dni: dataResult.dni,
+          ciudad: dataResult.ciudad,
+          provincia: dataResult.provincia,
+          forma_de_envio: dataResult.forma_de_envio,
+          email: dataResult.persona.email,
+          tipo_cliente: dataResult.tipo_cliente,
         }
 
-        setData(clientes)
-      })
-      .catch((error) => {
-        console.error("Error en la solicitud GET:", error)
-      });
-  }, []);
+        clientes.push(cliente)
+      }
+
+      setData(clientes)
+    })
+    .catch((error) => {
+      console.error("Error en la solicitud GET:", error)
+    });
+  }, [jwt]);
 
   //AGREGAR PROVEEDOR DB
   const handleAddCliente = (newCliente) => {
@@ -67,21 +76,19 @@ const ListadoClientes = () => {
       email: newCliente.email,
       tipo_cliente: newCliente.tipo_cliente
     }
-    console.log(requestData)
 
     fetch(`http://localhost:3001/api/clientes`, {
       method: "POST",
       headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`
       },
       body: JSON.stringify(requestData)
     })
     .then((response) => response.json())
     .then((result) => {
-      console.log(result)
       newCliente.id = result.id
       newCliente.persona_id = result.persona_id
-      console.log(newCliente)
       setData((prevData) => [...prevData, newCliente]);
     })
     .catch(error => {
@@ -99,7 +106,6 @@ const ListadoClientes = () => {
 
   //EDITAR PROVEEDOR DB
   const updateTableRow = (newData) => {
-    console.log(newData)
     const requestData = 
     {
       nombre: newData.nombre,
@@ -119,7 +125,8 @@ const ListadoClientes = () => {
     fetch(`http://localhost:3001/api/clientes/${newData.id}`, {
       method: "PUT",
       headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`
       },
       body: JSON.stringify(requestData)
     })
@@ -144,6 +151,9 @@ const ListadoClientes = () => {
     if (shouldDelete) {
       fetch(`http://localhost:3001/api/clientes/${row.original.id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
       })
       .then(() => {
         const rowIndex = data.indexOf(row.original);
@@ -189,51 +199,47 @@ const ListadoClientes = () => {
     <>
       <NavbarAdm/>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-      <table {...getTableProps()} className="tableContainer">
-        <thead>
-          {headerGroups.map((headerGroups) => (
-            <tr {...headerGroups.getHeaderGroupProps()}>
-              {headerGroups.headers.map((columns) => (
-                <th {...columns.getHeaderProps(columns)}>
-                  {columns.render("Header")}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td {...cell.getCellProps()}>
-                      {cell.column.id === "eliminar" ? (
-                        <button
-                          onClick={() => handleDeleteRow(row)}
-                          className="botonEliminar"
-                        >
-                          Eliminar
-                        </button>
-                      ) : cell.column.id === "editar" ? (
-                        <button
-                          onClick={() => handleEditRow(row)}
-                          className="botonEditar"
-                        >
-                          Editar
-                        </button>
-                      ) : (
-                        cell.render("Cell")
-                      )}
-                    </td>
-                  );
-                })}
+      <div className="tableDivContainer">
+        <table {...getTableProps()} className="tableContainer">
+          <thead>
+            {headerGroups.map((headerGroups) => (
+              <tr {...headerGroups.getHeaderGroupProps()}>
+                {headerGroups.headers.map((columns) => (
+                  <th {...columns.getHeaderProps(columns)}>
+                    {columns.render("Header")}
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {page.map((row) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>
+                        {cell.column.id === "eliminar" ? (
+                          <button onClick={() => handleDeleteRow(row)} className="botonEliminar">
+                            <FontAwesomeIcon icon={faTrashAlt} />
+                          </button>
+                        ) : cell.column.id === "editar" ? (
+                          <button onClick={() => handleEditRow(row)} className="botonEditar">
+                            <FontAwesomeIcon icon={faEdit} />
+                          </button>
+                        ) : (
+                          cell.render("Cell")
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
       {isEditModalOpen && (
         <ModalClienteEditar
           data={editingData}
@@ -245,17 +251,17 @@ const ListadoClientes = () => {
         />
       )}
       <div className="paginacion">
+        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </button>
         <span>
-          Page{" "}
+          Pagina{" "}
           <strong>
-            {pageIndex + 1} of {pageOptions.length}
+            {pageIndex + 1} de {pageOptions.length}
           </strong>{" "}
         </span>
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          Anterior
-        </button>
         <button onClick={() => nextPage()} disabled={!canNextPage}>
-          Siguiente
+          <FontAwesomeIcon icon={faArrowRight} />
         </button>
       </div>
       <ModalCliente onAddClient={handleAddCliente} />

@@ -3,56 +3,68 @@
 export const COLUMNS = [
 {
     Header: "Nombre Completo",
-    accessor: "nombre"
-    
+    accessor: "nombre",
+    width: 'auto',
 },
 {
     Header: "Cuit/Cuil",
-    accessor:"cuit_cuil"
+    accessor:"cuit_cuil",
+    width: 'auto',
 },
 {
     Header: "Direccion",
-    accessor:"direccion"
+    accessor:"direccion",
+    width: 'auto',
 },
 {
     Header: "CP",
-    accessor: "codigo_postal"
+    accessor: "codigo_postal",
+    width: 'auto',
 },
 {
     Header: "Telefono",
-    accessor:"telefono"
+    accessor:"telefono",
+    width: 'auto',
 },
 {
     Header: "DNI",
-    accessor: "dni"
+    accessor: "dni",
+    width: 'auto',
 },
 {
     Header: "Ciudad",
-    accessor:"ciudad"
+    accessor:"ciudad",
+    width: 'auto',
 },
 {
     Header: "Provincia",
-    accessor:"provincia"
+    accessor:"provincia",
+    width: 'auto',
 },
 {
     Header: "Envio",
-    accessor:"forma_de_envio"
+    accessor:"forma_de_envio",
+    width: 'auto',
 },
 {
     Header: "Email",
-    accessor: "email"
+    accessor: "email",
+    width: 'auto',
 },
 {
     Header: "Tipo",
-    accessor:"tipo_cliente"
+    accessor:"tipo_cliente",
+    width: 'auto',
 },
 {
-    Header: "Editar",
-    accessor:"editar"
+    Header: "",
+    accessor:"editar",
+    width: 'auto',
 },
 {
-    Header: "Eliminar",
-    accessor:"eliminar"
+    Header: "",
+    accessor:"eliminar",
+    width: 'auto',
 },
 
 ]

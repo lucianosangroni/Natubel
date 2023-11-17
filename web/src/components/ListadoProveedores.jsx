@@ -10,7 +10,8 @@ import { COLUMNSPROVE } from "./columnsListaProveedores";
 import GlobalFilter from "./GlobalFilter";
 import ModalProveedores from "./ModalProveedores";
 import ModalProveedoresEditar from "./ModalProveedoresEditar";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const ListadoProveedores = () => {
   const columns = useMemo(() => COLUMNSPROVE, []);
@@ -18,31 +19,38 @@ const ListadoProveedores = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
 
+  const jwt = localStorage.getItem('jwt')
+
   //OBTENER PROVEEDORES DB
   useEffect(() => {
-    fetch(`http://localhost:3001/api/proveedores`)
-      .then((response) => response.json())
-      .then((result) => {
-        const proveedores = []
-        for (const dataResult of result) {
-          const proveedor =
-          {
-            id: dataResult.id,
-            nombre: dataResult.nombre,
-            direccion: dataResult.direccion,
-            telefono: dataResult.telefono,
-            email: dataResult.email
-          }
-
-          proveedores.push(proveedor)
+    fetch(`http://localhost:3001/api/proveedores`, 
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      const proveedores = []
+      for (const dataResult of result) {
+        const proveedor =
+        {
+          id: dataResult.id,
+          nombre: dataResult.nombre,
+          direccion: dataResult.direccion,
+          telefono: dataResult.telefono,
+          email: dataResult.email
         }
 
-        setData(proveedores)
-      })
-      .catch((error) => {
-        console.error("Error en la solicitud GET:", error)
-      });
-  }, []);
+        proveedores.push(proveedor)
+      }
+
+      setData(proveedores)
+    })
+    .catch((error) => {
+      console.error("Error en la solicitud GET:", error)
+    });
+  }, [jwt]);
 
   //AGREGAR PROVEEDOR DB
   const handleAddProveedor = (newProveedor) => {
@@ -57,7 +65,8 @@ const ListadoProveedores = () => {
     fetch(`http://localhost:3001/api/proveedores`, {
       method: "POST",
       headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`
       },
       body: JSON.stringify(requestData)
     })
@@ -92,7 +101,8 @@ const ListadoProveedores = () => {
     fetch(`http://localhost:3001/api/proveedores/${newData.id}`, {
       method: "PUT",
       headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`
       },
       body: JSON.stringify(requestData)
     })
@@ -116,6 +126,9 @@ const ListadoProveedores = () => {
     if (shouldDelete) {
       fetch(`http://localhost:3001/api/proveedores/${row.original.id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
       })
       .then(() => {
         const rowIndex = data.indexOf(row.original);
@@ -161,51 +174,47 @@ const ListadoProveedores = () => {
     <>
       <NavbarAdm/>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-      <table {...getTableProps()} className="tableContainer">
-        <thead>
-          {headerGroups.map((headerGroups) => (
-            <tr {...headerGroups.getHeaderGroupProps()}>
-              {headerGroups.headers.map((columns) => (
-                <th {...columns.getHeaderProps(columns)}>
-                  {columns.render("Header")}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td {...cell.getCellProps()}>
-                      {cell.column.id === "eliminar" ? (
-                        <button
-                          onClick={() => handleDeleteRow(row)}
-                          className="botonEliminar"
-                        >
-                          Eliminar
-                        </button>
-                      ) : cell.column.id === "editar" ? (
-                        <button
-                          onClick={() => handleEditRow(row)}
-                          className="botonEditar"
-                        >
-                          Editar
-                        </button>
-                      ) : (
-                        cell.render("Cell")
-                      )}
-                    </td>
-                  );
-                })}
+      <div className="tableDivContainer">
+        <table {...getTableProps()} className="tableContainer">
+          <thead>
+            {headerGroups.map((headerGroups) => (
+              <tr {...headerGroups.getHeaderGroupProps()}>
+                {headerGroups.headers.map((columns) => (
+                  <th {...columns.getHeaderProps(columns)}>
+                    {columns.render("Header")}
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {page.map((row) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>
+                        {cell.column.id === "eliminar" ? (
+                          <button onClick={() => handleDeleteRow(row)} className="botonEliminar">
+                            <FontAwesomeIcon icon={faTrashAlt} />
+                          </button>
+                        ) : cell.column.id === "editar" ? (
+                          <button onClick={() => handleEditRow(row)} className="botonEditar">
+                            <FontAwesomeIcon icon={faEdit} />
+                          </button>
+                        ) : (
+                          cell.render("Cell")
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
       {isEditModalOpen && (
         <ModalProveedoresEditar
           data={editingData}
@@ -217,17 +226,17 @@ const ListadoProveedores = () => {
         />
       )}
       <div className="paginacion">
+        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </button>
         <span>
-          Page{" "}
+          Pagina{" "}
           <strong>
-            {pageIndex + 1} of {pageOptions.length}
+            {pageIndex + 1} de {pageOptions.length}
           </strong>{" "}
         </span>
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          Anterior
-        </button>
         <button onClick={() => nextPage()} disabled={!canNextPage}>
-          Siguiente
+          <FontAwesomeIcon icon={faArrowRight} />
         </button>
       </div>
       <ModalProveedores onAddProveedor={handleAddProveedor} />

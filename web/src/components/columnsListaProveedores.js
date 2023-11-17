@@ -2,27 +2,33 @@ export const COLUMNSPROVE = [
 
     {
         Header:"Nombre Completo",
-        accessor:"nombre"
+        accessor:"nombre",
+        width: 'auto',
     },
     {
         Header:"Direccion",
-        accessor:"direccion"
+        accessor:"direccion",
+        width: 'auto',
     },
     {
         Header:"Telefono",
-        accessor:"telefono"
+        accessor:"telefono",
+        width: 'auto',
     },
     {
         Header:"Email",
-        accessor:"email"
+        accessor:"email",
+        width: 'auto',
     },
     {
-        Header: "Editar",
-        accessor:"editar"
+        Header: "",
+        accessor:"editar",
+        width: 'auto',
     },
     {
-        Header: "Eliminar",
-        accessor:"eliminar"
+        Header: "",
+        accessor:"eliminar",
+        width: 'auto',
     }
 
 ]

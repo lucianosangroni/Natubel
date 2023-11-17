@@ -1,10 +1,35 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback  } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const storedAuth = localStorage.getItem('isAuthenticated');
   const [isAuthenticated, setAuthenticated] = useState(storedAuth === 'true');
+  const navigate = useNavigate();
+
+  const login = useCallback((token) => {
+    localStorage.setItem('jwt', token);
+    localStorage.setItem('isAuthenticated', 'true');
+    setAuthenticated(true);
+  }, [setAuthenticated]);
+
+  const logout = useCallback(() => {
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('isAuthenticated');
+    setAuthenticated(false);
+    navigate('/admin/login');
+  }, [navigate, setAuthenticated]);
+
+  const decode = (token) => {
+    const tokenParts = token.split('.');
+
+    if(tokenParts.length !== 3) {
+        return false
+    }
+
+    return JSON.parse(atob(tokenParts[1]))
+  }
 
   useEffect(() => {
     const token = localStorage.getItem('jwt');
@@ -25,32 +50,10 @@ export const AuthProvider = ({ children }) => {
     } else {
         logout();
     }
-  }, []);
-
-  const decode = (token) => {
-    const tokenParts = token.split('.');
-
-    if(tokenParts.length !== 3) {
-        return false
-    }
-
-    return JSON.parse(atob(tokenParts[1]))
-  }
-
-  const login = (token) => {
-    localStorage.setItem('jwt', token);
-    localStorage.setItem('isAuthenticated', 'true');
-    setAuthenticated(true);
-  };
-
-  const logout = () => {
-    localStorage.removeItem('jwt')
-    localStorage.removeItem('isAuthenticated');
-    setAuthenticated(false)
-  }
+  }, [login, logout]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

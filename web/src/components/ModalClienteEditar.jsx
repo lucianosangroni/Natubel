@@ -156,15 +156,14 @@ function ModalClienteEditar({ data, onClose, onSave }) {
           <Form.Group>
             <Form.Label>Tipo</Form.Label>
             <Form.Control
-              type="text"
+              as="select"
               value={editedData.tipo_cliente}
-              onChange={(e) =>
-                setEditedData({
-                  ...editedData,
-                  tipo_cliente: e.target.value,
-                })
-              }
-            />
+              onChange={(e) => {
+                setEditedData({ ...editedData, tipo_cliente: e.target.value });
+              }}>
+              <option value="MINORISTA">MINORISTA</option>
+              <option value="MAYORISTA">MAYORISTA</option>
+            </Form.Control>
           </Form.Group>
         </Form>
       </Modal.Body>
