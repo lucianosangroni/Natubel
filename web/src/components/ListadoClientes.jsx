@@ -17,38 +17,45 @@ const ListadoClientes = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
 
+  const jwt = localStorage.getItem('jwt')
+
   //OBTENER PROVEEDORES DB
   useEffect(() => {
-    fetch(`http://localhost:3001/api/clientes`)
-      .then((response) => response.json())
-      .then((result) => {
-        const clientes = []
-        for (const dataResult of result) {
-          const cliente = 
-          {
-            id: dataResult.id,
-            persona_id: dataResult.persona_id,
-            nombre: dataResult.persona.nombre,
-            cuit_cuil: dataResult.cuit_cuil,
-            direccion: dataResult.persona.direccion,
-            codigo_postal: dataResult.codigo_postal,
-            telefono: dataResult.persona.telefono,
-            dni: dataResult.dni,
-            ciudad: dataResult.ciudad,
-            provincia: dataResult.provincia,
-            forma_de_envio: dataResult.forma_de_envio,
-            email: dataResult.persona.email,
-            tipo_cliente: dataResult.tipo_cliente,
-          }
-
-          clientes.push(cliente)
+    fetch(`http://localhost:3001/api/clientes`, 
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      const clientes = []
+      for (const dataResult of result) {
+        const cliente = 
+        {
+          id: dataResult.id,
+          persona_id: dataResult.persona_id,
+          nombre: dataResult.persona.nombre,
+          cuit_cuil: dataResult.cuit_cuil,
+          direccion: dataResult.persona.direccion,
+          codigo_postal: dataResult.codigo_postal,
+          telefono: dataResult.persona.telefono,
+          dni: dataResult.dni,
+          ciudad: dataResult.ciudad,
+          provincia: dataResult.provincia,
+          forma_de_envio: dataResult.forma_de_envio,
+          email: dataResult.persona.email,
+          tipo_cliente: dataResult.tipo_cliente,
         }
 
-        setData(clientes)
-      })
-      .catch((error) => {
-        console.error("Error en la solicitud GET:", error)
-      });
+        clientes.push(cliente)
+      }
+
+      setData(clientes)
+    })
+    .catch((error) => {
+      console.error("Error en la solicitud GET:", error)
+    });
   }, []);
 
   //AGREGAR PROVEEDOR DB
@@ -72,7 +79,8 @@ const ListadoClientes = () => {
     fetch(`http://localhost:3001/api/clientes`, {
       method: "POST",
       headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`
       },
       body: JSON.stringify(requestData)
     })
@@ -119,7 +127,8 @@ const ListadoClientes = () => {
     fetch(`http://localhost:3001/api/clientes/${newData.id}`, {
       method: "PUT",
       headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`
       },
       body: JSON.stringify(requestData)
     })
@@ -144,6 +153,9 @@ const ListadoClientes = () => {
     if (shouldDelete) {
       fetch(`http://localhost:3001/api/clientes/${row.original.id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
       })
       .then(() => {
         const rowIndex = data.indexOf(row.original);

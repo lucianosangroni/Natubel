@@ -18,30 +18,37 @@ const ListadoProveedores = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
 
+  const jwt = localStorage.getItem('jwt')
+
   //OBTENER PROVEEDORES DB
   useEffect(() => {
-    fetch(`http://localhost:3001/api/proveedores`)
-      .then((response) => response.json())
-      .then((result) => {
-        const proveedores = []
-        for (const dataResult of result) {
-          const proveedor =
-          {
-            id: dataResult.id,
-            nombre: dataResult.nombre,
-            direccion: dataResult.direccion,
-            telefono: dataResult.telefono,
-            email: dataResult.email
-          }
-
-          proveedores.push(proveedor)
+    fetch(`http://localhost:3001/api/proveedores`, 
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      const proveedores = []
+      for (const dataResult of result) {
+        const proveedor =
+        {
+          id: dataResult.id,
+          nombre: dataResult.nombre,
+          direccion: dataResult.direccion,
+          telefono: dataResult.telefono,
+          email: dataResult.email
         }
 
-        setData(proveedores)
-      })
-      .catch((error) => {
-        console.error("Error en la solicitud GET:", error)
-      });
+        proveedores.push(proveedor)
+      }
+
+      setData(proveedores)
+    })
+    .catch((error) => {
+      console.error("Error en la solicitud GET:", error)
+    });
   }, []);
 
   //AGREGAR PROVEEDOR DB
@@ -57,7 +64,8 @@ const ListadoProveedores = () => {
     fetch(`http://localhost:3001/api/proveedores`, {
       method: "POST",
       headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`
       },
       body: JSON.stringify(requestData)
     })
@@ -92,7 +100,8 @@ const ListadoProveedores = () => {
     fetch(`http://localhost:3001/api/proveedores/${newData.id}`, {
       method: "PUT",
       headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`
       },
       body: JSON.stringify(requestData)
     })
@@ -116,6 +125,9 @@ const ListadoProveedores = () => {
     if (shouldDelete) {
       fetch(`http://localhost:3001/api/proveedores/${row.original.id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
       })
       .then(() => {
         const rowIndex = data.indexOf(row.original);

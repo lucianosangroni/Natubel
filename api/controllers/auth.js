@@ -7,8 +7,6 @@ const login = async (req, res) => {
     try {
       req = matchedData(req);
 
-      console.log(req)
-
       const admin = await adminModel.findOne({ where: { nombre_usuario: req.nombre_usuario } });
       if (!admin) {
         return res.status(404).json({ message: 'Usuario no encontrado' });

@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const { login } = useAuth();
+    const { isAuthenticated } = useAuth();
 
     const handleLogin = async () => {
         try {
@@ -30,7 +32,7 @@ const Login = () => {
         }
     };
 
-    return (
+    return isAuthenticated ? <Navigate to="/admin/cargar-pedido" /> : (
         <div className="contenedor-login">
           <h2 className="iniciar-sesion-titulo">Iniciar Sesion</h2>
           <label className="usuario"> 
