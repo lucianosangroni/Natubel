@@ -466,5 +466,16 @@
   border: 1px solid #000;
   border-radius: 0.5rem;
   text-align: center; 
-  width: 120px; /* Ajusta el ancho según sea necesario */
+  width: 120px; 
 }
+
+.mantenimiento-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; 
+
+}
+.mantenimiento-content {
+  text-align: center;
+} 
