@@ -97,8 +97,10 @@ const initialProducts = [
 const CargarPedido = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [cantidadesPorProducto, setCantidadesPorProducto] = useState({});
+  const [resumenPedido, setResumenPedido] = useState([]);
 
   const handleProductClick = (product) => {
+    handleConfirmarProducto(product);
     setSelectedProduct(product);
     setCantidadesPorProducto((prevCantidades) => ({
       ...prevCantidades,
@@ -106,13 +108,26 @@ const CargarPedido = () => {
     }));
   };
 
+  const handleConfirmarProducto = (product) => {
+    setCantidadesPorProducto((prevCantidades) => ({
+      ...prevCantidades,
+      [product.id]: prevCantidades[product.id] || initializeQuantities(product),
+    }));
+  
+    setResumenPedido((prevResumen) => [...prevResumen, product]);
+  };
+
   const initializeQuantities = (product) => {
     const quantities = {};
-    product.talles.forEach((talle) => {
-      product.colores.forEach((color) => {
-        quantities[`${talle}-${color}`] = 0;
+  
+    if (product && product.talles && product.colores) {
+      product.talles.forEach((talle) => {
+        product.colores.forEach((color) => {
+          quantities[`${talle}-${color}`] = 0;
+        });
       });
-    });
+    }
+  
     return quantities;
   };
 
@@ -180,9 +195,13 @@ const renderGrilla = (product) => {
 
   return ( <>
     <NavbarAdm/>
-    <div>
-      <button id="botonNuevoCliente">Cliente</button>
-      <button id="botonNuevoCliente">Proveedor</button>
+    <div className="contenedor-cargar-pedido">
+      <div className="contenedor-botones">
+      <button className="boton-cargar-cliente">Cliente</button>
+      <button className="boton-cargar-proveedor">Proveedor</button>
+
+      </div>
+
       <div className="contenedor-principal">
         <table className="table-cargarPedido-contenedor">
           <thead>
@@ -194,16 +213,17 @@ const renderGrilla = (product) => {
             {initialProducts.map((product) => (
               <tr key={product.id} onClick={() => handleProductClick(product)}>
                 <td className="table-cell-productos">{product.articulo}</td>
-              </tr>
+              </tr>    
             ))}
           </tbody>
         </table>
         {selectedProduct && (
           <div>{selectedProduct && renderGrilla(selectedProduct)}</div>
         )}
-      </div>
+        <button className="confirmar" onClick={handleConfirmarProducto}>Confirmar</button>
+      </div>    
       <h5 className="titulo-resumenPedido">Resumen de pedido</h5>
-      <button id="botonNuevoCliente">Cargar pedido</button>
+      <button className="cargar-pedido-boton">Cargar pedido</button>
     </div>
     </>
   );
