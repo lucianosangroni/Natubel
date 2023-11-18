@@ -7,6 +7,7 @@ import HistorialPedidos from './components/HistorialPedidos';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './components/AuthContext';
+import Mantenimiento from './components/Mantenimiento';
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+            <Route path='' element={<Mantenimiento/>}/>
             <Route path='admin' element={<Navigate to='/admin/login'/>}/>
             <Route path='admin/login' element={<Login/>}/>
             <Route element={<ProtectedRoute/>}>

@@ -171,8 +171,8 @@ const ListadoProductos = () => {
             ))}
           </tbody>
         </table>
-        <ModalProducto onAddProducto={handleAddArticulo} />
         {selectedProduct && <GrillaProducto articulo={selectedProduct} onEditProducto={handleEditProducto} onDeleteProducto={handleDeleteProducto}/>}
+        <ModalProducto onAddProducto={handleAddArticulo} />
       </div>
     </>
   );

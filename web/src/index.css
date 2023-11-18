@@ -462,3 +462,14 @@
   border-radius: 0.5rem;
   background-color:#FBCCD2;
 }
+
+.mantenimiento-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Esto asegura que ocupe todo el alto de la ventana */
+}
+
+.mantenimiento-content {
+  text-align: center;
+}
