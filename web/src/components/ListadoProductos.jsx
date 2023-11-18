@@ -1,327 +1,157 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavbarAdm from '../components/NavbarAdm';
-import { Button, Modal, Form } from "react-bootstrap";
-import ListadoProductosEditar from "./ListadoProductosEditar";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, } from '@fortawesome/free-solid-svg-icons';
-
-const initialProducts = [
-  {
-    id: 1,
-    articulo: "1",
-    talles: ["s", "m", "xl", "xxl"],
-    colores: ["blanco", "amarillo"],
-    datosPorTalleYColor: {
-      s: {
-        blanco: 5,
-        amarillo: 8,
-      },
-      m: {
-        blanco: 1,
-        amarillo: 0,
-      },
-      xl: {
-        blanco: 0,
-        amarillo: 3,
-      },
-      xxl: {
-        blanco: 0,
-        amarillo: 0,
-      },
-    },
-  },
-  {
-    id: 2,
-    articulo: "2",
-    talles: ["s", "m"],
-    colores: ["blanco", "amarillo", "negro", "fuccia"],
-    datosPorTalleYColor: {
-      s: {
-        blanco: 1,
-        amarillo: 8,
-        negro: 5,
-        fuccia: 0,
-      },
-      m: {
-        blanco: 1,
-        amarillo: 8,
-        negro: 5,
-        fuccia: 0,
-      },
-    },
-  },
-  {
-    id: 3,
-    articulo: "3",
-    talles: ["s", "m", "xl"],
-    colores: ["blanco"],
-    datosPorTalleYColor: {
-      s: {
-        blanco: 1,
-      },
-      m: {
-        blanco: 5,
-      },
-      xl: {
-        blanco: 4,
-      },
-    },
-  },
-
-  {
-    id: 4,
-    articulo: "4",
-    talles: ["s"],
-    colores: ["blanco", "amarillo", "negro"],
-    datosPorTalleYColor: {},
-  },
-  {
-    id: 5,
-    articulo: "5",
-    talles: ["s", "m", "xl"],
-    colores: ["blanco", "amarillo", "negro"],
-    datosPorTalleYColor: {},
-  },
-  {
-    id: 6,
-    articulo: "6",
-    talles: ["s", "m", "xl"],
-    colores: ["blanco", "amarillo", "negro"],
-    datosPorTalleYColor: {},
-  },
-  {
-    id: 7,
-    articulo: "7",
-    talles: ["s", "m", "xl"],
-    colores: ["blanco", "amarillo", "negro"],
-    datosPorTalleYColor: {},
-  },
-];
+import ModalProducto from "./ModalProducto";
+import GrillaProducto from "./GrillaProducto";
 
 const ListadoProductos = () => {
-  const [products, setProducts] = useState(initialProducts);
+  const [data, setData] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [newTallesList, setNewTallesList] = useState([]);
-  const [newColoresList, setNewColoresList] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedProductId, setEditedProductId] = useState(null);
-  
 
-  const [newProduct, setNewProduct] = useState({
-    articulo: "",
-    talles: [""],
-    colores: [""],
-    datosPorTalleYColor: {},
-  });
+  const jwt = localStorage.getItem('jwt')
 
-  const [newTalle, setNewTalle] = useState("");
-  const [newColor, setNewColor] = useState("");
+  //OBTENER ARTICULOS DB
+  useEffect(() => {
+    fetch(`http://localhost:3001/api/articulos`, 
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      const articulos = []
+      for (const dataResult of result) {
+        const productos = dataResult.productos.map(({id, color, talle, stock}) => ({id, color, talle, stock}))
+        const articulo = 
+        {
+          id: dataResult.id,
+          numero_articulo: dataResult.numero_articulo,
+          nombre: dataResult.nombre,
+          descripcion: dataResult.descripcion,
+          precio_unitario: dataResult.precio_unitario,
+          productos
+        }
+
+        if(productos.length > 0) articulos.push(articulo)
+      }
+
+      setData(articulos)
+    })
+    .catch((error) => {
+      console.error("Error en la solicitud GET:", error)
+    });
+  }, [jwt]);
+
+  //AGREGAR ARTICULO DB
+  const handleAddArticulo = (newArticulo) => {
+    const requestData = 
+    {
+      numero_articulo: newArticulo.numero_articulo,
+      nombre: newArticulo.nombre,
+      descripcion: newArticulo.descripcion,
+      precio_unitario: parseFloat(newArticulo.precio_unitario),
+      talles: newArticulo.talles,
+      colores: newArticulo.colores,
+    }
+
+    fetch(`http://localhost:3001/api/articulos`, {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`
+      },
+      body: JSON.stringify(requestData)
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      const newArticuloData = {
+        id: result.id,
+        numero_articulo: newArticulo.numero_articulo,
+        nombre: newArticulo.nombre,
+        descripcion: newArticulo.descripcion,
+        precio_unitario: newArticulo.precio_unitario,
+        productos: result.productos
+      }
+      setData((prevData) => [...prevData, newArticuloData]);
+    })
+    .catch(error => {
+        console.error("Error en la solicitud POST:", error);
+    });
+  };
+
+  //EDITAR ARTICULO DB
+  const handleEditProducto = (editProduct) => {
+    const talles = ["s"]
+    const colores = ["azul"]
+    const productos = editProduct.productos.map(({ id, talle, color }) => ({ producto_id: id, talle, color }));
+
+    const requestData = 
+    {
+      numero_articulo: editProduct.numero_articulo,
+      nombre: editProduct.nombre,
+      descripcion: editProduct.descripcion,
+      precio_unitario: parseFloat(editProduct.precio_unitario),
+      talles: talles,
+      colores: colores,
+      productos: productos
+    }
+
+    fetch(`http://localhost:3001/api/articulos/${editProduct.id}`, {
+      method: "PUT",
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`
+      },
+      body: JSON.stringify(requestData)
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      const editArticuloData = {
+        id: editProduct.id,
+        numero_articulo: editProduct.numero_articulo,
+        nombre: editProduct.nombre,
+        descripcion: editProduct.descripcion,
+        precio_unitario: editProduct.precio_unitario,
+        productos: result.productos
+      }
+
+      setData((prevData) => {
+        const updatedData = prevData.map((art) =>
+          art.id === editArticuloData.id ? editArticuloData : art
+        );
+        return updatedData;
+      });
+    })
+    .catch(error => {
+        console.error("Error en la solicitud PUT:", error);
+    });
+  }
+
+   //ELIMINAR ARTICULO DB
+  const handleDeleteProducto = (articulo) => {
+    const shouldDelete = window.confirm(
+      "¿Estas seguro que deseas eliminar el articulo?"
+    );
+    if (shouldDelete) {
+      fetch(`http://localhost:3001/api/articulos/${articulo.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
+      })
+      .then(() => {
+        const updatedData = data.filter((art) => art.id !== articulo.id);
+        setData(updatedData);
+      })
+      .catch(error => {
+          console.error("Error en la solicitud DELETE:", error);
+      });
+    }
+  };
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
-    
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    
-  };
-
-  const handleNewProductChange = (event) => {
-    const { name, value } = event.target;
-
-    setNewProduct({
-      ...newProduct,
-      [name]: value,
-    });
-  };
-
-  const handleNewTalleChange = (event) => {
-    const { value } = event.target;
-
-    setNewTalle(value);
-  };
-
-  const handleNewColorChange = (event) => {
-    const { value } = event.target;
-
-    setNewColor(value);
-  };
-
-  const [addingAnotherTalle, setAddingAnotherTalle] = useState(false);
-
-  const addTalle = () => {
-    if (newTalle.trim() !== "") {
-      setNewTallesList([...newTallesList, newTalle]);
-      setNewProduct({
-        ...newProduct,
-        talles: [
-          ...newProduct.talles.filter((talle) => talle.trim() !== ""),
-          newTalle,
-        ],
-      });
-      setNewTalle("");
-      setAddingAnotherTalle(true);
-    }
-  };
-
-  const [addingAnotherColor, setAddingAnotherColor] = useState(false); // Nuevo estado para controlar el botón "Agregar otro"
-
-  const addColor = () => {
-    if (newColor.trim() !== "") {
-      setNewColoresList([...newColoresList, newColor]);
-      setNewProduct({
-        ...newProduct,
-        colores: [
-          ...newProduct.colores.filter((color) => color.trim() !== ""),
-          newColor,
-        ],
-      });
-      setNewColor("");
-      setAddingAnotherColor(true);
-    }
-  };
-
-  const removeTalle = (index) => {
-    const updatedTalles = [...newTallesList];
-    updatedTalles.splice(index, 1);
-    setNewTallesList(updatedTalles);
-  
-    setNewProduct({
-      ...newProduct,
-      talles: updatedTalles.filter((talle) => talle.trim() !== ""),
-    });
-  };
-
-  const removeColor = (index) => {
-    const updatedColores = [...newColoresList];
-    updatedColores.splice(index, 1);
-    setNewColoresList(updatedColores);
-  
-    setNewProduct({
-      ...newProduct,
-      colores: updatedColores.filter((color) => color.trim() !== ""),
-    });
-  };
-
-  const handleSaveProduct = () => {
-    if (
-      newProduct.articulo.trim() === "" ||
-      newProduct.talles.every((talle) => talle.trim() === "") ||
-      newProduct.colores.every((color) => color.trim() === "")
-    ) {
-      // Validar que los campos requeridos no estén vacíos
-      alert("Todos los campos son obligatorios");
-      return;
-    }
-    const tallesNoVacios = newProduct.talles.filter((talle) => talle !== "");
-    const coloresNoVacios = newProduct.colores.filter((color) => color !== "");
-
-    if (isEditing && selectedProduct) {
-      // Editar producto existente
-      const updatedProducts = products.map((product) =>
-        product.id === selectedProduct.id
-          ? {
-              ...product,
-              articulo: newProduct.articulo,
-              talles: tallesNoVacios,
-              colores: coloresNoVacios,
-            }
-          : product
-      );
-      setProducts(updatedProducts);
-      setSelectedProduct(null);
-    } else {
-// Agregar nuevo producto
-    const newProductData = {
-      id: products.length + 1,
-      ...newProduct,
-      talles: tallesNoVacios,
-      colores: coloresNoVacios,
-    };
-
-    setProducts([...products, newProductData]);
   }
-
-    setNewProduct({
-      articulo: "",
-      talles: [""],
-      colores: [""],
-      datosPorTalleYColor: {},
-    });
-    setNewTallesList([]);
-setNewColoresList([]);
-
-    setIsModalOpen(false);
-    setIsEditing(false);
-  };
-
-  const handleEdit = () => {
-    setIsEditModalOpen(true);
-    setIsEditing(true);
-    setEditedProductId(selectedProduct.id);
-  };
-
-  const handleEditProduct = (editedProduct) => {
-    
-    
-
-  }
-
-  const renderGrilla = (product) => {
-    if (product && product.talles && product.colores) {
-      if (product.datosPorTalleYColor) {
-        return (
-          <div>
-            <table className="table-grilla">
-              <thead>
-                <tr className="table-header-grilla">
-                  <th className="articulo-grilla">{product.articulo}</th>
-                  {product.talles.map((talle, index) => (
-                    <th key={index}>Talle {talle}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {product.colores.map((color, index) => (
-                  <tr key={index}>
-                    <td className="table-cell-grilla">{color}</td>
-                    {product.talles.map((talle, talleIndex) => (
-                      <td key={talleIndex}>
-                        {selectedProduct.datosPorTalleYColor &&
-                          selectedProduct.datosPorTalleYColor[talle] &&
-                          selectedProduct.datosPorTalleYColor[talle][color]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <button className="agregar-producto-grilla" onClick={handleEdit}>
-              Editar Articulo
-            </button>
-            {isEditModalOpen && selectedProduct === product && (
-              <ListadoProductosEditar
-                product={selectedProduct}
-                isOpen={isEditModalOpen}
-                onClose={() => setIsEditModalOpen(false)}
-                onSave={(editedProduct) => {
-                  handleEditProduct(editedProduct);
-                  setIsEditModalOpen(false);
-                }}
-              />
-            )}
-          </div>
-        );
-      }
-    }
-  };
 
   return (
     <>
@@ -334,111 +164,16 @@ setNewColoresList([]);
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
-              <tr key={product.id} onClick={() => handleProductClick(product)}>
-                <td className="table-cell-productos">{product.articulo}</td>
+            {data.map((articulo) => (
+              <tr key={articulo.id} onClick={() => handleProductClick(articulo)}>
+                <td className="table-cell-productos">{articulo.numero_articulo}</td>
               </tr>
             ))}
           </tbody>
         </table>
-        <button onClick={openModal} className="agregar-producto-grilla">
-          Agregar Producto
-        </button>
-
-        {selectedProduct && renderGrilla(selectedProduct)}
+        <ModalProducto onAddProducto={handleAddArticulo} />
+        {selectedProduct && <GrillaProducto articulo={selectedProduct} onEditProducto={handleEditProducto} onDeleteProducto={handleDeleteProducto}/>}
       </div>
-      {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeModal}>
-              &times;
-            </span>
-            <Modal
-              show={isModalOpen}
-              onHide={closeModal}
-              backdrop="static"
-              keyboard={false}
-            >
-              <Modal.Header closeButton>
-                <Modal.Title>Nuevo producto</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form>
-                  <Form.Group controlId="articulo">
-                    <Form.Label>Número de Artículo</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="articulo"
-                      value={newProduct.articulo}
-                      onChange={handleNewProductChange}
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="talle">
-                    <Form.Label>Talle</Form.Label>
-                    <div className="input-with-button">
-                      <Form.Control
-                        type="text"
-                        value={newTalle}
-                        onChange={handleNewTalleChange}
-                      />
-                      <Button id="botonNuevoCliente" onClick={addTalle}>
-                        {addingAnotherTalle ? "Agregar otro" : "Agregar"}
-                      </Button>
-                    </div>
-                    {newTallesList.length > 0 && (
-                      <div>
-                        <p>Talles Agregados:</p>
-                        <ul>
-                          {newTallesList.map((talle, index) => (
-                            <li key={index} className="talles-agregados">
-                              {talle}{" "}
-                              <button onClick={() => removeTalle(index)} className="boton-eliminar-agregarProducto"><FontAwesomeIcon icon={faTrashAlt} /></button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </Form.Group>
-                  <Form.Group controlId="color">
-                    <Form.Label>Color</Form.Label>
-                    <div className="input-with-button">
-                      <Form.Control
-                        type="text"
-                        value={newColor}
-                        onChange={handleNewColorChange}
-                      />
-                      <Button id="botonNuevoCliente" onClick={addColor}>
-                        {addingAnotherColor ? "Agregar otro" : "Agregar"}
-                      </Button>
-                      {newColoresList.length > 0 && (
-                        <div>
-                          <p>Colores Agregados:</p>
-                          <ul>
-                            {newColoresList.map((color, index) => (
-                              <li key={index} className="talles-agregados">
-                                {color}{" "}
-          <button onClick={() => removeColor(index)} className="boton-eliminar-agregarProducto">Eliminar</button>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  </Form.Group>
-                </Form>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button id="botonNuevoCliente" onClick={closeModal}>
-                  Cerrar
-                </Button>
-                <Button id="botonNuevoCliente" onClick={handleSaveProduct}>
-                  Guardar
-                </Button>
-              </Modal.Footer>
-            </Modal>
-          </div>
-        </div>
-      )}
     </>
   );
 };

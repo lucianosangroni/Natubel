@@ -1,6 +1,6 @@
 // ESTA ES LA ESTRUCTURA DE COLUMNAS DEL LISTADO DE CLIENTES
 
-export const COLUMNS = [
+export const COLUMNSCLIENTES = [
 {
     Header: "Nombre Completo",
     accessor: "nombre",

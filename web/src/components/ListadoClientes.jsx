@@ -1,12 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import NavbarAdm from '../components/NavbarAdm';
-import {
-  useTable,
-  useGlobalFilter,
-  usePagination,
-  useRowSelect,
-} from "react-table";
-import { COLUMNS } from "./columnsListaClientes";
+import { useTable, useGlobalFilter, usePagination, useRowSelect } from "react-table";
+import { COLUMNSCLIENTES } from "./columnsListaClientes";
 import GlobalFilter from "./GlobalFilter";
 import ModalCliente from "./ModalCliente";
 import ModalClienteEditar from "./ModalClienteEditar";
@@ -15,14 +10,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const ListadoClientes = () => {
-  const columns = useMemo(() => COLUMNS, []);
+  const columns = useMemo(() => COLUMNSCLIENTES, []);
   const [data, setData] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
 
   const jwt = localStorage.getItem('jwt')
 
-  //OBTENER PROVEEDORES DB
+  //OBTENER CLIENTES DB
   useEffect(() => {
     fetch(`http://localhost:3001/api/clientes`, 
     {
@@ -241,16 +236,6 @@ const ListadoClientes = () => {
           </tbody>
         </table>
       </div>
-      {isEditModalOpen && (
-        <ModalClienteEditar
-          data={editingData}
-          onClose={() => setIsEditModalOpen(false)}
-          onSave={(editedData) => {
-            updateTableRow(editedData)
-            setIsEditModalOpen(false);
-          }}
-        />
-      )}
       <div className="paginacion">
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>
           <FontAwesomeIcon icon={faArrowLeft} />
@@ -266,6 +251,16 @@ const ListadoClientes = () => {
         </button>
       </div>
       <ModalCliente onAddClient={handleAddCliente} />
+      {isEditModalOpen && (
+        <ModalClienteEditar
+          data={editingData}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={(editedData) => {
+            updateTableRow(editedData)
+            setIsEditModalOpen(false);
+          }}
+        />
+      )}
     </>
   );
 };
