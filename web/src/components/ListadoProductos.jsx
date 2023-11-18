@@ -208,8 +208,6 @@ const ListadoProductos = () => {
     });
   };
 
-
-
   const handleSaveProduct = () => {
     if (
       newProduct.articulo.trim() === "" ||
@@ -268,6 +266,12 @@ setNewColoresList([]);
     setEditedProductId(selectedProduct.id);
   };
 
+  const handleEditProduct = (editedProduct) => {
+    
+    
+
+  }
+
   const renderGrilla = (product) => {
     if (product && product.talles && product.colores) {
       if (product.datosPorTalleYColor) {
@@ -300,16 +304,13 @@ setNewColoresList([]);
             <button className="agregar-producto-grilla" onClick={handleEdit}>
               Editar Articulo
             </button>
-            {/* EN ESTA PARTE DEL CODIGO HAY UN ERROR QUE NO PUEDO SOLUCIONAR */}
             {isEditModalOpen && selectedProduct === product && (
               <ListadoProductosEditar
                 product={selectedProduct}
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 onSave={(editedProduct) => {
-                  console.log(product)
-                  // Lógica para guardar el producto editado
-                  handleSaveProduct();
+                  handleEditProduct(editedProduct);
                   setIsEditModalOpen(false);
                 }}
               />

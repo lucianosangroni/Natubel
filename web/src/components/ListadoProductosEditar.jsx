@@ -9,25 +9,12 @@ function ListadoProductosEditar({ product, onClose, onSave }) {
   const [newColoresList, setNewColoresList] = useState(product.colores);
   const [newTalle, setNewTalle] = useState("");
   const [newColor, setNewColor] = useState("");
-  const [addingAnotherTalle, setAddingAnotherTalle] = useState(false);
-  const [addingAnotherColor, setAddingAnotherColor] = useState(false);
+  const [addingAnotherTalle, setAddingAnotherTalle] = useState(true);
+  const [addingAnotherColor, setAddingAnotherColor] = useState(true);
 
   const handleSave = () => {
     onSave(editedProduct);
     onClose();
-    console.log(editedProduct)
-  };
-
-  const handleNewTalleChange = (event) => {
-    const { value } = event.target;
-
-    setNewTalle(value);
-  };
-
-  const handleNewColorChange = (event) => {
-    const { value } = event.target;
-
-    setNewColor(value);
   };
 
   const addTalle = () => {
@@ -46,14 +33,25 @@ function ListadoProductosEditar({ product, onClose, onSave }) {
   };
 
   const removeTalle = (index) => {
-    const updatedTalles = [...newTallesList];
-    updatedTalles.splice(index, 1);
-    setNewTallesList(updatedTalles);
-  
-    setEditedProduct({
-      ...editedProduct,
-      talles: updatedTalles.filter((talle) => talle.trim() !== ""),
-    });
+    console.log(index)
+    console.log(newTallesList)
+
+    //const updatedTalles = [...newTallesList];
+//
+    //console.log(updatedTalles)
+    //updatedTalles.splice(index, 1);
+    //setNewTallesList(updatedTalles);
+//
+    //console.log(newTallesList)
+
+    //setEditedProduct({
+    //  ...editedProduct,
+    //  talles: updatedTalles.filter((talle) => talle.trim() !== ""),
+    //});
+//
+    //if(editedProduct.talles.length === 0) {
+    //  setAddingAnotherTalle(false)
+    //}
   };
 
 
@@ -81,6 +79,10 @@ function ListadoProductosEditar({ product, onClose, onSave }) {
       ...editedProduct,
       colores: updatedColor.filter((color) => color.trim() !== ""),
     });
+
+    if(editedProduct.colores.length === 0) {
+      setAddingAnotherColor(false)
+    }
   };
 
   return (
@@ -96,7 +98,9 @@ function ListadoProductosEditar({ product, onClose, onSave }) {
               <Form.Control
                 type="text"
                 value={newTalle}
-                onChange={handleNewTalleChange}
+                onChange={(e) => {
+                  setNewTalle(e.target.value);
+                }}
               />
               <Button id="botonNuevoCliente" onClick={addTalle}>
                 {addingAnotherTalle ? "Agregar otro" : "Agregar"}
@@ -122,24 +126,26 @@ function ListadoProductosEditar({ product, onClose, onSave }) {
             <Form.Control
             type="text"
             value={newColor}
-                onChange={handleNewColorChange}            
-             />        
-                           <Button id="botonNuevoCliente" onClick={addColor}>
-                {addingAnotherColor ? "Agregar otro" : "Agregar"}
-              </Button>
-              </div>           
-              {newColoresList.length > 0 && (
-              <div>
-                <p>Colores Agregados:</p>
-                <ul>
-                  {newColoresList.map((color, index) => (
-                    <li key={index} className="talles-agregados">
-                      {color}{" "}
-                      <button onClick={() => removeColor(index)} className="boton-eliminar-agregarProducto">Eliminar</button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            onChange={(e) => {
+              setNewColor(e.target.value)
+            }}            
+            />        
+            <Button id="botonNuevoCliente" onClick={addColor}>
+              {addingAnotherColor ? "Agregar otro" : "Agregar"}
+            </Button>
+            </div>           
+            {newColoresList.length > 0 && (
+            <div>
+              <p>Colores Agregados:</p>
+              <ul>
+                {newColoresList.map((color, index) => (
+                  <li key={index} className="talles-agregados">
+                    {color}{" "}
+                    <button onClick={() => removeColor(index)} className="boton-eliminar-agregarProducto">Eliminar</button>
+                  </li>
+                ))}
+              </ul>
+            </div>
             )}
           </Form.Group>
         </Form>
