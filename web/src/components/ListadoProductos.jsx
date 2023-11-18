@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import NavbarAdm from '../components/NavbarAdm';
 import { Button, Modal, Form } from "react-bootstrap";
 import ListadoProductosEditar from "./ListadoProductosEditar";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, } from '@fortawesome/free-solid-svg-icons';
 
 const initialProducts = [
   {
@@ -390,7 +392,7 @@ setNewColoresList([]);
                           {newTallesList.map((talle, index) => (
                             <li key={index} className="talles-agregados">
                               {talle}{" "}
-                              <button onClick={() => removeTalle(index)} className="boton-eliminar-agregarProducto">Eliminar</button>
+                              <button onClick={() => removeTalle(index)} className="boton-eliminar-agregarProducto"><FontAwesomeIcon icon={faTrashAlt} /></button>
                             </li>
                           ))}
                         </ul>

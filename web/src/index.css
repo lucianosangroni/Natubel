@@ -285,9 +285,42 @@
 
 /* CARGAR PEDIDO */
 
+.contenedor-cargar-pedido{
+  display: grid;
+  grid-template-areas:
+  "contenedorBoton  contenedorBoton"
+  "pedido pedido"
+  "resumenPedido resumenPedido"
+  "cargarPedido cargarPedido";
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin: 1rem;
+  
+}
+.contenedor-botones {
+  grid-area: contenedorBoton;
+}
+
+.contenedor-principal {
+  grid-area: pedido;
+}
+
+.titulo-resumenPedido {
+  grid-area: resumenPedido;
+}
+.cargar-pedido-boton {
+  grid-area: cargarPedido;
+}
+
 .contenedor-principal{
   display: flex;
-  height: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+  width: 100%;
+  margin: 1rem;
+  border: 1px solid #000;
   
 }
 .table-cargarPedido-contenedor {
@@ -295,6 +328,25 @@
   border: 1px solid #000;
   height: 10px;
 }
+
+.boton-cargar-cliente {
+  margin: 1rem;
+  padding: 0.5rem;
+  width: 120px;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  background-color:#FBCCD2;
+}
+
+.boton-cargar-proveedor {
+  margin: 1rem;
+  padding: 0.5rem;
+  width: 120px;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  background-color:#FBCCD2;
+}
+
 
 .table-grilla-cargar-pedido {
   border-collapse: collapse;
@@ -318,14 +370,33 @@
   
 }
 
-.titulo-resumenPedido {
-  text-align: center;
-  background-color: #F0F0F0;
-  width: 200px;
-  padding: 0.3rem;
+.confirmar {
+
+  margin: 1rem;
+  padding: 0.5rem;
+  width: 120px;
   border: 1px solid #000;
   border-radius: 0.5rem;
-  margin: auto;
+  background-color:#FBCCD2;
+}
+
+.titulo-resumenPedido {
+  text-align: left;
+  background-color: #F0F0F0;
+  width: 13rem;
+  padding: 0.7rem;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  margin: 1rem;
+}
+
+.cargar-pedido-boton{
+  margin: 1rem;
+  padding: 0.5rem;
+  width: 120px;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  background-color:#FBCCD2;
 }
 
 .stock-grilla {
