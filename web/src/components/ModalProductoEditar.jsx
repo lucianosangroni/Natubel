@@ -30,7 +30,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
         colores
       }
     );
-  }, []);
+  }, [articulo]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);

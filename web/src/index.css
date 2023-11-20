@@ -329,31 +329,24 @@
   height: 10px;
 }
 
-.boton-cargar-cliente {
+.boton-pedidor {
   margin: 1rem;
   padding: 0.5rem;
   width: 120px;
   border: 1px solid #000;
   border-radius: 0.5rem;
-  background-color:#FBCCD2;
+  background-color:#F0F0F0;
 }
 
-.boton-cargar-proveedor {
-  margin: 1rem;
-  padding: 0.5rem;
-  width: 120px;
-  border: 1px solid #000;
-  border-radius: 0.5rem;
+.pedidor-seleccionado {
   background-color:#FBCCD2;
 }
-
 
 .table-grilla-cargar-pedido {
   border-collapse: collapse;
   width: 100%;
   height: 100px;
   margin: 1rem 0 3rem 5rem;
-  
 }
 
 .table-grilla-cargar-pedido th  {

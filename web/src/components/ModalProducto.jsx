@@ -93,7 +93,7 @@ function ModalProducto({ onAddProducto }) {
 
   return (
     <>
-      <button onClick={handleShow} className="agregar-producto-grilla">
+      <button onClick={handleShow} className="agregar-producto-grilla abajoDerecha">
         Agregar Producto
       </button>
 

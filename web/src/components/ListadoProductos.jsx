@@ -73,6 +73,7 @@ const ListadoProductos = () => {
         productos: result.productos
       }
       setData((prevData) => [...prevData, newArticuloData]);
+      setSelectedProduct(newArticuloData)
     })
     .catch(error => {
         console.error("Error en la solicitud POST:", error);
@@ -119,6 +120,8 @@ const ListadoProductos = () => {
         );
         return updatedData;
       });
+
+      setSelectedProduct(editArticuloData)
     })
     .catch(error => {
         console.error("Error en la solicitud PUT:", error);

@@ -94,9 +94,41 @@ const initialProducts = [
   },
 ];
 
+const proveedores = [
+  {
+    "id": 1,
+    "nombre": "Juan Gomez",
+    "email": "juan@example.com",
+    "telefono": "555-555-5555",
+    "direccion": "123 Calle Principal",
+  }
+]
+
+const clientes = [
+  {
+    "id": 2,
+    "dni": "12345678",
+    "cuit_cuil": "12345678901",
+    "tipo_cliente": "MINORISTA",
+    "forma_de_envio": "agsaf",
+    "codigo_postal": "1405",
+    "ciudad": "fgasgasf",
+    "provincia": "asgsfa",
+    "persona": {
+        "id": 5,
+        "nombre": "PEPITO",
+        "email": "pepe@gmail.com",
+        "telefono": "fasfsaf",
+        "direccion": "fasfa",
+    }
+  }
+]
+
 const CargarPedido = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedPedidor, setSelectedPedidor] = useState("cliente")
   const [cantidadesPorProducto, setCantidadesPorProducto] = useState({});
+  const [filtroBusqueda, setFiltroBusqueda] = useState('');
   const [resumenPedido, setResumenPedido] = useState([]);
 
   const handleProductClick = (product) => {
@@ -144,6 +176,28 @@ const CargarPedido = () => {
       }));
     }
 
+
+    const handleCambiarPedidor = (pedidor) => {
+      setSelectedPedidor(pedidor)
+    }
+
+    const listaPedidores = selectedPedidor === 'cliente' ? clientes : proveedores;
+
+    const getNombre = (pedidor) => {
+      if(selectedPedidor === "cliente") {
+        return pedidor.persona.nombre
+      } else if (selectedPedidor === "proveedor") {
+        return pedidor.nombre
+      }
+    }
+
+    const pedidoresFiltrados = listaPedidores.filter(pedidor =>
+      getNombre(pedidor).toLowerCase().includes(filtroBusqueda.toLowerCase())
+    );
+
+    const handleCambiarFiltro = (event) => {
+      setFiltroBusqueda(event.target.value);
+    };
 
 const renderGrilla = (product) => {
   const initializeData = () => {
@@ -197,9 +251,23 @@ const renderGrilla = (product) => {
     <NavbarAdm/>
     <div className="contenedor-cargar-pedido">
       <div className="contenedor-botones">
-      <button className="boton-cargar-cliente">Cliente</button>
-      <button className="boton-cargar-proveedor">Proveedor</button>
-
+        <button id="btn-pedidor-cliente" className={selectedPedidor === 'cliente' ? 'boton-pedidor pedidor-seleccionado' : 'boton-pedidor'} onClick={() => handleCambiarPedidor('cliente')}>
+          Cliente
+        </button>
+        <button className={selectedPedidor === 'proveedor' ? 'boton-pedidor pedidor-seleccionado' : 'boton-pedidor'} onClick={() => handleCambiarPedidor('proveedor')}>
+          Proveedor
+        </button>
+        <input
+          type="text"
+          placeholder={`Seleccionar ${selectedPedidor === 'cliente' ? 'Cliente' : 'Proveedor'}`}
+          value={filtroBusqueda}
+          onChange={handleCambiarFiltro}
+        />
+        <ul>
+        {pedidoresFiltrados.map(pedidor => (
+          <li key={pedidor.id}>{pedidor.nombre}</li>
+        ))}
+      </ul>
       </div>
 
       <div className="contenedor-principal">
