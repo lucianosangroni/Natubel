@@ -81,8 +81,6 @@ const ListadoProductos = () => {
 
   //EDITAR ARTICULO DB
   const handleEditProducto = (editProduct) => {
-    const talles = ["s"]
-    const colores = ["azul"]
     const productos = editProduct.productos.map(({ id, talle, color }) => ({ producto_id: id, talle, color }));
 
     const requestData = 
@@ -91,8 +89,8 @@ const ListadoProductos = () => {
       nombre: editProduct.nombre,
       descripcion: editProduct.descripcion,
       precio_unitario: parseFloat(editProduct.precio_unitario),
-      talles: talles,
-      colores: colores,
+      talles: editProduct.talles,
+      colores: editProduct.colores,
       productos: productos
     }
 

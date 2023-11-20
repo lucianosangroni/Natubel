@@ -1,7 +1,5 @@
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
+import { Modal, Button, Form, FormControl } from "react-bootstrap";
 
 function ModalProducto({ onAddProducto }) {
   const [show, setShow] = useState(false);
@@ -10,14 +8,17 @@ function ModalProducto({ onAddProducto }) {
     nombre: "",
     descripcion: "",
     precio_unitario: "",
-    talles: ["s"],
-    colores: ["blanco"],
+    talles: [""],
+    colores: [""],
   });
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleSave = () => {
+    newProduct.talles = newProduct.talles.filter((talle) => talle.trim() !== "");
+    newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
+
     if (newProduct.numero_articulo && newProduct.nombre && newProduct.precio_unitario && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
       onAddProducto(newProduct);
       setNewProduct({
@@ -25,13 +26,69 @@ function ModalProducto({ onAddProducto }) {
         nombre: "",
         descripcion: "",
         precio_unitario: "",
-        talles: [],
-        colores: [],
+        talles: [""],
+        colores: [""],
       });
       handleClose();
     } else {
       console.log("Por favor, complete todos los campos.");
     }
+  };
+
+  const handleTalleChange = (e, index) => {
+    const newTalles = [...newProduct.talles];
+    newTalles[index] = e.target.value;
+    setNewProduct({
+      ...newProduct,
+      talles: newTalles,
+    });
+  };
+
+  const addTalleField = () => {
+    const lastTalle = newProduct.talles[newProduct.talles.length - 1].trim();
+    if (lastTalle !== "") {
+      setNewProduct({
+        ...newProduct,
+        talles: [...newProduct.talles, ""],
+      });
+    }
+  };
+
+  const removeTalleField = (index) => {
+    const newTalles = [...newProduct.talles];
+    newTalles.splice(index, 1);
+    setNewProduct({
+      ...newProduct,
+      talles: newTalles,
+    });
+  };
+
+  const handleColorChange = (e, index) => {
+    const newColores = [...newProduct.colores];
+    newColores[index] = e.target.value;
+    setNewProduct({
+      ...newProduct,
+      colores: newColores,
+    });
+  };
+
+  const addColorField = () => {
+    const lastColor = newProduct.colores[newProduct.colores.length - 1].trim();
+    if (lastColor !== "") {
+      setNewProduct({
+        ...newProduct,
+        colores: [...newProduct.colores, ""],
+      });
+    }
+  };
+
+  const removeColorField = (index) => {
+    const newColores = [...newProduct.colores];
+    newColores.splice(index, 1);
+    setNewProduct({
+      ...newProduct,
+      colores: newColores,
+    });
   };
 
   return (
@@ -102,6 +159,46 @@ function ModalProducto({ onAddProducto }) {
                   });
                 }}
               />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Talles</Form.Label>
+              {newProduct.talles.map((talle, index) => (
+                  <div key={index}>
+                  <FormControl
+                    placeholder="Talle"
+                    value={talle}
+                    onChange={(e) => handleTalleChange(e, index)}
+                  />
+                  {newProduct.talles.length > 1 && (
+                    <Button variant="outline-secondary" onClick={() => removeTalleField(index)}>
+                      -
+                    </Button>
+                  )}
+                </div>
+                  ))}
+               <Button variant="outline-secondary" onClick={addTalleField}>
+                 +
+               </Button>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Colores</Form.Label>
+              {newProduct.colores.map((color, index) => (
+                  <div key={index}>
+                  <FormControl
+                    placeholder="Color"
+                    value={color}
+                    onChange={(e) => handleColorChange(e, index)}
+                  />
+                  {newProduct.colores.length > 1 && (
+                    <Button variant="outline-secondary" onClick={() => removeColorField(index)}>
+                      -
+                    </Button>
+                  )}
+                </div>
+                  ))}
+               <Button variant="outline-secondary" onClick={addColorField}>
+                 +
+               </Button>
             </Form.Group>
           </Form>
         </Modal.Body>
