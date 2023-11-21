@@ -2,14 +2,14 @@ function GrillasProductosConfirmados({ articulos }) {
     return (
         <>
             <h5 className="titulo-resumenPedido">Resumen de pedido</h5>
-
+            <div div className="grillas-container-resumen">
             {articulos.map((articulo) => {
                     const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
                     const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
 
                 return  (
-                    <div>
-                    <table className="table-grilla">
+                    <div className="grillas-container-resumen">
+                    <table className="table-grilla-resumen">
                         <thead>
                             <tr className="table-header-grilla">
                                 <th className="articulo-grilla">{articulo.numero_articulo}</th>
@@ -38,6 +38,7 @@ function GrillasProductosConfirmados({ articulos }) {
                 </div>
                 )
             })}
+            </div>
         </>
     );
 }

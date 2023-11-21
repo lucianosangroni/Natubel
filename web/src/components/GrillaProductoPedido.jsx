@@ -87,9 +87,9 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto }) {
                     })}
                   </tr>
                 ))}
+                <button className="confirmar" onClick={handleConfirmarProducto}>Confirmar</button>
               </tbody>
         </table>
-        <button className="confirmar" onClick={handleConfirmarProducto}>Confirmar</button>
       </>
     );
   }

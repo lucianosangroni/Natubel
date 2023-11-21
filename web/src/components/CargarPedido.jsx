@@ -161,7 +161,6 @@ const CargarPedido = () => {
             noOptionsMessage={() => `No existe el ${tipoPedidor === "cliente" ? "cliente" : "proveedor"}`}
           />
       </div>
-
       <div className="contenedor-principal">
         <table className="table-cargarPedido-contenedor">
           <thead>
@@ -179,10 +178,8 @@ const CargarPedido = () => {
         </table>
         {selectedProduct && <GrillaProductoPedido articulo={selectedProduct} onConfirmarProducto={handleConfirmarProducto}/>}
       </div>
-
       {productosConfirmados.length > 0 && <GrillasProductosConfirmados articulos={productosConfirmados}/>}
-
-      <button className="cargar-pedido-boton abajoDerecha" onClick={handleCargarPedido}>Cargar pedido</button>
+      <button className="cargar-pedido-boton" onClick={handleCargarPedido}>Cargar pedido</button>
     </div>
     </>
   );
