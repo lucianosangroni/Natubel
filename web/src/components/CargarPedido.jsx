@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import NavbarAdm from '../components/NavbarAdm';
+import Select from "react-select";
 
 const initialProducts = [
   {
@@ -125,149 +126,150 @@ const clientes = [
 ]
 
 const CargarPedido = () => {
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedPedidor, setSelectedPedidor] = useState("cliente")
-  const [cantidadesPorProducto, setCantidadesPorProducto] = useState({});
+  const [tipoPedidor, setTipoPedidor] = useState("cliente")
   const [filtroBusqueda, setFiltroBusqueda] = useState('');
-  const [resumenPedido, setResumenPedido] = useState([]);
-
-  const handleProductClick = (product) => {
-    handleConfirmarProducto(product);
-    setSelectedProduct(product);
-    setCantidadesPorProducto((prevCantidades) => ({
-      ...prevCantidades,
-      [product.id]: prevCantidades[product.id] || initializeQuantities(product),
-    }));
-  };
-
-  const handleConfirmarProducto = (product) => {
-    setCantidadesPorProducto((prevCantidades) => ({
-      ...prevCantidades,
-      [product.id]: prevCantidades[product.id] || initializeQuantities(product),
-    }));
+  const [selectedPedidor, setSelectedPedidor] = useState('');
   
-    setResumenPedido((prevResumen) => [...prevResumen, product]);
-  };
+  //const [selectedProduct, setSelectedProduct] = useState(null);
+  //const [cantidadesPorProducto, setCantidadesPorProducto] = useState({});
+  //const [resumenPedido, setResumenPedido] = useState([]);
 
-  const initializeQuantities = (product) => {
-    const quantities = {};
-  
-    if (product && product.talles && product.colores) {
-      product.talles.forEach((talle) => {
-        product.colores.forEach((color) => {
-          quantities[`${talle}-${color}`] = 0;
-        });
-      });
-    }
-  
-    return quantities;
-  };
+  //const handleProductClick = (product) => {
+  //  handleConfirmarProducto(product);
+  //  setSelectedProduct(product);
+  //  setCantidadesPorProducto((prevCantidades) => ({
+  //    ...prevCantidades,
+  //    [product.id]: prevCantidades[product.id] || initializeQuantities(product),
+  //  }));
+  //};
 
-  const handleCantidadChange = (talle, color, e) => {
-    const key = `${selectedProduct.id}-${talle}-${color}`;
-    const newValue = parseInt(e.target.value, 10) || 0;
+  //const handleConfirmarProducto = (product) => {
+  //  setCantidadesPorProducto((prevCantidades) => ({
+  //    ...prevCantidades,
+  //    [product.id]: prevCantidades[product.id] || initializeQuantities(product),
+  //  }));
+  //
+  //  setResumenPedido((prevResumen) => [...prevResumen, product]);
+  //};
 
-      setCantidadesPorProducto((prevCantidades) => ({
-        ...prevCantidades,
-        [selectedProduct.id]: {
-          ...prevCantidades[selectedProduct.id],
-          [key]: newValue,
-        },
-      }));
-    }
+  //const initializeQuantities = (product) => {
+  //  const quantities = {};
+  //
+  //  if (product && product.talles && product.colores) {
+  //    product.talles.forEach((talle) => {
+  //      product.colores.forEach((color) => {
+  //        quantities[`${talle}-${color}`] = 0;
+  //      });
+  //    });
+  //  }
+  //
+  //  return quantities;
+  //};
 
+  //const handleCantidadChange = (talle, color, e) => {
+  //  const key = `${selectedProduct.id}-${talle}-${color}`;
+  //  const newValue = parseInt(e.target.value, 10) || 0;
+//
+  //    setCantidadesPorProducto((prevCantidades) => ({
+  //      ...prevCantidades,
+  //      [selectedProduct.id]: {
+  //        ...prevCantidades[selectedProduct.id],
+  //        [key]: newValue,
+  //      },
+  //    }));
+  //  }
 
     const handleCambiarPedidor = (pedidor) => {
-      setSelectedPedidor(pedidor)
+      setTipoPedidor(pedidor)
+      setFiltroBusqueda('');
     }
 
-    const listaPedidores = selectedPedidor === 'cliente' ? clientes : proveedores;
-
     const getNombre = (pedidor) => {
-      if(selectedPedidor === "cliente") {
+      if(tipoPedidor === "cliente") {
         return pedidor.persona.nombre
-      } else if (selectedPedidor === "proveedor") {
+      } else if (tipoPedidor === "proveedor") {
         return pedidor.nombre
       }
     }
+
+    const listaPedidores = tipoPedidor === 'cliente' ? clientes : proveedores;
 
     const pedidoresFiltrados = listaPedidores.filter(pedidor =>
       getNombre(pedidor).toLowerCase().includes(filtroBusqueda.toLowerCase())
     );
 
-    const handleCambiarFiltro = (event) => {
-      setFiltroBusqueda(event.target.value);
-    };
+    const handleCargarPedido = () => {
+      console.log(selectedPedidor)
+      console.log(tipoPedidor)
+    }
 
-const renderGrilla = (product) => {
-  const initializeData = () => {
-    const initializedData = {};
-    product.talles.forEach((talle) => {
-      initializedData[talle] = {};
-      product.colores.forEach((color) => {
-        initializedData[talle][color] = 0;
-        
-      });
-    });
-    return initializedData;
-  };
-
-  initializeData();
-
-  return (
-    <table className="table-grilla-cargar-pedido">
-      <thead>
-        <tr className="table-header-grilla">
-          <th className="articulo-grilla">{product.articulo}</th>
-          {product.talles.map((talle, index) => (
-            <th key={index}>Talle {talle}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {product.colores.map((color, index) => (
-          <tr key={index}>
-            <td className="table-cell-grilla">{color}</td>
-            {product.talles.map((talle, talleIndex) => (
-              <td key={talleIndex}>
-                <p className="stock-grilla">Stock: {selectedProduct.datosPorTalleYColor[talle]?.[color]?.toString() || '0'}</p>
-                <input
-                    className="input-cargar-pedido"
-                    type="number"
-                    min="0"
-                    value={cantidadesPorProducto[selectedProduct.id]?.[`${talle}-${color}`]?.toString() || '0'}
-                    onChange={(e) => handleCantidadChange(talle, color, e)}
-                  />
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
+//const renderGrilla = (product) => {
+//  const initializeData = () => {
+//    const initializedData = {};
+//    product.talles.forEach((talle) => {
+//      initializedData[talle] = {};
+//      product.colores.forEach((color) => {
+//        initializedData[talle][color] = 0;
+//        
+//      });
+//    });
+//    return initializedData;
+//  };
+//
+//  initializeData();
+//
+//  return (
+//    <table className="table-grilla-cargar-pedido">
+//      <thead>
+//        <tr className="table-header-grilla">
+//          <th className="articulo-grilla">{product.articulo}</th>
+//          {product.talles.map((talle, index) => (
+//            <th key={index}>Talle {talle}</th>
+//          ))}
+//        </tr>
+//      </thead>
+//      <tbody>
+//        {product.colores.map((color, index) => (
+//          <tr key={index}>
+//            <td className="table-cell-grilla">{color}</td>
+//            {product.talles.map((talle, talleIndex) => (
+//              <td key={talleIndex}>
+//                <p className="stock-grilla">Stock: {selectedProduct.datosPorTalleYColor[talle]?.[color]?.toString() || '0'}</p>
+//                <input
+//                    className="input-cargar-pedido"
+//                    type="number"
+//                    min="0"
+//                    value={cantidadesPorProducto[selectedProduct.id]?.[`${talle}-${color}`]?.toString() || '0'}
+//                    /*onChange={(e) => handleCantidadChange(talle, color, e)}*/
+//                  />
+//              </td>
+//            ))}
+//          </tr>
+//        ))}
+//      </tbody>
+//    </table>
+//  );
+//};
 
   return ( <>
     <NavbarAdm/>
     <div className="contenedor-cargar-pedido">
       <div className="contenedor-botones">
-        <button id="btn-pedidor-cliente" className={selectedPedidor === 'cliente' ? 'boton-pedidor pedidor-seleccionado' : 'boton-pedidor'} onClick={() => handleCambiarPedidor('cliente')}>
+        <button id="btn-pedidor-cliente" className={tipoPedidor === 'cliente' ? 'boton-pedidor pedidor-seleccionado' : 'boton-pedidor'} onClick={() => handleCambiarPedidor('cliente')}>
           Cliente
         </button>
-        <button className={selectedPedidor === 'proveedor' ? 'boton-pedidor pedidor-seleccionado' : 'boton-pedidor'} onClick={() => handleCambiarPedidor('proveedor')}>
+        <button className={tipoPedidor === 'proveedor' ? 'boton-pedidor pedidor-seleccionado' : 'boton-pedidor'} onClick={() => handleCambiarPedidor('proveedor')}>
           Proveedor
         </button>
-        <input
-          type="text"
-          placeholder={`Seleccionar ${selectedPedidor === 'cliente' ? 'Cliente' : 'Proveedor'}`}
-          value={filtroBusqueda}
-          onChange={handleCambiarFiltro}
-        />
-        <ul>
-        {pedidoresFiltrados.map(pedidor => (
-          <li key={pedidor.id}>{pedidor.nombre}</li>
-        ))}
-      </ul>
+        <Select options={pedidoresFiltrados.map((pedidor) => ({label: getNombre(pedidor)}))}
+            value={{label: filtroBusqueda || `Seleccionar ${tipoPedidor === "cliente" ? "Cliente" : "Proveedor"}`}}
+            onChange={(selectedOption) => {
+              setFiltroBusqueda(selectedOption.label || "")
+              setSelectedPedidor(selectedOption.label)
+            }}
+            isSearchable
+            noOptionsMessage={() => `No existe el ${tipoPedidor === "cliente" ? "cliente" : "proveedor"}`}
+          />
       </div>
 
       <div className="contenedor-principal">
@@ -279,19 +281,19 @@ const renderGrilla = (product) => {
           </thead>
           <tbody>
             {initialProducts.map((product) => (
-              <tr key={product.id} onClick={() => handleProductClick(product)}>
+              <tr key={product.id} /*onClick={() => handleProductClick(product)}*/>
                 <td className="table-cell-productos">{product.articulo}</td>
               </tr>    
             ))}
           </tbody>
         </table>
-        {selectedProduct && (
+        {/*selectedProduct && (
           <div>{selectedProduct && renderGrilla(selectedProduct)}</div>
-        )}
-        <button className="confirmar" onClick={handleConfirmarProducto}>Confirmar</button>
+        )*/}
+        <button className="confirmar" /*onClick={handleConfirmarProducto}*/>Confirmar</button>
       </div>    
       <h5 className="titulo-resumenPedido">Resumen de pedido</h5>
-      <button className="cargar-pedido-boton">Cargar pedido</button>
+      <button className="cargar-pedido-boton" onClick={handleCargarPedido}>Cargar pedido</button>
     </div>
     </>
   );
