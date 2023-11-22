@@ -55,7 +55,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto }) {
       <>
         <table className="table-grilla">
             <thead>
-                <tr className="table-header-grilla">
+                <tr>
                     <th className="articulo-grilla">{articulo.numero_articulo}</th>
                     {talles.map((talle, index) => (
                         <th key={index}>Talle {talle}</th>
@@ -65,7 +65,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto }) {
             <tbody>
                 {colores.map((color, index) => (
                   <tr key={index}>
-                    <td className="table-cell-grilla">{color}</td>
+                    <td>{color}</td>
                     {talles.map((talle, talleIndex) => {
                         const matchingProduct = articulo.productos.find(
                         (producto) => producto.color === color && producto.talle === talle

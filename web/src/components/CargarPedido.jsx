@@ -1,84 +1,103 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import NavbarAdm from '../components/NavbarAdm';
 import Select from "react-select";
 import GrillaProductoPedido from "./GrillaProductoPedido";
 import GrillasProductosConfirmados from "./GrillaProductoConfirmado";
 
-const initialProducts = [
-  {
-    id: 1,
-    numero_articulo: "1",
-    nombre: "boxer",
-    descripcion: "muy lindo",
-    precio_unitario: 2000,
-    productos: [
-      {
-        id: 1,
-        stock: 10,
-        talle: "s",
-        color: "azul",
-      }
-    ]
-  },
-  {
-    id: 2,
-    numero_articulo: "2",
-    nombre: "boxer",
-    descripcion: "muy lindo",
-    precio_unitario: 1000,
-    productos: [
-      {
-        id: 2,
-        stock: 5,
-        talle: "s",
-        color: "azul",
-      },
-      {
-        id: 3,
-        stock: 20,
-        talle: "m",
-        color: "rojo"
-      }
-    ]
-  },
-];
-
-const proveedores = [
-  {
-    "id": 1,
-    "nombre": "Juan Gomez",
-  }
-]
-
-const clientes = [
-  {
-    "id": 2,
-    "nombre": "PEPITO",
-  }
-]
-
 const CargarPedido = () => {
+  const [data, setData] = useState([])
+  const [clientes, setClientes] = useState([])
+  const [proveedores, setProveedores] = useState([])
   const [tipoPedidor, setTipoPedidor] = useState("cliente")
-  const [filtroBusqueda, setFiltroBusqueda] = useState('');
   const [selectedPedidor, setSelectedPedidor] = useState('');
+  const [filtroBusqueda, setFiltroBusqueda] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productosConfirmados, setProductosConfirmados] = useState([]);
 
-  const handleProductClick = (product) => {
-    setSelectedProduct(product);
-  };
+  const jwt = localStorage.getItem('jwt')
+
+  ////OBTENER ARTICULOS, CLIENTES Y PROVEEDORES DB
+  useEffect(() => {
+    fetch(`http://localhost:3001/api/articulos`, 
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      const articulos = []
+      for (const dataResult of result) {
+        const productos = dataResult.productos.map(({id, color, talle, stock}) => ({id, color, talle, stock}))
+        const articulo = 
+        {
+          id: dataResult.id,
+          numero_articulo: dataResult.numero_articulo,
+          precio_unitario: dataResult.precio_unitario,
+          productos
+        }
+
+        if(productos.length > 0) articulos.push(articulo)
+      }
+
+      setData(articulos)
+    })
+    .catch((error) => {
+      console.error("Error en la solicitud GET:", error)
+    });
+
+    fetch(`http://localhost:3001/api/clientes`, 
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      const dataClientes = result.map(({ persona }) => ({ id: persona.id, nombre: persona.nombre }));
+
+      setClientes(dataClientes)
+    })
+
+    fetch(`http://localhost:3001/api/proveedores`, 
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      const dataProveedores = result.map(({ id, nombre }) => ({ id, nombre }));
+
+      setProveedores(dataProveedores)
+    })
+  }, [jwt]);
 
     const handleCambiarTipoPedidor = (pedidor) => {
       setTipoPedidor(pedidor)
       setFiltroBusqueda('');
       setSelectedPedidor('')
     }
+    
+    const handleProductClick = (product) => {
+      setSelectedProduct(product);
+    };
 
     const listaPedidores = tipoPedidor === 'cliente' ? clientes : proveedores;
 
     const pedidoresFiltrados = listaPedidores.filter(pedidor =>
       pedidor.nombre.toLowerCase().includes(filtroBusqueda.toLowerCase())
     );
+
+    const handleConfirmarProducto = (articulo, cantidades) => {
+      const productoConfirmadosNuevo = {
+        precio_unitario: articulo.precio_unitario,
+        productos: articulo.productos,
+        numero_articulo: articulo.numero_articulo,
+        cantidades
+      }
+      setProductosConfirmados([...productosConfirmados, productoConfirmadosNuevo]);
+    }
 
     const calcularPrecioTotal = () => {
       let precioTotal = 0
@@ -131,16 +150,6 @@ const CargarPedido = () => {
       console.log(pedidoRequest)
     }
 
-    const handleConfirmarProducto = (articulo, cantidades) => {
-      const productoConfirmadosNuevo = {
-        precio_unitario: articulo.precio_unitario,
-        productos: articulo.productos,
-        numero_articulo: articulo.numero_articulo,
-        cantidades
-      }
-      setProductosConfirmados([...productosConfirmados, productoConfirmadosNuevo]);
-    }
-
   return ( <>
     <NavbarAdm/>
     <div className="contenedor-cargar-pedido">
@@ -163,19 +172,23 @@ const CargarPedido = () => {
       </div>
       <div className="contenedor-principal">
         <table className="table-cargarPedido-contenedor">
-          <thead>
-            <tr className="table-header-productos">
+          <thead> 
+            <tr className="table-header-productos"> 
               <th>Artículo</th>
             </tr>
           </thead>
+          
           <tbody>
-            {initialProducts.map((product) => (
+            {data.map((product) => (
               <tr key={product.id} onClick={() => handleProductClick(product)}>
-                <td className="table-cell-productos">{product.numero_articulo}</td>
+                <td className="table-cell-productos">{product.numero_articulo}</td>  
               </tr>    
             ))}
-          </tbody>
+            
+          </tbody> 
+          
         </table>
+        
         {selectedProduct && <GrillaProductoPedido articulo={selectedProduct} onConfirmarProducto={handleConfirmarProducto}/>}
       </div>
       {productosConfirmados.length > 0 && <GrillasProductosConfirmados articulos={productosConfirmados}/>}
