@@ -59,8 +59,7 @@ const CargarPedido = () => {
       setClientes(dataClientes)
     })
 
-    fetch(`http://localhost:3001/api/proveedores`, 
-    {
+    fetch(`http://localhost:3001/api/proveedores`, {
       headers: {
         Authorization: `Bearer ${jwt}`
       }
@@ -140,56 +139,71 @@ const CargarPedido = () => {
       const precio_total = calcularPrecioTotal()
       const productos = getProductos()
 
-      const pedidoRequest = {
+      const requestData = {
         persona_id: selectedPedidor,
         precio_total,
         es_proveedor: tipoPedidor === "proveedor",
         productos
       }
 
-      console.log(pedidoRequest)
+      fetch(`http://localhost:3001/api/pedidos`, {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`
+      },
+      body: JSON.stringify(requestData)
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result)
+      })
+      .catch(error => {
+          console.error("Error en la solicitud POST:", error);
+      });
     }
 
-  return ( <>
-    <NavbarAdm/>
-    <div className="contenedor-cargar-pedido">
-      <div className="contenedor-botones">
-        <button id="btn-pedidor-cliente" className={tipoPedidor === 'cliente' ? 'boton-pedidor pedidor-seleccionado' : 'boton-pedidor'} onClick={() => handleCambiarTipoPedidor('cliente')}>
-          Cliente
-        </button>
-        <button className={tipoPedidor === 'proveedor' ? 'boton-pedidor pedidor-seleccionado' : 'boton-pedidor'} onClick={() => handleCambiarTipoPedidor('proveedor')}>
-          Proveedor
-        </button>
-        <Select options={pedidoresFiltrados.map((pedidor) => ({value: pedidor.id, label: pedidor.nombre}))}
-            value={{label: filtroBusqueda || `Seleccionar ${tipoPedidor === "cliente" ? "Cliente" : "Proveedor"}`}}
-            onChange={(selectedOption) => {
-              setFiltroBusqueda(selectedOption.label || "")
-              setSelectedPedidor(selectedOption.value)
-            }}
-            isSearchable
-            noOptionsMessage={() => `No existe el ${tipoPedidor === "cliente" ? "cliente" : "proveedor"}`}
-          />
+  return ( 
+    <>
+      <NavbarAdm/>
+      <div className="contenedor-cargar-pedido">
+        <div className="contenedor-botones">
+          <button id="btn-pedidor-cliente" className={tipoPedidor === 'cliente' ? 'boton-pedidor pedidor-seleccionado' : 'boton-pedidor'} onClick={() => handleCambiarTipoPedidor('cliente')}>
+            Cliente
+          </button>
+          <button className={tipoPedidor === 'proveedor' ? 'boton-pedidor pedidor-seleccionado' : 'boton-pedidor'} onClick={() => handleCambiarTipoPedidor('proveedor')}>
+            Proveedor
+          </button>
+          <Select options={pedidoresFiltrados.map((pedidor) => ({value: pedidor.id, label: pedidor.nombre}))}
+              value={{label: filtroBusqueda || `Seleccionar ${tipoPedidor === "cliente" ? "Cliente" : "Proveedor"}`}}
+              onChange={(selectedOption) => {
+                setFiltroBusqueda(selectedOption.label || "")
+                setSelectedPedidor(selectedOption.value)
+              }}
+              isSearchable
+              noOptionsMessage={() => `No existe el ${tipoPedidor === "cliente" ? "cliente" : "proveedor"}`}
+            />
+        </div>
+        <div className="contenedor-principal">
+          <table className="table-cargarPedido-contenedor">
+            <thead>
+              <tr className="table-header-productos">
+                <th>Artículo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((product) => (
+                <tr key={product.id} onClick={() => handleProductClick(product)}>
+                  <td className="table-cell-productos">{product.numero_articulo}</td>
+                </tr>    
+              ))}
+            </tbody>
+          </table>
+          {selectedProduct && <GrillaProductoPedido articulo={selectedProduct} onConfirmarProducto={handleConfirmarProducto}/>}
+        </div>
+        {productosConfirmados.length > 0 && <GrillasProductosConfirmados articulos={productosConfirmados}/>}
+        <button className="cargar-pedido-boton" onClick={handleCargarPedido}>Cargar pedido</button>
       </div>
-      <div className="contenedor-principal">
-        <table className="table-cargarPedido-contenedor">
-          <thead>
-            <tr className="table-header-productos">
-              <th>Artículo</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((product) => (
-              <tr key={product.id} onClick={() => handleProductClick(product)}>
-                <td className="table-cell-productos">{product.numero_articulo}</td>
-              </tr>    
-            ))}
-          </tbody>
-        </table>
-        {selectedProduct && <GrillaProductoPedido articulo={selectedProduct} onConfirmarProducto={handleConfirmarProducto}/>}
-      </div>
-      {productosConfirmados.length > 0 && <GrillasProductosConfirmados articulos={productosConfirmados}/>}
-      <button className="cargar-pedido-boton" onClick={handleCargarPedido}>Cargar pedido</button>
-    </div>
     </>
   );
 };
