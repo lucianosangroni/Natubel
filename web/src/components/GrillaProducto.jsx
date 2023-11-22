@@ -39,7 +39,7 @@ function GrillaProducto({ onEditProducto, onDeleteProducto, articulo }) {
               </tbody>
         </table>
         <ModalProductoEditar onEditProducto={handleEditArticulo} articulo={articulo}/>
-        <button onClick={() => handleDeleteArticulo()} className="botonEliminar"> 
+        <button onClick={() => handleDeleteArticulo()}  className="agregar-producto-grilla"> 
             Eliminar Articulo
         </button>
       </>

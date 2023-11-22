@@ -93,7 +93,7 @@ function ModalProducto({ onAddProducto }) {
 
   return (
     <>
-      <button onClick={handleShow} className="agregar-producto-grilla abajoDerecha">
+      <button onClick={handleShow} className="agregarProducto">
         Agregar Producto
       </button>
 
@@ -160,8 +160,9 @@ function ModalProducto({ onAddProducto }) {
                 }}
               />
             </Form.Group>
+            <div className="contenedor-botones">
             <Form.Group>
-              <Form.Label>Talles</Form.Label>
+              <Form.Label className="boton-talle">Talles</Form.Label>
               {newProduct.talles.map((talle, index) => (
                   <div key={index}>
                   <FormControl
@@ -170,18 +171,18 @@ function ModalProducto({ onAddProducto }) {
                     onChange={(e) => handleTalleChange(e, index)}
                   />
                   {newProduct.talles.length > 1 && (
-                    <Button variant="outline-secondary" onClick={() => removeTalleField(index)}>
+                    <Button id="boton-menos" onClick={() => removeTalleField(index)}>
                       -
                     </Button>
                   )}
                 </div>
                   ))}
-               <Button variant="outline-secondary" onClick={addTalleField}>
+               <Button id="boton-mas" onClick={addTalleField}>
                  +
                </Button>
             </Form.Group>
             <Form.Group>
-              <Form.Label>Colores</Form.Label>
+              <Form.Label className="boton-talle">Colores</Form.Label>
               {newProduct.colores.map((color, index) => (
                   <div key={index}>
                   <FormControl
@@ -190,16 +191,17 @@ function ModalProducto({ onAddProducto }) {
                     onChange={(e) => handleColorChange(e, index)}
                   />
                   {newProduct.colores.length > 1 && (
-                    <Button variant="outline-secondary" onClick={() => removeColorField(index)}>
+                    <Button id="boton-menos" onClick={() => removeColorField(index)}>
                       -
                     </Button>
                   )}
                 </div>
                   ))}
-               <Button variant="outline-secondary" onClick={addColorField}>
+               <Button id="boton-mas" onClick={addColorField}>
                  +
                </Button>
             </Form.Group>
+            </div>
           </Form>
         </Modal.Body>
         <Modal.Footer>

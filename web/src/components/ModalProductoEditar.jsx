@@ -169,8 +169,9 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
                 }}
               />
             </Form.Group>
-            <Form.Group>
-              <Form.Label>Talles</Form.Label>
+         <div className="contenedor-botones">
+            <Form.Group>         
+              <Form.Label className="boton-talle">Talles</Form.Label>
               {editProduct.talles.map((talle, index) => (
                   <div key={index}>
                   <FormControl
@@ -179,18 +180,18 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
                     onChange={(e) => handleTalleChange(e, index)}
                   />
                   {editProduct.talles.length > 1 && (
-                    <Button variant="outline-secondary" onClick={() => removeTalleField(index)}>
+                    <Button id="boton-menos" onClick={() => removeTalleField(index)}>
                       -
                     </Button>
                   )}
                 </div>
                   ))}
-               <Button variant="outline-secondary" onClick={addTalleField}>
+               <Button id="boton-mas" onClick={addTalleField}>
                  +
                </Button>
             </Form.Group>
             <Form.Group>
-              <Form.Label>Colores</Form.Label>
+              <Form.Label className="boton-talle">Colores</Form.Label>
               {editProduct.colores.map((color, index) => (
                   <div key={index}>
                   <FormControl
@@ -199,16 +200,18 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
                     onChange={(e) => handleColorChange(e, index)}
                   />
                   {editProduct.colores.length > 1 && (
-                    <Button variant="outline-secondary" onClick={() => removeColorField(index)}>
+                    <Button id="boton-menos" onClick={() => removeColorField(index)}>
                       -
                     </Button>
                   )}
                 </div>
                   ))}
-               <Button variant="outline-secondary" onClick={addColorField}>
+               <Button id="boton-mas" onClick={addColorField}>
                  +
                </Button>
+               
             </Form.Group>
+         </div>
           </Form>
         </Modal.Body>
         <Modal.Footer>
