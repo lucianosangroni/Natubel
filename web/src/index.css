@@ -216,7 +216,6 @@
   align-items: center;
   justify-content: center;
   margin: 1rem;
-  height: 100%;
   
 }
 
@@ -230,7 +229,7 @@
 .table-cargarPedido-contenedor {
   margin: 1rem;
   border: 1px solid #000;
-  
+
 }
 
 .boton-pedidor {
@@ -266,9 +265,7 @@
 }
 
 .cargar-pedido-boton{
-  margin: 1rem auto; 
-  margin-left: auto;
-  margin-right: 0;
+
   padding: 0.5rem;
   width: 120px;
   border: 1px solid #000;
@@ -278,17 +275,14 @@
 
 .stock-grilla {
   font-weight: lighter;
+  
 }
-
-.input-cargar-pedido {
-  width: 70px;
-}
-
 
   /* PRODUCTOS */
 
 .table-productos-contenedor{
     display: flex;
+
   }
 
 .table-productos {
@@ -303,17 +297,19 @@
   background-color: #FBCCD2;
   font-weight: bold;
   padding: 1rem;
+
 }
 
 .table-header-productos th{
   padding: 0.5rem;
+  
 }
 .table-cell-productos {
   border: 1px solid #010101;
   padding: 8px;
   padding: 0.3rem;
   cursor: pointer;
-  
+
 }
 
 /* Opcional: Estilo de hover para resaltar las filas */
@@ -327,27 +323,45 @@
   
 }
 
-.articulo-grilla{
-  background-color: #FBCCD2;
-}
-
-.table-grilla{
+.table-grilla {
+  width: 100%;
   margin: 1rem;
+  border-collapse: collapse;
   
 }
 
-
-.table-grilla th  {
-  border: 1px solid #000;
-  padding: 8px;
-  text-align: center;
+.table-grilla th, .table-grilla td {
+  border: 1px solid #000000;
+  padding: 4px;
+  text-align: left;
+  font-weight: normal;
+  
 }
 
-.table-grilla td {
-  border: 1px solid #000;
-  padding: 8px;
+.table-grilla th {
+  background-color: rgb(255, 255, 255);
+  font-weight: normal;
+  
+}
+
+#articulo-grilla-elegido{
+  background-color: #FBCCD2;
+ 
+}
+
+.articulo-grilla {
+  background-color: #FBCCD2;
+ 
+}
+
+.table-grilla-input {
+  position: relative;
+  
+}
+
+.table-grilla-input input {
+  width: 40px; /* Ajusta el ancho según tus necesidades */
   text-align: center;
-  font-weight: bold;
   
 }
 
@@ -363,20 +377,20 @@ flex-wrap: wrap;
   
 }
 
-.articulo-grilla{
-  background-color: #FBCCD2;
-}
+
 .table-grilla-resumen th  {
   border: 1px solid #000;
-  padding: 8px;
+  padding: 4px;
   text-align: center;
+  font-weight: normal;
+  
 }
 
 .table-grilla-resumen td {
   border: 1px solid #000;
-  padding: 8px;
+  padding: 4px;
   text-align: center;
-  font-weight: bold;
+  font-weight: normal;
   
 }
 
@@ -390,6 +404,7 @@ flex-wrap: wrap;
   border-radius: 5px;
   cursor: pointer;
   margin: 5rem 1rem 1rem 1rem; 
+  
 }
 
 .grilla-NoDatos {

@@ -54,11 +54,11 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto }) {
     return (
       <>
         <table className="table-grilla">
-            <thead>
-                <tr>
-                    <th className="articulo-grilla">{articulo.numero_articulo}</th>
+            <thead >
+                <tr >
+                    <th id="articulo-grilla-elegido" >{articulo.numero_articulo}</th>
                     {talles.map((talle, index) => (
-                        <th key={index}>Talle {talle}</th>
+                        <th key={index}>Talle{talle}</th>
                     ))}
                 </tr>
             </thead>
@@ -75,7 +75,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto }) {
                         const cantidad = cantidades[productKey] || "";
 
                         return (
-                        <td key={talleIndex}>
+                        <td key={talleIndex} className='table-grilla-input'>
                             <input
                             type="text"
                             value={cantidad}

@@ -183,12 +183,9 @@ const CargarPedido = () => {
               <tr key={product.id} onClick={() => handleProductClick(product)}>
                 <td className="table-cell-productos">{product.numero_articulo}</td>  
               </tr>    
-            ))}
-            
-          </tbody> 
-          
+            ))}          
+          </tbody>      
         </table>
-        
         {selectedProduct && <GrillaProductoPedido articulo={selectedProduct} onConfirmarProducto={handleConfirmarProducto}/>}
       </div>
       {productosConfirmados.length > 0 && <GrillasProductosConfirmados articulos={productosConfirmados}/>}
