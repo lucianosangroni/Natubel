@@ -28,7 +28,7 @@ function ModalProveedores({ onAddProveedor }) {
       });
       handleClose();
     } else {
-      console.log("Por favor, complete el nombre y el telefono.");
+      alert("Por favor, complete el nombre y el telefono.");
     }
   };
 
