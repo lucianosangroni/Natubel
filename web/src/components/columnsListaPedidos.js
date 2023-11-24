@@ -29,6 +29,4 @@ export const COLUMNSPEDIDOS = [
         accessor:"tipo",
         width: 'auto',
     }
-
-    
-    ]
+]

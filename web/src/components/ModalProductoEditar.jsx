@@ -103,7 +103,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
   return (
     <>
       <button onClick={handleShow} className="agregar-producto-grilla">
-        Editar Producto
+        Editar Articulo
       </button>
 
       <Modal
@@ -173,7 +173,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
             <Form.Group>         
               <Form.Label className="boton-talle">Talles</Form.Label>
               {editProduct.talles.map((talle, index) => (
-                  <div key={index}>
+                  <div key={index} className="input-tallecolor-container">
                   <FormControl
                     placeholder="Talle"
                     value={talle}
@@ -193,7 +193,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
             <Form.Group>
               <Form.Label className="boton-talle">Colores</Form.Label>
               {editProduct.colores.map((color, index) => (
-                  <div key={index}>
+                  <div key={index} className="input-tallecolor-container">
                   <FormControl
                     placeholder="Color"
                     value={color}

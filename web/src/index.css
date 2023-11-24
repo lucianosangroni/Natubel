@@ -380,9 +380,20 @@
   
 }
 
+.abajoDerecha {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+}
+
 .contenedor-botones{
   text-align: center;
   
+}
+
+.input-tallecolor-container {
+  display: flex;
+  align-items: center;
 }
 
 .boton-talle{
@@ -530,7 +541,6 @@ flex-wrap: wrap;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid #000;
   border-radius: 0.5rem;
   margin: 1rem;
   padding: 1rem; 
@@ -544,6 +554,7 @@ flex-wrap: wrap;
   margin: 0.5rem;
   padding: 0.5rem;
   width: 330px;
+  text-align: center;
 }
 
 .usuario{

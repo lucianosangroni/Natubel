@@ -32,8 +32,8 @@ function NavbarAdm() {
             <Nav.Link className="botonNav" as={Link} to="/admin/clientes">
               Clientes
             </Nav.Link>
-            <Nav.Link className="botonNav" as={Link} to="/admin/productos">
-              Productos
+            <Nav.Link className="botonNav" as={Link} to="/admin/articulos">
+              Artículos
             </Nav.Link>
             <Nav.Link className="botonNav" as={Link} to="/admin/pedidos">
               Pedidos

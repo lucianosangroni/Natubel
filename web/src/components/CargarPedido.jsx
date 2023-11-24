@@ -18,13 +18,20 @@ const CargarPedido = () => {
 
   ////OBTENER ARTICULOS, CLIENTES Y PROVEEDORES DB
   useEffect(() => {
-    fetch(`http://localhost:3001/api/articulos`, 
+    let flag_error = false
+
+    const fetchArticulos = fetch(`http://localhost:3001/api/articulos`, 
     {
       headers: {
         Authorization: `Bearer ${jwt}`
       }
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        flag_error = true
+      }
+      return response.json();
+    })
     .then((result) => {
       const articulos = []
       for (const dataResult of result) {
@@ -42,34 +49,57 @@ const CargarPedido = () => {
 
       setData(articulos)
     })
-    .catch((error) => {
-      console.error("Error en la solicitud GET:", error)
+    .catch(() => {
+      flag_error = true
     });
 
-    fetch(`http://localhost:3001/api/clientes`, 
+    const fetchClientes = fetch(`http://localhost:3001/api/clientes`, 
     {
       headers: {
         Authorization: `Bearer ${jwt}`
       }
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        flag_error = true
+      }
+      return response.json();
+    })
     .then((result) => {
       const dataClientes = result.map(({ persona }) => ({ id: persona.id, nombre: persona.nombre }));
 
       setClientes(dataClientes)
     })
+    .catch(() => {
+      flag_error = true
+    });
 
-    fetch(`http://localhost:3001/api/proveedores`, {
+    const fetchProveedores = fetch(`http://localhost:3001/api/proveedores`, {
       headers: {
         Authorization: `Bearer ${jwt}`
       }
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        flag_error = true
+      }
+      return response.json();
+    })
     .then((result) => {
       const dataProveedores = result.map(({ id, nombre }) => ({ id, nombre }));
 
       setProveedores(dataProveedores)
     })
+    .catch(() => {
+      flag_error = true
+    });
+
+    Promise.all([fetchArticulos, fetchClientes, fetchProveedores])
+    .then(() => {
+      if (flag_error) {
+        alert("Error al buscar los datos, intente nuevamente");
+      }
+    });
   }, [jwt]);
 
     const handleCambiarTipoPedidor = (pedidor) => {
@@ -135,6 +165,7 @@ const CargarPedido = () => {
       return productosFinales;
     }
 
+    //AGREGAR PEDIDO DB
     const handleCargarPedido = () => {
       if(!selectedPedidor) {
         alert(`Seleccione un ${tipoPedidor}`)
@@ -166,7 +197,13 @@ const CargarPedido = () => {
       },
       body: JSON.stringify(requestData)
       })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al cargar el pedido, verifique los datos ingresados")
+          throw new Error("Error en la solicitud POST");
+        }
+        return response.json();
+      })
       .then((result) => {
         alert(result.message)
         actualizarStock()
@@ -174,10 +211,9 @@ const CargarPedido = () => {
         setTipoPedidor("cliente")
         setFiltroBusqueda('')
         setSelectedProduct(null)
-        
       })
-      .catch(error => {
-          console.error("Error en la solicitud POST:", error);
+      .catch((error) => {
+        console.error("Error en la solicitud POST:", error);
       });
     }
 
@@ -233,7 +269,7 @@ const CargarPedido = () => {
           <table className="table-cargarPedido-contenedor">
             <thead>
               <tr className="table-header-productos">
-                <th>Artículo</th>
+                <th>Artículos</th>
               </tr>
             </thead>
             <tbody>

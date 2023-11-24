@@ -28,7 +28,7 @@ function App() {
               <Route path="admin/clientes" element={<ListadoClientes/>} />
             </Route>
             <Route element={<ProtectedRoute/>}>
-              <Route path="admin/productos" element={<ListadoProductos/>} />
+              <Route path="admin/articulos" element={<ListadoProductos/>} />
             </Route>
             <Route element={<ProtectedRoute/>}>
               <Route path="admin/pedidos" element={<HistorialPedidos/>} />

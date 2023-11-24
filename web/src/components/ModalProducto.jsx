@@ -93,8 +93,8 @@ function ModalProducto({ onAddProducto }) {
 
   return (
     <>
-      <button onClick={handleShow} className="agregarProducto">
-        Agregar Producto
+      <button onClick={handleShow} className="agregarProducto abajoDerecha">
+        Agregar Articulo
       </button>
 
       <Modal
@@ -164,18 +164,18 @@ function ModalProducto({ onAddProducto }) {
             <Form.Group>
               <Form.Label className="boton-talle">Talles</Form.Label>
               {newProduct.talles.map((talle, index) => (
-                  <div key={index}>
-                  <FormControl
-                    placeholder="Talle"
-                    value={talle}
-                    onChange={(e) => handleTalleChange(e, index)}
-                  />
-                  {newProduct.talles.length > 1 && (
-                    <Button id="boton-menos" onClick={() => removeTalleField(index)}>
-                      -
-                    </Button>
-                  )}
-                </div>
+                  <div key={index} className="input-tallecolor-container">
+                    <FormControl
+                      placeholder="Talle"
+                      value={talle}
+                      onChange={(e) => handleTalleChange(e, index)}
+                    />
+                    {newProduct.talles.length > 1 && (
+                      <Button id="boton-menos" onClick={() => removeTalleField(index)}>
+                        -
+                      </Button>
+                    )}
+                  </div>
                   ))}
                <Button id="boton-mas" onClick={addTalleField}>
                  +
@@ -184,7 +184,7 @@ function ModalProducto({ onAddProducto }) {
             <Form.Group>
               <Form.Label className="boton-talle">Colores</Form.Label>
               {newProduct.colores.map((color, index) => (
-                  <div key={index}>
+                  <div key={index} className="input-tallecolor-container">
                   <FormControl
                     placeholder="Color"
                     value={color}

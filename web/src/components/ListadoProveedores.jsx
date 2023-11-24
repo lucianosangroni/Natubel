@@ -29,7 +29,13 @@ const ListadoProveedores = () => {
         Authorization: `Bearer ${jwt}`
       }
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al buscar los datos, intente nuevamente")
+        throw new Error("Error en la solicitud GET");
+      }
+      return response.json();
+    })
     .then((result) => {
       const proveedores = []
       for (const dataResult of result) {
@@ -48,7 +54,7 @@ const ListadoProveedores = () => {
       setData(proveedores)
     })
     .catch((error) => {
-      console.error("Error en la solicitud GET:", error)
+      console.error("Error en la solicitud GET:", error);
     });
   }, [jwt]);
 
@@ -70,12 +76,18 @@ const ListadoProveedores = () => {
       },
       body: JSON.stringify(requestData)
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al agregar proveedor, verifique los datos ingresados")
+        throw new Error("Error en la solicitud POST");
+      }
+      return response.json();
+    })
     .then((result) => {
       newProveedor.id = result.id
       setData((prevData) => [...prevData, newProveedor]);
     })
-    .catch(error => {
+    .catch((error) => {
         console.error("Error en la solicitud POST:", error);
     });
   };
@@ -106,6 +118,13 @@ const ListadoProveedores = () => {
       },
       body: JSON.stringify(requestData)
     })
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al editar proveedor, verifique los datos ingresados")
+        throw new Error("Error en la solicitud PUT");
+      }
+      return response.json();
+    })
     .then(() => {
       setData((prevData) => {
         const updatedData = [...prevData];
@@ -129,6 +148,13 @@ const ListadoProveedores = () => {
         headers: {
           Authorization: `Bearer ${jwt}`
         }
+      })
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al eliminar proveedor, intente nuevamente")
+          throw new Error("Error en la solicitud DELETE");
+        }
+        return response.json();
       })
       .then(() => {
         const rowIndex = data.indexOf(row.original);

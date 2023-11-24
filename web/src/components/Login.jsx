@@ -18,7 +18,13 @@ const Login = () => {
             },
             body: JSON.stringify({ nombre_usuario: username, password }),
           })
-          .then((response) => response.json())
+          .then((response) => {
+            if (!response.ok) {
+              alert("Error al iniciar sesion, verifique los datos ingresados")
+              throw new Error("Error en la solicitud POST");
+            }
+            return response.json();
+          })
           .then((result) => {
             if(result.jwt) {
               login(result.jwt);
@@ -26,7 +32,7 @@ const Login = () => {
             }
           })
         } catch (error) {
-          console.error('Error de red', error);
+          console.error("Error en la solicitud POST:", error);
         }
     };
 

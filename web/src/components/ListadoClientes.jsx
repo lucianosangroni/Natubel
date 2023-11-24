@@ -25,7 +25,13 @@ const ListadoClientes = () => {
         Authorization: `Bearer ${jwt}`
       }
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al buscar los datos, intente nuevamente")
+        throw new Error("Error en la solicitud GET");
+      }
+      return response.json();
+    })
     .then((result) => {
       const clientes = []
       for (const dataResult of result) {
@@ -81,7 +87,13 @@ const ListadoClientes = () => {
       },
       body: JSON.stringify(requestData)
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al agregar cliente, verifique los datos ingresados")
+        throw new Error("Error en la solicitud POST");
+      }
+      return response.json();
+    })
     .then((result) => {
       newCliente.id = result.id
       newCliente.persona_id = result.persona_id
@@ -126,6 +138,13 @@ const ListadoClientes = () => {
       },
       body: JSON.stringify(requestData)
     })
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al editar cliente, verifique los datos ingresados")
+        throw new Error("Error en la solicitud PUT");
+      }
+      return response.json();
+    })
     .then(() => {
       setData((prevData) => {
         const updatedData = [...prevData];
@@ -150,6 +169,13 @@ const ListadoClientes = () => {
         headers: {
           Authorization: `Bearer ${jwt}`
         }
+      })
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al eliminar cliente, intente nuevamente")
+          throw new Error("Error en la solicitud PUT");
+        }
+        return response.json();
       })
       .then(() => {
         const rowIndex = data.indexOf(row.original);

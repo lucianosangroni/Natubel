@@ -17,7 +17,13 @@ const ListadoProductos = () => {
         Authorization: `Bearer ${jwt}`
       }
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al buscar los datos, intente nuevamente")
+        throw new Error("Error en la solicitud GET");
+      }
+      return response.json();
+    })
     .then((result) => {
       const articulos = []
       for (const dataResult of result) {
@@ -62,7 +68,13 @@ const ListadoProductos = () => {
       },
       body: JSON.stringify(requestData)
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al agregar articulo, verifique los datos ingresados")
+        throw new Error("Error en la solicitud POST");
+      }
+      return response.json();
+    })
     .then((result) => {
       const newArticuloData = {
         id: result.id,
@@ -103,7 +115,13 @@ const ListadoProductos = () => {
       },
       body: JSON.stringify(requestData)
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al editar articulo, verifique los datos ingresados")
+        throw new Error("Error en la solicitud PUT");
+      }
+      return response.json();
+    })
     .then((result) => {
       const editArticuloData = {
         id: editProduct.id,
@@ -139,6 +157,13 @@ const ListadoProductos = () => {
         headers: {
           Authorization: `Bearer ${jwt}`
         }
+      })
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al eliminar articulo, intente nuevamente")
+          throw new Error("Error en la solicitud DELETE");
+        }
+        return response.json();
       })
       .then(() => {
         const updatedData = data.filter((art) => art.id !== articulo.id);

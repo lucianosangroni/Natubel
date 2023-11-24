@@ -7,9 +7,11 @@ const Cliente = sequelize.define(
     {
         dni: {
             type: DataTypes.STRING,
+            unique: true
         },
         cuit_cuil: {
             type: DataTypes.STRING,
+            unique: true
         },
         tipo_cliente: {
             type: DataTypes.ENUM('MAYORISTA', 'MINORISTA'),
