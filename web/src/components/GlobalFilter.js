@@ -14,7 +14,7 @@ const GlobalFilter = ({ filter, setFilter}) => {
         <span role="img" aria-label="lupa" className="search-icon">
         🔍
       </span>
-        <input value={value || ""} placeholder="Buscar..." onChange={(e) => {
+        <input className='globalFilter-input' value={value || ""} placeholder="Buscar..." onChange={(e) => {
             setValue(e.target.value)
             onChange(e.target.value);
             

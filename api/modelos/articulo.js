@@ -7,6 +7,7 @@ const Articulo = sequelize.define(
         numero_articulo: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: true
         },
         nombre: {
             type: DataTypes.STRING,

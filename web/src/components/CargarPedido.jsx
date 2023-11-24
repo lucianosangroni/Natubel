@@ -136,6 +136,18 @@ const CargarPedido = () => {
     }
 
     const handleCargarPedido = () => {
+      if(!selectedPedidor) {
+        alert(`Seleccione un ${tipoPedidor}`)
+        return
+      }
+
+      const shouldCargar = window.confirm(
+        `¿Estas seguro que quieres cargar este pedido del ${tipoPedidor} ${filtroBusqueda}?`
+      );
+      if (!shouldCargar) {
+        return
+      }
+
       const precio_total = calcularPrecioTotal()
       const productos = getProductos()
 
@@ -156,12 +168,45 @@ const CargarPedido = () => {
       })
       .then((response) => response.json())
       .then((result) => {
-        console.log(result)
+        alert(result.message)
+        actualizarStock()
+        setSelectedPedidor('')
+        setTipoPedidor("cliente")
+        setFiltroBusqueda('')
+        setSelectedProduct(null)
+        
       })
       .catch(error => {
           console.error("Error en la solicitud POST:", error);
       });
     }
+
+  const actualizarStock = () => {
+    const newData = [...data];
+
+    for (const articulo of productosConfirmados) {
+      const articuloIndex = newData.findIndex(item => item.numero_articulo === articulo.numero_articulo);
+
+      if (articuloIndex !== -1) {
+        for (const producto of articulo.productos) {
+          const key = `${producto.color}-${producto.talle}`;
+          const cantidad = articulo.cantidades[key] || 0;
+
+          const productoIndex = newData[articuloIndex].productos.findIndex(item =>
+            item.id === producto.id && item.color === producto.color && item.talle === producto.talle
+          );
+
+          if (productoIndex !== -1) {
+            const cantidadConSigno = tipoPedidor === "cliente" ? -cantidad : cantidad;
+            newData[articuloIndex].productos[productoIndex].stock += cantidadConSigno
+          }
+        }
+      }
+    }
+
+    setData(newData);
+    setProductosConfirmados([])
+  }
 
   return ( 
     <>
@@ -199,7 +244,7 @@ const CargarPedido = () => {
               ))}
             </tbody>
           </table>
-          {selectedProduct && <GrillaProductoPedido articulo={selectedProduct} onConfirmarProducto={handleConfirmarProducto}/>}
+          {selectedProduct && <GrillaProductoPedido articulo={selectedProduct} onConfirmarProducto={handleConfirmarProducto} tipoPedidor={tipoPedidor}/>}
         </div>
         {productosConfirmados.length > 0 && <GrillasProductosConfirmados articulos={productosConfirmados}/>}
         <button className="cargar-pedido-boton" onClick={handleCargarPedido}>Cargar pedido</button>

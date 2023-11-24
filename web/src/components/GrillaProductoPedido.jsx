@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function GrillaProductoPedido({ articulo, onConfirmarProducto }) {
+function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor }) {
     const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
     const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
     const [cantidades, setCantidades] = useState({});
@@ -25,7 +25,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto }) {
     const handleCantidadChange = (productKey, stock, cantidad) => {
         const parsedCantidad = parseInt(cantidad) || ""
 
-        if(parsedCantidad <= stock || parsedCantidad === "") {
+        if((tipoPedidor === "cliente" && parsedCantidad <= stock) || tipoPedidor === "proveedor" || parsedCantidad === "") {
             const newCantidades = {...cantidades, [productKey]: parsedCantidad}
             const filteredCantidades = filtrarDiccionario(newCantidades)
             setCantidades(filteredCantidades);
@@ -54,18 +54,18 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto }) {
     return (
       <>
         <table className="table-grilla">
-            <thead>
-                <tr className="table-header-grilla">
-                    <th className="articulo-grilla">{articulo.numero_articulo}</th>
+            <thead >
+                <tr >
+                    <th id="articulo-grilla-elegido" >{articulo.numero_articulo}</th>
                     {talles.map((talle, index) => (
-                        <th key={index}>Talle {talle}</th>
+                        <th key={index}>Talle{talle}</th>
                     ))}
                 </tr>
             </thead>
             <tbody>
                 {colores.map((color, index) => (
                   <tr key={index}>
-                    <td className="table-cell-grilla">{color}</td>
+                    <td>{color}</td>
                     {talles.map((talle, talleIndex) => {
                         const matchingProduct = articulo.productos.find(
                         (producto) => producto.color === color && producto.talle === talle
@@ -75,10 +75,10 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto }) {
                         const cantidad = cantidades[productKey] || "";
 
                         return (
-                        <td key={talleIndex}>
+                        <td key={talleIndex} className='table-grilla-input'>
                             <input
                             type="text"
-                            value={cantidad}
+                            defaultValue={cantidad}
                             onKeyDown={(e) => handleKeyDown(e, productKey, stock)}
                             />
                             ({stock})
@@ -87,9 +87,9 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto }) {
                     })}
                   </tr>
                 ))}
-                <button className="confirmar" onClick={handleConfirmarProducto}>Confirmar</button>
               </tbody>
         </table>
+        <button className="confirmar" onClick={handleConfirmarProducto}>Confirmar</button>
       </>
     );
   }
