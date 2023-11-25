@@ -295,16 +295,16 @@
 
 .titulo-resumenPedido {
   text-align: left;
-  background-color: #F0F0F0;
+  background-color: #FBCCD2;
   width: 13rem;
   padding: 0.7rem;
   border: 1px solid #000;
   border-radius: 0.5rem;
-  margin: 1rem;
+  margin: 5rem 1rem 2rem 1rem ;
 }
 
 .cargar-pedido-boton{
-
+  margin: 1rem;
   padding: 0.5rem;
   width: 120px;
   border: 1px solid #000;
@@ -350,13 +350,13 @@
   border: 1px solid #010101;
   padding: 4px;
   cursor: pointer;
-
+  
 }
 
-/* Opcional: Estilo de hover para resaltar las filas */
-.table-cell-productos:hover {
-  background-color: #F0F0F0;
+.table-cell-productos.selected {
+  background-color: #ffcccb;
 }
+
 
 .agregarProducto{
   height: 4rem;
