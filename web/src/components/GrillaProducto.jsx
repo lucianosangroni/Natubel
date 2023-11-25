@@ -17,7 +17,7 @@ function GrillaProducto({ onEditProducto, onDeleteProducto, articulo }) {
         <table className="table-grilla">
             <thead>
                 <tr className="table-header-grilla">
-                    <th className="articulo-grilla">{articulo.numero_articulo}</th>
+                    <th id="listado-articulo-grilla">{articulo.numero_articulo}</th>
                     {talles.map((talle, index) => (
                         <th key={index}>Talle {talle}</th>
                     ))}
