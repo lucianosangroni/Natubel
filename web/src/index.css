@@ -322,19 +322,27 @@
 .table-productos-contenedor{
     display: flex;
     align-items: center;
-    justify-content: center;
+    margin-top: 3rem;
   }
 
 .table-productos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 400px;
+  width: 200px;
+  overflow-y: auto;
   border: 1px solid #000000;
   border-collapse: collapse;
-  width: 10px;
-  margin: 5rem 1rem 1rem 1rem;
-
+  margin: 2rem;
+  padding: 1rem;
   
 }
 
 .table-header-productos {
+
+  border: 1px solid #000000;
+  border-collapse: collapse;
   background-color: #FBCCD2;
   font-weight: bold;
   padding: 1rem;
@@ -343,10 +351,12 @@
 }
 
 .table-header-productos th{
-  padding: 0.5rem;
+  width: 100%;
+  
   
 }
 .table-cell-productos {
+  width: 100%;
   border: 1px solid #010101;
   padding: 4px;
   cursor: pointer;
@@ -383,8 +393,23 @@
   
 }
 
+
+.agregarArticulo{
+  height: 4rem;
+  background-color: #FBCCD2; 
+  color: #000000; 
+  font-weight: bold;
+  border: 1px solid #000;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  
+}
+
 .abajoDerecha {
   position: fixed;
+  top: 700px;
   right: 20px;
   bottom: 20px;
 }
@@ -392,8 +417,9 @@
 .contenedor-botones{
   display: flex;
   justify-content: center;
-  align-items: center;
+  
   margin-top: 2rem;
+  gap: 1rem;
 }
 
 .input-selector{
