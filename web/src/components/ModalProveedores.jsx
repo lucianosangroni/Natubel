@@ -35,7 +35,7 @@ function ModalProveedores({ onAddProveedor }) {
   return (
     <>
       <Button id="boton-nuevo-proveedor"  onClick={handleShow}>
-        Nuevo proveedor
+        Nuevo Proveedor
       </Button>
 
       <Modal

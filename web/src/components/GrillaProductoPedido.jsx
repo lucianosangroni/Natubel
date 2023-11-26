@@ -58,7 +58,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor }) {
                 <tr >
                     <th id="articulo-grilla-elegido" >{articulo.numero_articulo}</th>
                     {talles.map((talle, index) => (
-                        <th key={index}>Talle{talle}</th>
+                        <th key={index}>Talle {talle}</th>
                     ))}
                 </tr>
             </thead>

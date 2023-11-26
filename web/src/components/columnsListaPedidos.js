@@ -1,7 +1,7 @@
 export const COLUMNSPEDIDOS = [
     {
         Header: "Nº Pedido",
-        accessor: "nPedido",
+        accessor: "numero_pedido",
         width: 'auto',
     },
     {
@@ -10,8 +10,8 @@ export const COLUMNSPEDIDOS = [
         width: 'auto',
     },
     {
-        Header: "Cliente / Proveedor",
-        accessor:"clienteProveedor",
+        Header: "Nombre",
+        accessor: "persona_nombre",
         width: 'auto',
     },
     {
@@ -21,11 +21,11 @@ export const COLUMNSPEDIDOS = [
     },
     {
         Header: "Precio",
-        accessor:"precio",
+        accessor: "precio_total",
         width: 'auto',
     },
     {
-        Header: "Tipo",
+        Header: "Cliente / Proveedor",
         accessor:"tipo",
         width: 'auto',
     }

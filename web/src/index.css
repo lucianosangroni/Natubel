@@ -293,8 +293,15 @@
   margin-top: auto;
 }
 
+.contenedor-resumen-pedido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .titulo-resumenPedido {
-  text-align: left;
+  text-align: center;
   background-color: #F0F0F0;
   width: 13rem;
   padding: 0.7rem;
@@ -303,8 +310,13 @@
   margin: 1rem;
 }
 
-.cargar-pedido-boton{
+.centrar-boton-cargar {
+  display: flex;
+  justify-content: center;
+}
 
+.cargar-pedido-boton{
+  margin: 1rem;
   padding: 0.5rem;
   width: 120px;
   border: 1px solid #000;
@@ -392,8 +404,9 @@
 .contenedor-botones{
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 2rem;
+  gap: 1.5rem;
 }
 
 .input-selector{

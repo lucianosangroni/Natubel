@@ -337,11 +337,15 @@ const CargarPedido = () => {
         )}
       </section>
       {productosConfirmados.length > 0 && (
+      <>
         <GrillasProductosConfirmados articulos={productosConfirmados} />
+        <div className="centrar-boton-cargar">
+          <button className="cargar-pedido-boton" onClick={handleCargarPedido}>
+            Cargar Pedido
+          </button>
+        </div>
+      </>
       )}
-      <button className="cargar-pedido-boton" onClick={handleCargarPedido}>
-        Cargar pedido
-      </button>
     </>
   );
 };

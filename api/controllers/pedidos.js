@@ -1,4 +1,4 @@
-const { pedidoModel, productoXPedidoModel, productoModel } = require("../modelos");
+const { pedidoModel, productoXPedidoModel, productoModel, personaModel } = require("../modelos");
 const { matchedData } = require("express-validator");
 
 const getItems = async (req, res) => {
@@ -14,6 +14,15 @@ const getItems = async (req, res) => {
               },
             ],
           })
+          
+        for (const pedido of pedidos) {
+            const persona = await personaModel.findOne({
+                where: { id: pedido.persona_id },
+            });
+
+            pedido.dataValues.persona = persona;
+        }
+        
         res.status(200).send(pedidos)
     } catch (e) {
         console.log("Error al buscar los pedidos: ", e)
