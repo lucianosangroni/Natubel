@@ -3,6 +3,7 @@
  import { COLUMNSPEDIDOS } from "./columnsListaPedidos"
  import NavbarAdm from '../components/NavbarAdm';
  import GlobalFilter from "./GlobalFilter";
+ import ListaProductosDePedido from "./ListaProductosDePedido";
 
  const HistorialPedidos = () => {
    const columns = useMemo(() => COLUMNSPEDIDOS, []);
@@ -62,9 +63,6 @@
        return response.json();
      })
      .then((result) => {
-        console.log("----------------")
-        console.log(articulos)
-        console.log("----------------")
        const pedidos = [];
 
        for (const dataResult of result) {
@@ -116,7 +114,6 @@
          };
 
          pedidos.push(pedido);
-         console.log(pedido)
        }
  
        setData(pedidos);
@@ -138,9 +135,19 @@
    const { globalFilter } = state;
 
    const handleRowClick = (row) => {
-    console.log(row.original)
-    setSelectedRow(row);
+    setSelectedRow(row.original);
   };
+
+  const actualizarEstado = (pedido_id, nuevoEstado) => {
+    const newData = data.map(pedido => {
+      if (pedido.numero_pedido === pedido_id) {
+        return { ...pedido, estado: nuevoEstado };
+      }
+      return pedido;
+    });
+
+    setData(newData);
+  }
 
   return (
     <>
@@ -166,7 +173,7 @@
                     key={rowIndex}
                     {...row.getRowProps()}
                     onClick={() => handleRowClick(row)}
-                    className={selectedRow === row ? "selected-row" : ""}
+                    className={selectedRow === row.original ? "selected-row" : ""}
                   >
                     {row.cells.map((cell, cellIndex) => (
                       <td key={cellIndex} {...cell.getCellProps()}>{cell.render("Cell")}</td>
@@ -179,7 +186,10 @@
         </div>
         <div className="detailsContainer">
           {selectedRow && (
-            <GrillaProductosDePedido></GrillaProductosDePedido>
+            <ListaProductosDePedido
+              pedido={selectedRow}
+              onCambiarEstado={actualizarEstado}
+              />
           )}
         </div>
       </div>

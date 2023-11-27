@@ -13,7 +13,6 @@ const CargarPedido = () => {
   const [filtroBusqueda, setFiltroBusqueda] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productosConfirmados, setProductosConfirmados] = useState([]);
-  const [selectedProductId, setSelectedProductId] = useState(null);
 
   const jwt = localStorage.getItem("jwt");
 
@@ -115,7 +114,6 @@ const CargarPedido = () => {
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
-    setSelectedProductId(product.id);
   };
 
   const listaPedidores = tipoPedidor === "cliente" ? clientes : proveedores;
@@ -324,7 +322,7 @@ const CargarPedido = () => {
               <tr key={product.id} onClick={() => handleProductClick(product)}>
                 <td
                   className={`table-cell-productos ${
-                    selectedProductId === product.id ? "selected" : ""
+                    selectedProduct && selectedProduct.id === product.id ? "selected" : ""
                   }`}
                 >
                   {product.numero_articulo}

@@ -92,8 +92,8 @@ const updateItem = async (req, res) => {
         const { estado, razon_cancelado, productos } = req
         
         // Validar si el pedido existe antes de intentar actualizarla
-        const pedidoExiste = await pedidoModel.findByPk(pedido_id);
-        if (!pedidoExiste) {
+        const pedido = await pedidoModel.findByPk(pedido_id);
+        if (!pedido) {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }
 

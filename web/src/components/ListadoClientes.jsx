@@ -63,7 +63,7 @@ const ListadoClientes = () => {
     });
   }, [jwt]);
 
-  //AGREGAR PROVEEDOR DB
+  //AGREGAR CLIENTE DB
   const handleAddCliente = (newCliente) => {
     const requestData = 
     {

@@ -351,6 +351,10 @@
   background-color: #ffcccb;
 }
 
+.selected-row {
+  background-color: #ffcccb;
+}
+
 .agregarProducto {
   height: 4rem;
   background-color: #fbccd2;
