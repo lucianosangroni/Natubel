@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
-
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -10,30 +9,30 @@ const Login = () => {
     const navigate = useNavigate();
 
     const handleLogin = async () => {
-        try {
-          fetch('http://localhost:3001/api/auth', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ nombre_usuario: username, password }),
-          })
-          .then((response) => {
-            if (!response.ok) {
-              alert("Error al iniciar sesion, verifique los datos ingresados")
-              throw new Error("Error en la solicitud POST");
-            }
-            return response.json();
-          })
-          .then((result) => {
-            if(result.jwt) {
-              login(result.jwt);
-              navigate('/admin/cargar-pedido');
-            }
-          })
-        } catch (error) {
+        fetch('http://localhost:3001/api/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ nombre_usuario: username, password }),
+        })
+        .then((response) => {
+          if (!response.ok) {
+            
+            alert("Error al iniciar sesion, verifique los datos ingresados")
+            throw new Error("Error en la solicitud POST");
+          }
+          return response.json();
+        })
+        .then((result) => {
+          if(result.jwt) {
+            login(result.jwt);
+            navigate('/admin/cargar-pedido');
+          }
+        })
+        .catch((error) => {
           console.error("Error en la solicitud POST:", error);
-        }
+        });
     };
 
     return isAuthenticated ? <Navigate to="/admin/cargar-pedido" /> : (

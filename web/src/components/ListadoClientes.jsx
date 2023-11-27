@@ -14,6 +14,7 @@ const ListadoClientes = () => {
   const [data, setData] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
+  
 
   const jwt = localStorage.getItem('jwt')
 

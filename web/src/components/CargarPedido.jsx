@@ -13,6 +13,7 @@ const CargarPedido = () => {
   const [filtroBusqueda, setFiltroBusqueda] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productosConfirmados, setProductosConfirmados] = useState([]);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   const jwt = localStorage.getItem("jwt");
 
@@ -114,6 +115,7 @@ const CargarPedido = () => {
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
+    setSelectedProductId(product.id);
   };
 
   const listaPedidores = tipoPedidor === "cliente" ? clientes : proveedores;
@@ -309,18 +311,22 @@ const CargarPedido = () => {
           }
         />
       </div>
-
+      
       <section className="contenedor-tabla-grilla">
         <table className="table-cargarPedido-contenedor">
           <thead>
             <tr className="table-header-productos">
-              <th>Artículos</th>
+              <th className="table-header-articulos">Artículos</th>
             </tr>
           </thead>
           <tbody>
             {data.map((product) => (
               <tr key={product.id} onClick={() => handleProductClick(product)}>
-                <td className="table-cell-productos">
+                <td
+                  className={`table-cell-productos ${
+                    selectedProductId === product.id ? "selected" : ""
+                  }`}
+                >
                   {product.numero_articulo}
                 </td>
               </tr>

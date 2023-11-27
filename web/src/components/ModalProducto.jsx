@@ -93,9 +93,12 @@ function ModalProducto({ onAddProducto }) {
 
   return (
     <>
-      <button onClick={handleShow} className="agregarProducto abajoDerecha">
+      
+      <button onClick={handleShow} className="agregarArticulo abajoDerecha">
         Agregar Articulo
       </button>
+      
+
 
       <Modal
         show={show}
