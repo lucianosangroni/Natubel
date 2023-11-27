@@ -99,6 +99,23 @@
   text-overflow: ellipsis;
 }
 
+.detailsContainer{
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem;
+  padding: 1rem;
+  
+  
+}
+
+
+.boton-estados{
+  background-color: white;
+  padding: 0.4rem;
+  border-radius: 0.5rem;
+}
+
 .tableContainerPedidos td {
   border: 1px solid #000000;
   padding: 8px;
@@ -484,7 +501,7 @@
 }
 
 .table-grilla-input input {
-  width: 40px; /* Ajusta el ancho según tus necesidades */
+  width: 40px;
   text-align: center;
 }
 

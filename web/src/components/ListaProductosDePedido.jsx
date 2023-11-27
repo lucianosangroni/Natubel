@@ -96,11 +96,11 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
         )}
 
         {pedido.estado !== "CANCELADO" && (<>
-        <button onClick={() => cambiarEstado('CANCELADO')}>Cancelar</button>
-        <button onClick={() => cambiarEstado('PEDIDO')}>Pedido</button>
-        <button onClick={() => cambiarEstado('ENVIADO')}>Enviado</button>
-        <button onClick={() => cambiarEstado('PAGADO')}>Pagado</button>
-        <button onClick={() => cambiarEstado('COMPLETADO')}>Completado</button>
+        <button className="boton-estados" onClick={() => cambiarEstado('CANCELADO')}>Cancelar</button>
+        <button className="boton-estados" onClick={() => cambiarEstado('PEDIDO')}>Pedido</button>
+        <button className="boton-estados" onClick={() => cambiarEstado('ENVIADO')}>Enviado</button>
+        <button className="boton-estados" onClick={() => cambiarEstado('PAGADO')}>Pagado</button>
+        <button className="boton-estados" onClick={() => cambiarEstado('COMPLETADO')}>Completado</button>
         </>
         )}
       </>
