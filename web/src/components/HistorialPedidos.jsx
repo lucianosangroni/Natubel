@@ -1,9 +1,11 @@
  import React, { useMemo, useState, useEffect } from "react";
- import { useTable,useGlobalFilter } from "react-table";
+ import { useTable,useGlobalFilter, usePagination } from "react-table";
  import { COLUMNSPEDIDOS } from "./columnsListaPedidos"
  import NavbarAdm from '../components/NavbarAdm';
  import GlobalFilter from "./GlobalFilter";
  import ListaProductosDePedido from "./ListaProductosDePedido";
+ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+ import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
  const HistorialPedidos = () => {
    const columns = useMemo(() => COLUMNSPEDIDOS, []);
@@ -101,9 +103,12 @@
           }
          }
 
+         const fechaPedido = new Date(dataResult.createdAt);
+         const fechaFormateada = `${fechaPedido.getDate()}/${fechaPedido.getMonth() + 1}/${fechaPedido.getFullYear() % 100}`;
+
          const pedido = {
            numero_pedido: dataResult.numero_pedido,
-           fecha: dataResult.createdAt,
+           fecha: fechaFormateada,
            persona_nombre: dataResult.persona.nombre,
            estado: dataResult.estado,
            precio_total: dataResult.precio_total,
@@ -128,11 +133,13 @@
       columns,
       data,
     },
-    useGlobalFilter
+    useGlobalFilter,
+    usePagination
   );
 
-   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, setGlobalFilter,state } = tableInstance
+   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, setGlobalFilter,state, page, nextPage, previousPage, canNextPage, canPreviousPage, pageOptions } = tableInstance
    const { globalFilter } = state;
+   const { pageIndex } = state;
 
    const handleRowClick = (row) => {
     setSelectedRow(row.original);
@@ -166,7 +173,7 @@
               ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-              {rows.map((row, rowIndex) => {
+              {page.map((row, rowIndex) => {
                 prepareRow(row);
                 return (
                   <tr
@@ -184,6 +191,22 @@
             </tbody>
           </table>
         </div>
+
+        <div className="paginacion">
+          <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </button>
+          <span>
+            Pagina{" "}
+            <strong>
+              {pageIndex + 1} de {pageOptions.length}
+            </strong>{" "}
+          </span>
+          <button onClick={() => nextPage()} disabled={!canNextPage}>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </button>
+        </div>
+
         <div className="detailsContainer">
           {selectedRow && (
             <ListaProductosDePedido
