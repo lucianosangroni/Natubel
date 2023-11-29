@@ -6,6 +6,7 @@
  import ListaProductosDePedido from "./ListaProductosDePedido";
  import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
  import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+ import { apiUrl } from "./config";
 
  const HistorialPedidos = () => {
    const columns = useMemo(() => COLUMNSPEDIDOS, []);
@@ -17,7 +18,7 @@
 
    ////OBTENER PEDIDOS Y ARTICULOS DB
    useEffect(() => {
-      fetch(`http://localhost:3001/api/articulos`, {
+      fetch(`${apiUrl}/articulos`, {
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
@@ -52,7 +53,7 @@
    }, [jwt]);
 
    useEffect(() => {
-    fetch(`http://localhost:3001/api/pedidos`, {
+    fetch(`${apiUrl}/pedidos`, {
        headers: {
          Authorization: `Bearer ${jwt}`,
        },

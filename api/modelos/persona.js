@@ -7,10 +7,12 @@ const Persona = sequelize.define(
         nombre: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: true
         },
         email: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: true
         },
         telefono: {
             type: DataTypes.STRING,

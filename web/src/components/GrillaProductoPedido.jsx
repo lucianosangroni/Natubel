@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor }) {
+function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBorrarConfirmarProducto }) {
     const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
     const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
     const [cantidades, setCantidades] = useState({});
@@ -48,7 +48,11 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor }) {
     }
 
     const handleConfirmarProducto = () => {
-        onConfirmarProducto(articulo, cantidades)
+        if (Object.keys(cantidades).length > 0) {
+            onConfirmarProducto(articulo, cantidades)
+        } else {
+            onBorrarConfirmarProducto(articulo)
+        }
     }
 
     return (

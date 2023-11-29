@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { apiUrl } from "./config";
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -9,7 +10,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     const handleLogin = async () => {
-        fetch('http://localhost:3001/api/auth', {
+        fetch(`${apiUrl}/auth`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

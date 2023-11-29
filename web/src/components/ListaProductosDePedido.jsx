@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import GrillaProductosDePedido from "./GrillaProductosDePedido";
+import { apiUrl } from "./config";
 
 function ListaProductosDePedido({ pedido, onCambiarEstado }) {
     const [selectedArticulo, setSelectedArticulo] = useState(null);
@@ -42,7 +43,7 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
         productos
       }
 
-      fetch(`http://localhost:3001/api/pedidos/${pedido.numero_pedido}`, {
+      fetch(`${apiUrl}/pedidos/${pedido.numero_pedido}`, {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',

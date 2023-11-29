@@ -12,6 +12,7 @@ import ModalProveedores from "./ModalProveedores";
 import ModalProveedoresEditar from "./ModalProveedoresEditar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { apiUrl } from "./config";
 
 const ListadoProveedores = () => {
   const columns = useMemo(() => COLUMNSPROVE, []);
@@ -23,7 +24,7 @@ const ListadoProveedores = () => {
 
   //OBTENER PROVEEDORES DB
   useEffect(() => {
-    fetch(`http://localhost:3001/api/proveedores`, 
+    fetch(`${apiUrl}/proveedores`, 
     {
       headers: {
         Authorization: `Bearer ${jwt}`
@@ -68,7 +69,7 @@ const ListadoProveedores = () => {
       email: newProveedor.email  
     }
 
-    fetch(`http://localhost:3001/api/proveedores`, {
+    fetch(`${apiUrl}/proveedores`, {
       method: "POST",
       headers: {
           'Content-Type': 'application/json',
@@ -110,7 +111,7 @@ const ListadoProveedores = () => {
       email: newData.email  
     }
 
-    fetch(`http://localhost:3001/api/proveedores/${newData.id}`, {
+    fetch(`${apiUrl}/proveedores/${newData.id}`, {
       method: "PUT",
       headers: {
           'Content-Type': 'application/json',
@@ -139,35 +140,35 @@ const ListadoProveedores = () => {
 
   //ELIMINAR PROVEEDOR DB
   const handleDeleteRow = (row) => {
-    const shouldDelete = window.confirm(
-      "¿Estas seguro que deseas eliminar el proveedor?"
-    );
-    if (shouldDelete) {
-      fetch(`http://localhost:3001/api/proveedores/${row.original.id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${jwt}`
-        }
-      })
-      .then((response) => {
-        if (!response.ok) {
-          alert("Error al eliminar proveedor, intente nuevamente")
-          throw new Error("Error en la solicitud DELETE");
-        }
-        return response.json();
-      })
-      .then(() => {
-        const rowIndex = data.indexOf(row.original);
-        if (rowIndex > -1) {
-          const newData = [...data];
-          newData.splice(rowIndex, 1);
-          setData(newData);
-        }
-      })
-      .catch(error => {
-          console.error("Error en la solicitud DELETE:", error);
-      });
-    }
+    //const shouldDelete = window.confirm(
+    //  "¿Estas seguro que deseas eliminar el proveedor?"
+    //);
+    //if (shouldDelete) {
+    //  fetch(`${apiUrl}/proveedores/${row.original.id}`, {
+    //    method: "DELETE",
+    //    headers: {
+    //      Authorization: `Bearer ${jwt}`
+    //    }
+    //  })
+    //  .then((response) => {
+    //    if (!response.ok) {
+    //      alert("Error al eliminar proveedor, intente nuevamente")
+    //      throw new Error("Error en la solicitud DELETE");
+    //    }
+    //    return response.json();
+    //  })
+    //  .then(() => {
+    //    const rowIndex = data.indexOf(row.original);
+    //    if (rowIndex > -1) {
+    //      const newData = [...data];
+    //      newData.splice(rowIndex, 1);
+    //      setData(newData);
+    //    }
+    //  })
+    //  .catch(error => {
+    //      console.error("Error en la solicitud DELETE:", error);
+    //  });
+    //}
   };
 
   const {

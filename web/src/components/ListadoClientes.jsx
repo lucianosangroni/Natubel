@@ -7,6 +7,7 @@ import ModalCliente from "./ModalCliente";
 import ModalClienteEditar from "./ModalClienteEditar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { apiUrl } from "./config";
 
 const ListadoClientes = () => {
   const columns = useMemo(() => COLUMNSCLIENTES, []);
@@ -19,7 +20,7 @@ const ListadoClientes = () => {
 
   //OBTENER CLIENTES DB
   useEffect(() => {
-    fetch(`http://localhost:3001/api/clientes`, 
+    fetch(`${apiUrl}/clientes`, 
     {
       headers: {
         Authorization: `Bearer ${jwt}`
@@ -79,7 +80,7 @@ const ListadoClientes = () => {
       tipo_cliente: newCliente.tipo_cliente
     }
 
-    fetch(`http://localhost:3001/api/clientes`, {
+    fetch(`${apiUrl}/clientes`, {
       method: "POST",
       headers: {
           'Content-Type': 'application/json',
@@ -130,7 +131,7 @@ const ListadoClientes = () => {
       persona_id: parseInt(newData.persona_id)
     }
     
-    fetch(`http://localhost:3001/api/clientes/${newData.id}`, {
+    fetch(`${apiUrl}/clientes/${newData.id}`, {
       method: "PUT",
       headers: {
           'Content-Type': 'application/json',
@@ -159,36 +160,35 @@ const ListadoClientes = () => {
 
   //ELIMINAR PROVEEDOR DB
   const handleDeleteRow = (row) => {
-    //TODO fetch delete
-    const shouldDelete = window.confirm(
-      "¿Estas seguro que deseas eliminar el cliente?"
-    );
-    if (shouldDelete) {
-      fetch(`http://localhost:3001/api/clientes/${row.original.id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${jwt}`
-        }
-      })
-      .then((response) => {
-        if (!response.ok) {
-          alert("Error al eliminar cliente, intente nuevamente")
-          throw new Error("Error en la solicitud PUT");
-        }
-        return response.json();
-      })
-      .then(() => {
-        const rowIndex = data.indexOf(row.original);
-        if (rowIndex > -1) {
-          const newData = [...data];
-          newData.splice(rowIndex, 1);
-          setData(newData);
-        }
-      })
-      .catch(error => {
-          console.error("Error en la solicitud DELETE:", error);
-      });
-    }
+    //const shouldDelete = window.confirm(
+    //  "¿Estas seguro que deseas eliminar el cliente?"
+    //);
+    //if (shouldDelete) {
+    //  fetch(`${apiUrl}/clientes/${row.original.id}`, {
+    //    method: "DELETE",
+    //    headers: {
+    //      Authorization: `Bearer ${jwt}`
+    //    }
+    //  })
+    //  .then((response) => {
+    //    if (!response.ok) {
+    //      alert("Error al eliminar cliente, intente nuevamente")
+    //      throw new Error("Error en la solicitud PUT");
+    //    }
+    //    return response.json();
+    //  })
+    //  .then(() => {
+    //    const rowIndex = data.indexOf(row.original);
+    //    if (rowIndex > -1) {
+    //      const newData = [...data];
+    //      newData.splice(rowIndex, 1);
+    //      setData(newData);
+    //    }
+    //  })
+    //  .catch(error => {
+    //      console.error("Error en la solicitud DELETE:", error);
+    //  });
+    //}
   };
 
   const {

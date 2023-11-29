@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import NavbarAdm from "../components/NavbarAdm";
+import NavbarAdm from "./NavbarAdm";
 import Select from "react-select";
 import GrillaProductoPedido from "./GrillaProductoPedido";
 import GrillasProductosConfirmados from "./GrillaProductoConfirmado";
+import { apiUrl } from "./config";
 
 const CargarPedido = () => {
   const [data, setData] = useState([]);
@@ -20,7 +21,7 @@ const CargarPedido = () => {
   useEffect(() => {
     let flag_error = false;
 
-    const fetchArticulos = fetch(`http://localhost:3001/api/articulos`, {
+    const fetchArticulos = fetch(`${apiUrl}/articulos`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
@@ -53,7 +54,7 @@ const CargarPedido = () => {
         flag_error = true;
       });
 
-    const fetchClientes = fetch(`http://localhost:3001/api/clientes`, {
+    const fetchClientes = fetch(`${apiUrl}/clientes`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
@@ -76,7 +77,7 @@ const CargarPedido = () => {
         flag_error = true;
       });
 
-    const fetchProveedores = fetch(`http://localhost:3001/api/proveedores`, {
+    const fetchProveedores = fetch(`${apiUrl}/proveedores`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
@@ -123,17 +124,36 @@ const CargarPedido = () => {
   );
 
   const handleConfirmarProducto = (articulo, cantidades) => {
-    const productoConfirmadosNuevo = {
-      precio_unitario: articulo.precio_unitario,
-      productos: articulo.productos,
-      numero_articulo: articulo.numero_articulo,
-      cantidades,
-    };
-    setProductosConfirmados([
-      ...productosConfirmados,
-      productoConfirmadosNuevo,
-    ]);
+    const productoExistenteIndex = productosConfirmados.findIndex(
+      (producto) => producto.numero_articulo === articulo.numero_articulo
+    );
+
+    if (productoExistenteIndex !== -1) {
+      const productosConfirmadosActualizados = [...productosConfirmados];
+      productosConfirmadosActualizados[productoExistenteIndex].cantidades = cantidades;
+      setProductosConfirmados(productosConfirmadosActualizados);
+    } else {
+      const productoConfirmadosNuevo = {
+        precio_unitario: articulo.precio_unitario,
+        productos: articulo.productos,
+        numero_articulo: articulo.numero_articulo,
+        cantidades,
+      };
+
+      setProductosConfirmados([
+        ...productosConfirmados,
+        productoConfirmadosNuevo,
+      ]);
+    }
   };
+
+  const handleBorrarConfirmarProducto = (articulo) => {
+    const productosConfirmadosActualizados = productosConfirmados.filter(
+      (producto) => producto.numero_articulo !== articulo.numero_articulo
+    );
+  
+    setProductosConfirmados(productosConfirmadosActualizados);
+  }
 
   const calcularPrecioTotal = () => {
     let precioTotal = 0;
@@ -196,7 +216,7 @@ const CargarPedido = () => {
       productos,
     };
 
-    fetch(`http://localhost:3001/api/pedidos`, {
+    fetch(`${apiUrl}/pedidos`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -336,6 +356,7 @@ const CargarPedido = () => {
           <GrillaProductoPedido
             articulo={selectedProduct}
             onConfirmarProducto={handleConfirmarProducto}
+            onBorrarConfirmarProducto={handleBorrarConfirmarProducto}
             tipoPedidor={tipoPedidor}
           />
         )}

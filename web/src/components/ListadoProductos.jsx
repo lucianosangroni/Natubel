@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import NavbarAdm from "../components/NavbarAdm";
 import ModalProducto from "./ModalProducto";
 import GrillaProducto from "./GrillaProducto";
+import { apiUrl } from "./config";
 
 const ListadoProductos = () => {
   const [data, setData] = useState([]);
@@ -11,7 +12,7 @@ const ListadoProductos = () => {
 
   //OBTENER ARTICULOS DB
   useEffect(() => {
-    fetch(`http://localhost:3001/api/articulos`, {
+    fetch(`${apiUrl}/articulos`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
@@ -59,7 +60,7 @@ const ListadoProductos = () => {
       colores: newArticulo.colores,
     };
 
-    fetch(`http://localhost:3001/api/articulos`, {
+    fetch(`${apiUrl}/articulos`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -109,7 +110,7 @@ const ListadoProductos = () => {
       productos: productos,
     };
 
-    fetch(`http://localhost:3001/api/articulos/${editProduct.id}`, {
+    fetch(`${apiUrl}/articulos/${editProduct.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -150,31 +151,31 @@ const ListadoProductos = () => {
 
   //ELIMINAR ARTICULO DB
   const handleDeleteProducto = (articulo) => {
-    const shouldDelete = window.confirm(
-      "¿Estas seguro que deseas eliminar el articulo?"
-    );
-    if (shouldDelete) {
-      fetch(`http://localhost:3001/api/articulos/${articulo.id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            alert("Error al eliminar articulo, intente nuevamente");
-            throw new Error("Error en la solicitud DELETE");
-          }
-          return response.json();
-        })
-        .then(() => {
-          const updatedData = data.filter((art) => art.id !== articulo.id);
-          setData(updatedData);
-        })
-        .catch((error) => {
-          console.error("Error en la solicitud DELETE:", error);
-        });
-    }
+    //const shouldDelete = window.confirm(
+    //  "¿Estas seguro que deseas eliminar el articulo?"
+    //);
+    //if (shouldDelete) {
+    //  fetch(`${apiUrl}/articulos/${articulo.id}`, {
+    //    method: "DELETE",
+    //    headers: {
+    //      Authorization: `Bearer ${jwt}`,
+    //    },
+    //  })
+    //    .then((response) => {
+    //      if (!response.ok) {
+    //        alert("Error al eliminar articulo, intente nuevamente");
+    //        throw new Error("Error en la solicitud DELETE");
+    //      }
+    //      return response.json();
+    //    })
+    //    .then(() => {
+    //      const updatedData = data.filter((art) => art.id !== articulo.id);
+    //      setData(updatedData);
+    //    })
+    //    .catch((error) => {
+    //      console.error("Error en la solicitud DELETE:", error);
+    //    });
+    //}
   };
 
   const handleProductClick = (product) => {
