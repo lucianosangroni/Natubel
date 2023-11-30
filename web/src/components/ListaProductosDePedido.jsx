@@ -89,21 +89,23 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
           </tbody>
         </table>
 
-        {selectedArticulo && (
+        {pedido.estado !== "CANCELADO" && (<>
+        <button className="boton-estados cancelado" onClick={() => cambiarEstado('CANCELADO')}>Cancelar</button>
+        <button className="boton-estados pedido" onClick={() => cambiarEstado('PEDIDO')}>Pedido</button>
+        <button className="boton-estados enviado" onClick={() => cambiarEstado('ENVIADO')}>Enviado</button>
+        <button className="boton-estados pagado" onClick={() => cambiarEstado('PAGADO')}>Pagado</button>
+        <button className="boton-estados completado" onClick={() => cambiarEstado('COMPLETADO')}>Completado</button>
+        </>
+        )}
+
+        
+                {selectedArticulo && (
             <GrillaProductosDePedido
             articulo={selectedArticulo}
             productos={pedido.productos}
           />
         )}
-
-        {pedido.estado !== "CANCELADO" && (<>
-        <button className="boton-estados" onClick={() => cambiarEstado('CANCELADO')}>Cancelar</button>
-        <button className="boton-estados" onClick={() => cambiarEstado('PEDIDO')}>Pedido</button>
-        <button className="boton-estados" onClick={() => cambiarEstado('ENVIADO')}>Enviado</button>
-        <button className="boton-estados" onClick={() => cambiarEstado('PAGADO')}>Pagado</button>
-        <button className="boton-estados" onClick={() => cambiarEstado('COMPLETADO')}>Completado</button>
-        </>
-        )}
+        
       </>
     );
   }

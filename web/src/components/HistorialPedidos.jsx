@@ -208,7 +208,7 @@
           </button>
         </div>
 
-        <div className="detailsContainer">
+        <div className="detailsContainerHistorialPedidos">
           {selectedRow && (
             <ListaProductosDePedido
               pedido={selectedRow}

@@ -105,14 +105,14 @@
   gap: 1rem;
   margin: 1rem;
   padding: 1rem;
-  
-  
+ 
 }
 
 
 .boton-estados{
+  height: 30px;
+  margin-top: 0.4rem;
   background-color: white;
-  padding: 0.4rem;
   border-radius: 0.5rem;
 }
 
@@ -553,6 +553,42 @@
   cursor: pointer;
   margin: 0 5px;
 }
+
+.detailsContainerHistorialPedidos{
+  display: grid;
+  grid-template-areas:
+    "table-cargarPedido-contenedor cancelado pedido enviado pagado completado";
+  gap: 10px;
+  justify-content: center;
+  grid-template-columns: repeat(6, 100px);
+  
+}
+
+.table-cargarPedido-contenedor{
+  grid-area: table-cargarPedido-contenedor;
+}
+
+.cancelado{
+  grid-area: cancelado;
+}
+
+.pedido{
+  grid-area: pedido;
+}
+
+.enviado{
+  grid-area: enviado;
+}
+
+.pagado{
+  grid-area: pagado;
+}
+
+.completado{
+  grid-area: completado;
+}
+
+
 
 /* LOGIN */
 
