@@ -24,7 +24,7 @@
 .nav {
   border: 1px solid black;
   margin: 1rem;
-  background-color: #f0f0f0;
+  background-color: #dcd9d9;
   border-radius: 5px;
 }
 
@@ -37,7 +37,7 @@
   margin-right: 2rem;
 }
 .botonNav:hover {
-  background-color: #fbccd2;
+  background-color: grey;
   border-radius: 5px;
 }
 
@@ -55,7 +55,7 @@
 }
 
 .tableContainer th {
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   border: 1px solid #000000;
   padding: 8px;
   text-align: left;
@@ -89,7 +89,7 @@
 }
 
 .tableContainerPedidos th {
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   border: 1px solid #000000;
   padding: 8px;
   text-align: left;
@@ -145,7 +145,7 @@
 
 .search-icon {
   align-items: center;
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   border-radius: 5px;
   padding: 0.2rem;
   border: 1px solid black;
@@ -166,7 +166,7 @@
 }
 
 .paginacion button {
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   color: #000000;
   border: none;
   padding: 5px 10px;
@@ -182,7 +182,7 @@
 /* BOTON DE ELIMINAR EN CLIENTES */
 
 .botonEliminar {
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   color: #000000;
   border: none;
   padding: 5px 10px;
@@ -195,7 +195,7 @@
 /* BOTON DE EDITAR CLIENTE */
 
 .botonEditar {
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   color: #000000;
   border: none;
   padding: 5px 10px;
@@ -206,7 +206,7 @@
 }
 
 .botonGuardar {
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   color: #000000;
   border: none;
   padding: 5px 10px;
@@ -218,7 +218,7 @@
 /* BOTON DE NUEVO  */
 
 #botonNuevoCliente {
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   color: #000000;
   padding: 0.5rem;
   border-radius: 5px;
@@ -236,7 +236,7 @@
   padding: 0.5rem;
   border: 1px solid #000;
   border-radius: 0.5rem;
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
 }
 
 /* BOTON CERRAR / AGREGAR */
@@ -249,7 +249,7 @@
   padding: 0.5rem;
   border: 1px solid #000;
   border-radius: 0.5rem;
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
 }
 
 /* CARGAR PEDIDO */
@@ -278,11 +278,11 @@
   width: 120px;
   border: 1px solid #000;
   border-radius: 0.5rem;
-  background-color: #f0f0f0;
+  background-color: white;
 }
 
 .pedidor-seleccionado {
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
 }
 
 .confirmar {
@@ -290,7 +290,7 @@
   padding: 0.5rem;
   border: 1px solid #000;
   border-radius: 0.5rem;
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   margin-bottom: 1rem;
   margin-right: 1rem;
   margin-top: auto;
@@ -305,7 +305,7 @@
 
 .titulo-resumenPedido {
   text-align: left;
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   width: 13rem;
   padding: 0.7rem;
   border: 1px solid #000;
@@ -319,7 +319,7 @@
   width: 120px;
   border: 1px solid #000;
   border-radius: 0.5rem;
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
 }
 
 .stock-grilla {
@@ -346,7 +346,7 @@
 
 .table-header-productos {
   border: 1px solid #000000;
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   font-weight: bold;
 }
 
@@ -361,20 +361,20 @@
 }
 
 .table-cell-productos.selected {
-  background-color: #ffcccb;
+  background-color: #dcd9d9;
 }
 
 .selected-product {
-  background-color: #ffcccb;
+  background-color: #dcd9d9;
 }
 
 .selected-row {
-  background-color: #ffcccb;
+  background-color: #dcd9d9;
 }
 
 .agregarProducto {
   height: 4rem;
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   color: #000000;
   font-weight: bold;
   border: 1px solid #000;
@@ -386,7 +386,7 @@
 
 .agregar-producto-grilla {
   height: 4rem;
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   color: #000000;
   font-weight: bold;
   border: 1px solid #000;
@@ -397,7 +397,7 @@
 
 .agregarArticulo {
   height: 4rem;
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   color: #000000;
   font-weight: bold;
   border: 1px solid #000;
@@ -437,7 +437,7 @@
 }
 
 #boton-mas {
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   color: #000000;
   font-weight: bold;
   border: 1px solid #000;
@@ -449,7 +449,7 @@
 }
 
 #boton-menos {
-  background-color: #f0f0f0;
+  background-color: #dcd9d9;
   color: #000000;
   font-weight: bold;
   border: 1px solid #000;
@@ -477,23 +477,25 @@
   padding: 4px;
   text-align: center;
   font-weight: normal;
+  
 }
 
-.table-grilla th {
-  background-color: rgb(255, 255, 255);
-  font-weight: normal;
-}
 
 #articulo-grilla-elegido {
-  background-color: #fbccd2;
+  background-color: black;
+  font-weight: bold;
+  color: white
 }
 
 .articulo-grilla {
-  background-color: #fbccd2;
+  background-color: black;
+  color:white;
 }
 
+
 #listado-articulo-grilla {
-  background-color: #fbccd2;
+  background-color: black;
+  color: white;
 }
 
 .table-grilla-input {
@@ -508,7 +510,9 @@
 .grillas-container-resumen {
   display: flex;
   flex-wrap: wrap;
+  
 }
+
 
 .table-grilla-resumen {
   margin: 1.3rem;
@@ -542,11 +546,11 @@
   border-radius: 5px;
   margin: 0.3rem;
   padding: 0.2rem;
-  background-color: #f0f0f0;
+  background-color: #dcd9d9;
 }
 
 .boton-eliminar-agregarProducto {
-  background-color: #f0f0f0;
+  background-color: #dcd9d9;
   color: #000000;
   border: none;
   border-radius: 5px;
@@ -604,7 +608,7 @@
 }
 
 .iniciar-sesion-titulo {
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   border: 1px solid #000;
   border-radius: 0.5rem;
   margin: 0.5rem;
@@ -641,7 +645,7 @@
 }
 
 .iniciar-sesion-boton {
-  background-color: #fbccd2;
+  background-color: #dcd9d9;
   border: 1px solid #000;
   border-radius: 0.5rem;
   text-align: center;
