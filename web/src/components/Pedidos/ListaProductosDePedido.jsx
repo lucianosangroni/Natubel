@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import GrillaProductosDePedido from "./GrillaProductosDePedido";
-import { apiUrl } from "./config";
+import { apiUrl } from "../../config/config";
 
 function ListaProductosDePedido({ pedido, onCambiarEstado }) {
     const [selectedArticulo, setSelectedArticulo] = useState(null);

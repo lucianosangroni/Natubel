@@ -1,18 +1,13 @@
 import React, { useMemo, useState, useEffect } from "react";
-import NavbarAdm from '../components/NavbarAdm';
-import {
-  useTable,
-  useGlobalFilter,
-  usePagination,
-  useRowSelect,
-} from "react-table";
+import NavbarAdm from '../Common/NavbarAdm';
+import { useTable, useGlobalFilter, usePagination, useRowSelect} from "react-table";
 import { COLUMNSPROVE } from "./columnsListaProveedores";
-import GlobalFilter from "./GlobalFilter";
+import GlobalFilter from "../../helpers/GlobalFilter";
 import ModalProveedores from "./ModalProveedores";
 import ModalProveedoresEditar from "./ModalProveedoresEditar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { apiUrl } from "./config";
+import { apiUrl } from "../../config/config";
 
 const ListadoProveedores = () => {
   const columns = useMemo(() => COLUMNSPROVE, []);

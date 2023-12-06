@@ -1,13 +1,13 @@
 import React, { useMemo, useState, useEffect } from "react";
-import NavbarAdm from '../components/NavbarAdm';
+import NavbarAdm from '../Common/NavbarAdm';
 import { useTable, useGlobalFilter, usePagination, useRowSelect } from "react-table";
 import { COLUMNSCLIENTES } from "./columnsListaClientes";
-import GlobalFilter from "./GlobalFilter";
+import GlobalFilter from "../../helpers/GlobalFilter";
 import ModalCliente from "./ModalCliente";
 import ModalClienteEditar from "./ModalClienteEditar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { apiUrl } from "./config";
+import { apiUrl } from "../../config/config";
 
 const ListadoClientes = () => {
   const columns = useMemo(() => COLUMNSCLIENTES, []);

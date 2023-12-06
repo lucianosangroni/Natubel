@@ -1,16 +1,17 @@
-import CargarPedido from './components/CargarPedido';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-import ListadoProveedores from './components/ListadoProveedores';
-import ListadoClientes from './components/ListadoClientes';
-import ListadoProductos from './components/ListadoProductos';
-import HistorialPedidos from './components/HistorialPedidos';
-import Login from './components/Login';
-import ProtectedRoute from './components/ProtectedRoute';
-import { AuthProvider } from './components/AuthContext';
-import Mantenimiento from './components/Mantenimiento';
+import CargarPedido from './components/CargarPedido/CargarPedido';
+import Proveedores from './components/Proveedores/Proveedores';
+import Clientes from './components/Clientes/Clientes';
+import Articulos from './components/Articulos/Articulos';
+import Pedidos from './components/Pedidos/Pedidos';
+import Login from './components/Login/Login';
+import ProtectedRoute from './routes/ProtectedRoute';
+import { AuthProvider } from './context/AuthContext';
+import Mantenimiento from './components/Mantenimiento/Mantenimiento';
 
 function App() {
     return (
+
     <div >
       <BrowserRouter>
         <AuthProvider>
@@ -22,16 +23,16 @@ function App() {
               <Route path="admin/cargar-pedido" element={<CargarPedido/>} />
             </Route>
             <Route element={<ProtectedRoute/>}>
-              <Route path="admin/proveedores" element={<ListadoProveedores/>} />
+              <Route path="admin/proveedores" element={<Proveedores/>} />
             </Route>
             <Route element={<ProtectedRoute/>}>
-              <Route path="admin/clientes" element={<ListadoClientes/>} />
+              <Route path="admin/clientes" element={<Clientes/>} />
             </Route>
             <Route element={<ProtectedRoute/>}>
-              <Route path="admin/articulos" element={<ListadoProductos/>} />
+              <Route path="admin/articulos" element={<Articulos/>} />
             </Route>
             <Route element={<ProtectedRoute/>}>
-              <Route path="admin/pedidos" element={<HistorialPedidos/>} />
+              <Route path="admin/pedidos" element={<Pedidos/>} />
             </Route>
           </Routes>
         </AuthProvider>

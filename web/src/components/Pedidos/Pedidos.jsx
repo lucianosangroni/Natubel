@@ -1,12 +1,12 @@
  import React, { useMemo, useState, useEffect } from "react";
  import { useTable,useGlobalFilter, usePagination } from "react-table";
  import { COLUMNSPEDIDOS } from "./columnsListaPedidos"
- import NavbarAdm from '../components/NavbarAdm';
- import GlobalFilter from "./GlobalFilter";
+ import NavbarAdm from '../Common/NavbarAdm';
+ import GlobalFilter from "../../helpers/GlobalFilter";
  import ListaProductosDePedido from "./ListaProductosDePedido";
  import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
  import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
- import { apiUrl } from "./config";
+ import { apiUrl } from "../../config/config";
 
  const HistorialPedidos = () => {
    const columns = useMemo(() => COLUMNSPEDIDOS, []);
@@ -122,6 +122,8 @@
          pedidos.push(pedido);
        }
  
+       pedidos.sort((a, b) => b.numero_pedido - a.numero_pedido)
+
        setData(pedidos);
      })
      .catch((error) => {

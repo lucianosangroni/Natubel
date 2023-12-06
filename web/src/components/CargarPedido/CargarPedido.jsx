@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import NavbarAdm from "./NavbarAdm";
+import NavbarAdm from "../Common/NavbarAdm";
 import Select from "react-select";
 import GrillaProductoPedido from "./GrillaProductoPedido";
 import GrillasProductosConfirmados from "./GrillaProductoConfirmado";
-import { apiUrl } from "./config";
+import { apiUrl } from "../../config/config";
 
 const CargarPedido = () => {
   const [data, setData] = useState([]);

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import NavbarAdm from "../components/NavbarAdm";
+import NavbarAdm from "../Common/NavbarAdm";
 import ModalProducto from "./ModalProducto";
 import GrillaProducto from "./GrillaProducto";
-import { apiUrl } from "./config";
+import { apiUrl } from "../../config/config";
 
 const ListadoProductos = () => {
   const [data, setData] = useState([]);
