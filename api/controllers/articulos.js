@@ -1,5 +1,6 @@
 const { articuloModel, productoModel } = require("../modelos");
 const { matchedData } = require("express-validator");
+const { sequelize } = require("../config/dbConnect")
 
 const getItems = async (req, res) => {
     try {
@@ -10,7 +11,8 @@ const getItems = async (req, res) => {
                     {
                         model: productoModel,
                     }
-                ]
+                ],
+                order: sequelize.literal("CAST(SUBSTRING_INDEX(numero_articulo, ' ', 1) AS UNSIGNED), SUBSTRING_INDEX(numero_articulo, ' ', -1) ASC")
             }
         )
 

@@ -20,6 +20,8 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.6.3",
     "nodemon": "^3.0.1",
+    "pdfkit": "^0.14.0",
+    "pdfkit-table": "^0.1.99",
     "sequelize": "^6.34.0"
   }
 }

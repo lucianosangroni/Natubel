@@ -3,6 +3,7 @@ import NavbarAdm from "../Common/NavbarAdm";
 import ModalProducto from "./ModalProducto";
 import GrillaProducto from "./GrillaProducto";
 import { apiUrl } from "../../config/config";
+import { Button } from "react-bootstrap";
 
 const ListadoProductos = () => {
   const [data, setData] = useState([]);
@@ -182,6 +183,35 @@ const ListadoProductos = () => {
     setSelectedProduct(product);
   };
 
+  const handleGenerarPDF = () => {
+    fetch(`${apiUrl}/pdf/stock`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      }
+    })
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al generar el pdf, intente nuevamente");
+        throw new Error("Error en la solicitud GET");
+      }
+      return response.blob();
+    })
+    .then((result) => {
+      const url = URL.createObjectURL(result);
+
+      const newWindow = window.open(url, '_blank');
+
+      if (!newWindow) {
+          alert('Habilite las ventanas emergentes para descargar el PDF');
+      }
+
+      URL.revokeObjectURL(url);
+    })
+    .catch((error) => {
+      console.error('Error en la solicitud GET:', error);
+    });
+  }
+
   return (
     <>
       <NavbarAdm />
@@ -213,6 +243,7 @@ const ListadoProductos = () => {
             onDeleteProducto={handleDeleteProducto}
           />
         )}
+        <Button onClick={handleGenerarPDF} id="btnDescargarStock">Descargar Stock</Button>
         <ModalProducto onAddProducto={handleAddArticulo} />
       </div>
     </>
