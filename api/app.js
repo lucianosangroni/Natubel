@@ -17,4 +17,4 @@ app.listen(puerto, () => {
 })
 
 dbConnect();
-dbSync(); //TODO comentar para el despliegue
+dbSync();

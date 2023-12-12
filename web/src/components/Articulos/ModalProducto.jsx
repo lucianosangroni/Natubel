@@ -5,7 +5,7 @@ function ModalProducto({ onAddProducto }) {
   const [show, setShow] = useState(false);
   const [newProduct, setNewProduct] = useState({
     numero_articulo: "",
-    nombre: "",
+    nombre: "Articulo Natubel",
     descripcion: "",
     precio_unitario: "",
     talles: [""],
@@ -23,7 +23,7 @@ function ModalProducto({ onAddProducto }) {
       onAddProducto(newProduct);
       setNewProduct({
         numero_articulo: "",
-        nombre: "",
+        nombre: "Articulo Natubel",
         descripcion: "",
         precio_unitario: "",
         talles: [""],
@@ -124,7 +124,7 @@ function ModalProducto({ onAddProducto }) {
                 }}
               />
             </Form.Group>
-            <Form.Group>
+            {/*<Form.Group>
               <Form.Label>Nombre</Form.Label>
               <Form.Control
                 type="text"
@@ -149,7 +149,7 @@ function ModalProducto({ onAddProducto }) {
                   });
                 }}
               />
-            </Form.Group>
+            </Form.Group>*/}
             <Form.Group>
               <Form.Label>Precio</Form.Label>
               <Form.Control

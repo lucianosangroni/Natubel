@@ -28,5 +28,10 @@ export const COLUMNSPEDIDOS = [
         Header: "Cliente / Proveedor",
         accessor:"tipo",
         width: 'auto',
+    },
+    {
+        Header: "Creador",
+        accessor:"creador",
+        width: 'auto',
     }
 ]

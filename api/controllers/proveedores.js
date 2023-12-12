@@ -15,7 +15,7 @@ const createItem = async (req, res) => {
     try {
         req = matchedData(req);
 
-        const { nombre, email, telefono, direccion } = req
+        const { nombre, email, telefono, cuit_cuil, direccion } = req
 
         const nuevaPersona = await personaModel.create
         (
@@ -23,6 +23,7 @@ const createItem = async (req, res) => {
                 nombre,
                 email,
                 telefono,
+                cuit_cuil,
                 direccion,
                 es_proveedor: true,
             }
@@ -40,7 +41,7 @@ const updateItem = async (req, res) => {
         req = matchedData(req);
 
         const proveedor_id = req.id
-        const { nombre, email, telefono, direccion } = req
+        const { nombre, email, telefono, cuit_cuil, direccion } = req
         
         // Validar si el proveedor existe antes de intentar actualizarla
         const proveedorExiste = await personaModel.findByPk(proveedor_id);
@@ -54,6 +55,7 @@ const updateItem = async (req, res) => {
                 nombre,
                 email,
                 telefono,
+                cuit_cuil,
                 direccion
             }, 
             {

@@ -23,6 +23,7 @@ const createItem = async (req, res) => {
                 nombre,
                 email,
                 telefono,
+                cuit_cuil,
                 direccion,
                 es_proveedor: false,
             }
@@ -33,7 +34,6 @@ const createItem = async (req, res) => {
             {
                 persona_id: nuevaPersona.id,
                 dni,
-                cuit_cuil,
                 tipo_cliente,
                 forma_de_envio,
                 codigo_postal,
@@ -74,6 +74,7 @@ const updateItem = async (req, res) => {
                 nombre,
                 email,
                 telefono,
+                cuit_cuil,
                 direccion
             }, 
             {
@@ -85,7 +86,6 @@ const updateItem = async (req, res) => {
         (
             {
                 dni,
-                cuit_cuil,
                 tipo_cliente,
                 forma_de_envio,
                 codigo_postal,

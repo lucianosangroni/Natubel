@@ -102,7 +102,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
 
   return (
     <>
-      <button onClick={handleShow} className="agregar-producto-grilla">
+      <button onClick={handleShow} className="agregar-producto-grilla" style={{ marginTop: '2rem' }}>
         Editar Articulo
       </button>
 
@@ -130,7 +130,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
                 }}
               />
             </Form.Group>
-            <Form.Group>
+            {/*<Form.Group>
               <Form.Label>Nombre</Form.Label>
               <Form.Control
                 type="text"
@@ -155,7 +155,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
                   });
                 }}
               />
-            </Form.Group>
+            </Form.Group>*/}
             <Form.Group>
               <Form.Label>Precio</Form.Label>
               <Form.Control

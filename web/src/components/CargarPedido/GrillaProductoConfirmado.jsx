@@ -13,9 +13,9 @@ function GrillasProductosConfirmados({ articulos }) {
                             <table className="table-grilla-resumen">
                                 <thead>
                                     <tr className="table-header-grilla">
-                                        <th className="articulo-grilla">{articulo.numero_articulo}</th>
+                                        <th id="listado-articulo-grilla">ART. {articulo.numero_articulo}</th>
                                         {talles.map((talle, index) => (
-                                            <th key={index}>Talle {talle}</th>
+                                            <th key={index}>{talle}</th>
                                         ))}
                                     </tr>
                                 </thead>

@@ -41,7 +41,8 @@ const ListadoProveedores = () => {
           nombre: dataResult.nombre,
           direccion: dataResult.direccion,
           telefono: dataResult.telefono,
-          email: dataResult.email
+          email: dataResult.email,
+          cuit_cuil: dataResult.cuit_cuil
         }
 
         proveedores.push(proveedor)
@@ -61,7 +62,8 @@ const ListadoProveedores = () => {
       nombre: newProveedor.nombre,
       direccion: newProveedor.direccion,
       telefono: newProveedor.telefono,
-      email: newProveedor.email  
+      email: newProveedor.email,
+      cuit_cuil: parseInt(newProveedor.cuit_cuil)
     }
 
     fetch(`${apiUrl}/proveedores`, {
@@ -103,7 +105,8 @@ const ListadoProveedores = () => {
       nombre: newData.nombre,
       direccion: newData.direccion,
       telefono: newData.telefono,
-      email: newData.email  
+      email: newData.email,
+      cuit_cuil: parseInt(newData.cuit_cuil)
     }
 
     fetch(`${apiUrl}/proveedores/${newData.id}`, {

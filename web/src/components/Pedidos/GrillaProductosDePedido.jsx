@@ -5,9 +5,9 @@ function GrillaProductosDePedido({ articulo, productos }) {
       <table className="table-grilla">
             <thead>
                 <tr className="table-header-grilla">
-                    <th id="listado-articulo-grilla">{articulo.numero_articulo}</th>
+                    <th id="listado-articulo-grilla">ART. {articulo.numero_articulo}</th>
                     {articulo.talles.map((talle, index) => (
-                        <th key={index}>Talle {talle}</th>
+                        <th key={index}>{talle}</th>
                     ))}
                 </tr>
             </thead>

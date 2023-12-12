@@ -1,14 +1,16 @@
 const express = require("express")
 const router = express.Router();
 const { 
-    getStock,
+    getStockAdmin,
+    getStockCliente,
     getNotaPedido,
     getRemito
     } = require("../controllers/pdf");
 const { checkAuth } = require("../middlewares/auth")
 
-router.get("/stock", checkAuth, getStock);
-router.get("/nota-pedido", checkAuth, getNotaPedido);
+router.get("/stock/admin", checkAuth, getStockAdmin);
+router.get("/stock/cliente", checkAuth, getStockCliente)
+router.get("/nota-pedido/:id", checkAuth, getNotaPedido);
 router.get("/remito", checkAuth, getRemito);
 
 module.exports = router

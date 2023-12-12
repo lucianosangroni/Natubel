@@ -11,6 +11,7 @@ function ModalProveedores({ onAddProveedor }) {
     direccion: "",
     telefono: "",
     email: "",
+    cuit_cuil: "",
   });
 
   const handleClose = () => setShow(false);
@@ -25,6 +26,7 @@ function ModalProveedores({ onAddProveedor }) {
         direccion: "",
         telefono: "",
         email: "",
+        cuit_cuil: "",
       });
       handleClose();
     } else {
@@ -50,7 +52,7 @@ function ModalProveedores({ onAddProveedor }) {
         <Modal.Body>
           <Form>
             <Form.Group>
-              <Form.Label>Nombre completo</Form.Label>
+              <Form.Label>Nombre</Form.Label>
               <Form.Control
                 type="text"
                 value={newProveedor.nombre}
@@ -59,6 +61,16 @@ function ModalProveedores({ onAddProveedor }) {
                     ...newProveedor,
                     nombre: e.target.value,
                   });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>CUIT/CUIL</Form.Label>
+              <Form.Control
+                type="text"
+                value={newProveedor.cuit_cuil}
+                onChange={(e) => {
+                  setNewProveedor({ ...newProveedor, cuit_cuil: e.target.value });
                 }}
               />
             </Form.Group>

@@ -104,6 +104,20 @@
           }
          }
 
+         newArticulosPedido.sort((articuloA, articuloB) => {
+          const numeroA = parseInt(articuloA.numero_articulo);
+          const numeroB = parseInt(articuloB.numero_articulo);
+      
+          if (numeroA !== numeroB) {
+              return numeroA - numeroB;
+          } else {
+              const letrasA = articuloA.numero_articulo.replace(/^\d+\s*/, '');
+              const letrasB = articuloB.numero_articulo.replace(/^\d+\s*/, '');
+      
+              return letrasA.localeCompare(letrasB);
+          }
+        });
+
          const fechaPedido = new Date(dataResult.createdAt);
          const fechaFormateada = `${fechaPedido.getDate()}/${fechaPedido.getMonth() + 1}/${fechaPedido.getFullYear() % 100}`;
 
@@ -116,7 +130,8 @@
            tipo: dataResult.persona.es_proveedor ? "PROVEEDOR" : "CLIENTE",
            razon_cancelado: dataResult.razon_cancelado,
            articulos: newArticulosPedido,
-           productos: dataResult.productos
+           productos: dataResult.productos,
+           creador: dataResult.creador
          };
 
          pedidos.push(pedido);
@@ -125,6 +140,7 @@
        pedidos.sort((a, b) => b.numero_pedido - a.numero_pedido)
 
        setData(pedidos);
+       setSelectedRow(pedidos[0])
      })
      .catch((error) => {
        console.error("Error en la solicitud GET:", error)

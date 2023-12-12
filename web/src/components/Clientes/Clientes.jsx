@@ -41,7 +41,7 @@ const ListadoClientes = () => {
           id: dataResult.id,
           persona_id: dataResult.persona_id,
           nombre: dataResult.persona.nombre,
-          cuit_cuil: dataResult.cuit_cuil,
+          cuit_cuil: dataResult.persona.cuit_cuil,
           direccion: dataResult.persona.direccion,
           codigo_postal: dataResult.codigo_postal,
           telefono: dataResult.persona.telefono,
