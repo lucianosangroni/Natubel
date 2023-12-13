@@ -284,7 +284,7 @@ const CargarPedido = () => {
 
   return (
     <>
-      <NavbarAdm />
+      <NavbarAdm selected={'Cargar Pedido'}/>
       <div className="contenedor-botones">
         <button
           id="btn-pedidor-cliente"

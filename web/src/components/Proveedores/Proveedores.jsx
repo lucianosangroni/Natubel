@@ -197,7 +197,7 @@ const ListadoProveedores = () => {
 
   return (
     <>
-      <NavbarAdm/>
+      <NavbarAdm selected={'Proveedores'}/>
       <GlobalFilter  filter={globalFilter} setFilter={setGlobalFilter} />
       <div className="tableDivContainer">
         <table {...getTableProps()} className="tableContainer">

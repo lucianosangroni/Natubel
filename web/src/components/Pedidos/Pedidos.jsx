@@ -173,11 +173,12 @@
     });
 
     setData(newData);
+    setSelectedRow(newData[0])
   }
 
   return (
     <>
-      <NavbarAdm />
+      <NavbarAdm selected={'Pedidos'}/>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
       <div className="tableDetailsContainer">
         <div className="tableDivContainerPedidos">
@@ -226,14 +227,12 @@
           </button>
         </div>
 
-        <div className="detailsContainerHistorialPedidos">
           {selectedRow && (
             <ListaProductosDePedido
               pedido={selectedRow}
               onCambiarEstado={actualizarEstado}
               />
           )}
-        </div>
       </div>
     </>
   );

@@ -4,7 +4,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
 import { useAuth } from '../../context/AuthContext';
 
-function NavbarAdm() {
+function NavbarAdm({ selected }) {
 
   const { logout } = useAuth()
 
@@ -20,28 +20,28 @@ function NavbarAdm() {
   return (
     <>
       <Navbar data-bs-theme="light" className="nav">
-        <Container>
-          <Navbar.Brand className="navContainer">Natubel Adm</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link className="botonNav" as={Link} to="/admin/cargar-pedido">
-              Cargar Pedido
-            </Nav.Link>
-            <Nav.Link className="botonNav" as={Link} to="/admin/proveedores">
-              Proveedores
-            </Nav.Link>
-            <Nav.Link className="botonNav" as={Link} to="/admin/clientes">
-              Clientes
-            </Nav.Link>
-            <Nav.Link className="botonNav" as={Link} to="/admin/articulos">
-              Artículos
-            </Nav.Link>
-            <Nav.Link className="botonNav" as={Link} to="/admin/pedidos">
-              Pedidos
-            </Nav.Link>
-            <Nav.Link className="botonNav" onClick={handleLogout}>
-              Cerrar Sesion
-            </Nav.Link>
+        <Container className="navBarElementsContainer" style={{ margin: 0 }}>
+          <h4 className="navUsername">{localStorage.getItem('username')}</h4>
+          <Nav className="navPantallasContainer">
+              <Nav.Link className={`botonNav ${selected === 'Cargar Pedido' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/cargar-pedido">
+                Cargar Pedido
+              </Nav.Link>
+              <Nav.Link className={`botonNav ${selected === 'Proveedores' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/proveedores">
+                Proveedores
+              </Nav.Link>
+              <Nav.Link className={`botonNav ${selected === 'Clientes' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/clientes">
+                Clientes
+              </Nav.Link>
+              <Nav.Link className={`botonNav ${selected === 'Articulos' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/articulos">
+                Artículos
+              </Nav.Link>
+              <Nav.Link className={`botonNav ${selected === 'Pedidos' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/pedidos">
+                Pedidos
+              </Nav.Link>
           </Nav>
+          <button className="botonCerrarSesion" onClick={handleLogout}>
+            Cerrar Sesion
+          </button>
         </Container>
       </Navbar>
     </>

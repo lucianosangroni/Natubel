@@ -2,7 +2,8 @@ function GrillaProductosDePedido({ articulo, productos }) {
 
     return (
       <>
-      <table className="table-grilla">
+      <div className="table-width-container">
+        <table className="table-grilla">
             <thead>
                 <tr className="table-header-grilla">
                     <th id="listado-articulo-grilla">ART. {articulo.numero_articulo}</th>
@@ -24,8 +25,9 @@ function GrillaProductosDePedido({ articulo, productos }) {
                     })}
                   </tr>
                 ))}
-              </tbody>
+            </tbody>
         </table>
+      </div>
       </>
     );
   }

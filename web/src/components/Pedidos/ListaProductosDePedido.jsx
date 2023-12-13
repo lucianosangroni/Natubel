@@ -98,25 +98,32 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
 
     return (
       <>
+      <div className="table-productos-contenedor">
         <ListaArticulos articulos={pedido.articulos} onArticuloClick={handleArticuloClick}/>
 
-        {pedido.estado !== "CANCELADO" && (<>
-        <button className="boton-estados cancelado" onClick={() => cambiarEstado('CANCELADO')}>Cancelar</button>
-        <button className="boton-estados pedido" onClick={() => cambiarEstado('PEDIDO')}>Pedido</button>
-        <button className="boton-estados enviado" onClick={() => cambiarEstado('ENVIADO')}>Enviado</button>
-        <button className="boton-estados pagado" onClick={() => cambiarEstado('PAGADO')}>Pagado</button>
-        <button className="boton-estados completado" onClick={() => cambiarEstado('COMPLETADO')}>Completado</button>
-        <button className="boton-estados" onClick={() => generarPdfPedido()}>Nota De Pedido</button>
-        </>
-        )}
-        
         {selectedArticulo && (
             <GrillaProductosDePedido
             articulo={selectedArticulo}
             productos={pedido.productos}
           />
         )}
+
         
+        {pedido.estado !== "CANCELADO" && (<>
+        <div className="contenedor-btns-estados">
+          <button className={`boton-estados completado ${pedido.estado === 'COMPLETADO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('COMPLETADO')}>Completado</button>
+          <button className={`boton-estados enviado ${pedido.estado === 'ENVIADO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('ENVIADO')}>Enviado</button>
+          <button className={`boton-estados pagado ${pedido.estado === 'PAGADO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('PAGADO')}>Pagado</button>
+          <button className={`boton-estados pedido ${pedido.estado === 'PEDIDO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('PEDIDO')}>Pedido</button>
+          <button className="boton-estados cancelado" onClick={() => cambiarEstado('CANCELADO')} style={{ marginBottom: 20 }}>Cancelado</button>
+        </div>
+        <div className="contenerdor-btns-pdfs-pedido">
+          <button className="boton-estados" onClick={() => generarPdfPedido()} style={{ width: 150 }}>Nota De Pedido</button>
+          <button className="boton-estados" onClick={() => generarPdfPedido()} style={{ width: 150 }}>Remito</button>
+        </div>
+        </>
+        )}
+      </div>
       </>
     );
   }

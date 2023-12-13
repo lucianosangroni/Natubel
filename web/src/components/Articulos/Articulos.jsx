@@ -245,7 +245,7 @@ const ListadoProductos = () => {
 
   return (
     <>
-      <NavbarAdm />
+      <NavbarAdm selected={'Articulos'}/>
       <div className="table-productos-contenedor">
         <ListaArticulos articulos={data} onArticuloClick={handleArticuloClick}/>
         {selectedProduct && (
