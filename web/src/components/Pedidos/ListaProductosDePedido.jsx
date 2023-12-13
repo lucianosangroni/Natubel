@@ -96,6 +96,10 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
       });
     }
 
+    const generarPdfRemito = () => {
+      alert("Todavia no está implementado")
+    }
+
     return (
       <>
       <div className="table-productos-contenedor">
@@ -119,7 +123,7 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
         </div>
         <div className="contenerdor-btns-pdfs-pedido">
           <button className="boton-estados" onClick={() => generarPdfPedido()} style={{ width: 150 }}>Nota De Pedido</button>
-          <button className="boton-estados" onClick={() => generarPdfPedido()} style={{ width: 150 }}>Remito</button>
+          <button className="boton-estados" onClick={() => generarPdfRemito()} style={{ width: 150 }}>Remito</button>
         </div>
         </>
         )}
