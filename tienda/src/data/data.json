@@ -1,0 +1,122 @@
+[
+    {
+       "id": 1,
+       "name": "corpiño",
+       "category": "mujer",
+       "description": "excelentes corpiños, calidad premium",
+       "price": 45000,
+       "sizes": "xl",
+       "color": "blanco",
+       "img": [
+        "./img/foto1.jpg"
+    ]
+    },
+    {
+        "id": 2,
+        "name": "corpiño",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "img": [
+         "./img/foto1.jpg"
+     ]
+     },
+     {
+        "id": 3,
+        "name": "corpiño",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "img": [
+         "./img/foto1.jpg"
+     ]
+     },
+     {
+        "id": 4,
+        "name": "corpiño",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "img": [
+         "./img/foto1.jpg"
+     ]
+     },
+     {
+        "id": 5,
+        "name": "corpiño",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "img": [
+         "./img/foto1.jpg"
+     ]
+     },
+     {
+        "id": 6,
+        "name": "corpiño",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "img": [
+         "./img/foto1.jpg"
+     ]
+     },
+     {
+        "id": 7,
+        "name": "corpiño",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "img": [
+         "./img/foto1.jpg"
+     ]
+     },
+     {
+        "id": 8,
+        "name": "corpiño",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "img": [
+         "./img/foto1.jpg"
+     ]
+     },
+     {
+        "id": 9,
+        "name": "corpiño",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "img": [
+         "./img/foto1.jpg"
+     ]
+     },
+     {
+        "id": 10,
+        "name": "corpiño",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "img": [
+         "./img/foto1.jpg"
+     ]
+     }
+]

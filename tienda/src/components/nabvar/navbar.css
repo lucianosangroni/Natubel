@@ -1,0 +1,62 @@
+    .encabezado{
+        font-size: 0.6rem;
+        text-align: center;
+        padding: 0.2rem;
+    }
+    
+    .navbar {
+        padding-top: 0.8rem;
+        padding-bottom: 0.2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #FBCCD2;
+        
+    }
+
+    .logo {
+        text-decoration: none;
+        color: white;
+        font-size: 2.5rem;
+        margin-left: 2rem;
+    }
+
+    .menu {
+        list-style-type: none;
+        display: flex;
+        align-items: center;
+        margin-top: 2rem;
+        gap: 1rem;
+    }
+    
+    .menu-link {
+        text-decoration: none;
+        color: white;
+        font-size: 1.2rem;
+    }
+    
+    .menu-link:hover {
+        text-decoration: underline;
+    }
+
+    .carrito-container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+    }
+
+    .carrito {
+        text-decoration: none;
+        color: white;
+        font-size: 1rem;
+        width: 1.5rem;
+        
+    }
+
+    .contador-carrito{
+        color: white;
+        margin-right: 2rem;
+        margin-top: 0.5rem;
+    }
