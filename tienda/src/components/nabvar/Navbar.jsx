@@ -1,6 +1,7 @@
 import React from 'react'
 import './navbar.css';
 import cartIcon from '../../img/carrito.png';
+import { Link } from 'react-router-dom';
 
 
 
@@ -9,17 +10,23 @@ const Navbar = () => {
     <div>
       <p className='encabezado'>MINIMO DE COMPRAS MAYORISTAS $25.000 || PARA COMPRAS MAYORES A $200.000.- ESCRIBINOS A NUESTRO WHATSAPP</p>
     <nav className='navbar'>
-        <h1 className='logo'>Natubel</h1>
+        <Link to="/" className='logo'><h1>Natubel</h1></Link>
         <ul className='menu'>
-            <li><a className='menu-link' href='#'>| Inicio |</a></li>
-            <li><a className='menu-link' href='#'>Catalogo</a></li>
-            <li><a className='menu-link' href='#'>Categorias</a></li>
-            <li><a className='menu-link' href='#'>Mayorista</a></li>
+            <li><Link className='menu-link' to='/'>| Inicio |</Link></li>
+            <li><Link className='menu-link' to='/productos'>Catalogo</Link></li>
+            <li><Link className='menu-link' to='/productos'>Categorias</Link></li>
+            <li><Link className='menu-link' to='/productos/mujer'>Mujer</Link></li>
+            <li><Link className='menu-link' to='/productos/reductores'>Reductores</Link></li>
+            <li><Link className='menu-link' to='/productos/corpiños'>Corpiños</Link></li>
+            <li><Link className='menu-link' to='/productos/bodys'>Bodys</Link></li>
+            <li><Link className='menu-link' to='/productos/conjuntos'>Conjuntos</Link></li>
+
+            <li><Link className='menu-link' to='/mayorista'>Mayorista</Link></li>
         </ul>
         <div className='carrito-container'>
-        <a href="#tu-enlace">
+        <Link to="/carrito">
           <img src={cartIcon} alt="Carrito" className='carrito' />       
-        </a>
+        </Link>
         <p className='contador-carrito'>0</p>
         </div>
         
