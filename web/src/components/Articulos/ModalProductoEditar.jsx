@@ -28,7 +28,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
         colores
       }
     );
-  }, [articulo]);
+  }, [articulo, talles, colores]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
