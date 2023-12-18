@@ -8,12 +8,12 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-const puerto = process.env.PUERTO || 3001
+const puerto = process.env.PORT || 3001
 
 app.use("/api", require("./rutas"));
 
 app.listen(puerto, () => {
-    console.log(`Inicio Servidor en: http://localhost:${puerto}`)
+    console.log(`Inicio Servidor en el puerto: ${puerto}`)
 })
 
 dbConnect();
