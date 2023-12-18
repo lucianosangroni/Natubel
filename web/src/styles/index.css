@@ -28,16 +28,41 @@
   border-radius: 5px;
 }
 
-.navContainer {
-  padding: 2rem;
+.navBarElementsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navUsername {
+  padding: 0.4rem 2rem;
   border: 1px solid black;
   border-radius: 5px;
+  font-size: 20px;
+  margin: 0;
+  margin-left: 6rem;
 }
-.botonNav {
-  margin-right: 2rem;
+
+.navPantallasContainer {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
-.botonNav:hover {
+
+.botonCerrarSesion {
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.65);
+  padding: 0.5rem;
+}
+.botonCerrarSesion:hover {
   background-color: grey;
+  border-radius: 5px;
+}
+
+.botonNav:hover {
+  background-color: #acabab;
   border-radius: 5px;
 }
 
@@ -108,10 +133,27 @@
  
 }
 
+.contenedor-btns-estados {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 20px;
+  margin-top: 2rem;
+}
+
+.contenerdor-btns-pdfs-pedido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 20px;
+  margin-top: 2rem;
+}
 
 .boton-estados{
   height: 30px;
-  margin-top: 0.4rem;
+  width: 100px;
+  margin-bottom: 10px;
+  text-align: center;
   background-color: white;
   border-radius: 0.5rem;
 }
@@ -296,6 +338,18 @@
   margin-top: auto;
 }
 
+.confirmarCargarPedido {
+  height: 100%;
+  padding: 0.5rem;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  background-color: #dcd9d9;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+  margin-top: auto;
+  margin-left: 1rem;
+}
+
 .contenedor-resumen-pedido {
   display: flex;
   flex-direction: column;
@@ -330,7 +384,6 @@
 
 .table-productos-contenedor {
   display: flex;
-  align-items: center;
   margin-top: 1rem;
 }
 
@@ -351,13 +404,14 @@
 }
 
 .table-header-articulos {
-  padding: 0.5rem;
+  padding: 0.3rem;
+  font-size: 14px;
 }
 
 .table-cell-productos {
   border: 1px solid #010101;
-  padding: 0.5rem 1rem 0.5rem 1rem;
-
+  width: 86px;
+  padding: 0.1rem 0.7rem 0.1rem 0.3rem
 }
 
 .table-cell-productos.selected {
@@ -368,8 +422,22 @@
   background-color: #dcd9d9;
 }
 
+.navPantallasContainer .botonNav.selectedNavBar {
+  background-color: #acabab;
+  border-radius: 5px;
+}
+
 .selected-row {
   background-color: #dcd9d9;
+}
+
+.table-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.table-width-container {
+  width: 450px;
 }
 
 .agregarProducto {
@@ -405,6 +473,30 @@
   padding: 0.5rem;
   border-radius: 5px;
   cursor: pointer;
+}
+
+#btnDescargarStock {
+  height: 4rem;
+  background-color: #dcd9d9;
+  color: #000000;
+  font-weight: bold;
+  border: 1px solid #000;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  position: fixed;
+  bottom: 20px;
+}
+
+.scrollable-list-container {
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.scrollable-list-container::-webkit-scrollbar {
+  width: 0;
 }
 
 .abajoDerecha {
@@ -466,18 +558,17 @@
 }
 
 .table-grilla {
-  width: 100%;
-  margin: 1rem;
+  width: auto;
+  height: 10px;
+  margin-top: 2rem;
   border-collapse: collapse;
 }
 
 .table-grilla th,
 .table-grilla td {
   border: 1px solid #000000;
-  padding: 4px;
+  padding: 0.1rem 0.3rem 0.1rem 0.3rem;
   text-align: center;
-  font-weight: normal;
-  
 }
 
 
@@ -592,7 +683,9 @@
   grid-area: completado;
 }
 
-
+.selectedEstado {
+  background: #dcd9d9;
+}
 
 /* LOGIN */
 

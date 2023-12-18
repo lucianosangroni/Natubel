@@ -21,6 +21,10 @@ const Pedido = sequelize.define(
         razon_cancelado: {
             type: DataTypes.STRING,
             defaultValue: null
+        },
+        creador: {
+            type: DataTypes.STRING,
+            allowNull: false
         }
     },
     {

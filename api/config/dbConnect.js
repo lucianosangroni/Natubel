@@ -4,6 +4,7 @@ const database = process.env.MYSQL_DATABASE
 const username = process.env.MYSQL_USUARIO
 const password = process.env.MYSQL_CONTRASENA
 const host = process.env.MYSQL_HOST
+const port = process.env.MYSQL_PORT || 3306;
 
 const sequelize = new Sequelize(
     database,
@@ -11,6 +12,7 @@ const sequelize = new Sequelize(
     password,
     {
         host,
+        port,
         dialect:"mysql",
         timezone: '-03:00',
     }

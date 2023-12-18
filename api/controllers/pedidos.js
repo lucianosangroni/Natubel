@@ -34,14 +34,15 @@ const createItem = async (req, res) => {
     try {
         req = matchedData(req);
 
-        const { persona_id, precio_total, es_proveedor, productos } = req
+        const { persona_id, precio_total, es_proveedor, productos, creador } = req
 
         const nuevoPedido = await pedidoModel.create
         (
             {
                 persona_id,
                 precio_total,
-                estado: "PEDIDO"
+                estado: "PEDIDO",
+                creador
             }
         )
         

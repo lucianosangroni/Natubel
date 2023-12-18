@@ -2,7 +2,7 @@
 
 export const COLUMNSCLIENTES = [
 {
-    Header: "Nombre Completo",
+    Header: "Nombre",
     accessor: "nombre",
     width: 'auto',
 },

@@ -6,8 +6,7 @@ const Admin = sequelize.define(
     {
         nombre_usuario: {
             type: DataTypes.STRING,
-            allowNull: false,
-            unique: true
+            primaryKey: true,
         },
         password: {
             type: DataTypes.STRING,

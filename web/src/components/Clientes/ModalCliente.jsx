@@ -62,7 +62,7 @@ function ModalCliente({ onAddClient }) {
         <Modal.Body>
           <Form>
             <Form.Group>
-              <Form.Label>Nombre completo</Form.Label>
+              <Form.Label>Nombre</Form.Label>
               <Form.Control
                 type="text"
                 value={newClient.nombre}
@@ -75,7 +75,7 @@ function ModalCliente({ onAddClient }) {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>CUIT CUIL</Form.Label>
+              <Form.Label>CUIT/CUIL</Form.Label>
               <Form.Control
                 type="text"
                 value={newClient.cuit_cuil}

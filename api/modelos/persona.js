@@ -16,6 +16,11 @@ const Persona = sequelize.define(
         },
         telefono: {
             type: DataTypes.STRING,
+            allowNull: false
+        },
+        cuit_cuil: {
+            type: DataTypes.STRING,
+            unique: true
         },
         direccion: {
             type: DataTypes.STRING,

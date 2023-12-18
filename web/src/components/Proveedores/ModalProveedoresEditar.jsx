@@ -24,7 +24,7 @@ function ModalProveedoresEditar({ data, onClose, onSave }) {
       <Modal.Body>
         <Form>
           <Form.Group>
-            <Form.Label>Nombre completo</Form.Label>
+            <Form.Label>Nombre</Form.Label>
             <Form.Control
               type="text"
               value={editedData.nombre}
@@ -35,6 +35,16 @@ function ModalProveedoresEditar({ data, onClose, onSave }) {
                 })
               }
             />
+          </Form.Group>
+          <Form.Group>
+              <Form.Label>CUIT/CUIL</Form.Label>
+              <Form.Control
+                type="text"
+                value={editedData.cuit_cuil}
+                onChange={(e) => {
+                  setEditedData({ ...editedData, cuit_cuil: e.target.value });
+                }}
+              />
           </Form.Group>
           <Form.Group>
             <Form.Label>Direccion</Form.Label>

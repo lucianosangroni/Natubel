@@ -1,18 +1,13 @@
 import React, { useMemo, useState, useEffect } from "react";
-import NavbarAdm from '../components/NavbarAdm';
-import {
-  useTable,
-  useGlobalFilter,
-  usePagination,
-  useRowSelect,
-} from "react-table";
+import NavbarAdm from '../Common/NavbarAdm';
+import { useTable, useGlobalFilter, usePagination, useRowSelect} from "react-table";
 import { COLUMNSPROVE } from "./columnsListaProveedores";
-import GlobalFilter from "./GlobalFilter";
+import GlobalFilter from "../../helpers/GlobalFilter";
 import ModalProveedores from "./ModalProveedores";
 import ModalProveedoresEditar from "./ModalProveedoresEditar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { apiUrl } from "./config";
+import { apiUrl } from "../../config/config";
 
 const ListadoProveedores = () => {
   const columns = useMemo(() => COLUMNSPROVE, []);
@@ -46,7 +41,8 @@ const ListadoProveedores = () => {
           nombre: dataResult.nombre,
           direccion: dataResult.direccion,
           telefono: dataResult.telefono,
-          email: dataResult.email
+          email: dataResult.email,
+          cuit_cuil: dataResult.cuit_cuil
         }
 
         proveedores.push(proveedor)
@@ -66,7 +62,8 @@ const ListadoProveedores = () => {
       nombre: newProveedor.nombre,
       direccion: newProveedor.direccion,
       telefono: newProveedor.telefono,
-      email: newProveedor.email  
+      email: newProveedor.email,
+      cuit_cuil: parseInt(newProveedor.cuit_cuil)
     }
 
     fetch(`${apiUrl}/proveedores`, {
@@ -108,7 +105,8 @@ const ListadoProveedores = () => {
       nombre: newData.nombre,
       direccion: newData.direccion,
       telefono: newData.telefono,
-      email: newData.email  
+      email: newData.email,
+      cuit_cuil: parseInt(newData.cuit_cuil)
     }
 
     fetch(`${apiUrl}/proveedores/${newData.id}`, {
@@ -199,7 +197,7 @@ const ListadoProveedores = () => {
 
   return (
     <>
-      <NavbarAdm/>
+      <NavbarAdm selected={'Proveedores'}/>
       <GlobalFilter  filter={globalFilter} setFilter={setGlobalFilter} />
       <div className="tableDivContainer">
         <table {...getTableProps()} className="tableContainer">

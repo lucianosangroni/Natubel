@@ -7,7 +7,8 @@ const checkAuth = async (req, res, next) => {
     }
     const token = req.headers.authorization.split(" ").pop();
     const tokenData = jwt.verify(token, process.env.JWT_SECRET);
-    if (tokenData.id) {
+
+    if (tokenData.username) {
       next();
     } else {
         return res.status(401).json({ message: 'Se requiere autorizacion' });

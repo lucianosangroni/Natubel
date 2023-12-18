@@ -5,7 +5,6 @@ function ModalProducto({ onAddProducto }) {
   const [show, setShow] = useState(false);
   const [newProduct, setNewProduct] = useState({
     numero_articulo: "",
-    nombre: "",
     descripcion: "",
     precio_unitario: "",
     talles: [""],
@@ -19,11 +18,10 @@ function ModalProducto({ onAddProducto }) {
     newProduct.talles = newProduct.talles.filter((talle) => talle.trim() !== "");
     newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
 
-    if (newProduct.numero_articulo && newProduct.nombre && newProduct.precio_unitario && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
+    if (newProduct.numero_articulo && newProduct.precio_unitario && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
       onAddProducto(newProduct);
       setNewProduct({
         numero_articulo: "",
-        nombre: "",
         descripcion: "",
         precio_unitario: "",
         talles: [""],
@@ -124,20 +122,7 @@ function ModalProducto({ onAddProducto }) {
                 }}
               />
             </Form.Group>
-            <Form.Group>
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control
-                type="text"
-                value={newProduct.nombre}
-                onChange={(e) => {
-                  setNewProduct({
-                    ...newProduct,
-                    nombre: e.target.value,
-                  });
-                }}
-              />
-            </Form.Group>
-            <Form.Group>
+            {/*<Form.Group>
               <Form.Label>Descripcion</Form.Label>
               <Form.Control
                 type="text"
@@ -149,7 +134,7 @@ function ModalProducto({ onAddProducto }) {
                   });
                 }}
               />
-            </Form.Group>
+            </Form.Group>*/}
             <Form.Group>
               <Form.Label>Precio</Form.Label>
               <Form.Control

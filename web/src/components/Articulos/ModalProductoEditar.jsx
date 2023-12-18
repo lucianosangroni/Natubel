@@ -6,7 +6,6 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
   const [editProduct, setEditProduct] = useState(
     {
     numero_articulo: articulo.numero_articulo,
-    nombre: articulo.nombre,
     descripcion: articulo.descripcion,
     precio_unitario: articulo.precio_unitario,
     talles: [],
@@ -22,7 +21,6 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
       {
         id: articulo.id,
         numero_articulo: articulo.numero_articulo,
-        nombre: articulo.nombre,
         descripcion: articulo.descripcion,
         precio_unitario: articulo.precio_unitario,
         productos: articulo.productos,
@@ -36,7 +34,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
   const handleShow = () => setShow(true);
 
   const handleSave = () => {
-    if (editProduct.numero_articulo && editProduct.nombre && editProduct.precio_unitario && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
+    if (editProduct.numero_articulo && editProduct.precio_unitario && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
       onEditProducto(editProduct);
       handleClose();
     } else {
@@ -102,7 +100,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
 
   return (
     <>
-      <button onClick={handleShow} className="agregar-producto-grilla">
+      <button onClick={handleShow} className="agregar-producto-grilla" style={{ marginTop: '2rem' }}>
         Editar Articulo
       </button>
 
@@ -130,20 +128,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
                 }}
               />
             </Form.Group>
-            <Form.Group>
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control
-                type="text"
-                value={editProduct.nombre}
-                onChange={(e) => {
-                    setEditProduct({
-                    ...editProduct,
-                    nombre: e.target.value,
-                  });
-                }}
-              />
-            </Form.Group>
-            <Form.Group>
+            {/*<Form.Group>
               <Form.Label>Descripcion</Form.Label>
               <Form.Control
                 type="text"
@@ -155,7 +140,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
                   });
                 }}
               />
-            </Form.Group>
+            </Form.Group>*/}
             <Form.Group>
               <Form.Label>Precio</Form.Label>
               <Form.Control

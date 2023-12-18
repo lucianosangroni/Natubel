@@ -1,13 +1,13 @@
 import React, { useMemo, useState, useEffect } from "react";
-import NavbarAdm from '../components/NavbarAdm';
+import NavbarAdm from '../Common/NavbarAdm';
 import { useTable, useGlobalFilter, usePagination, useRowSelect } from "react-table";
 import { COLUMNSCLIENTES } from "./columnsListaClientes";
-import GlobalFilter from "./GlobalFilter";
+import GlobalFilter from "../../helpers/GlobalFilter";
 import ModalCliente from "./ModalCliente";
 import ModalClienteEditar from "./ModalClienteEditar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { apiUrl } from "./config";
+import { apiUrl } from "../../config/config";
 
 const ListadoClientes = () => {
   const columns = useMemo(() => COLUMNSCLIENTES, []);
@@ -41,7 +41,7 @@ const ListadoClientes = () => {
           id: dataResult.id,
           persona_id: dataResult.persona_id,
           nombre: dataResult.persona.nombre,
-          cuit_cuil: dataResult.cuit_cuil,
+          cuit_cuil: dataResult.persona.cuit_cuil,
           direccion: dataResult.persona.direccion,
           codigo_postal: dataResult.codigo_postal,
           telefono: dataResult.persona.telefono,
@@ -219,7 +219,7 @@ const ListadoClientes = () => {
 
   return (
     <>
-      <NavbarAdm/>
+      <NavbarAdm selected={'Clientes'}/>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
       <div className="tableDivContainer">
         <table {...getTableProps()} className="tableContainer">

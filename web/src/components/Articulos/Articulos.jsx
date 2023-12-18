@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import NavbarAdm from "../components/NavbarAdm";
+import NavbarAdm from "../Common/NavbarAdm";
 import ModalProducto from "./ModalProducto";
+import ListaArticulos from "../Common/ListaArticulos";
 import GrillaProducto from "./GrillaProducto";
-import { apiUrl } from "./config";
+import { apiUrl } from "../../config/config";
+import { Button } from "react-bootstrap";
 
 const ListadoProductos = () => {
   const [data, setData] = useState([]);
@@ -33,7 +35,6 @@ const ListadoProductos = () => {
           const articulo = {
             id: dataResult.id,
             numero_articulo: dataResult.numero_articulo,
-            nombre: dataResult.nombre,
             descripcion: dataResult.descripcion,
             precio_unitario: dataResult.precio_unitario,
             productos,
@@ -43,6 +44,7 @@ const ListadoProductos = () => {
         }
 
         setData(articulos);
+        setSelectedProduct(articulos[0]);
       })
       .catch((error) => {
         console.error("Error en la solicitud GET:", error);
@@ -53,7 +55,6 @@ const ListadoProductos = () => {
   const handleAddArticulo = (newArticulo) => {
     const requestData = {
       numero_articulo: newArticulo.numero_articulo,
-      nombre: newArticulo.nombre,
       descripcion: newArticulo.descripcion,
       precio_unitario: parseFloat(newArticulo.precio_unitario),
       talles: newArticulo.talles,
@@ -79,7 +80,6 @@ const ListadoProductos = () => {
         const newArticuloData = {
           id: result.id,
           numero_articulo: newArticulo.numero_articulo,
-          nombre: newArticulo.nombre,
           descripcion: newArticulo.descripcion,
           precio_unitario: newArticulo.precio_unitario,
           productos: result.productos,
@@ -102,7 +102,6 @@ const ListadoProductos = () => {
 
     const requestData = {
       numero_articulo: editProduct.numero_articulo,
-      nombre: editProduct.nombre,
       descripcion: editProduct.descripcion,
       precio_unitario: parseFloat(editProduct.precio_unitario),
       talles: editProduct.talles,
@@ -129,7 +128,6 @@ const ListadoProductos = () => {
         const editArticuloData = {
           id: editProduct.id,
           numero_articulo: editProduct.numero_articulo,
-          nombre: editProduct.nombre,
           descripcion: editProduct.descripcion,
           precio_unitario: editProduct.precio_unitario,
           productos: result.productos,
@@ -178,34 +176,73 @@ const ListadoProductos = () => {
     //}
   };
 
-  const handleProductClick = (product) => {
+  const handleArticuloClick = (product) => {
     setSelectedProduct(product);
   };
 
+  const handleGenerarPDFAdmin = () => {
+    fetch(`${apiUrl}/pdf/stock/admin`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      }
+    })
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al generar el pdf, intente nuevamente");
+        throw new Error("Error en la solicitud GET");
+      }
+      return response.blob();
+    })
+    .then((result) => {
+      const url = URL.createObjectURL(result);
+
+      const newWindow = window.open(url, '_blank');
+
+      if (!newWindow) {
+          alert('Habilite las ventanas emergentes para descargar el PDF');
+      }
+
+      URL.revokeObjectURL(url);
+    })
+    .catch((error) => {
+      console.error('Error en la solicitud GET:', error);
+    });
+  }
+
+  const handleGenerarPDFCliente = () => {
+    fetch(`${apiUrl}/pdf/stock/cliente`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      }
+    })
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al generar el pdf, intente nuevamente");
+        throw new Error("Error en la solicitud GET");
+      }
+      return response.blob();
+    })
+    .then((result) => {
+      const url = URL.createObjectURL(result);
+
+      const newWindow = window.open(url, '_blank');
+
+      if (!newWindow) {
+          alert('Habilite las ventanas emergentes para descargar el PDF');
+      }
+
+      URL.revokeObjectURL(url);
+    })
+    .catch((error) => {
+      console.error('Error en la solicitud GET:', error);
+    });
+  }
+
   return (
     <>
-      <NavbarAdm />
+      <NavbarAdm selected={'Articulos'}/>
       <div className="table-productos-contenedor">
-        <table className="table-productos">
-          <thead>
-            <tr className="table-header-productos">
-              <th className="table-header-articulos " >Artículos</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((articulo) => (
-              <tr key={articulo.id} onClick={() => handleProductClick(articulo)}>
-                <td
-                  className={`table-cell-productos ${
-                    selectedProduct && selectedProduct.id === articulo.id ? "selected" : ""
-                  }`}
-                >
-                  {articulo.numero_articulo}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ListaArticulos articulos={data} onArticuloClick={handleArticuloClick}/>
         {selectedProduct && (
           <GrillaProducto
             articulo={selectedProduct}
@@ -213,6 +250,8 @@ const ListadoProductos = () => {
             onDeleteProducto={handleDeleteProducto}
           />
         )}
+        <Button onClick={handleGenerarPDFAdmin} id="btnDescargarStock" style={{right: "180px"}}>Stock Admin</Button>
+        <Button onClick={handleGenerarPDFCliente} id="btnDescargarStock" style={{right: "310px"}}>Stock Cliente</Button>
         <ModalProducto onAddProducto={handleAddArticulo} />
       </div>
     </>

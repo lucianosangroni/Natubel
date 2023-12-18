@@ -9,10 +9,6 @@ const Articulo = sequelize.define(
             allowNull: false,
             unique: true
         },
-        nombre: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         descripcion: {
             type: DataTypes.STRING,
         },

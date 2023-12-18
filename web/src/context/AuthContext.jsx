@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback  } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode  } from 'jwt-decode';
 
 const AuthContext = createContext();
 
@@ -11,12 +12,14 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback((token) => {
     localStorage.setItem('jwt', token);
     localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('username', jwtDecode(token).username)
     setAuthenticated(true);
   }, [setAuthenticated]);
 
   const logout = useCallback(() => {
     localStorage.removeItem('jwt');
     localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('username');
     setAuthenticated(false);
     navigate('/admin/login');
   }, [navigate, setAuthenticated]);

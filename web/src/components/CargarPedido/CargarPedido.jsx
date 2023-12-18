@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import NavbarAdm from "./NavbarAdm";
+import NavbarAdm from "../Common/NavbarAdm";
 import Select from "react-select";
 import GrillaProductoPedido from "./GrillaProductoPedido";
 import GrillasProductosConfirmados from "./GrillaProductoConfirmado";
-import { apiUrl } from "./config";
+import { apiUrl } from "../../config/config";
+import ListaArticulos from "../Common/ListaArticulos";
 
 const CargarPedido = () => {
   const [data, setData] = useState([]);
@@ -49,6 +50,7 @@ const CargarPedido = () => {
         }
 
         setData(articulos);
+        setSelectedProduct(articulos[0]);
       })
       .catch(() => {
         flag_error = true;
@@ -208,12 +210,14 @@ const CargarPedido = () => {
 
     const precio_total = calcularPrecioTotal();
     const productos = getProductos();
+    const creador = localStorage.getItem("username");
 
     const requestData = {
       persona_id: selectedPedidor,
       precio_total,
       es_proveedor: tipoPedidor === "proveedor",
       productos,
+      creador
     };
 
     fetch(`${apiUrl}/pedidos`, {
@@ -280,7 +284,7 @@ const CargarPedido = () => {
 
   return (
     <>
-      <NavbarAdm />
+      <NavbarAdm selected={'Cargar Pedido'}/>
       <div className="contenedor-botones">
         <button
           id="btn-pedidor-cliente"
@@ -331,26 +335,7 @@ const CargarPedido = () => {
       </div>
       
       <section className="contenedor-tabla-grilla">
-        <table className="table-cargarPedido-contenedor">
-          <thead>
-            <tr className="table-header-productos">
-              <th className="table-header-articulos">Artículos</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((product) => (
-              <tr key={product.id} onClick={() => handleProductClick(product)}>
-                <td
-                  className={`table-cell-productos ${
-                    selectedProduct && selectedProduct.id === product.id ? "selected" : ""
-                  }`}
-                >
-                  {product.numero_articulo}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ListaArticulos articulos={data} onArticuloClick={handleProductClick}/>
 
         {selectedProduct && (
           <GrillaProductoPedido

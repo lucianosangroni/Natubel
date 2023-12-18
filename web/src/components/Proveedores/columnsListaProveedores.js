@@ -6,6 +6,11 @@ export const COLUMNSPROVE = [
         width: 'auto',
     },
     {
+        Header: "Cuit/Cuil",
+        accessor:"cuit_cuil",
+        width: 'auto',
+    },
+    {
         Header:"Direccion",
         accessor:"direccion",
         width: 'auto',
