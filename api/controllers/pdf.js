@@ -374,6 +374,9 @@ const getNotaPedido = async (req, res) => {
 
         doc.y = 205;
 
+        let maxHeightPage = 550;
+        let footerHecho = false;
+
         articulosAMostrar.forEach((articulo) => {
             const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
             const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
@@ -405,7 +408,32 @@ const getNotaPedido = async (req, res) => {
             const firstCellWidth = 68;
             const cellHeight = 20;
 
-            if(doc.y + (table.rows.length + 1) * cellHeight > 740) {
+            if(doc.y + (table.rows.length + 1) * cellHeight > maxHeightPage) {
+                if(!footerHecho) {
+                    doc.fontSize(10).text('PREPARÓ', 52, 558);
+                    doc.fontSize(10).text('CONTROLÓ', 50, 633);
+                    doc.fontSize(10).text('GUARDÓ', 52, 708);
+                    doc.fontSize(9).text('FIRMA:', 120, 555);
+                    doc.fontSize(9).text('FIRMA:', 120, 630);
+                    doc.fontSize(9).text('FIRMA:', 120, 705);
+                    doc.fontSize(9).text('ACLARACIÓN:', 285, 555);
+                    doc.fontSize(9).text('ACLARACIÓN:', 285, 630);
+                    doc.fontSize(9).text('ACLARACIÓN:', 285, 705);
+                    doc.fontSize(7).text('CANTIDAD DE CAJAS:', 466, 555);
+
+                    doc.moveTo(115, 550).lineTo(115, 775).stroke('black');
+                    doc.moveTo(280, 550).lineTo(280, 775).stroke('black');
+                    doc.moveTo(445, 550).lineTo(445, 775).stroke('black');
+                    doc.moveTo(45, 550).lineTo(567, 550).stroke('black');
+                    doc.moveTo(45, 550).lineTo(45, 775).stroke('black');
+                    doc.moveTo(45, 625).lineTo(445, 625).stroke('black');
+                    doc.moveTo(45, 700).lineTo(445, 700).stroke('black');
+                    doc.moveTo(567, 550).lineTo(567, 775).stroke('black');
+                    doc.moveTo(45, 775).lineTo(567, 775).stroke('black');
+
+                    footerHecho = true;
+                }
+                
                 doc.addPage();
 
                 doc.fontSize(20).text('NOTA DE PEDIDO', 50, 57);
@@ -432,6 +460,8 @@ const getNotaPedido = async (req, res) => {
                 doc.moveTo(350,45).lineTo(350,145).stroke('black');
 
                 doc.y = 205;
+
+                maxHeightPage = 740;
 
                 tableStartY = doc.y;
             } 
@@ -470,13 +500,31 @@ const getNotaPedido = async (req, res) => {
             doc.moveDown();
         });
 
+        if(!footerHecho) {
+            console.log("asfasf")
+            doc.fontSize(10).text('PREPARÓ', 52, 558);
+            doc.fontSize(10).text('CONTROLÓ', 50, 633);
+            doc.fontSize(10).text('GUARDÓ', 52, 708);
+            doc.fontSize(9).text('FIRMA:', 120, 555);
+            doc.fontSize(9).text('FIRMA:', 120, 630);
+            doc.fontSize(9).text('FIRMA:', 120, 705);
+            doc.fontSize(9).text('ACLARACIÓN:', 285, 555);
+            doc.fontSize(9).text('ACLARACIÓN:', 285, 630);
+            doc.fontSize(9).text('ACLARACIÓN:', 285, 705);
+            doc.fontSize(7).text('CANTIDAD DE CAJAS:', 466, 555);
+
+            doc.moveTo(115, 550).lineTo(115, 775).stroke('black');
+            doc.moveTo(280, 550).lineTo(280, 775).stroke('black');
+            doc.moveTo(445, 550).lineTo(445, 775).stroke('black');
+            doc.moveTo(45, 550).lineTo(567, 550).stroke('black');
+            doc.moveTo(45, 550).lineTo(45, 775).stroke('black');
+            doc.moveTo(45, 625).lineTo(445, 625).stroke('black');
+            doc.moveTo(45, 700).lineTo(445, 700).stroke('black');
+            doc.moveTo(567, 550).lineTo(567, 775).stroke('black');
+            doc.moveTo(45, 775).lineTo(567, 775).stroke('black');
+        }
+
         doc.end();
-        //numero pedido LISTO pedido_id
-        //fecha LISTO createdAt
-        //nombre cliente LISTO persona.nombre
-        //direccion LISTO persona.direccion
-        //cant articulos LISTO articulosAMostrar.length
-        //cant unidades LISTO sum(articulosAMostrar.productos.cantidad de cada producto)
     } catch (e) {
         res.status(500).json({ message: 'Error al buscar los articulos' });
     }
