@@ -35,7 +35,6 @@ const ListadoProductos = () => {
           const articulo = {
             id: dataResult.id,
             numero_articulo: dataResult.numero_articulo,
-            nombre: dataResult.nombre,
             descripcion: dataResult.descripcion,
             precio_unitario: dataResult.precio_unitario,
             productos,
@@ -56,7 +55,6 @@ const ListadoProductos = () => {
   const handleAddArticulo = (newArticulo) => {
     const requestData = {
       numero_articulo: newArticulo.numero_articulo,
-      nombre: newArticulo.nombre,
       descripcion: newArticulo.descripcion,
       precio_unitario: parseFloat(newArticulo.precio_unitario),
       talles: newArticulo.talles,
@@ -82,7 +80,6 @@ const ListadoProductos = () => {
         const newArticuloData = {
           id: result.id,
           numero_articulo: newArticulo.numero_articulo,
-          nombre: newArticulo.nombre,
           descripcion: newArticulo.descripcion,
           precio_unitario: newArticulo.precio_unitario,
           productos: result.productos,
@@ -105,7 +102,6 @@ const ListadoProductos = () => {
 
     const requestData = {
       numero_articulo: editProduct.numero_articulo,
-      nombre: editProduct.nombre,
       descripcion: editProduct.descripcion,
       precio_unitario: parseFloat(editProduct.precio_unitario),
       talles: editProduct.talles,
@@ -132,7 +128,6 @@ const ListadoProductos = () => {
         const editArticuloData = {
           id: editProduct.id,
           numero_articulo: editProduct.numero_articulo,
-          nombre: editProduct.nombre,
           descripcion: editProduct.descripcion,
           precio_unitario: editProduct.precio_unitario,
           productos: result.productos,

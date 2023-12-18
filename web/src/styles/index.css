@@ -338,6 +338,18 @@
   margin-top: auto;
 }
 
+.confirmarCargarPedido {
+  height: 100%;
+  padding: 0.5rem;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  background-color: #dcd9d9;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+  margin-top: auto;
+  margin-left: 1rem;
+}
+
 .contenedor-resumen-pedido {
   display: flex;
   flex-direction: column;
