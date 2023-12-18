@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 const login = async (req, res) => {
     try {
-      //req = matchedData(req);
+      req = matchedData(req);
 
       //const admin = await adminModel.findOne({ where: { nombre_usuario: req.nombre_usuario } });
       //if (!admin) {
@@ -21,7 +21,7 @@ const login = async (req, res) => {
       //const tokenJwt = jwt.sign({ username: admin.nombre_usuario }, process.env.JWT_SECRET,{ expiresIn: "10h" })
 
       //res.status(201).json({ message: 'Inicio de sesion exitoso', jwt: tokenJwt });
-      res.status(200).json({ message: 'Inicio de sesion exitoso' })
+      res.status(200).json({ message: 'Inicio de sesion exitoso', req })
     } catch (e) {
       console.error(e)
         res.status(500).json({ message: 'Error al iniciar sesion' });
