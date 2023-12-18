@@ -23,6 +23,7 @@ const login = async (req, res) => {
       //res.status(201).json({ message: 'Inicio de sesion exitoso', jwt: tokenJwt });
       res.status(200).json({req})
     } catch (e) {
+      console.error(e)
         res.status(500).json({ message: 'Error al iniciar sesion' });
     }
   };
