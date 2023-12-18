@@ -5,7 +5,9 @@ const jwt = require("jsonwebtoken");
 
 const login = async (req, res) => {
     try {
-      req = matchedData(req);
+      console.log(req.body)
+
+      //req = matchedData(req);
 
       //const admin = await adminModel.findOne({ where: { nombre_usuario: req.nombre_usuario } });
       //if (!admin) {
