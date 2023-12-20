@@ -7,6 +7,16 @@ export const COLUMNSCLIENTES = [
     width: 'auto',
 },
 {
+    Header: "Email",
+    accessor: "email",
+    width: 'auto',
+},
+{
+    Header: "Telefono",
+    accessor:"telefono",
+    width: 'auto',
+},
+{
     Header: "Cuit/Cuil",
     accessor:"cuit_cuil",
     width: 'auto',
@@ -19,11 +29,6 @@ export const COLUMNSCLIENTES = [
 {
     Header: "CP",
     accessor: "codigo_postal",
-    width: 'auto',
-},
-{
-    Header: "Telefono",
-    accessor:"telefono",
     width: 'auto',
 },
 {
@@ -44,11 +49,6 @@ export const COLUMNSCLIENTES = [
 {
     Header: "Envio",
     accessor:"forma_de_envio",
-    width: 'auto',
-},
-{
-    Header: "Email",
-    accessor: "email",
     width: 'auto',
 },
 {

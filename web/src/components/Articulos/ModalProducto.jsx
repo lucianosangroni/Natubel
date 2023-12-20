@@ -6,7 +6,9 @@ function ModalProducto({ onAddProducto }) {
   const [newProduct, setNewProduct] = useState({
     numero_articulo: "",
     descripcion: "",
-    precio_unitario: "",
+    precio_minorista: "",
+    precio_mayorista: "",
+    precio_distribuidor: "",
     talles: [""],
     colores: [""],
   });
@@ -18,12 +20,14 @@ function ModalProducto({ onAddProducto }) {
     newProduct.talles = newProduct.talles.filter((talle) => talle.trim() !== "");
     newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
 
-    if (newProduct.numero_articulo && newProduct.precio_unitario && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
+    if (newProduct.numero_articulo && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
       onAddProducto(newProduct);
       setNewProduct({
         numero_articulo: "",
         descripcion: "",
-        precio_unitario: "",
+        precio_minorista: "",
+        precio_mayorista: "",
+        precio_distribuidor: "",
         talles: [""],
         colores: [""],
       });
@@ -136,14 +140,40 @@ function ModalProducto({ onAddProducto }) {
               />
             </Form.Group>*/}
             <Form.Group>
-              <Form.Label>Precio</Form.Label>
+              <Form.Label>Precio Minorista</Form.Label>
               <Form.Control
                 type="text"
-                value={newProduct.precio_unitario}
+                value={newProduct.precio_minorista}
                 onChange={(e) => {
                   setNewProduct({
                     ...newProduct,
-                    precio_unitario: e.target.value,
+                    precio_minorista: e.target.value,
+                  });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Precio Mayorista</Form.Label>
+              <Form.Control
+                type="text"
+                value={newProduct.precio_mayorista}
+                onChange={(e) => {
+                  setNewProduct({
+                    ...newProduct,
+                    precio_mayorista: e.target.value,
+                  });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Precio Distribuidor</Form.Label>
+              <Form.Control
+                type="text"
+                value={newProduct.precio_distribuidor}
+                onChange={(e) => {
+                  setNewProduct({
+                    ...newProduct,
+                    precio_distribuidor: e.target.value,
                   });
                 }}
               />

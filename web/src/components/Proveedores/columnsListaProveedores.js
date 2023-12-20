@@ -6,13 +6,8 @@ export const COLUMNSPROVE = [
         width: 'auto',
     },
     {
-        Header: "Cuit/Cuil",
-        accessor:"cuit_cuil",
-        width: 'auto',
-    },
-    {
-        Header:"Direccion",
-        accessor:"direccion",
+        Header:"Email",
+        accessor:"email",
         width: 'auto',
     },
     {
@@ -21,8 +16,13 @@ export const COLUMNSPROVE = [
         width: 'auto',
     },
     {
-        Header:"Email",
-        accessor:"email",
+        Header: "Cuit/Cuil",
+        accessor:"cuit_cuil",
+        width: 'auto',
+    },
+    {
+        Header:"Direccion",
+        accessor:"direccion",
         width: 'auto',
     },
     {

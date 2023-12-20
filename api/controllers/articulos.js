@@ -27,14 +27,16 @@ const createItem = async (req, res) => {
     try {
         req = matchedData(req);
 
-        const { numero_articulo, descripcion, precio_unitario, talles, colores } = req
+        const { numero_articulo, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, talles, colores } = req
 
         const nuevoArticulo = await articuloModel.create
         (
             {
                 numero_articulo,
                 descripcion,
-                precio_unitario
+                precio_mayorista,
+                precio_minorista,
+                precio_distribuidor
             }
         )
 
@@ -64,7 +66,7 @@ const updateItem = async (req, res) => {
         req = matchedData(req);
 
         const articulo_id = req.id
-        const { numero_articulo, descripcion, precio_unitario, productos, talles, colores } = req
+        const { numero_articulo, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, productos, talles, colores } = req
         
         // Validar si el articulo existe antes de intentar actualizarla
         const articuloExiste = await articuloModel.findByPk(articulo_id);
@@ -77,7 +79,9 @@ const updateItem = async (req, res) => {
             {
                 numero_articulo,
                 descripcion,
-                precio_unitario
+                precio_mayorista,
+                precio_minorista,
+                precio_distribuidor
             }, 
             {
             where: { id: articulo_id }
@@ -176,10 +180,6 @@ const deleteItem = async (req, res) => {
         console.log("Error al eliminar el articulo: ", e)
         res.status(500).json({ message: 'Error al eliminar el articulo' });
     }
-    
-    
-
-
 };
 
 module.exports = {getItems, createItem, updateItem, deleteItem};

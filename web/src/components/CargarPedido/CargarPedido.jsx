@@ -42,7 +42,9 @@ const CargarPedido = () => {
           const articulo = {
             id: dataResult.id,
             numero_articulo: dataResult.numero_articulo,
-            precio_unitario: dataResult.precio_unitario,
+            precio_minorista: dataResult.precio_minorista,
+            precio_mayorista: dataResult.precio_mayorista,
+            precio_distribuidor: dataResult.precio_distribuidor,
             productos,
           };
 
@@ -68,9 +70,10 @@ const CargarPedido = () => {
         return response.json();
       })
       .then((result) => {
-        const dataClientes = result.map(({ persona }) => ({
+        const dataClientes = result.map(({ tipo_cliente, persona }) => ({
           id: persona.id,
           nombre: persona.nombre,
+          tipo_cliente 
         }));
 
         setClientes(dataClientes);
@@ -136,7 +139,9 @@ const CargarPedido = () => {
       setProductosConfirmados(productosConfirmadosActualizados);
     } else {
       const productoConfirmadosNuevo = {
-        precio_unitario: articulo.precio_unitario,
+        precio_minorista: articulo.precio_minorista,
+        precio_mayorista: articulo.precio_mayorista,
+        precio_distribuidor: articulo.precio_distribuidor,
         productos: articulo.productos,
         numero_articulo: articulo.numero_articulo,
         cantidades,
@@ -160,32 +165,68 @@ const CargarPedido = () => {
   const calcularPrecioTotal = () => {
     let precioTotal = 0;
 
-    for (const articulo of productosConfirmados) {
-      const claves = Object.keys(articulo.cantidades);
+    if (tipoPedidor === "cliente") {
+      const clienteSeleccionado = clientes.find(cliente => cliente.id === selectedPedidor);
+      const tipo_cliente = clienteSeleccionado ? clienteSeleccionado.tipo_cliente : 'MAYORISTA';
 
-      for (const clave of claves) {
-        const cantidad = articulo.cantidades[clave];
+      for (const articulo of productosConfirmados) {
+        const claves = Object.keys(articulo.cantidades);
 
-        precioTotal += cantidad * articulo.precio_unitario;
+        for (const clave of claves) {
+          const cantidad = articulo.cantidades[clave];
+
+          switch (tipo_cliente) {
+            case 'MINORISTA':
+              precioTotal += cantidad * articulo.precio_minorista;
+              break;
+            case 'MAYORISTA':
+              precioTotal += cantidad * articulo.precio_mayorista;
+              break;
+            case 'DISTRIBUIDOR':
+              precioTotal += cantidad * articulo.precio_distribuidor;
+              break;
+            default: break;
+          }
+        }
       }
     }
-
+    
     return precioTotal;
   };
 
   const getProductos = () => {
     const productosFinales = [];
 
+    const clienteSeleccionado = clientes.find(cliente => cliente.id === selectedPedidor);
+    const tipo_cliente = clienteSeleccionado ? clienteSeleccionado.tipo_cliente : 'MAYORISTA';
+
+    let precio_unitario = 0;
+
     for (const articulo of productosConfirmados) {
       for (const producto of articulo.productos) {
         const key = `${producto.color}-${producto.talle}`;
         const cantidad = articulo.cantidades[key] || 0;
 
+        if (tipoPedidor === "cliente") {
+          switch (tipo_cliente) {
+            case 'MINORISTA':
+              precio_unitario = articulo.precio_minorista;
+              break;
+            case 'MAYORISTA':
+              precio_unitario = articulo.precio_mayorista;
+              break;
+            case 'DISTRIBUIDOR':
+              precio_unitario = articulo.precio_distribuidor;
+              break;
+            default: break;
+          }
+        }
+
         if (cantidad > 0) {
           productosFinales.push({
             producto_id: producto.id,
             cantidad: cantidad,
-            precio_unitario: articulo.precio_unitario,
+            precio_unitario,
           });
         }
       }

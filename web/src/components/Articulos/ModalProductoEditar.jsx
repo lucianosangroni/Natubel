@@ -7,7 +7,9 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
     {
     numero_articulo: articulo.numero_articulo,
     descripcion: articulo.descripcion,
-    precio_unitario: articulo.precio_unitario,
+    precio_minorista: articulo.precio_minorista,
+    precio_mayorista: articulo.precio_mayorista,
+    precio_distribuidor: articulo.precio_distribuidor,
     talles: [],
     colores: []
     }
@@ -22,19 +24,21 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
         id: articulo.id,
         numero_articulo: articulo.numero_articulo,
         descripcion: articulo.descripcion,
-        precio_unitario: articulo.precio_unitario,
+        precio_minorista: articulo.precio_minorista,
+        precio_mayorista: articulo.precio_mayorista,
+        precio_distribuidor: articulo.precio_distribuidor,
         productos: articulo.productos,
         talles,
         colores
       }
     );
-  }, [articulo, talles, colores]);
+  }, [articulo]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleSave = () => {
-    if (editProduct.numero_articulo && editProduct.precio_unitario && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
+    if (editProduct.numero_articulo && editProduct.precio_minorista && editProduct.precio_mayorista && editProduct.precio_distribuidor && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
       onEditProducto(editProduct);
       handleClose();
     } else {
@@ -142,14 +146,40 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
               />
             </Form.Group>*/}
             <Form.Group>
-              <Form.Label>Precio</Form.Label>
+              <Form.Label>Precio Minorista</Form.Label>
               <Form.Control
                 type="text"
-                value={editProduct.precio_unitario}
+                value={editProduct.precio_minorista}
                 onChange={(e) => {
                     setEditProduct({
                     ...editProduct,
-                    precio_unitario: e.target.value,
+                    precio_minorista: e.target.value,
+                  });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Precio Mayorista</Form.Label>
+              <Form.Control
+                type="text"
+                value={editProduct.precio_mayorista}
+                onChange={(e) => {
+                    setEditProduct({
+                    ...editProduct,
+                    precio_mayorista: e.target.value,
+                  });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Precio Distribuidor</Form.Label>
+              <Form.Control
+                type="text"
+                value={editProduct.precio_distribuidor}
+                onChange={(e) => {
+                    setEditProduct({
+                    ...editProduct,
+                    precio_distribuidor: e.target.value,
                   });
                 }}
               />
