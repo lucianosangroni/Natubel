@@ -85,7 +85,7 @@ function ModalProveedores({ onAddProveedor }) {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>CUIT/CUIL</Form.Label>
+              <Form.Label>CUIT/CUIL (11 digitos)</Form.Label>
               <Form.Control
                 type="text"
                 value={newProveedor.cuit_cuil}

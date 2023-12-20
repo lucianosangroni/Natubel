@@ -63,7 +63,7 @@ function ModalProveedoresEditar({ data, onClose, onSave }) {
             />
           </Form.Group>
           <Form.Group>
-              <Form.Label>CUIT/CUIL</Form.Label>
+              <Form.Label>CUIT/CUIL (11 digitos)</Form.Label>
               <Form.Control
                 type="text"
                 value={editedData.cuit_cuil}

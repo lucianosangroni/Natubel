@@ -63,7 +63,7 @@ function ModalClienteEditar({ data, onClose, onSave }) {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>CUIT/CUIL</Form.Label>
+            <Form.Label>CUIT/CUIL (11 digitos)</Form.Label>
             <Form.Control
               type="text"
               value={editedData.cuit_cuil}
@@ -102,7 +102,7 @@ function ModalClienteEditar({ data, onClose, onSave }) {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>DNI</Form.Label>
+            <Form.Label>DNI (8 digitos)</Form.Label>
             <Form.Control
               type="text"
               value={editedData.dni}
