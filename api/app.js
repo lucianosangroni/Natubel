@@ -2,7 +2,7 @@ require("dotenv").config()
 const express = require("express")
 const cors = require("cors")
 const { dbConnect } = require("./config/dbConnect")
-const { dbSync } = require("./config/dbSync")
+//const { dbSync } = require("./config/dbSync")
 const app = express()
 
 app.use(cors())
@@ -17,4 +17,4 @@ app.listen(puerto, () => {
 })
 
 dbConnect();
-dbSync();
+//dbSync();
