@@ -24,7 +24,7 @@ function ModalClienteEditar({ data, onClose, onSave }) {
       <Modal.Body>
         <Form>
           <Form.Group>
-            <Form.Label>Nombre</Form.Label>
+            <Form.Label>Nombre *</Form.Label>
             <Form.Control
               type="text"
               value={editedData.nombre}
@@ -37,7 +37,33 @@ function ModalClienteEditar({ data, onClose, onSave }) {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>CUIT/CUIL</Form.Label>
+            <Form.Label>Email *</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.email}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  email: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Telefono *</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.telefono}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  telefono: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>CUIT/CUIL (11 digitos)</Form.Label>
             <Form.Control
               type="text"
               value={editedData.cuit_cuil}
@@ -76,20 +102,7 @@ function ModalClienteEditar({ data, onClose, onSave }) {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Telefono</Form.Label>
-            <Form.Control
-              type="text"
-              value={editedData.telefono}
-              onChange={(e) =>
-                setEditedData({
-                  ...editedData,
-                  telefono: e.target.value,
-                })
-              }
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>DNI</Form.Label>
+            <Form.Label>DNI (8 digitos)</Form.Label>
             <Form.Control
               type="text"
               value={editedData.dni}
@@ -141,19 +154,6 @@ function ModalClienteEditar({ data, onClose, onSave }) {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="text"
-              value={editedData.email}
-              onChange={(e) =>
-                setEditedData({
-                  ...editedData,
-                  email: e.target.value,
-                })
-              }
-            />
-          </Form.Group>
-          <Form.Group>
             <Form.Label>Tipo</Form.Label>
             <Form.Control
               as="select"
@@ -163,6 +163,7 @@ function ModalClienteEditar({ data, onClose, onSave }) {
               }}>
               <option value="MINORISTA">MINORISTA</option>
               <option value="MAYORISTA">MAYORISTA</option>
+              <option value="DISTRIBUIDOR">DISTRIBUIDOR</option>
             </Form.Control>
           </Form.Group>
         </Form>

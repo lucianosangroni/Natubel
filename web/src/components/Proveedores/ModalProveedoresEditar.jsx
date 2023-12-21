@@ -24,7 +24,7 @@ function ModalProveedoresEditar({ data, onClose, onSave }) {
       <Modal.Body>
         <Form>
           <Form.Group>
-            <Form.Label>Nombre</Form.Label>
+            <Form.Label>Nombre *</Form.Label>
             <Form.Control
               type="text"
               value={editedData.nombre}
@@ -37,7 +37,33 @@ function ModalProveedoresEditar({ data, onClose, onSave }) {
             />
           </Form.Group>
           <Form.Group>
-              <Form.Label>CUIT/CUIL</Form.Label>
+            <Form.Label>Email *</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.email}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  email: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Telefono *</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.telefono}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  telefono: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
+              <Form.Label>CUIT/CUIL (11 digitos)</Form.Label>
               <Form.Control
                 type="text"
                 value={editedData.cuit_cuil}
@@ -55,32 +81,6 @@ function ModalProveedoresEditar({ data, onClose, onSave }) {
                 setEditedData({
                   ...editedData,
                   direccion: e.target.value,
-                })
-              }
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Telefono</Form.Label>
-            <Form.Control
-              type="text"
-              value={editedData.telefono}
-              onChange={(e) =>
-                setEditedData({
-                  ...editedData,
-                  telefono: e.target.value,
-                })
-              }
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="text"
-              value={editedData.email}
-              onChange={(e) =>
-                setEditedData({
-                  ...editedData,
-                  email: e.target.value,
                 })
               }
             />

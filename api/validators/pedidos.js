@@ -2,13 +2,13 @@ const { check, validationResult  } = require("express-validator")
 
 const validatorCreateItem = [
     check("persona_id").exists().isInt().custom((id) => id > 0),
-    check("precio_total").exists().isFloat().custom((precio_total) => precio_total > 0),
+    check("precio_total").exists().isFloat().custom((precio_total) => precio_total >= 0),
     check("es_proveedor").exists().isBoolean(),
     check("creador").exists().isString().notEmpty(),
     check("productos").exists().isArray({ min: 1 }).custom((productos) => productos.every((producto) => 
         typeof producto.producto_id === "number" && producto.producto_id > 0 &&
         typeof producto.cantidad === "number" && producto.cantidad > 0 &&
-        typeof producto.precio_unitario === "number" && producto.precio_unitario > 0)),
+        typeof producto.precio_unitario === "number" && producto.precio_unitario >= 0)),
     (req, res, next) => {
         try {
             validationResult(req).throw()

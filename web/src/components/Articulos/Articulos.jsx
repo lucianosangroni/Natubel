@@ -36,7 +36,9 @@ const ListadoProductos = () => {
             id: dataResult.id,
             numero_articulo: dataResult.numero_articulo,
             descripcion: dataResult.descripcion,
-            precio_unitario: dataResult.precio_unitario,
+            precio_minorista: dataResult.precio_minorista,
+            precio_mayorista: dataResult.precio_mayorista,
+            precio_distribuidor: dataResult.precio_distribuidor,
             productos,
           };
 
@@ -56,7 +58,9 @@ const ListadoProductos = () => {
     const requestData = {
       numero_articulo: newArticulo.numero_articulo,
       descripcion: newArticulo.descripcion,
-      precio_unitario: parseFloat(newArticulo.precio_unitario),
+      precio_minorista: parseFloat(newArticulo.precio_minorista),
+      precio_mayorista: parseFloat(newArticulo.precio_mayorista),
+      precio_distribuidor: parseFloat(newArticulo.precio_distribuidor),
       talles: newArticulo.talles,
       colores: newArticulo.colores,
     };
@@ -81,7 +85,9 @@ const ListadoProductos = () => {
           id: result.id,
           numero_articulo: newArticulo.numero_articulo,
           descripcion: newArticulo.descripcion,
-          precio_unitario: newArticulo.precio_unitario,
+          precio_minorista: newArticulo.precio_minorista,
+          precio_mayorista: newArticulo.precio_mayorista,
+          precio_distribuidor: newArticulo.precio_distribuidor,
           productos: result.productos,
         };
         setData((prevData) => [...prevData, newArticuloData]);
@@ -103,7 +109,9 @@ const ListadoProductos = () => {
     const requestData = {
       numero_articulo: editProduct.numero_articulo,
       descripcion: editProduct.descripcion,
-      precio_unitario: parseFloat(editProduct.precio_unitario),
+      precio_minorista: parseFloat(editProduct.precio_minorista),
+      precio_mayorista: parseFloat(editProduct.precio_mayorista),
+      precio_distribuidor: parseFloat(editProduct.precio_distribuidor),
       talles: editProduct.talles,
       colores: editProduct.colores,
       productos: productos,
@@ -129,7 +137,9 @@ const ListadoProductos = () => {
           id: editProduct.id,
           numero_articulo: editProduct.numero_articulo,
           descripcion: editProduct.descripcion,
-          precio_unitario: editProduct.precio_unitario,
+          precio_minorista: editProduct.precio_minorista,
+          precio_mayorista: editProduct.precio_mayorista,
+          precio_distribuidor: editProduct.precio_distribuidor,
           productos: result.productos,
         };
 

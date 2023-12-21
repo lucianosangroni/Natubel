@@ -52,7 +52,7 @@ function ModalProveedores({ onAddProveedor }) {
         <Modal.Body>
           <Form>
             <Form.Group>
-              <Form.Label>Nombre</Form.Label>
+              <Form.Label>Nombre *</Form.Label>
               <Form.Control
                 type="text"
                 value={newProveedor.nombre}
@@ -65,7 +65,27 @@ function ModalProveedores({ onAddProveedor }) {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>CUIT/CUIL</Form.Label>
+              <Form.Label>Email *</Form.Label>
+              <Form.Control
+                type="email"
+                value={newProveedor.email}
+                onChange={(e) => {
+                  setNewProveedor({ ...newProveedor, email: e.target.value });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Telefono *</Form.Label>
+              <Form.Control
+                type="text"
+                value={newProveedor.telefono}
+                onChange={(e) => {
+                  setNewProveedor({ ...newProveedor, telefono: e.target.value });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>CUIT/CUIL (11 digitos)</Form.Label>
               <Form.Control
                 type="text"
                 value={newProveedor.cuit_cuil}
@@ -81,26 +101,6 @@ function ModalProveedores({ onAddProveedor }) {
                 value={newProveedor.direccion}
                 onChange={(e) => {
                   setNewProveedor({ ...newProveedor, direccion: e.target.value });
-                }}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Telefono</Form.Label>
-              <Form.Control
-                type="text"
-                value={newProveedor.telefono}
-                onChange={(e) => {
-                  setNewProveedor({ ...newProveedor, telefono: e.target.value });
-                }}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                value={newProveedor.email}
-                onChange={(e) => {
-                  setNewProveedor({ ...newProveedor, email: e.target.value });
                 }}
               />
             </Form.Group>

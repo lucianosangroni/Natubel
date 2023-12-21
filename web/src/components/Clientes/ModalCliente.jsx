@@ -23,7 +23,7 @@ function ModalCliente({ onAddClient }) {
   const handleShow = () => setShow(true);
 
   const handleSave = () => {
-    if (newClient.nombre && newClient.tipo_cliente) {
+    if (newClient.nombre && newClient.email && newClient.telefono) {
       onAddClient(newClient);
       setNewClient({
         nombre: "",
@@ -40,7 +40,7 @@ function ModalCliente({ onAddClient }) {
       });
       handleClose();
     } else {
-      console.log("Por favor, complete nombre y tipo.");
+      console.log("Por favor, complete nombre, email y telefono.");
     }
   };
 
@@ -62,7 +62,7 @@ function ModalCliente({ onAddClient }) {
         <Modal.Body>
           <Form>
             <Form.Group>
-              <Form.Label>Nombre</Form.Label>
+              <Form.Label>Nombre *</Form.Label>
               <Form.Control
                 type="text"
                 value={newClient.nombre}
@@ -75,7 +75,27 @@ function ModalCliente({ onAddClient }) {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>CUIT/CUIL</Form.Label>
+              <Form.Label>Email *</Form.Label>
+              <Form.Control
+                type="email"
+                value={newClient.email}
+                onChange={(e) => {
+                  setNewClient({ ...newClient, email: e.target.value });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Telefono *</Form.Label>
+              <Form.Control
+                type="text"
+                value={newClient.telefono}
+                onChange={(e) => {
+                  setNewClient({ ...newClient, telefono: e.target.value });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>CUIT/CUIL (11 digitos)</Form.Label>
               <Form.Control
                 type="text"
                 value={newClient.cuit_cuil}
@@ -105,17 +125,7 @@ function ModalCliente({ onAddClient }) {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Telefono</Form.Label>
-              <Form.Control
-                type="text"
-                value={newClient.telefono}
-                onChange={(e) => {
-                  setNewClient({ ...newClient, telefono: e.target.value });
-                }}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>DNI</Form.Label>
+              <Form.Label>DNI (8 digitos)</Form.Label>
               <Form.Control
                 type="text"
                 value={newClient.dni}
@@ -161,16 +171,6 @@ function ModalCliente({ onAddClient }) {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                value={newClient.email}
-                onChange={(e) => {
-                  setNewClient({ ...newClient, email: e.target.value });
-                }}
-              />
-            </Form.Group>
-            <Form.Group>
               <Form.Label>Tipo</Form.Label>
               <Form.Control
                 as="select"
@@ -180,6 +180,7 @@ function ModalCliente({ onAddClient }) {
                 }}>
                 <option value="MINORISTA">MINORISTA</option>
                 <option value="MAYORISTA">MAYORISTA</option>
+                <option value="DISTRIBUIDOR">DISTRIBUIDOR</option>
               </Form.Control>
             </Form.Group>
           </Form>

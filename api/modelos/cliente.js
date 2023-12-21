@@ -10,7 +10,7 @@ const Cliente = sequelize.define(
             unique: true
         },
         tipo_cliente: {
-            type: DataTypes.ENUM('MAYORISTA', 'MINORISTA'),
+            type: DataTypes.ENUM('MAYORISTA', 'MINORISTA', 'DISTRIBUIDOR'),
             allowNull: false,
         },
         forma_de_envio: {

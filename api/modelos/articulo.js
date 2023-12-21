@@ -12,7 +12,15 @@ const Articulo = sequelize.define(
         descripcion: {
             type: DataTypes.STRING,
         },
-        precio_unitario: {
+        precio_mayorista: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+        },
+        precio_minorista: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+        },
+        precio_distribuidor: {
             type: DataTypes.FLOAT,
             allowNull: false,
         },
