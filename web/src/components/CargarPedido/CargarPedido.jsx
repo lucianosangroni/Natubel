@@ -200,7 +200,7 @@ const CargarPedido = () => {
     const clienteSeleccionado = clientes.find(cliente => cliente.id === selectedPedidor);
     const tipo_cliente = clienteSeleccionado ? clienteSeleccionado.tipo_cliente : 'MAYORISTA';
 
-    let precio_unitario = 0;
+    let precio_unitario = 0.00;
 
     for (const articulo of productosConfirmados) {
       for (const producto of articulo.productos) {
@@ -226,7 +226,7 @@ const CargarPedido = () => {
           productosFinales.push({
             producto_id: producto.id,
             cantidad: cantidad,
-            precio_unitario: Number(precio_unitario),
+            precio_unitario,
           });
         }
       }
