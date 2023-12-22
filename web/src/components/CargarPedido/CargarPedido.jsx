@@ -226,7 +226,7 @@ const CargarPedido = () => {
           productosFinales.push({
             producto_id: producto.id,
             cantidad: cantidad,
-            precio_unitario,
+            precio_unitario: parseFloat(precio_unitario),
           });
         }
       }

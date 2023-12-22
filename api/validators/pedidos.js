@@ -15,7 +15,6 @@ const validatorCreateItem = [
             validationResult(req).throw()
             return next()
         } catch (err) {
-            console.log("REQ validator: ", req)
             res.status(403)
             res.send({ errores: err.array() })
         }
