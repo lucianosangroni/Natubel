@@ -261,6 +261,8 @@ const CargarPedido = () => {
       creador
     };
 
+    console.log(requestData);
+
     fetch(`${apiUrl}/pedidos`, {
       method: "POST",
       headers: {
