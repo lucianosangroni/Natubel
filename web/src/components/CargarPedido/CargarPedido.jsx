@@ -226,7 +226,7 @@ const CargarPedido = () => {
           productosFinales.push({
             producto_id: producto.id,
             cantidad: cantidad,
-            precio_unitario: parseFloat(precio_unitario),
+            precio_unitario: Number(precio_unitario),
           });
         }
       }
@@ -260,8 +260,6 @@ const CargarPedido = () => {
       productos,
       creador
     };
-
-    console.log(requestData);
 
     fetch(`${apiUrl}/pedidos`, {
       method: "POST",
