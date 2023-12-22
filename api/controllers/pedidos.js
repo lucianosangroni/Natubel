@@ -34,6 +34,8 @@ const createItem = async (req, res) => {
     try {
         req = matchedData(req);
 
+        console.log("REQ: ", req)
+
         const { persona_id, precio_total, es_proveedor, productos, creador } = req
 
         const nuevoPedido = await pedidoModel.create
