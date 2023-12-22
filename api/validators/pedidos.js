@@ -11,7 +11,7 @@ const validatorCreateItem = [
         typeof producto.precio_unitario === "number" && producto.precio_unitario >= 0)),
     (req, res, next) => {
         try {
-            console.log("REQ validator 1: ", req)
+            console.log("REQ validator 1: ", req.body)
             validationResult(req).throw()
             return next()
         } catch (err) {
