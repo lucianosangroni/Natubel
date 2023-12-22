@@ -8,7 +8,7 @@ const validatorCreateItem = [
     check("productos").exists().isArray({ min: 1 }).custom((productos) => productos.every((producto) => 
         typeof producto.producto_id === "number" && producto.producto_id > 0 &&
         typeof producto.cantidad === "number" && producto.cantidad > 0 &&
-        parseFloat(producto.precio_unitario >= 0))),
+        parseFloat(producto.precio_unitario) >= 0)),
     (req, res, next) => {
         req.body.productos.forEach((producto) => {
             producto.precio_unitario = parseFloat(producto.precio_unitario);
