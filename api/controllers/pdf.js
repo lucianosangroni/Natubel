@@ -349,17 +349,17 @@ const getNotaPedido = async (req, res) => {
         doc.on('data', (data) => {stream.write(data)})
         doc.on('end', () => {stream.end()})
 
-        doc.fontSize(20).text('NOTA DE PEDIDO', 50, 57);
-        doc.fontSize(20).text("N° " + pedido_id, 250, 57)
+        doc.fontSize(20).fillColor('black').text('NOTA DE PEDIDO', 50, 57);
+        doc.fontSize(20).fillColor('black').text("N° " + pedido_id, 250, 57)
 
         const fechaDeHoy = new Date(pedido.createdAt);
         const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
         doc.fontSize(15).text(fechaFormateada, 440, 60);
 
-        doc.fontSize(9).text("Cliente:", 50, 90)
-        doc.fontSize(17).text(persona.nombre, 100, 107)
-        doc.fontSize(9).text("Dir Entrega:", 360, 90)
-        doc.fontSize(17).text(persona.direccion, 400, 107)
+        doc.fontSize(9).fillColor('black').text("Cliente:", 50, 90)
+        doc.fontSize(17).fillColor('black').text(persona.nombre, 100, 107)
+        doc.fontSize(9).fillColor('black').text("Dir Entrega:", 360, 90)
+        doc.fontSize(17).fillColor('black').text(persona.direccion, 400, 107)
         doc.rect(45, 145, 522, 20).fillAndStroke('lightgray', 'black');
         doc.fontSize(10).fillColor('black').text(cantArticulos + " Artículos, " + cantUnidades + " Unidades.", 245, 152)
 
@@ -410,16 +410,16 @@ const getNotaPedido = async (req, res) => {
 
             if(doc.y + (table.rows.length + 1) * cellHeight > maxHeightPage) {
                 if(!footerHecho) {
-                    doc.fontSize(10).text('PREPARÓ', 52, 558);
-                    doc.fontSize(10).text('CONTROLÓ', 50, 633);
-                    doc.fontSize(10).text('GUARDÓ', 52, 708);
-                    doc.fontSize(9).text('FIRMA:', 120, 555);
-                    doc.fontSize(9).text('FIRMA:', 120, 630);
-                    doc.fontSize(9).text('FIRMA:', 120, 705);
-                    doc.fontSize(9).text('ACLARACIÓN:', 285, 555);
-                    doc.fontSize(9).text('ACLARACIÓN:', 285, 630);
-                    doc.fontSize(9).text('ACLARACIÓN:', 285, 705);
-                    doc.fontSize(7).text('CANTIDAD DE CAJAS:', 466, 555);
+                    doc.fontSize(10).fillColor('black').text('PREPARÓ', 52, 558);
+                    doc.fontSize(10).fillColor('black').text('CONTROLÓ', 50, 633);
+                    doc.fontSize(10).fillColor('black').text('GUARDÓ', 52, 708);
+                    doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 555);
+                    doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 630);
+                    doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 705);
+                    doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 555);
+                    doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 630);
+                    doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 705);
+                    doc.fontSize(7).fillColor('black').text('CANTIDAD DE CAJAS:', 466, 555);
 
                     doc.moveTo(115, 550).lineTo(115, 775).stroke('black');
                     doc.moveTo(280, 550).lineTo(280, 775).stroke('black');
@@ -436,17 +436,17 @@ const getNotaPedido = async (req, res) => {
                 
                 doc.addPage();
 
-                doc.fontSize(20).text('NOTA DE PEDIDO', 50, 57);
-                doc.fontSize(20).text("N° " + pedido_id, 250, 57)
+                doc.fontSize(20).fillColor('black').text('NOTA DE PEDIDO', 50, 57);
+                doc.fontSize(20).fillColor('black').text("N° " + pedido_id, 250, 57)
 
                 const fechaDeHoy = new Date(pedido.createdAt);
                 const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
-                doc.fontSize(15).text(fechaFormateada, 440, 60);
+                doc.fontSize(15).fillColor('black').text(fechaFormateada, 440, 60);
 
-                doc.fontSize(9).text("Cliente:", 50, 90)
-                doc.fontSize(17).text(persona.nombre, 100, 107)
-                doc.fontSize(9).text("Dir Entrega:", 360, 90)
-                doc.fontSize(17).text(persona.direccion, 400, 107)
+                doc.fontSize(9).fillColor('black').text("Cliente:", 50, 90)
+                doc.fontSize(17).fillColor('black').text(persona.nombre, 100, 107)
+                doc.fontSize(9).fillColor('black').text("Dir Entrega:", 360, 90)
+                doc.fontSize(17).fillColor('black').text(persona.direccion, 400, 107)
                 doc.rect(45, 145, 522, 20).fillAndStroke('lightgray', 'black');
                 doc.fontSize(10).fillColor('black').text(cantArticulos + " Artículos, " + cantUnidades + " Unidades.", 245, 152)
 
@@ -501,17 +501,16 @@ const getNotaPedido = async (req, res) => {
         });
 
         if(!footerHecho) {
-            console.log("asfasf")
-            doc.fontSize(10).text('PREPARÓ', 52, 558);
-            doc.fontSize(10).text('CONTROLÓ', 50, 633);
-            doc.fontSize(10).text('GUARDÓ', 52, 708);
-            doc.fontSize(9).text('FIRMA:', 120, 555);
-            doc.fontSize(9).text('FIRMA:', 120, 630);
-            doc.fontSize(9).text('FIRMA:', 120, 705);
-            doc.fontSize(9).text('ACLARACIÓN:', 285, 555);
-            doc.fontSize(9).text('ACLARACIÓN:', 285, 630);
-            doc.fontSize(9).text('ACLARACIÓN:', 285, 705);
-            doc.fontSize(7).text('CANTIDAD DE CAJAS:', 466, 555);
+            doc.fontSize(10).fillColor('black').text('PREPARÓ', 52, 558);
+            doc.fontSize(10).fillColor('black').text('CONTROLÓ', 50, 633);
+            doc.fontSize(10).fillColor('black').text('GUARDÓ', 52, 708);
+            doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 555);
+            doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 630);
+            doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 705);
+            doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 555);
+            doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 630);
+            doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 705);
+            doc.fontSize(7).fillColor('black').text('CANTIDAD DE CAJAS:', 466, 555);
 
             doc.moveTo(115, 550).lineTo(115, 775).stroke('black');
             doc.moveTo(280, 550).lineTo(280, 775).stroke('black');
