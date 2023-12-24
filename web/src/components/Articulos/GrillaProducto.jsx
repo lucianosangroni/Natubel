@@ -4,6 +4,18 @@ function GrillaProducto({ onEditProducto, onDeleteProducto, articulo }) {
     const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
     const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
  
+    const totalStock = talles.reduce((total, talle) => {
+      const sumaTalle = articulo.productos.reduce((acc, producto) => {
+          if (producto.talle === talle) {
+              return acc + producto.stock;
+          }
+          return acc;
+      }, 0);
+      return total + sumaTalle;
+    }, 0);
+
+    console.log(totalStock)
+
     const handleEditArticulo = (editArticulo) => {
         onEditProducto(editArticulo)
     }
@@ -23,6 +35,7 @@ function GrillaProducto({ onEditProducto, onDeleteProducto, articulo }) {
                       {talles.map((talle, index) => (
                           <th key={index}>{talle}</th>
                       ))}
+                      <th id="listado-articulo-grilla">TOTAL</th>
                   </tr>
               </thead>
               <tbody>
@@ -33,9 +46,10 @@ function GrillaProducto({ onEditProducto, onDeleteProducto, articulo }) {
                           const matchingProduct = articulo.productos.find(
                           (producto) => producto.color === color && producto.talle === talle
                           );
-                          const stock = matchingProduct ? matchingProduct.stock : 0;
+                          const stock = matchingProduct && matchingProduct.stock !== 0  ? matchingProduct.stock : " ";
                           return <td key={talleIndex}>{stock}</td>;
                       })}
+                      <td>{index === 0 ? totalStock : "" }</td>
                     </tr>
                   ))}
                 </tbody>

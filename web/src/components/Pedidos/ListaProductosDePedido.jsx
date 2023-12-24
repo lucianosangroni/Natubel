@@ -103,7 +103,7 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
     return (
       <>
       <div className="table-productos-contenedor">
-        <ListaArticulos articulos={pedido.articulos} onArticuloClick={handleArticuloClick}/>
+        <ListaArticulos articulos={pedido.articulos} onArticuloClick={handleArticuloClick} selectedArticulo={selectedArticulo}/>
 
         {selectedArticulo && (
             <GrillaProductosDePedido

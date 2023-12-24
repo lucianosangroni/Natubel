@@ -1,5 +1,15 @@
 function GrillaProductosDePedido({ articulo, productos }) {
 
+  const totalPedido = articulo.talles.reduce((total, talle) => {
+    const sumaTalle = productos.reduce((acc, producto) => {
+        if (producto.talle === talle && producto.articulo_id === articulo.id) {
+            return acc + producto.productos_x_pedido.cantidad;
+        }
+        return acc;
+    }, 0);
+    return total + sumaTalle;
+  }, 0);
+
     return (
       <>
       <div className="table-width-container">
@@ -10,6 +20,7 @@ function GrillaProductosDePedido({ articulo, productos }) {
                     {articulo.talles.map((talle, index) => (
                         <th key={index}>{talle}</th>
                     ))}
+                    <th id="listado-articulo-grilla">TOTAL</th> 
                 </tr>
             </thead>
             <tbody>
@@ -23,6 +34,7 @@ function GrillaProductosDePedido({ articulo, productos }) {
                         const cantidad = matchingProduct ? matchingProduct.productos_x_pedido.cantidad : "";
                         return <td key={talleIndex}>{cantidad}</td>;
                     })}
+                    <td>{index === 0 ? totalPedido : ""}</td>
                   </tr>
                 ))}
             </tbody>

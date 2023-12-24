@@ -8,6 +8,14 @@ function GrillasProductosConfirmados({ articulos }) {
                         const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
                         const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
 
+                        const totalPedido = talles.reduce((total, talle) => {
+                            const sumaTalle = colores.reduce((acc, color) => {
+                                const key = `${color}-${talle}`;
+                                return acc + (articulo.cantidades[key] || 0);
+                            }, 0);
+                            return total + sumaTalle;
+                        }, 0);
+
                     return  (
                         <div key={articuloIndex} className="grillas-container-resumen">
                             <table className="table-grilla-resumen">
@@ -17,6 +25,7 @@ function GrillasProductosConfirmados({ articulos }) {
                                         {talles.map((talle, index) => (
                                             <th key={index}>{talle}</th>
                                         ))}
+                                        <th id="listado-articulo-grilla">TOTAL</th> 
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -32,6 +41,7 @@ function GrillasProductosConfirmados({ articulos }) {
                                                     </td>
                                                 );
                                             })}
+                                            <td>{index === 0 ? totalPedido : ""}</td> 
                                         </tr>
                                     ))}
                                 </tbody>

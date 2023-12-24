@@ -1,5 +1,4 @@
 function ListaArticulos({ articulos, onArticuloClick, selectedArticulo }) {
-
     return (
         <>
         <div className="scrollable-list-container">
