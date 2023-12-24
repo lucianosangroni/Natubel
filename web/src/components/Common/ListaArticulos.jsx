@@ -1,11 +1,4 @@
-import { useEffect, useState } from "react";
-
-function ListaArticulos({ articulos, onArticuloClick }) {
-    const [selectedArticulo, setSelectedArticulo] = useState(null);
-
-    useEffect(() => {
-        setSelectedArticulo(articulos[0])
-      }, [articulos]);
+function ListaArticulos({ articulos, onArticuloClick, selectedArticulo }) {
 
     return (
         <>
@@ -20,7 +13,6 @@ function ListaArticulos({ articulos, onArticuloClick }) {
                 {articulos.map((articulo) => (
                 <tr key={articulo.id} onClick={() => {
                     onArticuloClick(articulo)
-                    setSelectedArticulo(articulo)
                 }}>
                     <td
                     className={`table-cell-productos ${

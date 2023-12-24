@@ -15,6 +15,7 @@ const CargarPedido = () => {
   const [filtroBusqueda, setFiltroBusqueda] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productosConfirmados, setProductosConfirmados] = useState([]);
+  const [cantidadesArticuloActual, setCantidadesArticuloActual] = useState({});
 
   const jwt = localStorage.getItem("jwt");
 
@@ -118,7 +119,20 @@ const CargarPedido = () => {
     setSelectedPedidor("");
   };
 
+  const handleCantidadesChange = (cantidades) => {
+    setCantidadesArticuloActual(cantidades)
+  }
+
   const handleProductClick = (product) => {
+    if(Object.keys(cantidadesArticuloActual).length !== 0 && selectedProduct.numero_articulo !== product.numero_articulo) {
+      const shouldCambiarArticulo = window.confirm(
+        `El articulo actual no está confirmado, ¿Estas seguro que quieres seleccionar otro?`
+      );
+      if (!shouldCambiarArticulo) {
+        return;
+      }
+    }
+
     setSelectedProduct(product);
   };
 
@@ -152,6 +166,9 @@ const CargarPedido = () => {
         productoConfirmadosNuevo,
       ]);
     }
+
+    setCantidadesArticuloActual({});
+    alert(`Articulo confirmado`);
   };
 
   const handleBorrarConfirmarProducto = (articulo) => {
@@ -160,6 +177,7 @@ const CargarPedido = () => {
     );
   
     setProductosConfirmados(productosConfirmadosActualizados);
+    alert(`Articulo eliminado del pedido`);
   }
 
   const calcularPrecioTotal = () => {
@@ -282,7 +300,7 @@ const CargarPedido = () => {
         setSelectedPedidor("");
         setTipoPedidor("cliente");
         setFiltroBusqueda("");
-        setSelectedProduct(null);
+        setSelectedProduct(data[0]);
       })
       .catch((error) => {
         console.error("Error en la solicitud POST:", error);
@@ -376,13 +394,14 @@ const CargarPedido = () => {
       </div>
       
       <section className="contenedor-tabla-grilla">
-        <ListaArticulos articulos={data} onArticuloClick={handleProductClick}/>
+        <ListaArticulos articulos={data} onArticuloClick={handleProductClick} selectedArticulo={selectedProduct}/>
 
         {selectedProduct && (
           <GrillaProductoPedido
             articulo={selectedProduct}
             onConfirmarProducto={handleConfirmarProducto}
             onBorrarConfirmarProducto={handleBorrarConfirmarProducto}
+            onSetCantidades={handleCantidadesChange}
             tipoPedidor={tipoPedidor}
           />
         )}

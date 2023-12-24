@@ -1,12 +1,16 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBorrarConfirmarProducto }) {
+function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBorrarConfirmarProducto, onSetCantidades }) {
     const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
     const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
     const [cantidades, setCantidades] = useState({});
+    const inputRefs = {};
 
     useEffect(() => {
         setCantidades({});
+        onSetCantidades({});
+        const initialProductKey = `${colores[0]}-${talles[0]}`;
+        inputRefs[initialProductKey].current.focus();
       }, [articulo]);
 
     const filtrarDiccionario = (diccionario) => {
@@ -29,6 +33,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
             const newCantidades = {...cantidades, [productKey]: parsedCantidad}
             const filteredCantidades = filtrarDiccionario(newCantidades)
             setCantidades(filteredCantidades);
+            onSetCantidades(filteredCantidades);
         }
     };
 
@@ -44,6 +49,29 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
         } else if (key === "Backspace") {
             const newCantidad = (String(cantidades[productKey]) || "").slice(0, -1);
             handleCantidadChange(productKey, stock, newCantidad)
+        } else if (key === "ArrowRight" || key === "ArrowLeft" || key === "ArrowUp" || key === "ArrowDown") {
+            const rowIndex = colores.indexOf(productKey.split('-')[0]);
+            const colIndex = talles.indexOf(productKey.split('-')[1]);
+    
+            let nextRowIndex, nextColIndex;
+            if (key === "ArrowRight") {
+                nextRowIndex = rowIndex;
+                nextColIndex = colIndex + 1;
+            } else if (key === "ArrowLeft") {
+                nextRowIndex = rowIndex;
+                nextColIndex = colIndex - 1;
+            } else if (key === "ArrowUp") {
+                nextRowIndex = rowIndex - 1;
+                nextColIndex = colIndex;
+            } else if (key === "ArrowDown") {
+                nextRowIndex = rowIndex + 1;
+                nextColIndex = colIndex;
+            }
+    
+            if (colores[nextRowIndex] && talles[nextColIndex]) {
+                const nextProductKey = `${colores[nextRowIndex]}-${talles[nextColIndex]}`;
+                inputRefs[nextProductKey].current.focus();
+            }
         }
     }
 
@@ -72,21 +100,24 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
                     <td>{color}</td>
                     {talles.map((talle, talleIndex) => {
                         const matchingProduct = articulo.productos.find(
-                        (producto) => producto.color === color && producto.talle === talle
+                            (producto) => producto.color === color && producto.talle === talle
                         );
                         const stock = matchingProduct ? matchingProduct.stock : 0;
                         const productKey = `${color}-${talle}`;
                         const cantidad = cantidades[productKey] || "";
 
+                        inputRefs[productKey] = React.createRef();
+
                         return (
-                        <td key={talleIndex} className='table-grilla-input'>
-                            <input
-                            type="text"
-                            defaultValue={cantidad}
-                            onKeyDown={(e) => handleKeyDown(e, productKey, stock)}
-                            />
-                            ({stock})
-                        </td>
+                            <td key={talleIndex} className='table-grilla-input'>
+                                <input
+                                type="text"
+                                defaultValue={cantidad}
+                                onKeyDown={(e) => handleKeyDown(e, productKey, stock)}
+                                ref={inputRefs[productKey]}
+                                />
+                                ({stock})
+                            </td>
                         );
                     })}
                   </tr>
