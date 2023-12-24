@@ -7,22 +7,21 @@ import { useParams } from 'react-router-dom';
 const ItemListContainer = () => {
 
     const [productos, setProductos] = useState([]);
-    const [titulo, setTitulo] = useState("productos")
-    const categoria = useParams().category;
-    console.log(categoria)
+    const [titulo, setTitulo] = useState("Productos")
+    const category = useParams().categoria;
 
     useEffect(() => {
         pedirDatos()
             .then((res) => {
-              if (categoria){
-                setProductos(res.filter((prod) => prod.category === categoria));
-                setTitulo(categoria);
+              if (category){
+                setProductos(res.filter((prod) => prod.category === category));
+                setTitulo(category);
               } else {
                 setProductos(res);
                 setTitulo("productos")
               }             
             })
-    }, [categoria])
+    }, [category])
 
 
   return (

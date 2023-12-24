@@ -1,0 +1,23 @@
+.carrito-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}
+
+.carrito {
+    color: white;
+    font-size: 1rem;
+    width: 1.5rem;
+    
+}
+
+.contador-carrito{
+    color: white;
+    margin-right: 2rem;
+    margin-top: 0.5rem;
+
+}
+
+
