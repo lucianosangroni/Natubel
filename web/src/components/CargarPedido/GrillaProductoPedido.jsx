@@ -110,13 +110,15 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
 
                         return (
                             <td key={talleIndex} className='table-grilla-input'>
-                                <input
-                                type="text"
-                                defaultValue={cantidad}
-                                onKeyDown={(e) => handleKeyDown(e, productKey, stock)}
-                                ref={inputRefs[productKey]}
-                                />
-                                ({stock})
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <input
+                                        type="text"
+                                        defaultValue={cantidad}
+                                        onKeyDown={(e) => handleKeyDown(e, productKey, stock)}
+                                        ref={inputRefs[productKey]}
+                                    />
+                                    <span className="stock-label">&nbsp;({stock})</span>
+                                </div>
                             </td>
                         );
                     })}

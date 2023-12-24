@@ -327,6 +327,10 @@
   background-color: #dcd9d9;
 }
 
+.stock-label {
+  font-weight: bold;
+}
+
 .confirmar {
   height: 100%;
   padding: 0.5rem;
