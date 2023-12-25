@@ -2,6 +2,9 @@ import React from 'react'
 import './navbar.css';
 import { Link } from 'react-router-dom';
 import CartWidget from '../cartWidget/CartWidget';
+import MenuDesplegable from '../menuDesplegable/MenuDesplegable';
+
+
 
 const Navbar = () => {
 
@@ -13,12 +16,7 @@ const Navbar = () => {
         <ul className='menu'>
             <li><Link className='menu-link' to='/'>| Inicio |</Link></li>
             <li><Link className='menu-link' to='/catalogo'>Catalogo</Link></li>
-            <li><Link className='menu-link' to='/catalogo'>Categorias</Link></li>
-            <li><Link className='menu-link' to='/catalogo/mujer'>Mujer</Link></li>
-            <li><Link className='menu-link' to='/catalogo/reductores'>Reductores</Link></li>
-            <li><Link className='menu-link' to='/catalogo/corpiños'>Corpiños</Link></li>
-            <li><Link className='menu-link' to='/catalogo/bodys'>Bodys</Link></li>
-            <li><Link className='menu-link' to='/catalogo/conjuntos'>Conjuntos</Link></li>
+            <li><Link className='menu-link' to='/catalogo'><MenuDesplegable /></Link></li>
             <li><Link className='menu-link' to='/formulario'>Formulario</Link></li>          
             <li><Link className='menu-link' to='/mayorista'>Mayorista</Link></li>
         </ul>

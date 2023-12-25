@@ -8,7 +8,7 @@
        "sizes": "xl",
        "color": "blanco",
        "stock": 10,
-       "images": "http://dummyimage.com/200x100.png/cc0000/ffffff"
+       "images": "/img/foto1.jpg"
     },
     {
         "id": 2,
@@ -19,7 +19,7 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
-        "images":"http://dummyimage.com/200x100.png/cc0000/ffffff"
+        "images":"/img/foto1.jpg"
      },
      {
         "id": 3,
@@ -102,6 +102,72 @@
         "id": 10,
         "art": "Articulo 69",
         "category": "conjuntos",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto1.jpg"
+     },
+     {
+        "id": 11,
+        "art": "Articulo 69",
+        "category": "hombres",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto1.jpg"
+     },
+     {
+        "id": 12,
+        "art": "Articulo 633",
+        "category": "hombres",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto1.jpg"
+     },
+     {
+        "id": 13,
+        "art": "Articulo 69",
+        "category": "packx3",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto1.jpg"
+     },
+     {
+        "id": 14,
+        "art": "Articulo 69",
+        "category": "tallesEspeciales",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto1.jpg"
+     },
+     {
+        "id": 15,
+        "art": "Articulo 69",
+        "category": "boxer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto1.jpg"
+     },
+     {
+        "id": 16,
+        "art": "Articulo 69",
+        "category": "boxerJuvenil",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
         "sizes": "xl",

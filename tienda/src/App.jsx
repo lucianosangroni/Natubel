@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import FormularioCompra from "./components/formularioCompra/FormularioCompra";
 import { CartProvider } from "./context/CartContext";
 import Carrito from "./components/carrito/Carrito";
+import CategoriasLateral from "./components/categoriasLateral/CategoriasLateral";
 
 
 function App() {
@@ -14,9 +15,9 @@ function App() {
     <div>
       <CartProvider>
       <BrowserRouter>
-
       <Navbar />
-
+      <CategoriasLateral />
+      
       <Routes>
         <Route path="/" element={<ItemListContainer />}/>
         <Route path="/item/:id" element={<ItemDetailContainer />}/>

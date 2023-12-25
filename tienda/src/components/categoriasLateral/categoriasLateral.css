@@ -1,0 +1,26 @@
+.categoriaLateral {
+    max-width: 1140px;
+    padding-inline: 1.5rem;
+    margin: 0 auto;
+}
+
+.menuLateral {
+    display: flex;
+    flex-direction: column;
+    width: 12rem;
+    background-color: #FBCCD2;
+    list-style-type: none;
+    margin-top: 2rem;
+    gap: 1rem;
+    padding: 0.5rem;
+}
+
+.menu-link {
+    text-decoration: none;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.menu-link:hover {
+    text-decoration: underline;
+}
