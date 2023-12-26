@@ -19,7 +19,7 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
-        "images":"/img/foto1.jpg"
+        "images":"/img/foto2.jpg"
      },
      {
         "id": 3,
@@ -30,7 +30,7 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
-        "images": "/img/foto1.jpg"
+        "images": "/img/foto3.jpg"
      },
      {
         "id": 4,
@@ -41,7 +41,7 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
-        "images":"/img/foto1.jpg"
+        "images":"/img/foto4.jpg"
      },
      {
         "id": 5,
@@ -63,7 +63,7 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
-        "images":"/img/foto1.jpg"
+        "images":"/img/foto2.jpg"
      },
      {
         "id": 7,
@@ -74,7 +74,7 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
-        "images":"/img/foto1.jpg"
+        "images":"/img/foto3.jpg"
      },
      {
         "id": 8,
@@ -85,7 +85,7 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
-        "images":"/img/foto1.jpg"
+        "images":"/img/foto4.jpg"
      },
      {
         "id": 9,
@@ -107,7 +107,7 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
-        "images":"/img/foto1.jpg"
+        "images":"/img/foto2.jpg"
      },
      {
         "id": 11,
@@ -118,7 +118,7 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
-        "images":"/img/foto1.jpg"
+        "images":"/img/foto5.jpg"
      },
      {
         "id": 12,
@@ -129,7 +129,7 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
-        "images":"/img/foto1.jpg"
+        "images":"/img/foto5.jpg"
      },
      {
         "id": 13,
@@ -151,7 +151,7 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
-        "images":"/img/foto1.jpg"
+        "images":"/img/foto2.jpg"
      },
      {
         "id": 15,
@@ -162,7 +162,7 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
-        "images":"/img/foto1.jpg"
+        "images":"/img/foto5.jpg"
      },
      {
         "id": 16,
@@ -173,6 +173,105 @@
         "sizes": "xl",
         "color": "blanco",
         "stock": 10,
+        "images":"/img/foto5.jpg"
+     },
+     {
+        "id": 17,
+        "art": "Articulo 69",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto3.jpg"
+     },
+     {
+        "id": 18,
+        "art": "Articulo 69",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto4.jpg"
+     },
+     {
+        "id": 19,
+        "art": "Articulo 69",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto3.jpg"
+     },
+     {
+        "id": 20,
+        "art": "Articulo 69",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto2.jpg"
+     },
+     {
+        "id": 21,
+        "art": "Articulo 69",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
         "images":"/img/foto1.jpg"
+     },
+     {
+        "id": 22,
+        "art": "Articulo 69",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto2.jpg"
+     },
+     {
+        "id": 23,
+        "art": "Articulo 69",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto3.jpg"
+     },
+     {
+        "id": 24,
+        "art": "Articulo 69",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto4.jpg"
+     },
+     {
+        "id": 25,
+        "art": "Articulo 69",
+        "category": "mujer",
+        "description": "excelentes corpiños, calidad premium",
+        "price": 45000,
+        "sizes": "xl",
+        "color": "blanco",
+        "stock": 10,
+        "images":"/img/foto3.jpg"
      }
 ]

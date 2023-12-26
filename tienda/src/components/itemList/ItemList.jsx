@@ -1,19 +1,20 @@
-import React from 'react'
-import Item from '../item/Item'
-import './itemList.css';
-import { toCapital } from "../../helpers/toCapital"
+import React from "react";
+import Item from "../item/Item";
+import "./itemList.css";
+import CategoriasLateral from "../categoriasLateral/CategoriasLateral";
 
-
-const ItemList = ( {productos, titulo} ) => {
+const ItemList = ({ productos, titulo }) => {
   return (
-    <div className='container'> 
-      <h2 className='main-title'>{toCapital(titulo)}</h2>
-
-      <div className='productos'>
-          { productos.map((prod) => <Item producto={prod} key={prod.id} />)}
+    <div className="containerItemList">
+            
+      <div className="productos">
+      <CategoriasLateral />
+        {productos.map((prod) => (
+          <Item producto={prod} key={prod.id} />
+        ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ItemList
+export default ItemList;

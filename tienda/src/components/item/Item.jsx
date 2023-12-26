@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 import { toCapital } from '../../helpers/toCapital';
 
 const Item = ( { producto } ) => {
-
-  console.log(producto)
   
   return (
     <div className="producto">

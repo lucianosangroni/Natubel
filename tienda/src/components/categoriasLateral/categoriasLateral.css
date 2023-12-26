@@ -7,10 +7,10 @@
 .menuLateral {
     display: flex;
     flex-direction: column;
-    width: 12rem;
+    width: 11rem;
+    border-radius: 0.5rem;
     background-color: #FBCCD2;
     list-style-type: none;
-    margin-top: 2rem;
     gap: 1rem;
     padding: 0.5rem;
 }
@@ -18,9 +18,25 @@
 .menu-link {
     text-decoration: none;
     color: white;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
 }
 
 .menu-link:hover {
     text-decoration: underline;
 }
+
+.menu-link.seleccionada {
+    background-color:#f7b0ba;
+    font-weight: bold;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin-left: 1rem;
+    text-decoration: none;
+
+  }
+
+  .menuLateralTitulo{
+    color: white;
+    font-style: italic;
+    font-weight: bold;
+  }

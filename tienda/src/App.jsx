@@ -6,7 +6,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import FormularioCompra from "./components/formularioCompra/FormularioCompra";
 import { CartProvider } from "./context/CartContext";
 import Carrito from "./components/carrito/Carrito";
-import CategoriasLateral from "./components/categoriasLateral/CategoriasLateral";
+import Footer from "./components/footer/Footer";
+import Inicio from "./components/inicio/Inicio";
 
 
 function App() {
@@ -16,10 +17,9 @@ function App() {
       <CartProvider>
       <BrowserRouter>
       <Navbar />
-      <CategoriasLateral />
-      
+            
       <Routes>
-        <Route path="/" element={<ItemListContainer />}/>
+        <Route path="/" element={<Inicio/>}/>
         <Route path="/item/:id" element={<ItemDetailContainer />}/>
         <Route path="/catalogo" element={<ItemListContainer/>} />
         <Route path="/catalogo/:categoria" element={<ItemListContainer/>} />
@@ -27,6 +27,7 @@ function App() {
         <Route path="/formulario" element={<FormularioCompra/>} />
       </Routes>
 
+      <Footer />
 
       </BrowserRouter>
       </CartProvider>

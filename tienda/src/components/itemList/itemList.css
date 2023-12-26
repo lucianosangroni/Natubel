@@ -1,17 +1,24 @@
-.container {
-    max-width: 1140px;
-    padding-inline: 1.5rem;
-    margin: 0 auto;
-}
+.containerItemList {   
+    padding-inline: 1rem;
+    
+} 
 
 .main-title {
+    background-color: #FBCCD2;
+    color: white;
+    padding: 0.5rem;
+    width: 13rem;
+    height: 2rem;
     margin-top: 2rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    margin-left: 1.5rem;
 }
 
 .productos {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    padding-block: 2rem;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    padding-block: 3rem;
     
 }

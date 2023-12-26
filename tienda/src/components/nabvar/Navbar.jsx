@@ -15,7 +15,7 @@ const Navbar = () => {
         <Link to="/" className='logo'><h1>Natubel</h1></Link>
         <ul className='menu'>
             <li><Link className='menu-link' to='/'>| Inicio |</Link></li>
-            <li><Link className='menu-link' to='/catalogo'>Catalogo</Link></li>
+            {/* <li><Link className='menu-link' to='/catalogo'>Catalogo</Link></li> */}
             <li><Link className='menu-link' to='/catalogo'><MenuDesplegable /></Link></li>
             <li><Link className='menu-link' to='/formulario'>Formulario</Link></li>          
             <li><Link className='menu-link' to='/mayorista'>Mayorista</Link></li>

@@ -2,15 +2,13 @@
         font-size: 0.6rem;
         text-align: center;
         padding: 0.2rem;
+        margin-bottom: 0;
     }
     
     .navbar {
-        padding-top: 0.8rem;
-        padding-bottom: 0.2rem;
         display: flex;
         align-items: center;
         background-color: #FBCCD2;
-        
     }
 
     .logo {
@@ -18,14 +16,15 @@
         color: white;
         font-size: 2rem;
         margin-left: 2rem;
+        
     }
 
     .menu {
         list-style-type: none;
         display: flex;
         align-items: center;
-        margin-top: 2rem;
         gap: 1rem;
+        margin: 0;
     }
     
     .menu-link {
