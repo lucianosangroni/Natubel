@@ -10,13 +10,11 @@
     background-color: white;
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: .2rem;
 }
 
 .producto > img {
     width: 100%;
-
-   
     object-fit: cover;
 }
 
@@ -28,5 +26,14 @@
     width: max-content;
     border-radius: .5rem;
     transition: .2s;
+    margin-top: 1rem;
 }
 
+.productoInicio h4 {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.productoInicio p {
+    font-size: 0.8rem;
+}

@@ -13,7 +13,7 @@
 }
 
 .imgGaleria {
-    max-width: 60rem; /* Ajusta el ancho máximo según tus necesidades */
+    max-width: 75rem; /* Ajusta el ancho máximo según tus necesidades */
     max-height: 60rem; /* Ajusta la altura máxima según tus necesidades */
     margin: 0 auto; /* Centra la imagen horizontalmente */
     display: block; /* Elimina cualquier margen adicional */

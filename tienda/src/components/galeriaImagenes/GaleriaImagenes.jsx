@@ -8,8 +8,8 @@ function UncontrolledExample() {
       <Carousel.Item className='imgItem'>
       <img className='imgGaleria' src="/img/fotoHorizontal1.jpg" alt="modelo" />
         <Carousel.Caption>
-          <h3>First slide label</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+          <h3>Conjunto noche</h3>
+          <p>Body negro gdgdgdgdgdgdgdgdgdgdgdgdgdgdgdgd</p>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>

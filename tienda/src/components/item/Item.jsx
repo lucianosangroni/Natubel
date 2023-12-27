@@ -8,12 +8,12 @@ const Item = ( { producto } ) => {
   return (
     <div className="producto">
       <img src={producto.images} alt={producto.art} />
-      <div>
+      <div className='productoInicio'>
             <h4>{producto.art}</h4>
             <p>Precio: ${producto.price}</p>
             <p>Categoria: {toCapital(producto.category)}</p>
             <Link className='ver-mas' to={`/item/${producto.id}`}>Detalle</Link>
-        </div>
+      </div>
     </div>
   )
 }

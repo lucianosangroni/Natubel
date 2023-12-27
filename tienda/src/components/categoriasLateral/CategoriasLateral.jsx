@@ -9,8 +9,6 @@ const CategoriasLateral = () => {
   const handleCatSeleccionada = (categoria) => {
    
       setCatSeleccionada(categoria)
-
-    
   }
 
   return (

@@ -5,7 +5,7 @@
        "category": "mujer",
        "description": "excelentes corpiños, calidad premium",
        "price": 45000,
-       "sizes": "xl",
+       "sizes": "s",
        "color": "blanco",
        "stock": 10,
        "images": "/img/foto1.jpg"
@@ -16,7 +16,7 @@
         "category": "mujer",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
+        "sizes": "s",
         "color": "blanco",
         "stock": 10,
         "images":"/img/foto2.jpg"
@@ -27,8 +27,8 @@
         "category": "reductores",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
-        "color": "blanco",
+        "sizes": "s",
+        "color": "negro",
         "stock": 10,
         "images": "/img/foto3.jpg"
      },
@@ -38,8 +38,8 @@
         "category": "reductores",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
-        "color": "blanco",
+        "sizes": "s",
+        "color": "azul",
         "stock": 10,
         "images":"/img/foto4.jpg"
      },
@@ -49,8 +49,8 @@
         "category": "corpiños",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
-        "color": "blanco",
+        "sizes": "s",
+        "color": "violeta",
         "stock": 10,
         "images":"/img/foto1.jpg"
      },
@@ -60,8 +60,8 @@
         "category": "corpiños",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
-        "color": "blanco",
+        "sizes": "m",
+        "color": "violeta",
         "stock": 10,
         "images":"/img/foto2.jpg"
      },
@@ -71,8 +71,8 @@
         "category": "bodys",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
-        "color": "blanco",
+        "sizes": "m",
+        "color": "rojo",
         "stock": 10,
         "images":"/img/foto3.jpg"
      },
@@ -82,8 +82,8 @@
         "category": "bodys",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
-        "color": "blanco",
+        "sizes": "l",
+        "color": "verde",
         "stock": 10,
         "images":"/img/foto4.jpg"
      },
@@ -94,7 +94,7 @@
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
         "sizes": "xl",
-        "color": "blanco",
+        "color": "verde",
         "stock": 10,
         "images":"/img/foto1.jpg"
      },
@@ -105,7 +105,7 @@
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
         "sizes": "xl",
-        "color": "blanco",
+        "color": "natural",
         "stock": 10,
         "images":"/img/foto2.jpg"
      },
@@ -116,7 +116,7 @@
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
         "sizes": "xl",
-        "color": "blanco",
+        "color": "rosa",
         "stock": 10,
         "images":"/img/foto5.jpg"
      },
@@ -126,7 +126,7 @@
         "category": "hombres",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
+        "sizes": "xxl",
         "color": "blanco",
         "stock": 10,
         "images":"/img/foto5.jpg"
@@ -137,7 +137,7 @@
         "category": "packx3",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
+        "sizes": "xxl",
         "color": "blanco",
         "stock": 10,
         "images":"/img/foto1.jpg"
@@ -148,7 +148,7 @@
         "category": "tallesEspeciales",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
+        "sizes": "especiales",
         "color": "blanco",
         "stock": 10,
         "images":"/img/foto2.jpg"
@@ -159,7 +159,7 @@
         "category": "boxer",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
+        "sizes": "1",
         "color": "blanco",
         "stock": 10,
         "images":"/img/foto5.jpg"
@@ -170,7 +170,7 @@
         "category": "boxerJuvenil",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
+        "sizes": "1",
         "color": "blanco",
         "stock": 10,
         "images":"/img/foto5.jpg"
@@ -181,7 +181,7 @@
         "category": "mujer",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
+        "sizes": "1",
         "color": "blanco",
         "stock": 10,
         "images":"/img/foto3.jpg"
@@ -192,7 +192,7 @@
         "category": "mujer",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
+        "sizes": "2",
         "color": "blanco",
         "stock": 10,
         "images":"/img/foto4.jpg"
@@ -203,7 +203,7 @@
         "category": "mujer",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
+        "sizes": "2",
         "color": "blanco",
         "stock": 10,
         "images":"/img/foto3.jpg"
@@ -214,7 +214,7 @@
         "category": "mujer",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
+        "sizes": "2",
         "color": "blanco",
         "stock": 10,
         "images":"/img/foto2.jpg"
@@ -225,7 +225,7 @@
         "category": "mujer",
         "description": "excelentes corpiños, calidad premium",
         "price": 45000,
-        "sizes": "xl",
+        "sizes": "2",
         "color": "blanco",
         "stock": 10,
         "images":"/img/foto1.jpg"

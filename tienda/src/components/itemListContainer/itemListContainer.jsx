@@ -9,6 +9,7 @@ const ItemListContainer = () => {
     const [productos, setProductos] = useState([]);
     const [titulo, setTitulo] = useState("Productos")
     const category = useParams().categoria;
+    const color = useParams().color
 
     useEffect(() => {
         pedirDatos()
@@ -19,9 +20,16 @@ const ItemListContainer = () => {
               } else {
                 setProductos(res);
                 setTitulo("productos")
-              }             
+              }      
+              if (color) {
+                setProductos(res.filter((prod) => prod.color === color));
+                setTitulo(color);
+              }  else {
+                setProductos(res);
+                setTitulo("productos")
+              }         
             })
-    }, [category])
+    }, [category, color])
 
 
   return (

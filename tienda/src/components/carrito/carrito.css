@@ -1,0 +1,50 @@
+.carritoContainer {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    
+}
+
+.encabezadoCarrito {
+    background-color: #FBCCD2;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .encabezadoCarrito th {
+    padding: 10px;
+  }
+
+
+  .artContainer td {
+    padding: 10px;
+    text-align: center; /* Centrar el texto en td */
+  }
+
+  .button-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end; /* Alinear el botón a la derecha */
+    margin-right: 15rem; /* Puedes ajustar esto según sea necesario */
+    margin-top: 10px; /* Añadir margen superior para separar del contenido anterior */
+  }
+
+  .button-container p {
+        font-size: 1rem;
+        font-weight: bold;
+  }
+
+  button {
+    background-color: #FBCCD2;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #d23200;
+  }
