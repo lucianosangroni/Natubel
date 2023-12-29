@@ -1,7 +1,8 @@
 .desplegable{
     background-color: #FBCCD2 !important;
     border: none !important;
-    font-size: 1rem !important;
+    font-size: 1.2rem !important;
+    font-family: sans-serif;
 }
 
 .desplegable:hover {
@@ -17,6 +18,10 @@
     border-radius: 0.5rem;
     font-size: 0.8rem !important;
 
+}
+
+.fondoItem:active {
+  background-color: inherit !important;
 }
 
 

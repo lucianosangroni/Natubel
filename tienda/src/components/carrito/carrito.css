@@ -1,8 +1,26 @@
+.margenes {
+  margin-left: 5rem;
+  margin-right: 5rem;
+}
+
+.carritoCompras {
+  background-color: #FBCCD2;
+  color: white;
+  padding: 0.5rem;
+  width: 10rem;
+  height: 2rem;
+  margin-top: 2rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  margin-left: 1.5rem;
+}
+
 .carritoContainer {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 2rem;
     margin-bottom: 20px;
-    
+
 }
 
 .encabezadoCarrito {
@@ -19,20 +37,25 @@
 
   .artContainer td {
     padding: 10px;
-    text-align: center; /* Centrar el texto en td */
+    text-align: center; 
+    border-bottom: 1px solid #ddd;
   }
 
   .button-container {
     display: flex;
     gap: 1rem;
-    justify-content: flex-end; /* Alinear el botón a la derecha */
-    margin-right: 15rem; /* Puedes ajustar esto según sea necesario */
-    margin-top: 10px; /* Añadir margen superior para separar del contenido anterior */
+    justify-content: space-evenly; 
+    margin-top: 8rem; 
+    margin-bottom: 5rem;
   }
 
   .button-container p {
         font-size: 1rem;
         font-weight: bold;
+        background-color: #FBCCD2;
+        color: white;
+        border-radius: 0.5rem;
+        padding: 10px 15px;
   }
 
   button {
@@ -46,5 +69,5 @@
   }
   
   button:hover {
-    background-color: #d23200;
+    background-color: #f7b0ba;
   }

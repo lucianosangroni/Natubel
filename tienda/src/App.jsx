@@ -8,6 +8,7 @@ import { CartProvider } from "./context/CartContext";
 import Carrito from "./components/carrito/Carrito";
 import Footer from "./components/footer/Footer";
 import Inicio from "./components/inicio/Inicio";
+import OrdenarMayorMenor from "./components/ordenarMayorMenor/OrdenarMayorMenor";
 
 
 function App() {
@@ -21,8 +22,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Inicio/>}/>
         <Route path="/item/:id" element={<ItemDetailContainer />}/>
-        <Route path="/catalogo" element={<ItemListContainer/>} />
-        <Route path="/catalogo/:categoria" element={<ItemListContainer/>} />
+        <Route path="/catalogo" element={<ItemListContainer flagCatalogo={true}/>} />
+        <Route path="/catalogo/:categoria" element={<ItemListContainer flagCatalogo={true}/>} />
         <Route path="/carrito" element={<Carrito/>} />
         <Route path="/formulario" element={<FormularioCompra/>} />
       </Routes>

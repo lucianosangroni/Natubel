@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 
 const FiltroColor = () => {
 
-    const [ filtroColor, setFiltroColor ] = useState();
+  const [ filtroColor, setFiltroColor ] = useState();
 
-    const handleFiltroColor = (color) => {
-        setFiltroColor(color)
-    }
+  const handleFiltroColor = (color) => {
+      setFiltroColor(color)
+  }
 
   return (
     <div className="categoriaLateral">
@@ -17,7 +17,7 @@ const FiltroColor = () => {
             <li>
             <Link
             className={`menu-link ${filtroColor === "blanco" ? "seleccionada" : ""}`}
-            to='/catalogo/blanco'
+            to='/catalogo/blanco' //cambiar el parametro color a blanco (chatgpt)
             onClick={() => handleFiltroColor("blanco")}
           >
             blanco

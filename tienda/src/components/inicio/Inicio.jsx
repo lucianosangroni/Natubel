@@ -27,7 +27,7 @@ const Inicio = () => {
           <p>Tus datos siempre protegidos</p>
         </div>
       </div>
-      <ItemListContainer />
+      <ItemListContainer flagCatalogo={false} /> 
     </div>
   );
 };

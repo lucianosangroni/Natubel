@@ -1,42 +1,45 @@
-import React, { useEffect, useState } from 'react'
-import { pedirDatos } from '../../helpers/pedirDatos';
-import ItemList from '../itemList/ItemList';
-import './itemListContainer.css';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { pedirDatos } from "../../helpers/pedirDatos";
+import ItemList from "../itemList/ItemList";
+import "./itemListContainer.css";
+import { useParams } from "react-router-dom";
 
-const ItemListContainer = () => {
+const ItemListContainer = ({ flagCatalogo, productos, filtroMayorPrecio, filtroMenorPrecio, filtroMasVendidos }) => {
+  const [productosPorCategoria, setProductosPorCategoria] = useState([]);
+  //const [productosPorColor, setProductosPorColor] = useState([]);
+  //const [productosPorTalle, setProductosPorTalle] = useState([]);
+  const category = useParams().categoria;
+  //const color = useParams().color;
+  //const talle = useParams().talle;
 
-    const [productos, setProductos] = useState([]);
-    const [titulo, setTitulo] = useState("Productos")
-    const category = useParams().categoria;
-    const color = useParams().color
+  //catalogo/categoria=blabla&color=blabla&talle=blabla
 
-    useEffect(() => {
-        pedirDatos()
-            .then((res) => {
-              if (category){
-                setProductos(res.filter((prod) => prod.category === category));
-                setTitulo(category);
-              } else {
-                setProductos(res);
-                setTitulo("productos")
-              }      
-              if (color) {
-                setProductos(res.filter((prod) => prod.color === color));
-                setTitulo(color);
-              }  else {
-                setProductos(res);
-                setTitulo("productos")
-              }         
-            })
-    }, [category, color])
-
+  useEffect(() => {
+    pedirDatos().then((res) => {
+      if (category) {
+        setProductosPorCategoria(res.filter((prod) => prod.category === category));
+      } else {
+        setProductosPorCategoria(res);
+      } 
+      //if (color) {
+      //  setProductosPorColor(productosPorCategoria.filter((prod) => prod.color === color));
+      //} else {
+      //  setProductosPorColor(productosPorCategoria)
+      //}
+//
+      //if (talle) {
+      //  setProductosPorTalle(productosPorColor.filter((prod) => prod.talle === talle));
+      //} else {
+      //  setProductosPorTalle(productosPorColor)
+      //}
+    });
+  }, [category, filtroMayorPrecio, filtroMenorPrecio, filtroMasVendidos, productos/*, color, talle*/]);
 
   return (
     <div>
-        <ItemList productos={productos} titulo={titulo} />
+      <ItemList productos={productosPorCategoria} flagCatalogo={flagCatalogo} />
     </div>
-  )
-}
+  );
+};
 
-export default ItemListContainer
+export default ItemListContainer;

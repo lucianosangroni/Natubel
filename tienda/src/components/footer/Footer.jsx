@@ -31,13 +31,17 @@ const Footer = () => {
         <div className="footerNovedades">
           <p>ENTERATE DE LAS ULTIMAS NOVEDADES!</p>
           <div>
-            <img className="redesFace" src={face} alt="facebook" />
-            <img className="redesInsta" src={insta} alt="instagram" />
+            <a href="https://www.instagram.com/natubeloficial/" target="_blank" rel="noopener noreferrer">
+              <img className="redesFace" src={face} alt="facebook" />
+            </a>
+            <a href="https://www.instagram.com/natubeloficial/" target="_blank" rel="noopener noreferrer">
+              <img className="redesInsta" src={insta} alt="instagram" />
+            </a>
           </div>
         </div>
       </div>
       <div className="copyrigth">
-      <p>| Sitio creado por EvoTech |</p>
+        <p>| Sitio creado por EvoTech |</p>
       </div>
     </div>
   );

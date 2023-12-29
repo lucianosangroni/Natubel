@@ -37,3 +37,10 @@
         text-decoration: underline;
     }
 
+    .redesWhatsapp {
+        position: fixed;
+        bottom: 2.5rem; 
+        right: 20px; 
+        z-index: 1000;
+    }
+

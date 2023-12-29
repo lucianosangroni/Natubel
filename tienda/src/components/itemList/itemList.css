@@ -1,7 +1,12 @@
 .containerItemList {   
+    display: flex;
     padding-inline: 1rem;
     
 } 
+
+.categoriaFiltros {
+    margin-top: 3rem;
+}
 
 .main-title {
     background-color: #FBCCD2;
@@ -21,4 +26,18 @@
     gap: 1rem;
     padding-block: 3rem;
     
+}
+
+.buttonVerMas {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.ordenarMayorMenor {
+    display: flex;
+    justify-content: end;
+    margin-right: 2rem;
+    margin-top: 2rem;
 }
