@@ -14,8 +14,6 @@ function GrillaProducto({ onEditProducto, onDeleteProducto, articulo }) {
       return total + sumaTalle;
     }, 0);
 
-    console.log(totalStock)
-
     const handleEditArticulo = (editArticulo) => {
         onEditProducto(editArticulo)
     }

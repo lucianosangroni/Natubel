@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import GrillaProductosDePedido from "./GrillaProductosDePedido";
 import { apiUrl } from "../../config/config";
 import ListaArticulos from "../Common/ListaArticulos";
+import ModalRemito from "./ModalRemito";
 
 function ListaProductosDePedido({ pedido, onCambiarEstado }) {
     const [selectedArticulo, setSelectedArticulo] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const jwt = localStorage.getItem("jwt");
 
@@ -96,8 +98,8 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
       });
     }
 
-    const generarPdfRemito = () => {
-      alert("Todavia no está implementado")
+    const openModalRemito = () => {
+      setIsModalOpen(true)
     }
 
     return (
@@ -121,13 +123,19 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
           <button className={`boton-estados pedido ${pedido.estado === 'PEDIDO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('PEDIDO')}>Pedido</button>
           <button className="boton-estados cancelado" onClick={() => cambiarEstado('CANCELADO')} style={{ marginBottom: 20 }}>Cancelado</button>
         </div>
-        <div className="contenerdor-btns-pdfs-pedido">
+        {pedido.tipo !== "PROVEEDOR" && (<div className="contenerdor-btns-pdfs-pedido">
           <button className="boton-estados" onClick={() => generarPdfPedido()} style={{ width: 150 }}>Nota De Pedido</button>
-          <button className="boton-estados" onClick={() => generarPdfRemito()} style={{ width: 150 }}>Remito</button>
-        </div>
+          <button className="boton-estados" onClick={() => openModalRemito()} style={{ width: 150 }}>Remito</button>
+        </div>)}
         </>
         )}
       </div>
+      {isModalOpen && (
+        <ModalRemito
+          pedido_id={pedido.numero_pedido}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
       </>
     );
   }
