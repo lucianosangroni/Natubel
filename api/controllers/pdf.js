@@ -82,7 +82,7 @@ const getStockAdmin = async (req, res) => {
             const firstCellWidth = 68;
             const cellHeight = 20;
 
-            if(doc.y + (table.rows.length + 1) * cellHeight > 730) {
+            if(doc.y + (table.rows.length + 1) * cellHeight > 720) {
                 doc.addPage();
 
                 doc.fontSize(20).text('Natubel Stock', 50, 57);
@@ -218,7 +218,7 @@ const getStockCliente = async (req, res) => {
             const firstCellWidth = 68;
             const cellHeight = 20;
 
-            if(doc.y + (table.rows.length + 1) * cellHeight > 730) {
+            if(doc.y + (table.rows.length + 1) * cellHeight > 720) {
                 doc.addPage();
 
                 doc.fontSize(20).text('Natubel Stock', 50, 57);
@@ -463,7 +463,7 @@ const getNotaPedido = async (req, res) => {
 
                 doc.y = 205;
 
-                maxHeightPage = 730;
+                maxHeightPage = 720;
 
                 tableStartY = doc.y;
             } 
