@@ -22,3 +22,5 @@ export const pedirItemPorId = (id) => {
         }
     })
 }
+
+export const pedirTodosLosProductos = pedirDatos;

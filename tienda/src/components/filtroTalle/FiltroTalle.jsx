@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import "../categoriasLateral/categoriasLateral.css";
-import { Link } from 'react-router-dom';
 
-const FiltroTalle = () => {
-
-    const [ filtroTalle, setFiltroTalle ] = useState();
+const FiltroTalle = ({ onChangeTalle }) => {
+    const [ filtroTalle, setFiltroTalle ] = useState(null);
 
     const handleFiltroTalle = (talle) => {
         setFiltroTalle(talle)
+        onChangeTalle(talle)
     }
 
   return (
@@ -15,76 +14,68 @@ const FiltroTalle = () => {
         <ul className="menuLateral">
             <p className="menuLateralTitulo">Filtro color</p>
             <li>
-            <Link
-            className={`menu-link ${filtroTalle === "S" ? "seleccionada" : ""}`}
-            to='/catalogo/S'
-            onClick={() => handleFiltroTalle("S")}
+            <button
+            className={`menu-link ${filtroTalle === "s" ? "seleccionada" : ""}`}
+            onClick={() => handleFiltroTalle("s")}
           >
             S
-          </Link>
+          </button>
             </li>
             <li>
-            <Link
-            className={`menu-link ${filtroTalle === "M" ? "seleccionada" : ""}`}
-            to='/catalogo/M'
-            onClick={() => handleFiltroTalle("M")}
+            <button
+            className={`menu-link ${filtroTalle === "m" ? "seleccionada" : ""}`}
+            onClick={() => handleFiltroTalle("m")}
           >
             M
-          </Link>
+          </button>
             </li>
             <li>
-            <Link
-            className={`menu-link ${filtroTalle === "L" ? "seleccionada" : ""}`}
-            to='/catalogo/L'
-            onClick={() => handleFiltroTalle("L")}
+            <button
+            className={`menu-link ${filtroTalle === "l" ? "seleccionada" : ""}`}
+            onClick={() => handleFiltroTalle("l")}
           >
             L
-          </Link>
+          </button>
             </li>
             <li>
-            <Link
-            className={`menu-link ${filtroTalle === "XL" ? "seleccionada" : ""}`}
-            to='/catalogo/XL'
-            onClick={() => handleFiltroTalle("XL")}
+            <button
+            className={`menu-link ${filtroTalle === "xl" ? "seleccionada" : ""}`}
+            onClick={() => handleFiltroTalle("xl")}
           >
             XL
-          </Link>
+          </button>
             </li>
             <li>
-            <Link
-            className={`menu-link ${filtroTalle === "XXL" ? "seleccionada" : ""}`}
-            to='/catalogo/XXL'
-            onClick={() => handleFiltroTalle("XXL")}
+            <button
+            className={`menu-link ${filtroTalle === "xxl" ? "seleccionada" : ""}`}
+            onClick={() => handleFiltroTalle("xxl")}
           >
             XXL
-          </Link>
+          </button>
             </li>
             <li>
-            <Link
-            className={`menu-link ${filtroTalle === "ESPECIALES" ? "seleccionada" : ""}`}
-            to='/catalogo/ESPECIALES'
-            onClick={() => handleFiltroTalle("ESPECIALES")}
+            <button
+            className={`menu-link ${filtroTalle === "especiales" ? "seleccionada" : ""}`}
+            onClick={() => handleFiltroTalle("especiales")}
           >
             ESPECIALES
-          </Link>
+          </button>
             </li>
             <li>
-            <Link
+            <button
             className={`menu-link ${filtroTalle === "1" ? "seleccionada" : ""}`}
-            to='/catalogo/1'
             onClick={() => handleFiltroTalle("1")}
           >
             1
-          </Link>
+          </button>
             </li>
             <li>
-            <Link
+            <button
             className={`menu-link ${filtroTalle === "2" ? "seleccionada" : ""}`}
-            to='/catalogo/2'
             onClick={() => handleFiltroTalle("2")}
           >
             2
-          </Link>
+          </button>
             </li>
         </ul>
     </div>

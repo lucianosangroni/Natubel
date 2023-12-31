@@ -6,25 +6,38 @@ import FiltroColor from "../filtroColor/FiltroColor";
 import FiltroTalle from "../filtroTalle/FiltroTalle";
 import OrdenarMayorMenor from "../ordenarMayorMenor/OrdenarMayorMenor";
 
-const ItemList = ({ productos, setProductos, flagCatalogo }) => {
+const ItemList = ({ productos, setProductosContainer, flagCatalogo, onChangeColorContainer, onChangeTalleContainer }) => {
   const [visibleProducts, setVisibleProducts] = useState(15);
 
   const handleLoadMore = () => {
     setVisibleProducts((prevVisible) => prevVisible + 15);
   };
 
+  const setProductos = (productosOrdenados) => {
+    setProductosContainer(productosOrdenados)
+  }
+
+  const handleChangeColor = (color) => {
+    onChangeColorContainer(color)
+  }
+
+  const handleChangeTalle = (talle) => {
+    onChangeTalleContainer(talle)
+  }
+
+
   return (
     <div>
       <div className="ordenarMayorMenor">
-      <OrdenarMayorMenor productos={{productos, setProductos}}/>
+      <OrdenarMayorMenor productos={productos} setProductos={setProductos}/>
       </div>
       <div className="containerItemList">
         <div className="categoriaFiltros">
           <CategoriasLateral />
           {flagCatalogo && (
             <>
-              <FiltroColor />
-              <FiltroTalle />
+              <FiltroColor onChangeColor={handleChangeColor}/>
+              <FiltroTalle onChangeTalle={handleChangeTalle} />
             </>
           )}
         </div>

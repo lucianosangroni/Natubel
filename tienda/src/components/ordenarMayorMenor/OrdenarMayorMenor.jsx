@@ -4,20 +4,16 @@ import "./ordenarMayorMenor.css";
 const ordenar = [
   { label: "Mayor precio", value: "Mayor precio" },
   { label: "Menor precio", value: "Menor precio" },
-  { label: "Mas vendidos", value: "Mas vendidos" },
 ]
 
 const OrdenarMayorMenor = ( { productos, setProductos } ) => {
-
     const handleOrdenar = (opcion) => {
-      if (opcion === "mayorPrecio") {
+      if (opcion === "Mayor precio") {
         const productosOrdenados = [...productos].sort((a, b) => b.price - a.price);
         setProductos(productosOrdenados)
-      } else if (opcion === "menorPrecio") {
+      } else if (opcion === "Menor precio") {
         const productosOrdenados = [...productos].sort((a, b) => a.price - b.price);
         setProductos(productosOrdenados);
-      } else if (opcion === "masVendidos") {
-
       }
     }
 

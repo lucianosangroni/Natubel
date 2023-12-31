@@ -8,25 +8,76 @@
     padding-block: 2rem;
     display: grid;
     grid-template-columns: 1fr 2fr;
-    gap: 2rem;
+    gap: 3rem;
 }
 
 .producto-detalle img {
     width: 100%;
 }
 
-.producto-detalle-info h3 {
-    font-size: 2rem;
+.precio {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    font-weight: 600;
+    
 }
 
-.categoria {
-    font-size: .8rem;
-    color: #424242;
+.tallesItemDetail {
+    margin-top: 2rem;
+    border-top: 1px solid #ddd;
+    
+}
+
+.colorItemDetail{
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+    border-top: 1px solid #ddd;
+}
+
+.descripcion {
+    background-color: #FBCCD2;
+    padding: 0.5rem;
+}
+
+.productosRelacionados {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    
+}
+
+.productosRelacionados h3{
+    text-align: center;
+    background-color: #FBCCD2;
+    padding: 1rem;
+    color: white;
+}
+
+.productosRelacionadosLista{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 2rem;
+    
+}
+
+.productosRelacionadosLista img {
+    width: 18rem;
+    margin-bottom: 1rem;
+}
+.productosRelacionadosLista p {
+    padding-bottom: 0.2rem;
+}
+
+.detalleContainer {
     margin-top: 1rem;
 }
 
-.precio {
-    font-size: 2rem;
-    margin-top: 2rem;
-    font-weight: 600;
+.detalle {
+    text-decoration: none;
+    background-color: #FBCCD2;
+    color: white;
+    padding: .5rem;
+    width: max-content;
+    border-radius: .5rem;
+    transition: .2s;
 }

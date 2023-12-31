@@ -8,7 +8,6 @@ import { CartProvider } from "./context/CartContext";
 import Carrito from "./components/carrito/Carrito";
 import Footer from "./components/footer/Footer";
 import Inicio from "./components/inicio/Inicio";
-import OrdenarMayorMenor from "./components/ordenarMayorMenor/OrdenarMayorMenor";
 
 
 function App() {

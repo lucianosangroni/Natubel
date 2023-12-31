@@ -4,40 +4,45 @@ import ItemList from "../itemList/ItemList";
 import "./itemListContainer.css";
 import { useParams } from "react-router-dom";
 
-const ItemListContainer = ({ flagCatalogo, productos, filtroMayorPrecio, filtroMenorPrecio, filtroMasVendidos }) => {
-  const [productosPorCategoria, setProductosPorCategoria] = useState([]);
-  //const [productosPorColor, setProductosPorColor] = useState([]);
-  //const [productosPorTalle, setProductosPorTalle] = useState([]);
+const ItemListContainer = ({ flagCatalogo }) => {
+  const [productos, setProductos] = useState([]);
+  const [color, setColor] = useState(null)
+  const [talle, setTalle] = useState(null)
   const category = useParams().categoria;
-  //const color = useParams().color;
-  //const talle = useParams().talle;
-
-  //catalogo/categoria=blabla&color=blabla&talle=blabla
 
   useEffect(() => {
     pedirDatos().then((res) => {
+      let productosFiltrados = res;
+
       if (category) {
-        setProductosPorCategoria(res.filter((prod) => prod.category === category));
-      } else {
-        setProductosPorCategoria(res);
+        productosFiltrados = productosFiltrados.filter((prod) => prod.category === category)    
       } 
-      //if (color) {
-      //  setProductosPorColor(productosPorCategoria.filter((prod) => prod.color === color));
-      //} else {
-      //  setProductosPorColor(productosPorCategoria)
-      //}
-//
-      //if (talle) {
-      //  setProductosPorTalle(productosPorColor.filter((prod) => prod.talle === talle));
-      //} else {
-      //  setProductosPorTalle(productosPorColor)
-      //}
+      if (color) {
+        productosFiltrados = productosFiltrados.filter((prod) => prod.colores.includes(color));
+      } 
+      if (talle) {
+        productosFiltrados = productosFiltrados.filter((prod) => prod.talles.includes(talle));
+      }
+
+      setProductos(productosFiltrados)
     });
-  }, [category, filtroMayorPrecio, filtroMenorPrecio, filtroMasVendidos, productos/*, color, talle*/]);
+  }, [category, color, talle]);
+
+  const handleSetProductos = (productosOrdenados) => {
+    setProductos(productosOrdenados)
+  }
+
+  const handleChangeColor = (color) => {
+    setColor(color)
+  }
+
+  const handleChangeTalle = (talle) => {
+    setTalle(talle)
+  }
 
   return (
     <div>
-      <ItemList productos={productosPorCategoria} flagCatalogo={flagCatalogo} />
+      <ItemList productos={productos} flagCatalogo={flagCatalogo} setProductosContainer={handleSetProductos} onChangeColorContainer={handleChangeColor} onChangeTalleContainer={handleChangeTalle} />
     </div>
   );
 };
