@@ -3,7 +3,7 @@ import './formularioCompra.css';
 
 const FormularioCompra = () => {
 
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
     const enviar = (data) => {
         console.log(data)
@@ -15,15 +15,15 @@ const FormularioCompra = () => {
         <form onSubmit={handleSubmit(enviar)}>
         <div className='formulario'>
             <label>Email:</label>
-            <input type="email"  {...register("email")}/>
+            <input type="email"  {...register("email", { required: "Este campo es obligatorio" })}/>
         </div>
         <div className='formulario'>
             <label>Nombre completo:</label>
-            <input type="text" {...register("nombreCompleto")}/>
+            <input type="text" {...register("nombreCompleto", { required: "Este campo es obligatorio" })}/>
         </div>
         <div className='formulario'>
             <label>Telefono:</label>
-            <input type="tel" {...register("telefono")}/>
+            <input type="tel" {...register("telefono", { required: "Este campo es obligatorio" })}/>
         </div>
         <div className='formulario'>
             <label>Direccion:</label>

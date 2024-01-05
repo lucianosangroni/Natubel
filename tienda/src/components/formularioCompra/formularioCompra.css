@@ -11,6 +11,7 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 1rem;
+    margin-top: 2rem;
 }
 
 .formulario label {
@@ -38,6 +39,7 @@
     align-items: flex-end;
     justify-content: flex-end;
     text-align: center;
+    margin-bottom: 2rem;
 }
 
 .enviar {

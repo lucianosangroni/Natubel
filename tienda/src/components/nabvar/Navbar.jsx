@@ -33,11 +33,6 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link className="menu-link" to="/formulario">
-              Formulario
-            </Link>
-          </li>
-          <li>
             <Link className="menu-link" to="/mayorista">
               Mayorista
             </Link>

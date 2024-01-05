@@ -1,14 +1,19 @@
 import React, { useContext } from "react";
 import { CartContext } from "../../context/CartContext";
 import "./carrito.css";
+import { Link } from "react-router-dom";
 
 const Carrito = () => {
-  const { carrito, precioTotal, vaciarCarrito, cantidadEnCarrito } =
+  const { carrito, precioTotal, vaciarCarrito, cantidadEnCarrito, eliminarProducto } =
     useContext(CartContext);
 
   const handleVaciar = () => {
     vaciarCarrito();
   };
+
+  const handleEliminarProducto = (productId) => {
+    eliminarProducto(productId);
+  }
 
   return (
     <div className="margenes">
@@ -22,6 +27,7 @@ const Carrito = () => {
             <th>Talle</th>
             <th>Cantidad</th>
             <th>Precio</th>
+            <th>Eliminar</th>
           </tr>
         </thead>
         <tbody>
@@ -32,6 +38,14 @@ const Carrito = () => {
               <td>{prod.color}</td>
               <td>{prod.cantidad}</td>
               <td>${prod.price}</td>
+              <td className="delete-icon">
+              <img
+                  src="/img/trash.svg"
+                  alt="Eliminar"
+                  onClick={() => handleEliminarProducto(prod.id)}       
+                />
+              </td>
+
             </tr>
           ))}
         </tbody>
@@ -40,11 +54,11 @@ const Carrito = () => {
         <div className="button-container">
           <p>Cantidad total: {cantidadEnCarrito()}</p>
           <p>Precio total: ${precioTotal()}</p>
-          <button>Confirmar compra</button>
+          <Link className="linkForm" to="/formulario">Confirmar compra</Link>
           <button onClick={handleVaciar}>Vaciar carrito</button>
         </div>
       ) : (
-        <h2>El carrito esta vacio</h2>
+        <div className="carritoVacioContainer"><h2 className="carritoVacio">El carrito esta vacio...</h2></div>
       )}
     </div>
   );

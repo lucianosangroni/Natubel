@@ -41,12 +41,26 @@
     border-bottom: 1px solid #ddd;
   }
 
+  .delete-icon{
+    display: flex; /* Utiliza el modelo de caja flexible */
+    justify-content: center; /* Centra horizontalmente en el contenedor flex */
+    align-items: center; /* Centra verticalmente en el contenedor flex */
+    cursor: pointer; 
+    
+  }
+
+  .delete-icon img{
+    padding: 10px;
+    
+  }
+
   .button-container {
     display: flex;
     gap: 1rem;
     justify-content: space-evenly; 
     margin-top: 8rem; 
     margin-bottom: 5rem;
+    
   }
 
   .button-container p {
@@ -57,6 +71,16 @@
         border-radius: 0.5rem;
         padding: 10px 15px;
   }
+
+  .linkForm {
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #FBCCD2;
+    color: white;
+    border-radius: 0.5rem;
+    padding: 10px 15px;
+}
 
   button {
     background-color: #FBCCD2;
@@ -70,4 +94,22 @@
   
   button:hover {
     background-color: #f7b0ba;
+  }
+
+  .carritoVacioContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .carritoVacio {
+    background-color: #f7b0ba;
+    color: white;
+    width: 17rem;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin-top: 3rem;
+    margin-bottom: 5rem;
   }
