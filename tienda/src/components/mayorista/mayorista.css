@@ -1,0 +1,58 @@
+.mayoristaContainer {
+    margin: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #010101;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  /* Estilo específico para el encabezado de la tabla */
+  thead th {
+    font-weight: bold;
+  }
+  
+  /* Estilo específico para el cuerpo de la tabla */
+  tbody td {
+    font-style: italic;
+  }
+  
+  .contenedor-tabla-grilla {
+    display: flex;
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 1rem;
+    border: 1px solid #010101;
+    margin-top: 5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .table-cargarPedido-contenedor {
+    border: 1px solid #010101;
+  }
+
+  .table-header-productos {
+    border: 1px solid #010101;
+    background-color: #FBCCD2;
+    font-weight: bold;
+  }
+
+  .table-header-articulos {
+    padding: 0.5rem;
+    color: white;
+  }
+
+  .table-cell-productos {
+    border: 1px solid #010101;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+  }
+
+  .table-cell-productos.selected {
+    background-color: #fde6ea;
+  }

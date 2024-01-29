@@ -1,17 +1,21 @@
 import { createContext, useState } from "react";
 
-
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [carrito, setCarrito] = useState([]);
 
-  const agregarAlCarrito = (item, cantidad) => {
-    const itemAgregado = { ...item, cantidad };
+  const agregarAlCarrito = (numero_articulo, color, talle, cantidad, productoId) => {
+    console.log(numero_articulo)
+    console.log(color)
+    console.log(talle)
+    console.log(cantidad)
+    console.log(productoId)
+    const itemAgregado = { numero_articulo, color, talle, cantidad, productoId };
 
     const nuevoCarrito = [...carrito];
     const estaEnElCarrito = nuevoCarrito.find(
-      (producto) => producto.id === itemAgregado.id
+      (articulo) => articulo.numero_articulo === itemAgregado.numero_articulo && articulo.color === itemAgregado.color && articulo.talle === itemAgregado.talle
     );
 
     if (estaEnElCarrito) {
@@ -32,7 +36,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const precioTotal = () => {
-    return carrito.reduce((acc, prod) => acc + prod.price * prod.cantidad, 0);
+    return carrito.reduce((acc, prod) => acc + 10 * prod.cantidad, 0);
   };
 
   const vaciarCarrito = () => {

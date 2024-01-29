@@ -32,17 +32,17 @@ const Carrito = () => {
         </thead>
         <tbody>
           {carrito.map((prod) => (
-            <tr className="artContainer" key={prod.id}>
-              <td>{prod.art}</td>
-              <td>{prod.sizes}</td>
+            <tr className="artContainer" key={prod.productoId}>
+              <td>{prod.numero_articulo}</td>
               <td>{prod.color}</td>
+              <td>{prod.talle}</td>
               <td>{prod.cantidad}</td>
-              <td>${prod.price}</td>
+              <td>$10</td>
               <td className="delete-icon">
               <img
                   src="/img/trash.svg"
                   alt="Eliminar"
-                  onClick={() => handleEliminarProducto(prod.id)}       
+                  onClick={() => handleEliminarProducto(prod.productoId)}       
                 />
               </td>
 

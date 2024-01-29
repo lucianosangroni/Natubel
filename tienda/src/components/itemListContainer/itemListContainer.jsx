@@ -12,6 +12,7 @@ const ItemListContainer = ({ flagCatalogo }) => {
 
   useEffect(() => {
     pedirDatos().then((res) => {
+      console.log(res);
       let productosFiltrados = res;
 
       if (category) {

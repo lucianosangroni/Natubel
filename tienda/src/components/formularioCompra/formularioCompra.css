@@ -52,3 +52,21 @@
 
 }
 
+.compraFinalizadaContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30rem;
+}
+
+.compraFinalizada{
+    background-color: #FBCCD2;
+    padding: 0.5rem;
+    margin: 2rem;
+    border-radius: 0.5rem;
+    color: white;
+    font-weight: bold;
+    width: 15rem;
+    text-align: center;
+}
+

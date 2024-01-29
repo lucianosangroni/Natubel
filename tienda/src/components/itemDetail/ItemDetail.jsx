@@ -8,7 +8,7 @@ const ItemDetail = ({ item, productos }) => {
   const { carrito, agregarAlCarrito } = useContext(CartContext);
   const [cantidad, setCantidad] = useState(1);
   const [selectedTalle, setSelectedTalle] = useState();
-
+  const [selectedColor, setSelectedColor] = useState();
 
   const handleRestar = () => {
     cantidad > 1 && setCantidad(cantidad - 1);
@@ -17,15 +17,6 @@ const ItemDetail = ({ item, productos }) => {
   const handleSumar = () => {
     cantidad < item.stock && setCantidad(cantidad + 1);
   };
-
-  const handleTallesButtonClick = (talle) => {
-    setSelectedTalle(talle);
-  }
-
-  const tallesButton =
-    item && item.productos
-      ? Array.from(new Set(item.productos.map((producto) => producto.talles)))
-      : [];
 
   return (
     <div className="container">
@@ -40,19 +31,37 @@ const ItemDetail = ({ item, productos }) => {
           <p className="precio">${item.price}</p>
           <div className="tallesItemDetail">
           <p>Talles: </p>
-            {tallesButton.map((talle) => (
-              <button
-                key={talle}
-                onClick={() => handleTallesButtonClick(talle)}
-                className={selectedTalle === talle ? "selected" : ""}
-              >
-                {talle}
-              </button>
+          <form>
+          {item.talles.map((talle) => (
+            <label key={talle}>
+              <input
+                type="radio"
+                name="talle"
+                value={talle}
+                onChange={() => setSelectedTalle(talle)}
+                checked={selectedTalle === talle}
+              />
+              {talle}
+            </label>
             ))}
+          </form>
           </div>
           <div className="colorItemDetail">
             <p>Color: </p>
-            {item && <button>{item.colores}</button>}
+            <form>
+            {item.colores.map((color) => (
+              <label key={color}>
+                <input
+                  type="radio"
+                  name="color"
+                  value={color}
+                  onChange={() => setSelectedColor(color)}
+                  checked={selectedColor === color}
+                />
+                {color}
+              </label>
+              ))}
+            </form>
           </div>
 
           <ItemCount
@@ -60,7 +69,7 @@ const ItemDetail = ({ item, productos }) => {
             handleSumar={handleSumar}
             handleRestar={handleRestar}
             handleAgregar={() => {
-              agregarAlCarrito(item, cantidad);
+              agregarAlCarrito(item.art, selectedColor, selectedTalle, cantidad, 1);
             }}
           />
         </div>

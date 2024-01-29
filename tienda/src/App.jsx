@@ -8,6 +8,7 @@ import { CartProvider } from "./context/CartContext";
 import Carrito from "./components/carrito/Carrito";
 import Footer from "./components/footer/Footer";
 import Inicio from "./components/inicio/Inicio";
+import Mayorista from "./components/mayorista/mayorista";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/catalogo/:categoria" element={<ItemListContainer flagCatalogo={true}/>} />
         <Route path="/carrito" element={<Carrito/>} />
         <Route path="/formulario" element={<FormularioCompra/>} />
+        <Route path="/mayorista" element={<Mayorista/>}></Route>
       </Routes>
 
       <Footer />
