@@ -31,15 +31,15 @@ const ItemDetail = ({ item, productos }) => {
           <p className="precio">${item.price}</p>
           <div className="tallesItemDetail">
           <p>Talles: </p>
-          <form>
+          <form className="checkTalle">
           {item.talles.map((talle) => (
-            <label key={talle}>
+            <label key={talle} className="talleLabel">
               <input
                 type="radio"
                 name="talle"
                 value={talle}
                 onChange={() => setSelectedTalle(talle)}
-                checked={selectedTalle === talle}
+                checked={selectedTalle === talle} className="talleInput"
               />
               {talle}
             </label>
@@ -48,15 +48,15 @@ const ItemDetail = ({ item, productos }) => {
           </div>
           <div className="colorItemDetail">
             <p>Color: </p>
-            <form>
+            <form className="checkColor">
             {item.colores.map((color) => (
-              <label key={color}>
+              <label key={color} className="colorLabel" >
                 <input
                   type="radio"
                   name="color"
                   value={color}
                   onChange={() => setSelectedColor(color)}
-                  checked={selectedColor === color}
+                  checked={selectedColor === color} className="colorInput"
                 />
                 {color}
               </label>

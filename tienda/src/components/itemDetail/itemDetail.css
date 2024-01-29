@@ -34,6 +34,49 @@
     border-top: 1px solid #ddd;
 }
 
+.checkTalle {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.talleLabel {
+    display: block;
+    margin-bottom: 10px;
+    padding: 0.3rem;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    background-color: #FBCCD2;
+    border: 1px solid #ddd;
+  }
+  
+  .talleInput {
+    margin-right: 5px;
+    
+  }
+
+.checkColor {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.colorLabel {
+    display: block;
+    margin-bottom: 10px;
+    padding: 0.3rem;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    background-color: #FBCCD2;
+    border: 1px solid #ddd;
+  }
+  
+  .colorInput {
+    margin-right: 5px;
+    
+  }
+
+
 .descripcion {
     background-color: #FBCCD2;
     padding: 0.5rem;

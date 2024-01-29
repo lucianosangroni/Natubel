@@ -4,8 +4,13 @@ import "./carrito.css";
 import { Link } from "react-router-dom";
 
 const Carrito = () => {
-  const { carrito, precioTotal, vaciarCarrito, cantidadEnCarrito, eliminarProducto } =
-    useContext(CartContext);
+  const {
+    carrito,
+    precioTotal,
+    vaciarCarrito,
+    cantidadEnCarrito,
+    eliminarProducto,
+  } = useContext(CartContext);
 
   const handleVaciar = () => {
     vaciarCarrito();
@@ -13,7 +18,7 @@ const Carrito = () => {
 
   const handleEliminarProducto = (productId) => {
     eliminarProducto(productId);
-  }
+  };
 
   return (
     <div className="margenes">
@@ -27,7 +32,7 @@ const Carrito = () => {
             <th>Talle</th>
             <th>Cantidad</th>
             <th>Precio</th>
-            <th>Eliminar</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -39,26 +44,31 @@ const Carrito = () => {
               <td>{prod.cantidad}</td>
               <td>$10</td>
               <td className="delete-icon">
-              <img
+                <img
                   src="/img/trash.svg"
                   alt="Eliminar"
-                  onClick={() => handleEliminarProducto(prod.productoId)}       
+                  onClick={() => handleEliminarProducto(prod.productoId)}
                 />
               </td>
-
             </tr>
           ))}
         </tbody>
       </table>
+      <div className="totalContainer"> 
+      <p className="cantidadTotal">Cantidad total: {cantidadEnCarrito()}</p>
+      <p className="precioTotal">Precio total: ${precioTotal()}</p>
+      </div>
       {carrito.length > 0 ? (
         <div className="button-container">
-          <p>Cantidad total: {cantidadEnCarrito()}</p>
-          <p>Precio total: ${precioTotal()}</p>
-          <Link className="linkForm" to="/formulario">Confirmar compra</Link>
+          <Link className="linkForm" to="/formulario">
+            Confirmar compra
+          </Link>
           <button onClick={handleVaciar}>Vaciar carrito</button>
         </div>
       ) : (
-        <div className="carritoVacioContainer"><h2 className="carritoVacio">El carrito esta vacio...</h2></div>
+        <div className="carritoVacioContainer">
+          <h2 className="carritoVacio">El carrito esta vacio...</h2>
+        </div>
       )}
     </div>
   );

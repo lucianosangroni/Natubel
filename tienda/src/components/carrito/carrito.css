@@ -6,13 +6,14 @@
 .carritoCompras {
   background-color: #FBCCD2;
   color: white;
-  padding: 0.5rem;
-  width: 10rem;
-  height: 2rem;
+  font-weight: bold;
+  padding: 1rem;
+  width: 12rem;
+  height: 3rem;
   margin-top: 2rem;
   font-size: 1rem;
   border-radius: 0.5rem;
-  margin-left: 1.5rem;
+  
 }
 
 .carritoContainer {
@@ -38,38 +39,31 @@
   .artContainer td {
     padding: 10px;
     text-align: center; 
-    border-bottom: 1px solid #ddd;
-  }
-
-  .delete-icon{
-    display: flex; /* Utiliza el modelo de caja flexible */
-    justify-content: center; /* Centra horizontalmente en el contenedor flex */
-    align-items: center; /* Centra verticalmente en el contenedor flex */
-    cursor: pointer; 
-    
-  }
-
-  .delete-icon img{
-    padding: 10px;
     
   }
 
   .button-container {
     display: flex;
     gap: 1rem;
-    justify-content: space-evenly; 
+    justify-content: end; 
     margin-top: 8rem; 
     margin-bottom: 5rem;
     
   }
 
-  .button-container p {
-        font-size: 1rem;
-        font-weight: bold;
-        background-color: #FBCCD2;
-        color: white;
-        border-radius: 0.5rem;
-        padding: 10px 15px;
+  .totalContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    margin-left: auto;
+    border: 1px solid black;
+    width: fit-content;
+    padding: 0.3rem;
+  }
+
+  .cantidadTotal {
+    margin-bottom: 21rem;
+    
   }
 
   .linkForm {
@@ -80,6 +74,10 @@
     color: white;
     border-radius: 0.5rem;
     padding: 10px 15px;
+}
+
+.linkForm:hover {
+  background-color: #f7b0ba;
 }
 
   button {
