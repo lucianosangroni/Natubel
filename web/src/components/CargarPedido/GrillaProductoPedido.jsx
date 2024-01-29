@@ -7,6 +7,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
 
     useEffect(() => {
         setCantidades({});
+        console.log(articulo)
       }, [articulo]);
 
     const filtrarDiccionario = (diccionario) => {
