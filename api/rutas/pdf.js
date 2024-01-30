@@ -11,6 +11,6 @@ const { checkAuth } = require("../middlewares/auth")
 router.get("/stock/admin", checkAuth, getStockAdmin);
 router.get("/stock/cliente", checkAuth, getStockCliente)
 router.get("/nota-pedido/:id", checkAuth, getNotaPedido);
-router.get("/remito", checkAuth, getRemito);
+router.get("/remito/:id", checkAuth, getRemito);
 
 module.exports = router
