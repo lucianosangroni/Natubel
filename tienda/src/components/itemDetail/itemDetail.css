@@ -1,0 +1,127 @@
+.container {
+    max-width: 1140px;
+    padding-inline: 1.5rem;
+    margin: 0 auto;
+}
+
+.producto-detalle {
+    padding-block: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+}
+
+.producto-detalle img {
+    width: 100%;
+}
+
+.precio {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    font-weight: 600;
+    
+}
+
+.tallesItemDetail {
+    margin-top: 2rem;
+    border-top: 1px solid #ddd;
+    
+}
+
+.colorItemDetail{
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+    border-top: 1px solid #ddd;
+}
+
+.checkTalle {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.talleLabel {
+    display: block;
+    margin-bottom: 10px;
+    padding: 0.3rem;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    background-color: #FBCCD2;
+    border: 1px solid #ddd;
+  }
+  
+  .talleInput {
+    margin-right: 5px;
+    
+  }
+
+.checkColor {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.colorLabel {
+    display: block;
+    margin-bottom: 10px;
+    padding: 0.3rem;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    background-color: #FBCCD2;
+    border: 1px solid #ddd;
+  }
+  
+  .colorInput {
+    margin-right: 5px;
+    
+  }
+
+
+.descripcion {
+    background-color: #FBCCD2;
+    padding: 0.5rem;
+    color: white;
+}
+
+.productosRelacionados {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    
+}
+
+.productosRelacionados h3{
+    text-align: center;
+    background-color: #FBCCD2;
+    padding: 1rem;
+    color: white;
+}
+
+.productosRelacionadosLista{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 2rem;
+    
+}
+
+.productosRelacionadosLista img {
+    width: 18rem;
+    margin-bottom: 1rem;
+}
+.productosRelacionadosLista p {
+    padding-bottom: 0.2rem;
+}
+
+.detalleContainer {
+    margin-top: 1rem;
+}
+
+.detalle {
+    text-decoration: none;
+    background-color: #FBCCD2;
+    color: white;
+    padding: .5rem;
+    width: max-content;
+    border-radius: .5rem;
+    transition: .2s;
+}

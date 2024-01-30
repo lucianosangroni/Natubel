@@ -1,0 +1,46 @@
+    .encabezado{
+        font-size: 0.6rem;
+        text-align: center;
+        padding: 0.2rem;
+        margin-bottom: 0;
+    }
+    
+    .navbar {
+        display: flex;
+        align-items: center;
+        background-color: #FBCCD2;
+    }
+
+    .logo {
+        text-decoration: none;
+        color: white;
+        font-size: 2rem;
+        margin-left: 2rem;
+        
+    }
+
+    .menu {
+        list-style-type: none;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 0;
+    }
+    
+    .menu-link {
+        text-decoration: none;
+        color: white;
+        font-size: 1.2rem;
+    }
+    
+    .menu-link:hover {
+        text-decoration: underline;
+    }
+
+    .redesWhatsapp {
+        position: fixed;
+        bottom: 2.5rem; 
+        right: 20px; 
+        z-index: 1000;
+    }
+

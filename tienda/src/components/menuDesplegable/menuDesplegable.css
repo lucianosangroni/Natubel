@@ -1,0 +1,30 @@
+.desplegable{
+    background-color: #FBCCD2 !important;
+    border: none !important;
+    font-size: 1.2rem !important;
+    font-family: sans-serif;
+}
+
+.desplegable:hover {
+    text-decoration: underline;
+    
+}
+
+.desplegable-menu{
+    text-decoration: none;
+    background-color: #FBCCD2;
+    color: white;
+    padding: 0.3rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem !important;
+
+}
+
+.fondoItem:active {
+  background-color: inherit !important;
+}
+
+
+  
+
+
