@@ -23,43 +23,44 @@ const ItemDetail = ({ item, productos }) => {
       <div className="producto-detalle">
         <div>
           <img src={item.images} alt={item.art} />
-          <p className="descripcion">{item.description}</p>
         </div>
         <div>
           <h3 className="titulo">{item.art}</h3>
           <p>{item.category}</p>
           <p className="precio">${item.price}</p>
           <div className="tallesItemDetail">
-          <p>Talles: </p>
-          <form className="checkTalle">
-          {item.talles.map((talle) => (
-            <label key={talle} className="talleLabel">
-              <input
-                type="radio"
-                name="talle"
-                value={talle}
-                onChange={() => setSelectedTalle(talle)}
-                checked={selectedTalle === talle} className="talleInput"
-              />
-              {talle}
-            </label>
-            ))}
-          </form>
+            <p>Talles: </p>
+            <form className="checkTalle">
+              {item.talles.map((talle) => (
+                <label key={talle} className="talleLabel">
+                  <input
+                    type="radio"
+                    name="talle"
+                    value={talle}
+                    onChange={() => setSelectedTalle(talle)}
+                    checked={selectedTalle === talle}
+                    className="talleInput"
+                  />
+                  {talle}
+                </label>
+              ))}
+            </form>
           </div>
           <div className="colorItemDetail">
             <p>Color: </p>
             <form className="checkColor">
-            {item.colores.map((color) => (
-              <label key={color} className="colorLabel" >
-                <input
-                  type="radio"
-                  name="color"
-                  value={color}
-                  onChange={() => setSelectedColor(color)}
-                  checked={selectedColor === color} className="colorInput"
-                />
-                {color}
-              </label>
+              {item.colores.map((color) => (
+                <label key={color} className="colorLabel">
+                  <input
+                    type="radio"
+                    name="color"
+                    value={color}
+                    onChange={() => setSelectedColor(color)}
+                    checked={selectedColor === color}
+                    className="colorInput"
+                  />
+                  {color}
+                </label>
               ))}
             </form>
           </div>
@@ -69,31 +70,50 @@ const ItemDetail = ({ item, productos }) => {
             handleSumar={handleSumar}
             handleRestar={handleRestar}
             handleAgregar={() => {
-              agregarAlCarrito(item.art, selectedColor, selectedTalle, cantidad, 1);
+              agregarAlCarrito(
+                item.art,
+                selectedColor,
+                selectedTalle,
+                cantidad,
+                1
+              );
             }}
           />
         </div>
+        <div>
+          <p className="descripcion">{item.description}</p>
+        </div>
       </div>
       <div className="productosRelacionados">
-          <h3>Productos relacionados</h3>
-          <div className="productosRelacionadosLista">
-            {productos
-            .filter((producto) => producto.category === item.category && producto.id !== item.id)
+        <h3>Productos relacionados</h3>
+        <div className="productosRelacionadosLista">
+          {productos
+            .filter(
+              (producto) =>
+                producto.category === item.category && producto.id !== item.id
+            )
             .slice(0, 3)
             .map((productoRelacionado) => (
-             <div key={productoRelacionado.id} >
-               <img src={productoRelacionado.images} alt="producto relacionado" /> 
-               <h4>{productoRelacionado.art}</h4>
-               <p>{productoRelacionado.category}</p>
-               <p >${productoRelacionado.price}</p>
-               <div className="detalleContainer">
-               <Link className='detalle' to={`/item/${productoRelacionado.id}`}>Detalle</Link>
-               </div>
-               </div>
+              <div key={productoRelacionado.id}>
+                <img
+                  src={productoRelacionado.images}
+                  alt="producto relacionado"
+                />
+                <h4>{productoRelacionado.art}</h4>
+                <p>{productoRelacionado.category}</p>
+                <p>${productoRelacionado.price}</p>
+                <div className="detalleContainer">
+                  <Link
+                    className="detalle"
+                    to={`/item/${productoRelacionado.id}`}
+                  >
+                    Detalle
+                  </Link>
+                </div>
+              </div>
             ))}
-
-          </div>
         </div>
+      </div>
     </div>
   );
 };

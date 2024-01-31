@@ -32,15 +32,15 @@
 
 .footerNatubelTitulo {
     color: white;
-    font-size: 4rem;
+    font-size: 3rem;
 }
 
 .footerNovedades {
     color: white;
     width: 15rem;
-    font-size: 1rem;
+    font-size: 0.8rem;
     text-align: center;
-   
+    font-style: italic;
 }
 
 .redesFace {

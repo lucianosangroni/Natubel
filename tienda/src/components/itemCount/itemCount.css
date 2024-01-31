@@ -5,6 +5,13 @@
     margin-top: 1rem;
 }
 
+.numeroCantidad {
+    border-bottom: 2px solid #ddd; /* Ajusta el grosor y el estilo según tus preferencias */
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+    
+}
+
 .item-count button, .agregar-al-carrito, .enviar {
     background-color: #FBCCD2;
     border: 0;

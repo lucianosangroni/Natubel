@@ -10,7 +10,7 @@ const Navbar = () => {
     <div>
       <p className="encabezado">
         MINIMO DE COMPRAS MAYORISTAS $25.000 || PARA COMPRAS MAYORES A
-        $200.000.- ESCRIBINOS A NUESTRO WHATSAPP
+        $200.000. HACE TU PEDIDO Y ESCRIBINOS A NUESTRO WHATSAPP
       </p>
       <nav className="navbar">
         <Link to="/" className="logo">
@@ -48,7 +48,7 @@ const Navbar = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img src={whatsapp} alt="whatsapp" />
+          <img src={whatsapp} alt="Contactar por WhatsApp" />
         </a>
       </div>
     </div>

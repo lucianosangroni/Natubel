@@ -7,7 +7,7 @@
 .producto-detalle {
     padding-block: 2rem;
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 3rem;
 }
 
@@ -19,19 +19,21 @@
     font-size: 1.5rem;
     margin-top: 2rem;
     font-weight: 600;
+    padding-top: 0.5rem;
     
 }
 
 .tallesItemDetail {
-    margin-top: 2rem;
+    margin-top: 1rem;
     border-top: 1px solid #ddd;
     
 }
 
 .colorItemDetail{
-    margin-top: 2rem;
-    margin-bottom: 3rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
     border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }
 
 .checkTalle {
@@ -46,14 +48,15 @@
     padding: 0.3rem;
     border-radius: 0.5rem;
     text-transform: uppercase;
+    font-size: 0.7rem;
     background-color: #FBCCD2;
     border: 1px solid #ddd;
-  }
-  
-  .talleInput {
+}
+
+.talleInput {
     margin-right: 5px;
     
-  }
+}
 
 .checkColor {
     display: flex;
@@ -64,18 +67,18 @@
 .colorLabel {
     display: block;
     margin-bottom: 10px;
+    font-size: 0.7rem;
     padding: 0.3rem;
     border-radius: 0.5rem;
     text-transform: uppercase;
     background-color: #FBCCD2;
     border: 1px solid #ddd;
-  }
-  
-  .colorInput {
+}
+
+.colorInput {
     margin-right: 5px;
     
-  }
-
+}
 
 .descripcion {
     background-color: #FBCCD2;
