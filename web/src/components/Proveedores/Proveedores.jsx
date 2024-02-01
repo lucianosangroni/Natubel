@@ -7,7 +7,7 @@ import ModalProveedores from "./ModalProveedores";
 import ModalProveedoresEditar from "./ModalProveedoresEditar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { apiUrl } from "../../config/config";
+import { apiUrl, bearerToken } from "../../config/config";
 
 const ListadoProveedores = () => {
   const columns = useMemo(() => COLUMNSPROVE, []);
@@ -15,14 +15,12 @@ const ListadoProveedores = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
 
-  const jwt = localStorage.getItem('jwt')
-
   //OBTENER PROVEEDORES DB
   useEffect(() => {
     fetch(`${apiUrl}/proveedores`, 
     {
       headers: {
-        Authorization: `Bearer ${jwt}`
+        Authorization: `Bearer ${bearerToken}`
       }
     })
     .then((response) => {
@@ -53,7 +51,7 @@ const ListadoProveedores = () => {
     .catch((error) => {
       console.error("Error en la solicitud GET:", error);
     });
-  }, [jwt]);
+  }, []);
 
   //AGREGAR PROVEEDOR DB
   const handleAddProveedor = (newProveedor) => {
@@ -70,7 +68,7 @@ const ListadoProveedores = () => {
       method: "POST",
       headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${jwt}`
+          Authorization: `Bearer ${bearerToken}`
       },
       body: JSON.stringify(requestData)
     })
@@ -113,7 +111,7 @@ const ListadoProveedores = () => {
       method: "PUT",
       headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${jwt}`
+          Authorization: `Bearer ${bearerToken}`
       },
       body: JSON.stringify(requestData)
     })
@@ -145,7 +143,7 @@ const ListadoProveedores = () => {
     //  fetch(`${apiUrl}/proveedores/${row.original.id}`, {
     //    method: "DELETE",
     //    headers: {
-    //      Authorization: `Bearer ${jwt}`
+    //      Authorization: `Bearer ${bearerToken}`
     //    }
     //  })
     //  .then((response) => {

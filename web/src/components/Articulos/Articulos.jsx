@@ -3,20 +3,18 @@ import NavbarAdm from "../Common/NavbarAdm";
 import ModalProducto from "./ModalProducto";
 import ListaArticulos from "../Common/ListaArticulos";
 import GrillaProducto from "./GrillaProducto";
-import { apiUrl } from "../../config/config";
+import { apiUrl, bearerToken } from "../../config/config";
 import { Button } from "react-bootstrap";
 
 const ListadoProductos = () => {
   const [data, setData] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const jwt = localStorage.getItem("jwt");
-
   //OBTENER ARTICULOS DB
   useEffect(() => {
     fetch(`${apiUrl}/articulos`, {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${bearerToken}`,
       },
     })
       .then((response) => {
@@ -51,7 +49,7 @@ const ListadoProductos = () => {
       .catch((error) => {
         console.error("Error en la solicitud GET:", error);
       });
-  }, [jwt]);
+  }, []);
 
   //AGREGAR ARTICULO DB
   const handleAddArticulo = (newArticulo) => {
@@ -69,7 +67,7 @@ const ListadoProductos = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${bearerToken}`,
       },
       body: JSON.stringify(requestData),
     })
@@ -121,7 +119,7 @@ const ListadoProductos = () => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${bearerToken}`,
       },
       body: JSON.stringify(requestData),
     })
@@ -166,7 +164,7 @@ const ListadoProductos = () => {
     //  fetch(`${apiUrl}/articulos/${articulo.id}`, {
     //    method: "DELETE",
     //    headers: {
-    //      Authorization: `Bearer ${jwt}`,
+    //      Authorization: `Bearer ${bearerToken}`,
     //    },
     //  })
     //    .then((response) => {
@@ -193,7 +191,7 @@ const ListadoProductos = () => {
   const handleGenerarPDFAdmin = () => {
     fetch(`${apiUrl}/pdf/stock/admin`, {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${bearerToken}`,
       }
     })
     .then((response) => {
@@ -222,7 +220,7 @@ const ListadoProductos = () => {
   const handleGenerarPDFCliente = () => {
     fetch(`${apiUrl}/pdf/stock/cliente`, {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${bearerToken}`,
       }
     })
     .then((response) => {

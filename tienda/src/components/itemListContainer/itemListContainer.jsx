@@ -1,36 +1,60 @@
 import React, { useEffect, useState } from "react";
-import { pedirDatos } from "../../helpers/pedirDatos";
 import ItemList from "../itemList/ItemList";
 import "./itemListContainer.css";
 import { useParams } from "react-router-dom";
+import { apiUrl, tokenBearer } from "../../config/config";
 
 const ItemListContainer = ({ flagCatalogo }) => {
-  const [productos, setProductos] = useState([]);
+  const [articulos, setArticulos] = useState([]);
   const [color, setColor] = useState(null)
   const [talle, setTalle] = useState(null)
   const category = useParams().categoria;
+  
 
   useEffect(() => {
-    pedirDatos().then((res) => {
-      console.log(res);
-      let productosFiltrados = res;
+    fetch(`${apiUrl}/articulos`, 
+    {
+      headers: {
+        Authorization: `Bearer ${tokenBearer}`
+      }
+    })
+    .then((response) => {
+      if (!response.ok) {
+        alert("Error al buscar los datos, intente nuevamente")
+        throw new Error("Error en la solicitud GET");
+      }
+      return response.json();
+    })
+    .then((res) => {
+      let articulosFiltrados = res;
 
       if (category) {
-        productosFiltrados = productosFiltrados.filter((prod) => prod.category === category)    
+        articulosFiltrados = articulosFiltrados.filter((articulo) => articulo.categorias.includes(category))    
       } 
-      if (color) {
-        productosFiltrados = productosFiltrados.filter((prod) => prod.colores.includes(color));
-      } 
-      if (talle) {
-        productosFiltrados = productosFiltrados.filter((prod) => prod.talles.includes(talle));
-      }
 
-      setProductos(productosFiltrados)
+      if (color) {
+        articulosFiltrados = articulosFiltrados.filter((articulo) => {
+          const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
+          colores.includes(color)
+        });
+      }
+      
+      if (talle) {
+        articulosFiltrados = articulosFiltrados.filter((articulo) => {
+          const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
+          talles.includes(talle)
+        });
+      }
+  
+      setArticulos(articulosFiltrados)
+    })
+    .catch((error) => {
+      console.error("Error en la solicitud GET:", error)
     });
   }, [category, color, talle]);
 
   const handleSetProductos = (productosOrdenados) => {
-    setProductos(productosOrdenados)
+    setArticulos(productosOrdenados)
   }
 
   const handleChangeColor = (color) => {
@@ -43,7 +67,7 @@ const ItemListContainer = ({ flagCatalogo }) => {
 
   return (
     <div>
-      <ItemList productos={productos} flagCatalogo={flagCatalogo} setProductosContainer={handleSetProductos} onChangeColorContainer={handleChangeColor} onChangeTalleContainer={handleChangeTalle} />
+      <ItemList productos={articulos} flagCatalogo={flagCatalogo} setProductosContainer={handleSetProductos} onChangeColorContainer={handleChangeColor} onChangeTalleContainer={handleChangeTalle} />
     </div>
   );
 };

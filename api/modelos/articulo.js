@@ -1,5 +1,6 @@
 const { sequelize } = require("../config/dbConnect")
 const { DataTypes } = require("sequelize")
+const Categoria = require("./categoria");
 
 const Articulo = sequelize.define(
     "articulo",
@@ -35,5 +36,14 @@ const Articulo = sequelize.define(
         deletedAt: "flag_activo",
     }
 )
+
+Articulo.belongsToMany(Categoria, {
+    through: "categoria_x_articulo",
+    foreignKey: "articulo_id",
+});
+Categoria.belongsToMany(Articulo, {
+    through: "categoria_x_articulo",
+    foreignKey: "categoria_id",
+});
 
 module.exports = Articulo;

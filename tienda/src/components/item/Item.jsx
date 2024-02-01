@@ -7,11 +7,13 @@ const Item = ( { producto } ) => {
   
   return (
     <div className="producto">
-      <img src={producto.images} alt={producto.art} />
+      <img src={producto.images} alt={producto.numero_articulo} />
       <div className='productoInicio'>
-            <h4>{producto.art}</h4>
-            <p>Precio: ${producto.price}</p>
-            <p>Categoria: {toCapital(producto.category)}</p>
+            <h4>{producto.numero_articulo}</h4>
+            <p>Precio: ${producto.precio_minorista}</p>
+            {producto.categorias.map((categoria, index) => (
+              <p key={index}>Categoria: {toCapital(categoria)}</p>
+            ))}
             <Link className='ver-mas' to={`/item/${producto.id}`}>Detalle</Link>
       </div>
     </div>

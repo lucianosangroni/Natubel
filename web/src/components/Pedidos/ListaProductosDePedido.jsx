@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import GrillaProductosDePedido from "./GrillaProductosDePedido";
-import { apiUrl } from "../../config/config";
+import { apiUrl, bearerToken } from "../../config/config";
 import ListaArticulos from "../Common/ListaArticulos";
 import ModalRemito from "./ModalRemito";
 
 function ListaProductosDePedido({ pedido, onCambiarEstado }) {
     const [selectedArticulo, setSelectedArticulo] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const jwt = localStorage.getItem("jwt");
 
     useEffect(() => {
       setSelectedArticulo(pedido.articulos[0])
@@ -50,7 +48,7 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${jwt}`
+            Authorization: `Bearer ${bearerToken}`
         },
         body: JSON.stringify(requestData)
       })
@@ -72,7 +70,7 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
     const generarPdfPedido = () => {
       fetch(`${apiUrl}/pdf/nota-pedido/${pedido.numero_pedido}`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${bearerToken}`,
         }
       })
       .then((response) => {

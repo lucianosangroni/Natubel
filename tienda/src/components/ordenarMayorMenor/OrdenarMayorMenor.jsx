@@ -9,10 +9,10 @@ const ordenar = [
 const OrdenarMayorMenor = ( { productos, setProductos } ) => {
     const handleOrdenar = (opcion) => {
       if (opcion === "Mayor precio") {
-        const productosOrdenados = [...productos].sort((a, b) => b.price - a.price);
+        const productosOrdenados = [...productos].sort((a, b) => b.precio_minorista - a.precio_minorista);
         setProductos(productosOrdenados)
       } else if (opcion === "Menor precio") {
-        const productosOrdenados = [...productos].sort((a, b) => a.price - b.price);
+        const productosOrdenados = [...productos].sort((a, b) => a.precio_minorista - b.precio_minorista);
         setProductos(productosOrdenados);
       }
     }
