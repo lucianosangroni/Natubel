@@ -16,5 +16,6 @@ app.listen(puerto, () => {
     console.log(`Inicio Servidor en el puerto: ${puerto}`)
 })
 
+//prueba de git, borrar este comentario
 dbConnect();
 //dbSync();
