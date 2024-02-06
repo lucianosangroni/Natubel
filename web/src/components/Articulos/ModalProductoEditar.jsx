@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
 import { Modal, Button, Form, FormControl } from "react-bootstrap";
 
-function ModalProductoEditar({ onEditProducto, articulo }) {
+function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
+  console.log(articulo)
   const [show, setShow] = useState(false);
   const [editProduct, setEditProduct] = useState(
     {
     numero_articulo: articulo.numero_articulo,
+    categorias: articulo.categorias.map((categoria) => categoria.id),
     descripcion: articulo.descripcion,
     precio_minorista: articulo.precio_minorista,
     precio_mayorista: articulo.precio_mayorista,
     precio_distribuidor: articulo.precio_distribuidor,
     talles: [],
-    colores: []
+    colores: [],
+    imagenes: articulo.imagenes
     }
   );
 
@@ -23,13 +26,15 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
       {
         id: articulo.id,
         numero_articulo: articulo.numero_articulo,
+        categorias: articulo.categorias.map((categoria) => categoria.id),
         descripcion: articulo.descripcion,
         precio_minorista: articulo.precio_minorista,
         precio_mayorista: articulo.precio_mayorista,
         precio_distribuidor: articulo.precio_distribuidor,
         productos: articulo.productos,
         talles,
-        colores
+        colores,
+        imagenes: articulo.imagenes
       }
     );
   }, [articulo]);
@@ -38,12 +43,47 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
   const handleShow = () => setShow(true);
 
   const handleSave = () => {
-    if (editProduct.numero_articulo && editProduct.precio_minorista && editProduct.precio_mayorista && editProduct.precio_distribuidor && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
+    if (editProduct.numero_articulo && editProduct.categorias.length > 0 && editProduct.precio_minorista && editProduct.precio_mayorista && editProduct.precio_distribuidor && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
       onEditProducto(editProduct);
       handleClose();
     } else {
       console.log("Por favor, complete todos los campos.");
     }
+  };
+
+  const handleCategoriaChange = (e, index) => {
+    const newCategorias = [...editProduct.categorias];
+    let newValue
+    if(e.target.value !== "") {
+      newValue = parseInt(e.target.value)
+    } else {
+      newValue = ""
+    }
+    
+    newCategorias[index] = newValue;
+    setEditProduct({
+      ...editProduct,
+      categorias: newCategorias,
+    });
+  };
+
+  const addCategoriaField = () => {
+    const lastCategoria = editProduct.categorias[editProduct.categorias.length - 1]
+    if (lastCategoria !== "") {
+      setEditProduct({
+        ...editProduct,
+        categorias: [...editProduct.categorias, ""],
+      });
+    }
+  };
+
+  const removeCategoriaField = (index) => {
+    const newCategorias = [...editProduct.categorias];
+    newCategorias.splice(index, 1);
+    setEditProduct({
+      ...editProduct,
+      categorias: newCategorias,
+    });
   };
 
   const handleTalleChange = (e, index) => {
@@ -132,7 +172,31 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
                 }}
               />
             </Form.Group>
-            {/*<Form.Group>
+            <Form.Group>
+              <Form.Label className="boton-categoria">Categorias</Form.Label>
+              {editProduct.categorias.map((categoria, index) => (
+                  <div key={index} className="input-tallecolor-container">
+                    <Form.Select
+                      value={categoria}
+                      onChange={(e) => handleCategoriaChange(e, index)}
+                    >
+                      <option value="">Selecciona una categoría</option>
+                      {categorias.map((cat, catIndex) => (
+                        <option key={cat.id} value={cat.id}>{cat.nombre}</option>
+                      ))}
+                    </Form.Select>
+                    {editProduct.categorias.length > 1 && (
+                      <Button id="boton-menos" onClick={() => removeCategoriaField(index)}>
+                        -
+                      </Button>
+                    )}
+                  </div>
+                  ))}
+              <Button id="boton-mas-cat" onClick={addCategoriaField}>
+                +
+              </Button>
+            </Form.Group>
+            <Form.Group>
               <Form.Label>Descripcion</Form.Label>
               <Form.Control
                 type="text"
@@ -144,7 +208,7 @@ function ModalProductoEditar({ onEditProducto, articulo }) {
                   });
                 }}
               />
-            </Form.Group>*/}
+            </Form.Group>
             <Form.Group>
               <Form.Label>Precio Minorista</Form.Label>
               <Form.Control

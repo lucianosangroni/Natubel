@@ -26,6 +26,8 @@ const ItemListContainer = ({ flagCatalogo }) => {
       return response.json();
     })
     .then((res) => {
+      console.log(res)
+
       let articulosFiltrados = res;
 
       if (category) {
@@ -35,14 +37,14 @@ const ItemListContainer = ({ flagCatalogo }) => {
       if (color) {
         articulosFiltrados = articulosFiltrados.filter((articulo) => {
           const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
-          colores.includes(color)
+          return colores.includes(color)
         });
       }
       
       if (talle) {
         articulosFiltrados = articulosFiltrados.filter((articulo) => {
           const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
-          talles.includes(talle)
+          return talles.includes(talle)
         });
       }
   

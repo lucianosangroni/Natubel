@@ -16,6 +16,7 @@
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",
     "reactstrap": "^9.2.1",
+    "styled-components": "^6.1.8",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

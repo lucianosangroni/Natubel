@@ -1,6 +1,7 @@
 const modelos = {
     articuloModel: require("./articulo"),
     categoriaModel: require("./categoria"),
+    categoriaXArticuloModel: require("./categoria_x_articulo"),
     imagenModel: require("./imagen"),
     productoModel: require("./producto"),
     personaModel: require("./persona"),

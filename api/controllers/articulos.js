@@ -1,6 +1,7 @@
-const { articuloModel, productoModel } = require("../modelos");
+const { articuloModel, productoModel, categoriaXArticuloModel, imagenModel, categoriaModel } = require("../modelos");
 const { matchedData } = require("express-validator");
 const { sequelize } = require("../config/dbConnect")
+const URL_PUBLIC = process.env.URL_PUBLIC || null;
 
 const getItems = async (req, res) => {
     try {
@@ -9,9 +10,15 @@ const getItems = async (req, res) => {
                 include: 
                 [
                     {
-                        model: productoModel,
-                    }
-                ],
+                        model: productoModel, 
+                    },
+                    {
+                        model: imagenModel,
+                    },
+                    {
+                        model: categoriaModel,
+                    },
+                ], 
                 order: sequelize.literal("CAST(SUBSTRING_INDEX(numero_articulo, ' ', 1) AS UNSIGNED), SUBSTRING_INDEX(numero_articulo, ' ', -1) ASC")
             }
         )
@@ -25,9 +32,11 @@ const getItems = async (req, res) => {
 
 const createItem = async (req, res) => {
     try {
-        req = matchedData(req);
-
-        const { numero_articulo, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, talles, colores } = req
+        const { numero_articulo, categorias: categoriasString, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, talles: tallesString, colores: coloresString } = req.body
+        const imagenes = req.files.map((file) => file.filename);
+        const categorias = JSON.parse(categoriasString);
+        const talles = JSON.parse(tallesString);
+        const colores = JSON.parse(coloresString);
 
         const nuevoArticulo = await articuloModel.create
         (
@@ -39,6 +48,16 @@ const createItem = async (req, res) => {
                 precio_distribuidor
             }
         )
+
+        for (const categoria of categorias) {
+            await categoriaXArticuloModel.create
+            (
+                {
+                    articulo_id: nuevoArticulo.id,
+                    categoria_id: categoria,
+                }
+            )
+        }
 
         const productos = await Promise.all(talles.map(async (talle) => {
             return Promise.all(colores.map(async (color) => {
@@ -53,6 +72,16 @@ const createItem = async (req, res) => {
             }));
         }));
 
+        for(const imagen of imagenes) {
+            await imagenModel.create
+            (
+                {
+                    url: `${URL_PUBLIC}/${imagen}`,
+                    articulo_id: nuevoArticulo.id,
+                }
+            )
+        }
+
         res.status(201).json({ message: 'Articulo creado con éxito', id: nuevoArticulo.id, productos: productos.flat() });
     } catch(e) {
         console.log("Error al crear el articulo: ", e)
@@ -63,11 +92,14 @@ const createItem = async (req, res) => {
 
 const updateItem = async (req, res) => {
     try {
-        req = matchedData(req);
+        const articulo_id = req.params.id
+        const { numero_articulo, categorias: categoriasString, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, productos: productosString, talles: tallesString, colores: coloresString } = req.body
+        const imagenes = req.files.map((file) => file.filename);
+        const categorias = JSON.parse(categoriasString);
+        const productos = JSON.parse(productosString);
+        const talles = JSON.parse(tallesString);
+        const colores = JSON.parse(coloresString);
 
-        const articulo_id = req.id
-        const { numero_articulo, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, productos, talles, colores } = req
-        
         // Validar si el articulo existe antes de intentar actualizarla
         const articuloExiste = await articuloModel.findByPk(articulo_id);
         if (!articuloExiste) {

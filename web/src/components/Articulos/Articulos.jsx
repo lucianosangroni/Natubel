@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NavbarAdm from "../Common/NavbarAdm";
 import ModalProducto from "./ModalProducto";
+import ModalCategorias from "./ModalCategorias";
 import ListaArticulos from "../Common/ListaArticulos";
 import GrillaProducto from "./GrillaProducto";
 import { apiUrl, bearerToken } from "../../config/config";
@@ -8,68 +9,98 @@ import { Button } from "react-bootstrap";
 
 const ListadoProductos = () => {
   const [data, setData] = useState([]);
+  const [categorias, setCategorias] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isCategoriasModalOpen, setIsCategoriasModalOpen] = useState(false);
 
   //OBTENER ARTICULOS DB
   useEffect(() => {
-    fetch(`${apiUrl}/articulos`, {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          alert("Error al buscar los datos, intente nuevamente");
-          throw new Error("Error en la solicitud GET");
+    const fetchData = async () => {
+      try {
+        let flag_error = false;
+
+        const responseArticulos = await fetch(`${apiUrl}/articulos`, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        });
+
+        if (!responseArticulos.ok) {
+          flag_error = true;
         }
-        return response.json();
-      })
-      .then((result) => {
-        const articulos = [];
-        for (const dataResult of result) {
+
+        const resultArticulos = await responseArticulos.json();
+
+        const articulos = resultArticulos.map((dataResult) => {
           const productos = dataResult.productos.map(
             ({ id, color, talle, stock }) => ({ id, color, talle, stock })
           );
-          const articulo = {
+          return {
             id: dataResult.id,
             numero_articulo: dataResult.numero_articulo,
+            categorias: dataResult.categoria,
             descripcion: dataResult.descripcion,
             precio_minorista: dataResult.precio_minorista,
             precio_mayorista: dataResult.precio_mayorista,
             precio_distribuidor: dataResult.precio_distribuidor,
             productos,
+            imagenes: dataResult.imagens
           };
-
-          if (productos.length > 0) articulos.push(articulo);
-        }
+        });
 
         setData(articulos);
         setSelectedProduct(articulos[0]);
-      })
-      .catch((error) => {
-        console.error("Error en la solicitud GET:", error);
-      });
+
+        const responseCategorias = await fetch(`${apiUrl}/categorias`, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        });
+
+        if (!responseCategorias.ok) {
+          flag_error = true;
+        }
+
+        const resultCategorias = await responseCategorias.json();
+
+        setCategorias(resultCategorias);
+
+        if (flag_error) {
+          alert("Error al buscar los datos, intente nuevamente");
+        }
+      } catch (error) {
+        console.error("Error en la obtención de datos:", error);
+        alert("Error al buscar los datos, intente nuevamente");
+      }
+    };
+
+    fetchData();
   }, []);
 
   //AGREGAR ARTICULO DB
   const handleAddArticulo = (newArticulo) => {
-    const requestData = {
-      numero_articulo: newArticulo.numero_articulo,
-      descripcion: newArticulo.descripcion,
-      precio_minorista: parseFloat(newArticulo.precio_minorista),
-      precio_mayorista: parseFloat(newArticulo.precio_mayorista),
-      precio_distribuidor: parseFloat(newArticulo.precio_distribuidor),
-      talles: newArticulo.talles,
-      colores: newArticulo.colores,
-    };
+    const formData = new FormData();
+
+    formData.append('numero_articulo', newArticulo.numero_articulo);
+    const categoriasInt = newArticulo.categorias.map((categoria) => parseInt(categoria, 10));
+    formData.append('categorias', JSON.stringify(categoriasInt));
+    formData.append('descripcion', newArticulo.descripcion);
+    formData.append('precio_minorista', parseFloat(newArticulo.precio_minorista));
+    formData.append('precio_mayorista', parseFloat(newArticulo.precio_mayorista));
+    formData.append('precio_distribuidor', parseFloat(newArticulo.precio_distribuidor));
+    formData.append('talles', JSON.stringify(newArticulo.talles));
+    formData.append('colores', JSON.stringify(newArticulo.colores));
+
+    newArticulo.imagenes.forEach((file) => {
+      formData.append('files', file);
+    });
 
     fetch(`${apiUrl}/articulos`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${bearerToken}`,
       },
-      body: JSON.stringify(requestData),
+      body: formData,
     })
       .then((response) => {
         if (!response.ok) {
@@ -82,11 +113,13 @@ const ListadoProductos = () => {
         const newArticuloData = {
           id: result.id,
           numero_articulo: newArticulo.numero_articulo,
+          categorias: newArticulo.categorias,
           descripcion: newArticulo.descripcion,
           precio_minorista: newArticulo.precio_minorista,
           precio_mayorista: newArticulo.precio_mayorista,
           precio_distribuidor: newArticulo.precio_distribuidor,
           productos: result.productos,
+          imagenes: newArticulo.imagenes
         };
         setData((prevData) => [...prevData, newArticuloData]);
         setSelectedProduct(newArticuloData);
@@ -104,24 +137,29 @@ const ListadoProductos = () => {
       color,
     }));
 
-    const requestData = {
-      numero_articulo: editProduct.numero_articulo,
-      descripcion: editProduct.descripcion,
-      precio_minorista: parseFloat(editProduct.precio_minorista),
-      precio_mayorista: parseFloat(editProduct.precio_mayorista),
-      precio_distribuidor: parseFloat(editProduct.precio_distribuidor),
-      talles: editProduct.talles,
-      colores: editProduct.colores,
-      productos: productos,
-    };
+    const formData = new FormData();
+
+    formData.append('numero_articulo', editProduct.numero_articulo);
+    const categoriasInt = editProduct.categorias.map((categoria) => parseInt(categoria, 10));
+    formData.append('categorias', JSON.stringify(categoriasInt));
+    formData.append('descripcion', editProduct.descripcion);
+    formData.append('precio_minorista', parseFloat(editProduct.precio_minorista));
+    formData.append('precio_mayorista', parseFloat(editProduct.precio_mayorista));
+    formData.append('precio_distribuidor', parseFloat(editProduct.precio_distribuidor));
+    formData.append('talles', JSON.stringify(editProduct.talles));
+    formData.append('colores', JSON.stringify(editProduct.colores));
+    formData.append('productos', JSON.stringify(productos));
+
+    editProduct.imagenes.forEach((file) => {
+      formData.append('files', file);
+    });
 
     fetch(`${apiUrl}/articulos/${editProduct.id}`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${bearerToken}`,
       },
-      body: JSON.stringify(requestData),
+      body: formData,
     })
       .then((response) => {
         if (!response.ok) {
@@ -134,11 +172,13 @@ const ListadoProductos = () => {
         const editArticuloData = {
           id: editProduct.id,
           numero_articulo: editProduct.numero_articulo,
+          categorias: editProduct.categorias,
           descripcion: editProduct.descripcion,
           precio_minorista: editProduct.precio_minorista,
           precio_mayorista: editProduct.precio_mayorista,
           precio_distribuidor: editProduct.precio_distribuidor,
           productos: result.productos,
+          imagenes: editProduct.imagenes,
         };
 
         setData((prevData) => {
@@ -217,6 +257,10 @@ const ListadoProductos = () => {
     });
   }
 
+  const handleCategorias = () => {
+    setIsCategoriasModalOpen(true);
+  }
+
   const handleGenerarPDFCliente = () => {
     fetch(`${apiUrl}/pdf/stock/cliente`, {
       headers: {
@@ -246,6 +290,69 @@ const ListadoProductos = () => {
     });
   }
 
+  const handleNuevaCategoria = (nuevaCategoria) => {
+    const requestData = {
+      nombre: nuevaCategoria
+    }
+
+    fetch(`${apiUrl}/categorias`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${bearerToken}`,
+      },
+      body: JSON.stringify(requestData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al agregar categoria, verifique los datos ingresados");
+          throw new Error("Error en la solicitud POST");
+        }
+        return response.json();
+      })
+      .then((result) => {
+        const newCategorias = [...categorias, {nombre: nuevaCategoria, id: result.id}]
+        setCategorias(newCategorias)
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud POST:", error);
+      });
+  }
+
+  const handleEditCategoria = (nuevaCategoria) => {
+    const requestData = {
+      nombre: nuevaCategoria.nombre
+    }
+
+    fetch(`${apiUrl}/categorias/${nuevaCategoria.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${bearerToken}`,
+      },
+      body: JSON.stringify(requestData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al editar categoria, verifique los datos ingresados");
+          throw new Error("Error en la solicitud PUT");
+        }
+        return response.json();
+      })
+      .then(() => {
+        const categoriasActualizadas = categorias.map((categoria) =>
+          categoria.id === nuevaCategoria.id
+            ? { ...categoria, nombre: nuevaCategoria.nombre }
+            : categoria
+        );
+
+        setCategorias(categoriasActualizadas);
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud POST:", error);
+      });
+  }
+
   return (
     <>
       <NavbarAdm selected={'Articulos'}/>
@@ -256,11 +363,22 @@ const ListadoProductos = () => {
             articulo={selectedProduct}
             onEditProducto={handleEditProducto}
             onDeleteProducto={handleDeleteProducto}
+            categorias={categorias}
           />
         )}
-        <Button onClick={handleGenerarPDFAdmin} id="btnDescargarStock" style={{right: "180px"}}>Stock Admin</Button>
-        <Button onClick={handleGenerarPDFCliente} id="btnDescargarStock" style={{right: "310px"}}>Stock Cliente</Button>
-        <ModalProducto onAddProducto={handleAddArticulo} />
+        <Button onClick={handleGenerarPDFCliente} id="btnDescargarStock" style={{right: "425px"}}>Stock Cliente</Button>
+        <Button onClick={handleGenerarPDFAdmin} id="btnDescargarStock" style={{right: "295px"}}>Stock Admin</Button>
+        <Button onClick={handleCategorias} id="btnDescargarStock" style={{right: "180px"}}>Categorias</Button>
+        {isCategoriasModalOpen && (
+        <ModalCategorias
+          data={categorias}
+          onClose={() => setIsCategoriasModalOpen(false)}
+          onNuevaCategoria={(nuevaCategoria) => handleNuevaCategoria(nuevaCategoria)}
+          onEditCategoria={(nuevaCategoria) => handleEditCategoria(nuevaCategoria)}
+        />
+        )}
+
+        <ModalProducto categorias={categorias} onAddProducto={handleAddArticulo} />
       </div>
     </>
   );
