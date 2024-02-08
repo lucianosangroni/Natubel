@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Modal, Button, Form, FormControl } from "react-bootstrap";
 
 function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
-  console.log(articulo)
   const [show, setShow] = useState(false);
   const [editProduct, setEditProduct] = useState(
     {
@@ -17,6 +16,11 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
     imagenes: articulo.imagenes
     }
   );
+
+  const fileInputRef = useRef(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [oldFiles, setOldFiles] = useState(articulo.imagenes)
+  const [previewImages, setPreviewImages] = useState([]);
 
   const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
   const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
@@ -39,15 +43,61 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
     );
   }, [articulo]);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setSelectedFiles([])
+    setPreviewImages([])
+    setShow(false);
+  }
+  const handleShow = () => {
+    setShow(true);
+    setOldFiles(articulo.imagenes)
+  }
+
+  const handleSelectFiles = () => {
+    fileInputRef.current.click();
+  };
+
+  const onFileChange = (event) => {
+    const files = event.target.files;
+
+    setSelectedFiles([...selectedFiles, ...files]);
+
+    const previews = Array.from(files).map((file) => URL.createObjectURL(file));
+    setPreviewImages([...previewImages, ...previews]);
+  };
+
+  const removeOldFile = (index) => {
+    const updatedOldFiles = [...oldFiles];
+    updatedOldFiles.splice(index, 1);
+
+    setOldFiles(updatedOldFiles)
+  };
+
+  const removePreview = (index) => {
+    const updatedPreviews = [...previewImages];
+    updatedPreviews.splice(index, 1);
+
+    const updatedFiles = [...selectedFiles];
+    updatedFiles.splice(index, 1);
+
+    setPreviewImages(updatedPreviews);
+    setSelectedFiles(updatedFiles);
+  };
 
   const handleSave = () => {
-    if (editProduct.numero_articulo && editProduct.categorias.length > 0 && editProduct.precio_minorista && editProduct.precio_mayorista && editProduct.precio_distribuidor && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
-      onEditProducto(editProduct);
-      handleClose();
+    if(selectedFiles.length + oldFiles.length > 8) {
+      alert("Solo se permite un máximo de 8 imagenes");
     } else {
-      console.log("Por favor, complete todos los campos.");
+      editProduct.categorias = editProduct.categorias.filter((categoria) => categoria.toString().trim() !== "");
+
+      if (editProduct.numero_articulo && editProduct.categorias.length > 0 && editProduct.precio_minorista && editProduct.precio_mayorista && editProduct.precio_distribuidor && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
+        const imagenesRemove = articulo.imagenes.filter(imagen => !oldFiles.map(file => file.id).includes(imagen.id)).map(imagen => imagen.id)
+        const editProductData = {...editProduct, imagenesAdd: selectedFiles, imagenesRemove}
+        onEditProducto(editProductData);
+        handleClose();
+      } else {
+        alert("Por favor, complete todos los campos.");
+      }
     }
   };
 
@@ -181,9 +231,14 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
                       onChange={(e) => handleCategoriaChange(e, index)}
                     >
                       <option value="">Selecciona una categoría</option>
-                      {categorias.map((cat, catIndex) => (
-                        <option key={cat.id} value={cat.id}>{cat.nombre}</option>
-                      ))}
+                      {categorias.map((cat, catIndex) => {
+                        const esVisible = !editProduct.categorias.includes(cat.id);
+                        return (
+                            <option key={cat.id} value={cat.id} hidden={!esVisible}>
+                                {cat.nombre}
+                            </option>
+                        );
+                      })}
                     </Form.Select>
                     {editProduct.categorias.length > 1 && (
                       <Button id="boton-menos" onClick={() => removeCategoriaField(index)}>
@@ -248,7 +303,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
                 }}
               />
             </Form.Group>
-         <div className="contenedor-botones">
+          <div className="contenedor-botones">
             <Form.Group>         
               <Form.Label className="boton-talle">Talles</Form.Label>
               {editProduct.talles.map((talle, index) => (
@@ -272,7 +327,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
             <Form.Group>
               <Form.Label className="boton-talle">Colores</Form.Label>
               {editProduct.colores.map((color, index) => (
-                  <div key={index} className="input-tallecolor-container">
+                <div key={index} className="input-tallecolor-container">
                   <FormControl
                     placeholder="Color"
                     value={color}
@@ -284,13 +339,37 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
                     </Button>
                   )}
                 </div>
-                  ))}
-               <Button id="boton-mas" onClick={addColorField}>
-                 +
-               </Button>
-               
+              ))}
+              <Button id="boton-mas" onClick={addColorField}>
+                +
+              </Button>
             </Form.Group>
-         </div>
+          </div>
+          <Form.Group>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                multiple
+                accept="image/*"
+                onChange={onFileChange}
+              />
+              <button type="button" id="botonNuevoCliente" onClick={handleSelectFiles}>Seleccionar Imagenes</button>
+              <div className="imagenesCargadas">
+              {oldFiles.map((file, index) => (
+                <div key={index} style={{ display: 'flex', alignItems: 'center', flexDirection: "column", marginBottom: '5px' }}>
+                  <img key={index} src={file.url} alt={`imagen`} style={{ maxWidth: '100px', maxHeight: '100px', margin: '5px' }} />
+                  <button type="button" id="botonNuevoCliente" onClick={() => removeOldFile(index)}>Eliminar</button>
+                </div>
+              ))}
+              {previewImages.map((preview, index) => (
+                <div key={index} style={{ display: 'flex', alignItems: 'center', flexDirection: "column", marginBottom: '5px' }}>
+                  <img key={index} src={preview} alt={`imagen`} style={{ maxWidth: '100px', maxHeight: '100px', margin: '5px' }} />
+                  <button type="button" id="botonNuevoCliente" onClick={() => removePreview(index)}>Eliminar</button>
+                </div>
+              ))}
+              </div>
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>

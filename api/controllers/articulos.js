@@ -2,6 +2,7 @@ const { articuloModel, productoModel, categoriaXArticuloModel, imagenModel, cate
 const { matchedData } = require("express-validator");
 const { sequelize } = require("../config/dbConnect")
 const URL_PUBLIC = process.env.URL_PUBLIC || null;
+const fs = require('fs');
 
 const getItems = async (req, res) => {
     try {
@@ -72,17 +73,21 @@ const createItem = async (req, res) => {
             }));
         }));
 
+        const imagenesNuevas = []
+
         for(const imagen of imagenes) {
-            await imagenModel.create
+            const nuevaImagen = await imagenModel.create
             (
                 {
                     url: `${URL_PUBLIC}/${imagen}`,
                     articulo_id: nuevoArticulo.id,
                 }
             )
+
+            imagenesNuevas.push(nuevaImagen)
         }
 
-        res.status(201).json({ message: 'Articulo creado con éxito', id: nuevoArticulo.id, productos: productos.flat() });
+        res.status(201).json({ message: 'Articulo creado con éxito', id: nuevoArticulo.id, productos: productos.flat(), imagenes: imagenesNuevas });
     } catch(e) {
         console.log("Error al crear el articulo: ", e)
         res.status(500).json({ message: 'Error al crear el articulo' });
@@ -93,8 +98,9 @@ const createItem = async (req, res) => {
 const updateItem = async (req, res) => {
     try {
         const articulo_id = req.params.id
-        const { numero_articulo, categorias: categoriasString, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, productos: productosString, talles: tallesString, colores: coloresString } = req.body
-        const imagenes = req.files.map((file) => file.filename);
+        const { numero_articulo, categorias: categoriasString, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, productos: productosString, talles: tallesString, colores: coloresString, imagenesRemove: imagenesRemoveString } = req.body
+        const imagenesAdd = req.files.map((file) => file.filename);
+        const imagenesRemove = JSON.parse(imagenesRemoveString)
         const categorias = JSON.parse(categoriasString);
         const productos = JSON.parse(productosString);
         const talles = JSON.parse(tallesString);
@@ -119,6 +125,57 @@ const updateItem = async (req, res) => {
             where: { id: articulo_id }
             }
         )
+
+        const categoriasActuales = await categoriaXArticuloModel.findAll({
+            where: { articulo_id: articulo_id }
+        });
+
+        const categoriasActualesIds = categoriasActuales.map(categoria => categoria.categoria_id);
+
+        const categoriasAdd = categorias.filter(categoria => !categoriasActualesIds.includes(categoria));
+
+        const categoriasDelete = categoriasActualesIds.filter(categoria => !categorias.includes(categoria));
+
+        await Promise.all(categoriasAdd.map(async categoria => {
+            await categoriaXArticuloModel.create({
+                articulo_id: articulo_id,
+                categoria_id: categoria
+            });
+        }));
+
+        await Promise.all(categoriasDelete.map(async categoria => {
+            await categoriaXArticuloModel.destroy({ 
+                where: { 
+                    articulo_id: articulo_id, 
+                    categoria_id: categoria 
+                } 
+            });
+        }));
+
+        const imagenesNuevas = []
+
+        for(const imagen of imagenesAdd) {
+            const nuevaImagen = await imagenModel.create
+            (
+                {
+                    url: `${URL_PUBLIC}/${imagen}`,
+                    articulo_id: articulo_id,
+                }
+            )
+
+            imagenesNuevas.push(nuevaImagen)
+        }
+
+        await Promise.all(imagenesRemove.map(async imagenId => {
+            const imagen = await imagenModel.findByPk(imagenId);
+            if (imagen) {
+                const filename = imagen.url.split('/').pop();
+                const filePath = `${__dirname}/../storage/${filename}`;
+                fs.unlinkSync(filePath);
+
+                await imagen.destroy();
+            }
+        }));
 
         const productosViejos = productos.map(producto => ({ ...producto, eliminar: true }));
 
@@ -167,7 +224,7 @@ const updateItem = async (req, res) => {
             where: { articulo_id: articulo_id, flag_activo: true },
         });
 
-        res.status(200).json({ message: 'Articulo editado con éxito', productos: updatedProducts });
+        res.status(200).json({ message: 'Articulo editado con éxito', productos: updatedProducts, imagenesNuevas });
     } catch(e) {
         console.log("Error al editar el articulo: ", e)
         res.status(500).json({ message: 'Error al editar el articulo' });

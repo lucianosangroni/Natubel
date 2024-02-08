@@ -8,16 +8,10 @@ const Imagen = sequelize.define(
         url: {
             type: DataTypes.STRING,
             allowNull: false,
-        },
-        flag_activo: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true,
-        },
+        }
     },
     {
         tableName: "imagen",
-        paranoid: true,
-        deletedAt: "flag_activo",
     }
 )
 

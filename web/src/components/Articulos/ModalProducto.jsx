@@ -49,34 +49,39 @@ function ModalProducto({ onAddProducto, categorias }) {
   };
 
   const handleSave = () => {
-    newProduct.categorias = newProduct.categorias.filter((categoria) => categoria.trim() !== "");
-    newProduct.talles = newProduct.talles.filter((talle) => talle.trim() !== "");
-    newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
-
-    if (newProduct.numero_articulo && newProduct.categorias.length > 0 && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
-      const addProduct = {...newProduct, imagenes: selectedFiles}
-      onAddProducto(addProduct);
-      setNewProduct({
-        numero_articulo: "",
-        categorias: [""],
-        descripcion: "",
-        precio_minorista: "",
-        precio_mayorista: "",
-        precio_distribuidor: "",
-        talles: [""],
-        colores: [""],
-      });
-      setSelectedFiles([])
-      setPreviewImages([])
-      handleClose();
+    if(selectedFiles.length > 8) {
+      alert("Solo se permite un máximo de 8 imagenes");
     } else {
-      console.log("Por favor, complete todos los campos.");
+      newProduct.categorias = newProduct.categorias.filter((categoria) => categoria.trim() !== "");
+      newProduct.talles = newProduct.talles.filter((talle) => talle.trim() !== "");
+      newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
+
+      if (newProduct.numero_articulo && newProduct.categorias.length > 0 && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
+        const addProduct = {...newProduct, imagenes: selectedFiles}
+        onAddProducto(addProduct);
+        setNewProduct({
+          numero_articulo: "",
+          categorias: [""],
+          descripcion: "",
+          precio_minorista: "",
+          precio_mayorista: "",
+          precio_distribuidor: "",
+          talles: [""],
+          colores: [""],
+        });
+        setSelectedFiles([])
+        setPreviewImages([])
+        handleClose();
+      } else {
+        alert("Por favor, complete todos los campos.");
+      }
     }
   };
 
   const handleCategoriaChange = (e, index) => {
     const newCategorias = [...newProduct.categorias];
     newCategorias[index] = e.target.value;
+
     setNewProduct({
       ...newProduct,
       categorias: newCategorias,
@@ -96,6 +101,7 @@ function ModalProducto({ onAddProducto, categorias }) {
   const removeCategoriaField = (index) => {
     const newCategorias = [...newProduct.categorias];
     newCategorias.splice(index, 1);
+
     setNewProduct({
       ...newProduct,
       categorias: newCategorias,
@@ -197,9 +203,14 @@ function ModalProducto({ onAddProducto, categorias }) {
                       onChange={(e) => handleCategoriaChange(e, index)}
                     >
                       <option value="">Selecciona una categoría</option>
-                      {categorias.map((cat, catIndex) => (
-                        <option key={catIndex} value={cat.id}>{cat.nombre}</option>
-                      ))}
+                      {categorias.map((cat, catIndex) => {
+                        const esVisible = !newProduct.categorias.includes(cat.id.toString());
+                        return (
+                            <option key={catIndex} value={cat.id} hidden={!esVisible}>
+                                {cat.nombre}
+                            </option>
+                        );
+                      })}
                     </Form.Select>
                     {newProduct.categorias.length > 1 && (
                       <Button id="boton-menos" onClick={() => removeCategoriaField(index)}>
