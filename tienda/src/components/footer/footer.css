@@ -58,3 +58,9 @@
     padding: 0.2rem;
     
 }
+
+@media (max-width: 768px) {
+    .footerNatubel {
+        display: none;
+    }
+}

@@ -13,8 +13,20 @@
 }
 
 .imgGaleria {
-    max-width: 75rem; /* Ajusta el ancho máximo según tus necesidades */
-    max-height: 60rem; /* Ajusta la altura máxima según tus necesidades */
-    margin: 0 auto; /* Centra la imagen horizontalmente */
-    display: block; /* Elimina cualquier margen adicional */
+    max-width: 75rem; 
+    max-height: 60rem; 
+    margin: 0 auto; 
+    display: block; 
+}
+
+
+@media (max-width: 768px) {
+    .imgContianer {
+        padding-inline: 0.5rem; 
+    }
+
+    .imgGaleria {
+        max-width: 100%; 
+        max-height: auto; 
+    }
 }

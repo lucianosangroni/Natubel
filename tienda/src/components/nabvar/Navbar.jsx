@@ -9,7 +9,7 @@ import styled from "styled-components";
 import BurguerButton from "./BurguerButton";
 
 const Navbar = () => {
-  const [clicked, setClicked ] = useState(false)
+  const [clicked, setClicked] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const handleResize = () => {
@@ -25,23 +25,45 @@ const Navbar = () => {
   }, []);
 
   const handleClick = () => {
-    setClicked(!clicked)
-  }
+    setClicked(!clicked);
+  };
 
   return (
     <>
       {isMobile ? (
         <NavContainer>
-          <div className={ `links ${clicked ? "active" : ""}` } >
-            <a href="/">Inicio</a>
-            <a href="/">Catalogo</a>
-            <a href="/">Categorias</a>
-            <a href="/">Mayorista</a>
+          <div className={`links ${clicked ? "active" : ""}`}>
+            <a onClick={handleClick} href="/">
+              Inicio
+            </a>
+            <a onClick={handleClick} href="/catalogo">
+              Catalogo
+            </a>
+            <a onClick={handleClick} href="/mayorista">
+              Mayorista
+            </a>
           </div>
-          <div className="burguer">
-          <BurguerButton clicked={clicked} handleClick = {handleClick}/>
+          <div className="navbarMobileContainer">
+            <div className="burguer">
+              <BurguerButton clicked={clicked} handleClick={handleClick} />
+            </div>
+            <BgDiv className={`initial ${clicked ? " active" : ""}`}></BgDiv>
+            <div>
+              <Link to="/" className="logo">
+                <h1>Natubel</h1>
+              </Link>
+            </div>
+            <CartWidget />
           </div>
-          
+          <div className="redesWhatsapp">
+            <a
+              href="https://web.whatsapp.com/send?phone=1131109942"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={whatsapp} alt="Contactar por WhatsApp" />
+            </a>
+          </div>
         </NavContainer>
       ) : (
         <>
@@ -97,8 +119,8 @@ const Navbar = () => {
 export default Navbar;
 
 const NavContainer = styled.nav`
-  padding: .4rem;
-  background-color: #FBCCD2;
+  padding: 0.4rem;
+  background-color: #fbccd2;
   displey: flex;
   align-items: center;
   justify-content: space-between;
@@ -109,11 +131,11 @@ const NavContainer = styled.nav`
     margin-rigth: 1rem;
   }
   .burguer {
-    @media(min-width: 768px){
+    @media (min-width: 768px) {
       display: none;
     }
   }
-  .links{
+  .links {
     position: absolute;
     top: -700px;
     left: -2000px;
@@ -121,16 +143,16 @@ const NavContainer = styled.nav`
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    transition: all .5s ease;
-    a{
+    transition: all 0.5s ease;
+    a {
       color: white;
       font-size: 2rem;
       display: block;
     }
-    @media(min-width: 768px){
+    @media (min-width: 768px) {
       position: initial;
       margin: 0;
-      a{
+      a {
         font-size: 1rem;
         color: white;
         display: inline;
@@ -138,8 +160,8 @@ const NavContainer = styled.nav`
       display: block;
     }
   }
-  .links.active{
-    z-index: 1;
+  .links.active {
+    z-index: 2;
     width: 100%;
     display: block;
     position: absolute;
@@ -149,10 +171,34 @@ const NavContainer = styled.nav`
     left: 0;
     right: 0;
     text-align: center;
-    a{
+    a {
       font-size: 2rem;
       margin-top: 1rem;
       color: white;
     }
+  }
+  .burguer {
+    @media (min-width: 768px) {
+      display: none;
+    }
+  }
+`;
+
+const BgDiv = styled.div`
+  background-color: #fbccd2;
+  position: absolute;
+  top: -1000px;
+  left: -1000px;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: all 0.6s ease;
+
+  &.active {
+    border-radius: 0 0 80% 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 `;

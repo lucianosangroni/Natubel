@@ -23,7 +23,12 @@
 }
 
 @media only screen and (max-width: 768px) { 
-    
+    .carrito-container{
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        margin-bottom: 0.5rem;
+    }
 }
 
 
