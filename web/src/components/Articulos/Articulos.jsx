@@ -110,16 +110,18 @@ const ListadoProductos = () => {
         return response.json();
       })
       .then((result) => {
+        const categoriasNewArticulo = categorias.filter(cat => newArticulo.categorias.includes(cat.id.toString()))
+
         const newArticuloData = {
           id: result.id,
           numero_articulo: newArticulo.numero_articulo,
-          categorias: newArticulo.categorias,
+          categorias: categoriasNewArticulo,
           descripcion: newArticulo.descripcion,
           precio_minorista: newArticulo.precio_minorista,
           precio_mayorista: newArticulo.precio_mayorista,
           precio_distribuidor: newArticulo.precio_distribuidor,
           productos: result.productos,
-          imagenes: newArticulo.imagenes
+          imagenes: result.imagenes
         };
         setData((prevData) => [...prevData, newArticuloData]);
         setSelectedProduct(newArticuloData);
@@ -149,8 +151,9 @@ const ListadoProductos = () => {
     formData.append('talles', JSON.stringify(editProduct.talles));
     formData.append('colores', JSON.stringify(editProduct.colores));
     formData.append('productos', JSON.stringify(productos));
+    formData.append('imagenesRemove', JSON.stringify(editProduct.imagenesRemove))
 
-    editProduct.imagenes.forEach((file) => {
+    editProduct.imagenesAdd.forEach((file) => {
       formData.append('files', file);
     });
 
@@ -169,16 +172,20 @@ const ListadoProductos = () => {
         return response.json();
       })
       .then((result) => {
+        const categoriasEditArticulo = categorias.filter(cat => editProduct.categorias.includes(cat.id))
+        const nuevasImagenes = editProduct.imagenes.filter(imagen => !editProduct.imagenesRemove.includes(imagen.id))
+        nuevasImagenes.push(...result.imagenesNuevas);
+
         const editArticuloData = {
           id: editProduct.id,
           numero_articulo: editProduct.numero_articulo,
-          categorias: editProduct.categorias,
+          categorias: categoriasEditArticulo,
           descripcion: editProduct.descripcion,
           precio_minorista: editProduct.precio_minorista,
           precio_mayorista: editProduct.precio_mayorista,
           precio_distribuidor: editProduct.precio_distribuidor,
           productos: result.productos,
-          imagenes: editProduct.imagenes,
+          imagenes: nuevasImagenes,
         };
 
         setData((prevData) => {

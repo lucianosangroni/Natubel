@@ -12,8 +12,8 @@ const { checkAuth } = require("../middlewares/auth")
 const { upload } = require("../utils/handleStorage");
 
 router.get("/", checkAuth, getItems);
-router.post("/", checkAuth, upload.array("files", 5), createItem);
-router.put("/:id", checkAuth, validateId, upload.array("files", 5), updateItem);
+router.post("/", checkAuth, upload.array("files", 8), createItem);
+router.put("/:id", checkAuth, validateId, upload.array("files", 8), updateItem);
 router.delete("/:id", checkAuth, validateId, deleteItem);
 
 module.exports = router
