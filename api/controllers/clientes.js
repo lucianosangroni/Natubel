@@ -3,8 +3,6 @@ const { matchedData } = require("express-validator");
 
 const getItems = async (req, res) => {
     try {
-        console.log("getItems")
-
         const clientes = await clienteModel.findAll({include: [{model: personaModel}]})
         res.status(200).send(clientes)
     } catch (e) {
