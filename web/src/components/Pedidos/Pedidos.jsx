@@ -1,26 +1,25 @@
- import React, { useMemo, useState, useEffect } from "react";
- import { useTable,useGlobalFilter, usePagination } from "react-table";
- import { COLUMNSPEDIDOS } from "./columnsListaPedidos"
- import NavbarAdm from '../Common/NavbarAdm';
- import GlobalFilter from "../../helpers/GlobalFilter";
- import ListaProductosDePedido from "./ListaProductosDePedido";
- import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
- import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
- import { apiUrl } from "../../config/config";
+import React, { useMemo, useState, useEffect } from "react";
+import { useTable,useGlobalFilter, usePagination } from "react-table";
+import { COLUMNSPEDIDOS } from "./columnsListaPedidos"
+import NavbarAdm from '../Common/NavbarAdm';
+import GlobalFilter from "../../helpers/GlobalFilter";
+import ListaProductosDePedido from "./ListaProductosDePedido";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { apiUrl, bearerToken } from "../../config/config";
 
- const HistorialPedidos = () => {
-   const columns = useMemo(() => COLUMNSPEDIDOS, []);
-   const [data, setData] = useState([]);
-   const [articulos, setArticulos] = useState([]);
-   const [selectedRow, setSelectedRow] = useState(null);
+const HistorialPedidos = () => {
+  const columns = useMemo(() => COLUMNSPEDIDOS, []);
+  const [data, setData] = useState([]);
+  const [articulos, setArticulos] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
 
-   const jwt = localStorage.getItem("jwt");
 
    ////OBTENER PEDIDOS Y ARTICULOS DB
-   useEffect(() => {
+  useEffect(() => {
       fetch(`${apiUrl}/articulos`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${bearerToken}`,
         },
       })
       .then((response) => {
@@ -50,12 +49,12 @@
       .catch((error) => {
         console.error("Error en la solicitud GET:", error)
       });
-   }, [jwt]);
+   }, []);
 
    useEffect(() => {
     fetch(`${apiUrl}/pedidos`, {
        headers: {
-         Authorization: `Bearer ${jwt}`,
+         Authorization: `Bearer ${bearerToken}`,
        },
      })
      .then((response) => {
@@ -145,7 +144,7 @@
      .catch((error) => {
        console.error("Error en la solicitud GET:", error)
      });
-   }, [jwt, articulos])
+   }, [articulos])
 
    const tableInstance = useTable(
     {

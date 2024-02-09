@@ -465,6 +465,7 @@
   margin: 0.5rem;
   border-radius: 5px;
   cursor: pointer;
+  padding: 0.5rem;
 }
 
 .agregarArticulo {
@@ -529,7 +530,7 @@
 
 .boton-talle {
   color: #000000;
-  margin-top: 3rem;
+  margin-top: 0rem;
 }
 
 #boton-mas {
@@ -542,6 +543,17 @@
   border-radius: 5px;
   cursor: pointer;
   float: left;
+}
+
+#boton-mas-cat {
+  background-color: #dcd9d9;
+  color: #000000;
+  font-weight: bold;
+  border: 1px solid #000;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 #boton-menos {
@@ -757,4 +769,10 @@
 }
 .mantenimiento-content {
   text-align: center;
+}
+
+.imagenesCargadas {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
 }

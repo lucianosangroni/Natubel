@@ -3,7 +3,7 @@ import NavbarAdm from "../Common/NavbarAdm";
 import Select from "react-select";
 import GrillaProductoPedido from "./GrillaProductoPedido";
 import GrillasProductosConfirmados from "./GrillaProductoConfirmado";
-import { apiUrl } from "../../config/config";
+import { apiUrl, bearerToken } from "../../config/config";
 import ListaArticulos from "../Common/ListaArticulos";
 
 const CargarPedido = () => {
@@ -17,15 +17,13 @@ const CargarPedido = () => {
   const [productosConfirmados, setProductosConfirmados] = useState([]);
   const [cantidadesArticuloActual, setCantidadesArticuloActual] = useState({});
 
-  const jwt = localStorage.getItem("jwt");
-
   ////OBTENER ARTICULOS, CLIENTES Y PROVEEDORES DB
   useEffect(() => {
     let flag_error = false;
 
     const fetchArticulos = fetch(`${apiUrl}/articulos`, {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${bearerToken}`,
       },
     })
       .then((response) => {
@@ -61,7 +59,7 @@ const CargarPedido = () => {
 
     const fetchClientes = fetch(`${apiUrl}/clientes`, {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${bearerToken}`,
       },
     })
       .then((response) => {
@@ -85,7 +83,7 @@ const CargarPedido = () => {
 
     const fetchProveedores = fetch(`${apiUrl}/proveedores`, {
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${bearerToken}`,
       },
     })
       .then((response) => {
@@ -111,7 +109,7 @@ const CargarPedido = () => {
         alert("Error al buscar los datos, intente nuevamente");
       }
     });
-  }, [jwt]);
+  }, []);
 
   const handleCambiarTipoPedidor = (pedidor) => {
     setTipoPedidor(pedidor);
@@ -283,7 +281,7 @@ const CargarPedido = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${bearerToken}`,
       },
       body: JSON.stringify(requestData),
     })

@@ -19,7 +19,6 @@ const Login = () => {
         })
         .then((response) => {
           if (!response.ok) {
-            
             alert("Error al iniciar sesion, verifique los datos ingresados")
             throw new Error("Error en la solicitud POST");
           }

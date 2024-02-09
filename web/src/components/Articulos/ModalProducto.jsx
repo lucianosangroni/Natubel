@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Modal, Button, Form, FormControl } from "react-bootstrap";
 
-function ModalProducto({ onAddProducto }) {
+function ModalProducto({ onAddProducto, categorias }) {
   const [show, setShow] = useState(false);
   const [newProduct, setNewProduct] = useState({
     numero_articulo: "",
+    categorias: [""],
     descripcion: "",
     precio_minorista: "",
     precio_mayorista: "",
@@ -13,28 +14,98 @@ function ModalProducto({ onAddProducto }) {
     colores: [""],
   });
 
-  const handleClose = () => setShow(false);
+  const fileInputRef = useRef(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previewImages, setPreviewImages] = useState([]);
+  const handleClose = () => {
+    setSelectedFiles([])
+    setPreviewImages([])
+    setShow(false);
+  }
   const handleShow = () => setShow(true);
 
-  const handleSave = () => {
-    newProduct.talles = newProduct.talles.filter((talle) => talle.trim() !== "");
-    newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
+  const handleSelectFiles = () => {
+    fileInputRef.current.click();
+  };
 
-    if (newProduct.numero_articulo && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
-      onAddProducto(newProduct);
-      setNewProduct({
-        numero_articulo: "",
-        descripcion: "",
-        precio_minorista: "",
-        precio_mayorista: "",
-        precio_distribuidor: "",
-        talles: [""],
-        colores: [""],
-      });
-      handleClose();
+  const onFileChange = (event) => {
+    const files = event.target.files;
+
+    setSelectedFiles([...selectedFiles, ...files]);
+
+    const previews = Array.from(files).map((file) => URL.createObjectURL(file));
+    setPreviewImages([...previewImages, ...previews]);
+  };
+
+  const removePreview = (index) => {
+    const updatedPreviews = [...previewImages];
+    updatedPreviews.splice(index, 1);
+
+    const updatedFiles = [...selectedFiles];
+    updatedFiles.splice(index, 1);
+
+    setPreviewImages(updatedPreviews);
+    setSelectedFiles(updatedFiles);
+  };
+
+  const handleSave = () => {
+    if(selectedFiles.length > 8) {
+      alert("Solo se permite un máximo de 8 imagenes");
     } else {
-      console.log("Por favor, complete todos los campos.");
+      newProduct.categorias = newProduct.categorias.filter((categoria) => categoria.trim() !== "");
+      newProduct.talles = newProduct.talles.filter((talle) => talle.trim() !== "");
+      newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
+
+      if (newProduct.numero_articulo && newProduct.categorias.length > 0 && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
+        const addProduct = {...newProduct, imagenes: selectedFiles}
+        onAddProducto(addProduct);
+        setNewProduct({
+          numero_articulo: "",
+          categorias: [""],
+          descripcion: "",
+          precio_minorista: "",
+          precio_mayorista: "",
+          precio_distribuidor: "",
+          talles: [""],
+          colores: [""],
+        });
+        setSelectedFiles([])
+        setPreviewImages([])
+        handleClose();
+      } else {
+        alert("Por favor, complete todos los campos.");
+      }
     }
+  };
+
+  const handleCategoriaChange = (e, index) => {
+    const newCategorias = [...newProduct.categorias];
+    newCategorias[index] = e.target.value;
+
+    setNewProduct({
+      ...newProduct,
+      categorias: newCategorias,
+    });
+  };
+
+  const addCategoriaField = () => {
+    const lastCategoria = newProduct.categorias[newProduct.categorias.length - 1].trim();
+    if (lastCategoria !== "") {
+      setNewProduct({
+        ...newProduct,
+        categorias: [...newProduct.categorias, ""],
+      });
+    }
+  };
+
+  const removeCategoriaField = (index) => {
+    const newCategorias = [...newProduct.categorias];
+    newCategorias.splice(index, 1);
+
+    setNewProduct({
+      ...newProduct,
+      categorias: newCategorias,
+    });
   };
 
   const handleTalleChange = (e, index) => {
@@ -95,12 +166,9 @@ function ModalProducto({ onAddProducto }) {
 
   return (
     <>
-      
       <button onClick={handleShow} className="agregarArticulo abajoDerecha">
         Agregar Articulo
       </button>
-      
-
 
       <Modal
         show={show}
@@ -126,10 +194,40 @@ function ModalProducto({ onAddProducto }) {
                 }}
               />
             </Form.Group>
-            {/*<Form.Group>
+            <Form.Group>
+              <Form.Label className="boton-categoria">Categorias</Form.Label>
+              {newProduct.categorias.map((categoria, index) => (
+                  <div key={index} className="input-tallecolor-container">
+                    <Form.Select
+                      value={categoria}
+                      onChange={(e) => handleCategoriaChange(e, index)}
+                    >
+                      <option value="">Selecciona una categoría</option>
+                      {categorias.map((cat, catIndex) => {
+                        const esVisible = !newProduct.categorias.includes(cat.id.toString());
+                        return (
+                            <option key={catIndex} value={cat.id} hidden={!esVisible}>
+                                {cat.nombre}
+                            </option>
+                        );
+                      })}
+                    </Form.Select>
+                    {newProduct.categorias.length > 1 && (
+                      <Button id="boton-menos" onClick={() => removeCategoriaField(index)}>
+                        -
+                      </Button>
+                    )}
+                  </div>
+                  ))}
+              <Button id="boton-mas-cat" onClick={addCategoriaField}>
+                +
+              </Button>
+            </Form.Group>
+            <Form.Group>
               <Form.Label>Descripcion</Form.Label>
               <Form.Control
-                type="text"
+                as="textarea"
+                style={{ maxHeight: '200px' }}
                 value={newProduct.descripcion}
                 onChange={(e) => {
                   setNewProduct({
@@ -138,7 +236,7 @@ function ModalProducto({ onAddProducto }) {
                   });
                 }}
               />
-            </Form.Group>*/}
+            </Form.Group>
             <Form.Group>
               <Form.Label>Precio Minorista</Form.Label>
               <Form.Control
@@ -195,9 +293,9 @@ function ModalProducto({ onAddProducto }) {
                     )}
                   </div>
                   ))}
-               <Button id="boton-mas" onClick={addTalleField}>
-                 +
-               </Button>
+              <Button id="boton-mas" onClick={addTalleField}>
+                +
+              </Button>
             </Form.Group>
             <Form.Group>
               <Form.Label className="boton-talle">Colores</Form.Label>
@@ -215,11 +313,30 @@ function ModalProducto({ onAddProducto }) {
                   )}
                 </div>
                   ))}
-               <Button id="boton-mas" onClick={addColorField}>
-                 +
-               </Button>
+              <Button id="boton-mas" onClick={addColorField}>
+                +
+              </Button>
             </Form.Group>
             </div>
+            <Form.Group>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                multiple
+                accept="image/*"
+                onChange={onFileChange}
+              />
+              <button type="button" id="botonNuevoCliente" onClick={handleSelectFiles}>Seleccionar Imagenes</button>
+              <div className="imagenesCargadas">
+              {previewImages.map((preview, index) => (
+                <div key={index} style={{ display: 'flex', alignItems: 'center', flexDirection: "column", marginBottom: '5px' }}>
+                  <img key={index} src={preview} alt={`imagen`} style={{ maxWidth: '100px', maxHeight: '100px', margin: '5px' }} />
+                  <button type="button" id="botonNuevoCliente" onClick={() => removePreview(index)}>Eliminar</button>
+                </div>
+              ))}
+              </div>
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>

@@ -5,15 +5,14 @@ const {
     createItem,
     updateItem,
     deleteItem
-    } = require("../controllers/articulos");
+    } = require("../controllers/categorias");
 const { validateId } = require("../validators/id")
-const { validatorCreateItem, validatorUpdateItem } = require("../validators/articulos")
+const { validatorCreateItem, validatorUpdateItem } = require("../validators/categorias")
 const { checkAuth } = require("../middlewares/auth")
-const { upload } = require("../utils/handleStorage");
 
 router.get("/", checkAuth, getItems);
-router.post("/", checkAuth, upload.array("files", 8), createItem);
-router.put("/:id", checkAuth, validateId, upload.array("files", 8), updateItem);
+router.post("/", checkAuth, validatorCreateItem, createItem);
+router.put("/:id", checkAuth, validatorUpdateItem, validateId, updateItem);
 router.delete("/:id", checkAuth, validateId, deleteItem);
 
 module.exports = router
