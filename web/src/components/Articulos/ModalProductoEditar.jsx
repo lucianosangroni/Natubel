@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Modal, Button, Form, FormControl } from "react-bootstrap";
 
 function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
-  console.log(articulo)
   const [show, setShow] = useState(false);
   const [editProduct, setEditProduct] = useState(
     {
