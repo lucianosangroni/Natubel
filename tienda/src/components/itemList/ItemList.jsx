@@ -6,11 +6,12 @@ import FiltroColor from "../filtroColor/FiltroColor";
 import FiltroTalle from "../filtroTalle/FiltroTalle";
 import OrdenarMayorMenor from "../ordenarMayorMenor/OrdenarMayorMenor";
 
+
 const ItemList = ({ productos, setProductosContainer, flagCatalogo, onChangeColorContainer, onChangeTalleContainer }) => {
-  const [visibleProducts, setVisibleProducts] = useState(15);
+  const [visibleProducts, setVisibleProducts] = useState(16);
 
   const handleLoadMore = () => {
-    setVisibleProducts((prevVisible) => prevVisible + 15);
+    setVisibleProducts((prevVisible) => prevVisible + 16);
   };
 
   const setProductos = (productosOrdenados) => {
@@ -41,6 +42,9 @@ const ItemList = ({ productos, setProductosContainer, flagCatalogo, onChangeColo
             </>
           )}
         </div>
+        {productos.length === 0 && (
+          <p>No hay productos</p>
+        )}
         <div className="productos">
           {productos.slice(0, visibleProducts).map((prod) => (
             <Item producto={prod} key={prod.id} />

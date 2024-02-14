@@ -10,7 +10,6 @@ import Footer from "./components/footer/Footer";
 import Inicio from "./components/inicio/Inicio";
 import Mayorista from "./components/mayorista/mayorista";
 
-
 function App() {
 
   return (
@@ -21,9 +20,8 @@ function App() {
             
       <Routes>
         <Route path="/" element={<Inicio/>}/>
-        <Route path="/item/:id" element={<ItemDetailContainer />}/>
-        <Route path="/catalogo" element={<ItemListContainer flagCatalogo={true}/>} />
-        <Route path="/catalogo/:categoria" element={<ItemListContainer flagCatalogo={true}/>} />
+        <Route path="/articulo/:id" element={<ItemDetailContainer />}/>
+        <Route path="/catalogo/:categoria?" element={<ItemListContainer flagCatalogo={true}/>} />
         <Route path="/carrito" element={<Carrito/>} />
         <Route path="/formulario" element={<FormularioCompra/>} />
         <Route path="/mayorista" element={<Mayorista/>}></Route>

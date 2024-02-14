@@ -32,6 +32,10 @@ const Navbar = () => {
     <>
       {isMobile ? (
         <NavContainer>
+          <p className="encabezadoMobile">
+            MINIMO DE COMPRAS MAYORISTAS $25.000 || PARA COMPRAS MAYORES A
+            $200.000. HACE TU PEDIDO Y ESCRIBINOS A NUESTRO WHATSAPP
+          </p>
           <div className={`links ${clicked ? "active" : ""}`}>
             <a onClick={handleClick} href="/">
               Inicio
@@ -87,9 +91,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link className="menu-link" to="/catalogo">
-                  <MenuDesplegable />
-                </Link>
+                <MenuDesplegable />
               </li>
               <li>
                 <Link className="menu-link" to="/mayorista">

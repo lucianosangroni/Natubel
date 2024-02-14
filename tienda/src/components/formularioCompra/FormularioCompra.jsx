@@ -15,7 +15,6 @@ const FormularioCompra = () => {
   const cartContext = useContext(CartContext);
 
   const enviar = (data) => {
-    console.log(data);
     setCompraFinalizada(true);
 
     cartContext.vaciarCarrito();

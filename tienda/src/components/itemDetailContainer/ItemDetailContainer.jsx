@@ -1,35 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { pedirItemPorId, pedirTodosLosProductos } from '../../helpers/pedirDatos';
 import ItemDetail from '../itemDetail/ItemDetail';
 import { useParams } from 'react-router-dom';
-
+import { useData } from '../../context/DataContext';
 
 const ItemDetailContainer = () => {
     const [item, setItem] = useState(null);
-    const [productos, setProductos] = useState([]);
+    const { articulosData } = useData();
     const id = useParams().id;
     
     useEffect(() => {
-        pedirTodosLosProductos()
-          .then((productos) => {
-            setProductos(productos)
-          })
-          .catch((error) => {
-            console.error("Error al obtener todos los productos", error);
-          })
+      const articuloSeleccionado = articulosData.find(articulo => parseInt(articulo.id) === parseInt(id))
 
-
-      pedirItemPorId(Number(id))
-        .then((res) => {
-          setItem(res);
-            })
+      setItem(articuloSeleccionado)
     }, [id])
 
 
   return (
     <div>
       {item ? (
-        <ItemDetail item={item} productos={productos} />
+        <ItemDetail item={item} />
       ) : (
         <p>Cargando...</p>
       )}
