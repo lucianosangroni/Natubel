@@ -59,11 +59,19 @@
             display: flex;
             justify-content: space-between;
             align-items: end;
+            margin-top: 0.5rem;
             
         }
         .logo {
             justify-content: center; 
             margin-left: 0; 
+        }
+        .encabezadoMobile {
+            font-size: 0.6rem;
+            text-align: center;
+            margin-bottom: 0;
+            background-color: rgba(255, 255, 255, 0.7);
+
         }
     }
 

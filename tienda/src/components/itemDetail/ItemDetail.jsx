@@ -100,7 +100,7 @@ const ItemDetail = ({ item }) => {
             //}}
           />
         </div>
-        <div>
+        <div className="description-container">
           <p className="descripcion">{item.descripcion}</p>
         </div>
       </div>
