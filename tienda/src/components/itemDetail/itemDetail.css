@@ -19,6 +19,40 @@
    
 }
 
+/* Estilo para el contenedor principal del carrusel y miniaturas */
+.contenedor-carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Estilo para el contenedor del carrusel */
+.carousel-container {
+    width: 100%; 
+    margin-top: 20px; 
+  }
+
+/* Ajusta el tamaño del contenedor del carrusel */
+.carousel {
+    width: 100%;
+  }
+
+  /* Estilo para el contenedor de miniaturas */
+.miniaturas {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+/* Estilo para las miniaturas individuales */
+.miniatura {
+    width: 50px; /* Ajusta el tamaño según tus preferencias */
+    height: 100px; /* Ajusta el tamaño según tus preferencias */
+    margin: 0 5px; /* Espaciado entre miniaturas */
+    
+  }
+  
+
 .precio {
     font-size: 1.5rem;
     margin-top: 2rem;
