@@ -52,3 +52,22 @@
     margin-right: 2rem;
     margin-top: 2rem;
 }
+
+.noHayArtContainer {
+    display: flex; /* Utiliza un modelo de diseño flexible para alinear los elementos internos */
+    justify-content: center; /* Centra los elementos horizontalmente dentro del contenedor */
+    align-items: start;
+    padding-inline: 1rem;
+    margin-top: 3rem;
+
+}
+
+.noHayArticulos {
+    background-color: #FBCCD2;
+    color: white;
+    padding: 0.5rem;
+    width: 16rem;
+    height: 2.5rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+}

@@ -12,13 +12,13 @@ const Footer = () => {
       <div className="footerContainer">
         <div className="contactanos">
           <p>CONTACTANOS</p>
-          <div className="tel">
-            <img src={telephone} alt="telefono" />
-            <p>11 - 3467 4234</p>
-          </div>
           <div className="mail">
             <img src={mail} alt="mail" />
             <p>gamarrafranco@gmail.com</p>
+          </div>
+          <div className="tel">
+            <img src={telephone} alt="telefono" />
+            <p>11 - 3467 4234</p>
           </div>
           <div className="dir">
             <img src={map} alt="ubicacion" />

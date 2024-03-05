@@ -16,25 +16,26 @@
 
 .producto-detalle img {
     width: 100%;
+    height: 100%;
    
 }
 
 /* Estilo para el contenedor principal del carrusel y miniaturas */
-.contenedor-carousel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 
-  /* Estilo para el contenedor del carrusel */
-.carousel-container {
-    width: 100%; 
-    margin-top: 20px; 
-  }
+  .contenedor-carousel .carousel-container {
+    width: 400px; /* Ajusta según tus preferencias */
+    height: 450px; /* Ajusta según tus preferencias */
+    margin: 20px auto; /* Añadido para centrar el contenedor */
+    overflow: hidden; /* Evita que las imágenes más grandes se desborden */
+    
+}
+
 
 /* Ajusta el tamaño del contenedor del carrusel */
 .carousel {
     width: 100%;
+    height: auto; /* Añadido para mantener la proporción */
+    
   }
 
   /* Estilo para el contenedor de miniaturas */
@@ -42,6 +43,8 @@
     display: flex;
     justify-content: center;
     margin-top: 10px;
+    height: 80px; /* Ajusta según tus preferencias */
+    
   }
 
 /* Estilo para las miniaturas individuales */
@@ -49,6 +52,7 @@
     width: 50px; /* Ajusta el tamaño según tus preferencias */
     height: 100px; /* Ajusta el tamaño según tus preferencias */
     margin: 0 5px; /* Espaciado entre miniaturas */
+    
     
   }
   
@@ -153,9 +157,7 @@
 }
 
 .productosRelacionadosLista img {
-    width: 100%;
-    height: 10rem;
-    object-fit: contain; 
+    width: 100%;  
     margin-bottom: 1rem;
 }
 .productosRelacionadosLista p {

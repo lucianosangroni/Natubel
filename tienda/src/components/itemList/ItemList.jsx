@@ -43,7 +43,9 @@ const ItemList = ({ productos, setProductosContainer, flagCatalogo, onChangeColo
           )}
         </div>
         {productos.length === 0 && (
-          <p>No hay productos</p>
+          <div className="noHayArtContainer">
+            <p className="noHayArticulos">En este momento, no hay stock</p>
+          </div>
         )}
         <div className="productos">
           {productos.slice(0, visibleProducts).map((prod) => (

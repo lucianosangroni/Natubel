@@ -4,6 +4,7 @@
     align-items: center;
     background-color: #FBCCD2;
     padding: 0.5rem;
+    margin-top: 250px;
     
 }
 
@@ -33,6 +34,7 @@
 .footerNatubelTitulo {
     color: white;
     font-size: 3rem;
+    margin-bottom: 0;
 }
 
 .footerNovedades {
