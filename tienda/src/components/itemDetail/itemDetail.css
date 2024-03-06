@@ -14,48 +14,25 @@
    
 }
 
-.producto-detalle img {
-    width: 100%;
-    height: 100%;
-   
-}
-
 /* Estilo para el contenedor principal del carrusel y miniaturas */
 
-  .contenedor-carousel .carousel-container {
-    width: 400px; /* Ajusta según tus preferencias */
-    height: 450px; /* Ajusta según tus preferencias */
+  .contenedor-carousel {
+    width: 100%; /* Ajusta según tus preferencias */
+    height: auto; /* Ajusta según tus preferencias */
     margin: 20px auto; /* Añadido para centrar el contenedor */
     overflow: hidden; /* Evita que las imágenes más grandes se desborden */
     
 }
-
-
-/* Ajusta el tamaño del contenedor del carrusel */
-.carousel {
-    width: 100%;
-    height: auto; /* Añadido para mantener la proporción */
-    
-  }
 
   /* Estilo para el contenedor de miniaturas */
 .miniaturas {
     display: flex;
     justify-content: center;
     margin-top: 10px;
-    height: 80px; /* Ajusta según tus preferencias */
-    
-  }
-
-/* Estilo para las miniaturas individuales */
-.miniatura {
-    width: 50px; /* Ajusta el tamaño según tus preferencias */
-    height: 100px; /* Ajusta el tamaño según tus preferencias */
-    margin: 0 5px; /* Espaciado entre miniaturas */
+    height: 150px;
     
     
   }
-  
 
 .precio {
     font-size: 1.5rem;
@@ -136,13 +113,15 @@
     height: 100%;
     padding: 0.5rem;
     margin-bottom: 1rem;
+    margin-top: 5rem;
     
 }
 
 .productosRelacionados h3{
     text-align: center;
     background-color: #FBCCD2;
-    padding: 1rem;
+    padding: 0.5rem;
+    margin-bottom: 2rem;
     color: white;
 }
 

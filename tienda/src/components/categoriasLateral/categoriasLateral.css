@@ -12,10 +12,20 @@
     border-radius: 0.5rem;
     background-color: #FBCCD2;
     list-style-type: none;
-    gap: 0.5rem;
     padding: 0.3rem;
     
 }
+
+.menuLateralColor {
+    display: flex;
+    flex-direction: column;
+    width: 9rem;
+    border-radius: 0.5rem;
+    background-color: #FBCCD2;
+    list-style-type: none;
+    padding: 0.3rem;
+}
+
 
 .menu-link {
     text-decoration: none;

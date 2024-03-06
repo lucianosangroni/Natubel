@@ -19,7 +19,7 @@ const FiltroColor = ({ onChangeColor }) => {
 
   return (
     <div className="categoriaLateral">
-      <ul className="menuLateral">
+      <ul className="menuLateralColor">
         <p className="menuLateralTitulo">Colores</p>
         {coloresData.map(color => (
           <li className="textoCategorias" key={color}>

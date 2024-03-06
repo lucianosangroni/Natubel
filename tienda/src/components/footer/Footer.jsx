@@ -41,7 +41,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="copyrigth">
-        <p>| Sitio creado por EvoTech |</p>
+        <p>| Sitio creado por SangroniDev |</p>
       </div>
     </div>
   );
