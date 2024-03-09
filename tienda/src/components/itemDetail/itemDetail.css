@@ -1,169 +1,191 @@
 .container {
-    padding-inline: 1.5rem;
-    margin: 0 auto;
-  
+  padding-inline: 1.5rem;
+  margin: 0 auto;
 }
 
 .producto-detalle {
-    width: 100%;
-    box-sizing: border-box;
-    padding-block: 2rem;
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-   
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 7rem;
 }
 
 /* Estilo para el contenedor principal del carrusel y miniaturas */
 
-  .contenedor-carousel {
-    width: 100%; /* Ajusta según tus preferencias */
-    height: auto; /* Ajusta según tus preferencias */
-    margin: 20px auto; /* Añadido para centrar el contenedor */
-    overflow: hidden; /* Evita que las imágenes más grandes se desborden */
-    
+.contenedor-carousel {
+  width: 100%; /* Ajusta según tus preferencias */
+  height: auto; /* Ajusta según tus preferencias */
+  overflow: hidden; /* Evita que las imágenes más grandes se desborden */
 }
 
-  /* Estilo para el contenedor de miniaturas */
+.imgItemDetail {
+  width: 100%;
+  height: 25rem;
+  object-fit: contain;
+}
+
+/* Estilo para el contenedor de miniaturas */
 .miniaturas {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-    height: 150px;
-    
-    
-  }
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  height: 150px;
+}
+
+.infoContainer {
+  width: 40rem;
+}
 
 .precio {
-    font-size: 1.5rem;
-    margin-top: 2rem;
-    font-weight: 600;
-    padding-top: 0.5rem;
-    
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  font-weight: 600;
+  padding-top: 0.5rem;
 }
 
 .tallesItemDetail {
-    margin-top: 1rem;
-    border-top: 1px solid #ddd;
-    
+  margin-top: 1rem;
+  border-top: 1px solid #ddd;
 }
 
-.colorItemDetail{
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+.colorItemDetail {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 .checkTalle {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.5rem;
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  
 }
 
 .talleLabel {
-    display: block;
-    margin-bottom: 10px;
-    padding: 0.3rem;
-    border-radius: 0.5rem;
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    background-color: #FBCCD2;
-    border: 1px solid #ddd;
+  display: block;
+  text-transform: uppercase;
+  font-size: 1rem;
+
+  padding: 0.2rem;
+  
 }
 
 .talleInput {
-    margin-right: 5px;
-    
+  margin-right: 5px;
+  
 }
 
+
 .checkColor {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.5rem;
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  
 }
 
 .colorLabel {
     display: block;
-    margin-bottom: 10px;
-    font-size: 0.7rem;
-    padding: 0.3rem;
-    border-radius: 0.5rem;
     text-transform: uppercase;
-    background-color: #FBCCD2;
-    border: 1px solid #ddd;
+    font-size: 1rem;
+
+    padding: 0.2rem;
+    
 }
 
 .colorInput {
-    margin-right: 5px;
+  margin-right: 5px;
+  
+}
+
+input {
+    accent-color: #fbccd2;
     
 }
 
 .descripcion {
-    width: 15rem;
-    background-color: #FBCCD2;
-    padding: 0.5rem;
-    color: white;
-    overflow-wrap: break-word; 
-    
+  width: 15rem;
+  background-color: #fbccd2;
+  padding: 0.5rem;
+  color: white;
+  overflow-wrap: break-word;
 }
 
 .productosRelacionados {
-    width: 100%;
-    height: 100%;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    margin-top: 5rem;
-    
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  margin-top: 5rem;
 }
 
-.productosRelacionados h3{
-    text-align: center;
-    background-color: #FBCCD2;
-    padding: 0.5rem;
-    margin-bottom: 2rem;
-    color: white;
+.productosRelacionados h3 {
+  text-align: center;
+  background-color: #fbccd2;
+  padding: 0.5rem;
+  margin-bottom: 2rem;
+  color: white;
 }
 
-.productosRelacionadosLista{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    gap: 2rem;
-    
+.productosRelacionadosLista {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 2rem;
 }
 
 .productosRelacionadosLista img {
-    width: 100%;  
-    margin-bottom: 1rem;
+  width: 100%;
+  height: 10rem;
+  margin-bottom: 1rem;
+  object-fit: contain;
 }
 .productosRelacionadosLista p {
-    padding-bottom: 0.2rem;
+  padding-bottom: 0.2rem;
 }
 
 .detalleContainer {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .detalle {
-    text-decoration: none;
-    background-color: #FBCCD2;
-    color: white;
-    padding: .5rem;
-    width: max-content;
-    border-radius: .5rem;
-    transition: .2s;
+  text-decoration: none;
+  background-color: #fbccd2;
+  color: white;
+  padding: 0.5rem;
+  width: max-content;
+  border-radius: 0.5rem;
+  transition: 0.2s;
 }
 
 @media (max-width: 768px) {
-    .producto-detalle {
-      display: flex; 
-      flex-direction: column;
-    }
-    .descripcion{
-        width: 25rem;
-    }
-
+  .producto-detalle {
+    display: flex;
+    flex-direction: column;
   }
+  .descripcion {
+    width: 25rem;
+  }
+  .infoContainer {
+    width: 20rem;
+  }
+  .imgItemDetail {
+    width: 100%;
+    height: 23rem;
+    object-fit: contain;
+  }
+  .miniaturas {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    height: 6rem;
+  }
+}

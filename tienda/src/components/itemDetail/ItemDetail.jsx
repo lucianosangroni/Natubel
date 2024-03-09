@@ -54,7 +54,7 @@ const ItemDetail = ({ item }) => {
               {item.imagens.map((imagen, index) => (
                 <Carousel.Item key={index}>
                   <img
-                    className="d-block w-100"
+                    className="d-block w-100 imgItemDetail"
                     src={imagen.url}
                     alt={`Imagen ${index + 1}`}
                   />
@@ -84,15 +84,7 @@ const ItemDetail = ({ item }) => {
             ))}
           </div>
         </div>
-
-        {/* <div>
-          {item.imagens.length > 0 ? (
-            <img src={item.imagens[0].url} alt={"sin imagen"} />
-          ) : (
-            <img src={"http://localhost:3001/no-hay-foto.png"} alt={"sin imagen"} />
-          )}
-        </div> */}
-        <div>
+        <div className="infoContainer">
           <h3 className="titulo">ART. {item.numero_articulo}</h3>
           <p className="precio">${item.precio_minorista}</p>
           <div className="tallesItemDetail">
@@ -100,16 +92,15 @@ const ItemDetail = ({ item }) => {
             <form className="checkTalle">
               {talles.map((talle) => (
                 <label key={talle} className="talleLabel">
-                  <input
-                    type="radio"
+                  <input className="talleInput"
+                    type ="checkbox" 
                     name="talle"
                     value={talle}
-                    onChange={() => {
+                    onChange ={() => {
                       setSelectedTalle(talle);
                       setCantidad(0);
                     }}
-                    checked={selectedTalle === talle}
-                    className="talleInput"
+                    checked={ selectedTalle === talle}
                   />
                   {talle}
                 </label>
@@ -122,7 +113,7 @@ const ItemDetail = ({ item }) => {
               {colores.map((color) => (
                 <label key={color} className="colorLabel">
                   <input
-                    type="radio"
+                    type="checkbox"
                     name="color"
                     value={color}
                     onChange={() => {
@@ -142,15 +133,6 @@ const ItemDetail = ({ item }) => {
             cantidad={cantidad}
             handleSumar={handleSumar}
             handleRestar={handleRestar}
-            //handleAgregar={() => {
-            //  agregarAlCarrito(
-            //    item.numero_articulo,
-            //    selectedColor,
-            //    selectedTalle,
-            //    cantidad,
-            //    1
-            //  );
-            //}}
           />
         </div>
         <div className="description-container">
