@@ -15,7 +15,8 @@
 
 .producto > img {
     width: 100%;
-    object-fit: cover;
+    height: 10rem;
+    object-fit: contain;
 }
 
 .producto .ver-mas {
@@ -38,3 +39,9 @@
 .productoInicio p {
     font-size: 0.8rem;
 }
+
+@media (max-width: 768px) {
+    .producto > img {
+        height: 5.6rem;
+        
+    }}
