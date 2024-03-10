@@ -21,34 +21,35 @@ export const DataProvider = ({ children }) => {
             }
             return response.json();
         })
-        .then(data => {
-            setCategoriasData(data);
+        .then(categoriasData => {
+            fetch(`${apiUrl}/articulos`, {
+                headers: {
+                    Authorization: `Bearer ${tokenBearer}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error en la solicitud GET para artículos");
+                }
+                return response.json();
+            })
+            .then(articulosData => {
+                const coloresConStock = Array.from(new Set(articulosData.flatMap(articulo => articulo.productos.filter(producto => producto.stock > 0).map(producto => producto.color))));
+                const tallesConStock = Array.from(new Set(articulosData.flatMap(articulo => articulo.productos.filter(producto => producto.stock > 0).map(producto => producto.talle))));
+                const articulosConStock = articulosData.filter(articulo => articulo.productos.some(producto => producto.stock > 0));
+                const categoriasConStock = categoriasData.filter(categoria => articulosConStock.some(articulo => articulo.categoria.some(c => c.id === categoria.id)));
+                
+                setColoresData(coloresConStock)
+                setTallesData(tallesConStock)
+                setArticulosData(articulosConStock);
+                setCategoriasData(categoriasConStock);
+            })
+            .catch(error => {
+                console.error("Error en la solicitud GET para artículos:", error);
+            });       
         })
         .catch(error => {
             console.error("Error en la solicitud GET para categorías:", error);
-        });
-
-        fetch(`${apiUrl}/articulos`, {
-            headers: {
-                Authorization: `Bearer ${tokenBearer}`
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error en la solicitud GET para artículos");
-            }
-            return response.json();
-        })
-        .then(data => {
-            const colores = Array.from(new Set(data.flatMap(articulo => articulo.productos.map(producto => producto.color))));
-            const talles = Array.from(new Set(data.flatMap(articulo => articulo.productos.map(producto => producto.talle))));
-
-            setColoresData(colores)
-            setTallesData(talles)
-            setArticulosData(data);
-        })
-        .catch(error => {
-            console.error("Error en la solicitud GET para artículos:", error);
         });
     }, []);
 

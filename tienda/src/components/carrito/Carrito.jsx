@@ -1,24 +1,33 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../context/CartContext";
 import "./carrito.css";
 import { Link } from "react-router-dom";
 
 const Carrito = () => {
   const {
-    carrito,
     precioTotal,
     vaciarCarrito,
     cantidadEnCarrito,
     eliminarProducto,
+    verificarStock
   } = useContext(CartContext);
 
+  const [ carrito, setCarrito ] = useState([])
+
   const handleVaciar = () => {
-    vaciarCarrito();
+    const nuevoCarrito = vaciarCarrito();
+    setCarrito(nuevoCarrito)
   };
 
   const handleEliminarProducto = (productId) => {
-    eliminarProducto(productId);
+    const nuevoCarrito = eliminarProducto(productId);
+    setCarrito(nuevoCarrito)
   };
+
+  useEffect(() => {
+    const nuevoCarrito = verificarStock()
+    setCarrito(nuevoCarrito)
+  }, []);
 
   return (
     <div className="margenes">
@@ -27,7 +36,7 @@ const Carrito = () => {
       <table className="carritoContainer">
         <thead>
           <tr className="encabezadoCarrito">
-            <th>Productos</th>
+            <th>Articulo</th>
             <th>Color</th>
             <th>Talle</th>
             <th>Cantidad</th>
@@ -37,17 +46,17 @@ const Carrito = () => {
         </thead>
         <tbody>
           {carrito.map((prod) => (
-            <tr className="artContainer" key={prod.productoId}>
-              <td>{prod.numero_articulo}</td>
+            <tr className="artContainer" key={prod.id}>
+              <td>ART. {prod.numero_articulo}</td>
               <td>{prod.color}</td>
               <td>{prod.talle}</td>
               <td>{prod.cantidad}</td>
-              <td>$10</td>
+              <td>{prod.cantidad * prod.precio}</td>
               <td className="delete-icon">
                 <img
                   src="/img/trash.svg"
                   alt="Eliminar"
-                  onClick={() => handleEliminarProducto(prod.productoId)}
+                  onClick={() => handleEliminarProducto(prod.id)}
                 />
               </td>
             </tr>

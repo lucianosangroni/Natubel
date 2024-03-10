@@ -10,6 +10,11 @@ const ItemListContainer = ({ flagCatalogo }) => {
   const [ color, setColor ] = useState(null)
   const [ talle, setTalle ] = useState(null)
   const { categoria } = useParams();
+  const [ categoriaAnterior, setCategoriaAnterior ] = useState(null);
+  const [ productosFiltroTalles, setProductosFiltroTalles ] = useState(null);
+  const [ talleAnterior, setTalleAnterior ] = useState(null);
+  const [ productosFiltroColores, setProductosFiltroColores ] = useState(null);
+  const [ flagOrdenar, setFlagOrdenar ] = useState(0);
 
   useEffect(() => {
     setArticulos(articulosData)
@@ -22,41 +27,53 @@ const ItemListContainer = ({ flagCatalogo }) => {
       articulosFiltrados = articulosFiltrados.filter((articulo) => {
         const categorias = articulo.categoria.map(cat => cat.id);
         return categorias.includes(parseInt(categoria));
-      });      
+      });    
     } 
 
-    if (color) {
-      articulosFiltrados = articulosFiltrados.filter((articulo) => {
-        const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
-        return colores.includes(color)
-      });
-    }
-    
-    if (talle) {
-      articulosFiltrados = articulosFiltrados.filter((articulo) => {
-        const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
-        return talles.includes(talle)
-      });
+    if(categoria !== categoriaAnterior) {
+      setProductosFiltroTalles(articulosFiltrados)
+      setProductosFiltroColores(articulosFiltrados)
+      setCategoriaAnterior(categoria)
+    } else {
+      if (talle) {
+        articulosFiltrados = articulosFiltrados.filter((articulo) => {
+          const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
+          return talles.includes(talle)
+        });
+      }
+  
+      if(talle !== talleAnterior) {
+        setProductosFiltroColores(articulosFiltrados)
+        setTalleAnterior(talle)
+      } else {
+        if (color) {
+          articulosFiltrados = articulosFiltrados.filter((articulo) => {
+            const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
+            return colores.includes(color)
+          });
+        }
+      }
     }
 
+    setFlagOrdenar(flagOrdenar + 1)
     setArticulos(articulosFiltrados)
-  }, [categoria, color, talle]);
+  }, [categoria, talle, color]);
 
   const handleSetProductos = (productosOrdenados) => {
     setArticulos(productosOrdenados)
-  }
-
-  const handleChangeColor = (color) => {
-    setColor(color)
   }
 
   const handleChangeTalle = (talle) => {
     setTalle(talle)
   }
 
+  const handleChangeColor = (color) => {
+    setColor(color)
+  }
+
   return (
     <div>
-      <ItemList productos={articulos} flagCatalogo={flagCatalogo} setProductosContainer={handleSetProductos} onChangeColorContainer={handleChangeColor} onChangeTalleContainer={handleChangeTalle} />
+      <ItemList productos={articulos} productosFiltroTalles={productosFiltroTalles} productosFiltroColores={productosFiltroColores} flagCatalogo={flagCatalogo} setProductosContainer={handleSetProductos} onChangeTalleContainer={handleChangeTalle} onChangeColorContainer={handleChangeColor} flagOrdenar={flagOrdenar} />
     </div>
   );
 };

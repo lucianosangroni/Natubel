@@ -8,15 +8,15 @@ import { Carousel } from "react-bootstrap";
 
 const ItemDetail = ({ item }) => {
   const { agregarAlCarrito } = useContext(CartContext);
-  const [cantidad, setCantidad] = useState(0);
+  const [cantidad, setCantidad] = useState(1);
   const { articulosData } = useData();
   const [selectedTalle, setSelectedTalle] = useState();
   const [selectedColor, setSelectedColor] = useState();
   const talles = Array.from(
-    new Set(item.productos.map((producto) => producto.talle))
+    new Set(item.productos.filter(producto => producto.stock > 0).map((producto) => producto.talle))
   );
   const colores = Array.from(
-    new Set(item.productos.map((producto) => producto.color))
+    new Set(item.productos.filter(producto => producto.stock > 0).map((producto) => producto.color))
   );
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -25,8 +25,10 @@ const ItemDetail = ({ item }) => {
   };
 
   useEffect(() => {
-    setSelectedTalle(talles[0]);
-    setSelectedColor(colores[0]);
+      setSelectedTalle(talles[0]);
+
+      const primerColorConStock = colores.find(color => item.productos.some(producto => producto.color === color && producto.talle === talles[0] && producto.stock > 0));
+      setSelectedColor(primerColorConStock);
   }, [item]);
 
   const handleRestar = () => {
@@ -41,6 +43,17 @@ const ItemDetail = ({ item }) => {
 
     cantidad < stock && setCantidad(cantidad + 1);
   };
+
+  const handleAgregarAlCarrito = (numero_articulo, color, talle, cantidad) => {
+    agregarAlCarrito(numero_articulo, color, talle, cantidad)
+    setCantidad(1)
+    alert("Productos agregados al carrito")
+  }
+
+  const isColorDisabled = (color) => {
+    const producto = item.productos.find(producto => producto.color === color && producto.talle === selectedTalle);
+    return producto ? producto.stock <= 0 : false;
+};
 
   return (
     <div className="container">
@@ -71,7 +84,6 @@ const ItemDetail = ({ item }) => {
               )}
             </Carousel>
           </div>
-          {/* Vista de miniaturas debajo del carousel */}
           <div className="miniaturas">
             {item.imagens.map((imagen, index) => (
               <img
@@ -84,14 +96,6 @@ const ItemDetail = ({ item }) => {
             ))}
           </div>
         </div>
-
-        {/* <div>
-          {item.imagens.length > 0 ? (
-            <img src={item.imagens[0].url} alt={"sin imagen"} />
-          ) : (
-            <img src={"http://localhost:3001/no-hay-foto.png"} alt={"sin imagen"} />
-          )}
-        </div> */}
         <div>
           <h3 className="titulo">ART. {item.numero_articulo}</h3>
           <p className="precio">${item.precio_minorista}</p>
@@ -106,7 +110,9 @@ const ItemDetail = ({ item }) => {
                     value={talle}
                     onChange={() => {
                       setSelectedTalle(talle);
-                      setCantidad(0);
+                      const primerColorConStock = colores.find(color => item.productos.some(producto => producto.color === color && producto.talle === talle && producto.stock > 0));
+                      setSelectedColor(primerColorConStock);
+                      setCantidad(1);
                     }}
                     checked={selectedTalle === talle}
                     className="talleInput"
@@ -127,10 +133,11 @@ const ItemDetail = ({ item }) => {
                     value={color}
                     onChange={() => {
                       setSelectedColor(color);
-                      setCantidad(0);
+                      setCantidad(1);
                     }}
                     checked={selectedColor === color}
                     className="colorInput"
+                    disabled={isColorDisabled(color)}
                   />
                   {color}
                 </label>
@@ -142,15 +149,9 @@ const ItemDetail = ({ item }) => {
             cantidad={cantidad}
             handleSumar={handleSumar}
             handleRestar={handleRestar}
-            //handleAgregar={() => {
-            //  agregarAlCarrito(
-            //    item.numero_articulo,
-            //    selectedColor,
-            //    selectedTalle,
-            //    cantidad,
-            //    1
-            //  );
-            //}}
+            handleAgregar={() => {
+              handleAgregarAlCarrito(item.numero_articulo,  selectedColor,  selectedTalle,  cantidad);
+            }}
           />
         </div>
         <div className="description-container">
