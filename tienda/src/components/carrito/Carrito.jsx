@@ -9,7 +9,9 @@ const Carrito = () => {
     vaciarCarrito,
     cantidadEnCarrito,
     eliminarProducto,
-    verificarStock
+    verificarStock,
+    tipoPrecios,
+    setTipoPrecios
   } = useContext(CartContext);
 
   const [ carrito, setCarrito ] = useState([])
@@ -35,9 +37,13 @@ const Carrito = () => {
   useEffect(() => {
     const nuevoCarrito = verificarStock()
     setCarrito(nuevoCarrito)
+
+    const precios = tipoPrecios()
+    setSelectedPrecios(precios)
   }, []);
 
   const handlePreciosChange = (tipoPrecios) => {
+    setTipoPrecios(tipoPrecios)
     setSelectedPrecios(tipoPrecios)
   } 
 
@@ -49,6 +55,12 @@ const Carrito = () => {
           <button className={selectedPrecios === "minorista" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("minorista")}>Minorista</button>
           <button className={selectedPrecios === "mayorista" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("mayorista")}>Mayorista</button>
           <button className={selectedPrecios === "distribuidor" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("distribuidor")}>Distribuidor</button>
+          {selectedPrecios === "mayorista" && (
+            <span>Compra minima: $25.000</span>
+          )}
+          {selectedPrecios === "distribuidor" && (
+            <span>Compra minima: $200.000</span>
+          )}
           <table className="carritoContainer">
             <thead>
               <tr className="encabezadoCarrito">

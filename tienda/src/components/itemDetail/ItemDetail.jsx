@@ -7,7 +7,7 @@ import { useData } from "../../context/DataContext";
 import { Carousel } from "react-bootstrap";
 
 const ItemDetail = ({ item }) => {
-  const { agregarAlCarrito } = useContext(CartContext);
+  const { agregarAlCarrito, setTipoPrecios } = useContext(CartContext);
   const [ cantidad, setCantidad ] = useState(1);
   const { articulosData } = useData();
   const [ selectedTalle, setSelectedTalle ] = useState();
@@ -45,6 +45,7 @@ const ItemDetail = ({ item }) => {
 
   const handleAgregarAlCarrito = (numero_articulo, color, talle, cantidad) => {
     agregarAlCarrito(numero_articulo, color, talle, cantidad)
+    setTipoPrecios("minorista")
     setCantidad(1)
     alert("Productos agregados al carrito")
   }
