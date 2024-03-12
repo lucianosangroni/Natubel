@@ -38,7 +38,7 @@ export const DataProvider = ({ children }) => {
                 const tallesConStock = Array.from(new Set(articulosData.flatMap(articulo => articulo.productos.filter(producto => producto.stock > 0).map(producto => producto.talle))));
                 const articulosConStock = articulosData.filter(articulo => articulo.productos.some(producto => producto.stock > 0));
                 const categoriasConStock = categoriasData.filter(categoria => articulosConStock.some(articulo => articulo.categoria.some(c => c.id === categoria.id)));
-                
+
                 setColoresData(coloresConStock)
                 setTallesData(tallesConStock)
                 setArticulosData(articulosConStock);

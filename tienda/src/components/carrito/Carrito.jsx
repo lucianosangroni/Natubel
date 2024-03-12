@@ -13,8 +13,16 @@ const Carrito = () => {
   } = useContext(CartContext);
 
   const [ carrito, setCarrito ] = useState([])
+  const [ selectedPrecios, setSelectedPrecios ] = useState("minorista")
 
   const handleVaciar = () => {
+    const shouldVaciar = window.confirm(
+      `¿Estas seguro que quieres vaciar el carrito?`
+    );
+    if (!shouldVaciar) {
+      return;
+    }
+
     const nuevoCarrito = vaciarCarrito();
     setCarrito(nuevoCarrito)
   };
@@ -29,51 +37,73 @@ const Carrito = () => {
     setCarrito(nuevoCarrito)
   }, []);
 
+  const handlePreciosChange = (tipoPrecios) => {
+    setSelectedPrecios(tipoPrecios)
+  } 
+
   return (
     <div className="margenes">
-      <h1 className="carritoCompras">Carrito de compras</h1>
-
-      <table className="carritoContainer">
-        <thead>
-          <tr className="encabezadoCarrito">
-            <th>Articulo</th>
-            <th>Color</th>
-            <th>Talle</th>
-            <th>Cantidad</th>
-            <th>Precio</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {carrito.map((prod) => (
-            <tr className="artContainer" key={prod.id}>
-              <td>ART. {prod.numero_articulo}</td>
-              <td>{prod.color}</td>
-              <td>{prod.talle}</td>
-              <td>{prod.cantidad}</td>
-              <td>{prod.cantidad * prod.precio}</td>
-              <td className="delete-icon">
-                <img
-                  src="/img/trash.svg"
-                  alt="Eliminar"
-                  onClick={() => handleEliminarProducto(prod.id)}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="totalContainer"> 
-      <p className="cantidadTotal">Cantidad total: {cantidadEnCarrito()}</p>
-      <p className="precioTotal">Precio total: ${precioTotal()}</p>
-      </div>
       {carrito.length > 0 ? (
-        <div className="button-container">
-          <Link className="linkForm" to="/formulario">
-            Confirmar compra
-          </Link>
-          <button onClick={handleVaciar}>Vaciar carrito</button>
-        </div>
+        <> 
+          <h1 className="carritoCompras">Carrito de compras</h1>
+          <button className={selectedPrecios === "minorista" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("minorista")}>Minorista</button>
+          <button className={selectedPrecios === "mayorista" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("mayorista")}>Mayorista</button>
+          <button className={selectedPrecios === "distribuidor" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("distribuidor")}>Distribuidor</button>
+          <table className="carritoContainer">
+            <thead>
+              <tr className="encabezadoCarrito">
+                <th>Articulo</th>
+                <th>Color</th>
+                <th>Talle</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {carrito.map((prod) => (
+                <tr className="artContainer" key={prod.id}>
+                  <td>ART. {prod.numero_articulo}</td>
+                  <td>{prod.color}</td>
+                  <td>{prod.talle}</td>
+                  <td>{prod.cantidad}</td>
+                  <td>$
+                    {(() => {
+                      switch (selectedPrecios) {
+                        case "minorista":
+                          return prod.cantidad * prod.precio_minorista;
+                        case "mayorista":
+                          return prod.cantidad * prod.precio_mayorista;
+                        case "distribuidor":
+                          return prod.cantidad * prod.precio_distribuidor;
+                        default:
+                          return prod.cantidad * prod.precio;
+                      }
+                    })()}
+                  </td>
+                  <td className="delete-icon">
+                    <img
+                      src="/img/trash.svg"
+                      alt="Eliminar"
+                      onClick={() => handleEliminarProducto(prod.id)}
+                    />
+                  </td>
+                </tr>
+
+              ))}
+            </tbody>
+          </table>
+          <div className="totalContainer"> 
+          <p className="cantidadTotal">Cantidad total: {cantidadEnCarrito()}</p>
+          <p className="precioTotal">Precio total: ${precioTotal(selectedPrecios)}</p>
+          </div>
+          <div className="button-container">
+            <Link className="linkForm" to="/formulario">
+              Confirmar compra
+            </Link>
+            <button onClick={handleVaciar}>Vaciar carrito</button>
+          </div>
+        </>
       ) : (
         <div className="carritoVacioContainer">
           <h2 className="carritoVacio">El carrito esta vacio...</h2>

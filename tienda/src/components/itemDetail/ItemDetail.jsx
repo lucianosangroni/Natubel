@@ -8,10 +8,11 @@ import { Carousel } from "react-bootstrap";
 
 const ItemDetail = ({ item }) => {
   const { agregarAlCarrito } = useContext(CartContext);
-  const [cantidad, setCantidad] = useState(1);
+  const [ cantidad, setCantidad ] = useState(1);
   const { articulosData } = useData();
-  const [selectedTalle, setSelectedTalle] = useState();
-  const [selectedColor, setSelectedColor] = useState();
+  const [ selectedTalle, setSelectedTalle ] = useState();
+  const [ selectedColor, setSelectedColor ] = useState();
+  const [ selectedStock, setSelectedStock ] = useState(0);
   const talles = Array.from(
     new Set(item.productos.filter(producto => producto.stock > 0).map((producto) => producto.talle))
   );
@@ -29,6 +30,9 @@ const ItemDetail = ({ item }) => {
 
       const primerColorConStock = colores.find(color => item.productos.some(producto => producto.color === color && producto.talle === talles[0] && producto.stock > 0));
       setSelectedColor(primerColorConStock);
+
+      const stock = item.productos.find((producto) => producto.talle === talles[0] && producto.color === primerColorConStock).stock;
+      setSelectedStock(stock)
   }, [item]);
 
   const handleRestar = () => {
@@ -36,12 +40,7 @@ const ItemDetail = ({ item }) => {
   };
 
   const handleSumar = () => {
-    const stock = item.productos.find(
-      (producto) =>
-        producto.talle === selectedTalle && producto.color === selectedColor
-    ).stock;
-
-    cantidad < stock && setCantidad(cantidad + 1);
+    cantidad < selectedStock && setCantidad(cantidad + 1);
   };
 
   const handleAgregarAlCarrito = (numero_articulo, color, talle, cantidad) => {
@@ -112,6 +111,8 @@ const ItemDetail = ({ item }) => {
                       setSelectedTalle(talle);
                       const primerColorConStock = colores.find(color => item.productos.some(producto => producto.color === color && producto.talle === talle && producto.stock > 0));
                       setSelectedColor(primerColorConStock);
+                      const stock = item.productos.find((producto) => producto.talle === talle && producto.color === primerColorConStock).stock;
+                      setSelectedStock(stock)
                       setCantidad(1);
                     }}
                     checked={ selectedTalle === talle}
@@ -132,6 +133,8 @@ const ItemDetail = ({ item }) => {
                     value={color}
                     onChange={() => {
                       setSelectedColor(color);
+                      const stock = item.productos.find((producto) => producto.talle === selectedTalle && producto.color === color).stock;
+                      setSelectedStock(stock)
                       setCantidad(1);
                     }}
                     checked={selectedColor === color}
@@ -143,6 +146,8 @@ const ItemDetail = ({ item }) => {
               ))}
             </form>
           </div>
+
+          <span>{selectedStock} unidades disponibles</span>
 
           <ItemCount
             cantidad={cantidad}
