@@ -4,20 +4,30 @@ import ItemCount from "../itemCount/ItemCount";
 import { CartContext } from "../../context/CartContext";
 import { Link } from "react-router-dom";
 import { useData } from "../../context/DataContext";
-import { Carousel } from "react-bootstrap";
+import { Carousel, Modal, Button } from "react-bootstrap";
 
 const ItemDetail = ({ item }) => {
   const { agregarAlCarrito, setTipoPrecios } = useContext(CartContext);
-  const [ cantidad, setCantidad ] = useState(1);
+  const [cantidad, setCantidad] = useState(1);
   const { articulosData } = useData();
-  const [ selectedTalle, setSelectedTalle ] = useState();
-  const [ selectedColor, setSelectedColor ] = useState();
-  const [ selectedStock, setSelectedStock ] = useState(0);
+  const [selectedTalle, setSelectedTalle] = useState();
+  const [selectedColor, setSelectedColor] = useState();
+  const [selectedStock, setSelectedStock] = useState(0);
+  const [showModal, setShowModal] = useState(false); 
+
   const talles = Array.from(
-    new Set(item.productos.filter(producto => producto.stock > 0).map((producto) => producto.talle))
+    new Set(
+      item.productos
+        .filter((producto) => producto.stock > 0)
+        .map((producto) => producto.talle)
+    )
   );
   const colores = Array.from(
-    new Set(item.productos.filter(producto => producto.stock > 0).map((producto) => producto.color))
+    new Set(
+      item.productos
+        .filter((producto) => producto.stock > 0)
+        .map((producto) => producto.color)
+    )
   );
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -26,13 +36,23 @@ const ItemDetail = ({ item }) => {
   };
 
   useEffect(() => {
-      setSelectedTalle(talles[0]);
+    setSelectedTalle(talles[0]);
 
-      const primerColorConStock = colores.find(color => item.productos.some(producto => producto.color === color && producto.talle === talles[0] && producto.stock > 0));
-      setSelectedColor(primerColorConStock);
+    const primerColorConStock = colores.find((color) =>
+      item.productos.some(
+        (producto) =>
+          producto.color === color &&
+          producto.talle === talles[0] &&
+          producto.stock > 0
+      )
+    );
+    setSelectedColor(primerColorConStock);
 
-      const stock = item.productos.find((producto) => producto.talle === talles[0] && producto.color === primerColorConStock).stock;
-      setSelectedStock(stock)
+    const stock = item.productos.find(
+      (producto) =>
+        producto.talle === talles[0] && producto.color === primerColorConStock
+    ).stock;
+    setSelectedStock(stock);
   }, [item]);
 
   const handleRestar = () => {
@@ -44,16 +64,18 @@ const ItemDetail = ({ item }) => {
   };
 
   const handleAgregarAlCarrito = (numero_articulo, color, talle, cantidad) => {
-    agregarAlCarrito(numero_articulo, color, talle, cantidad)
-    setTipoPrecios("minorista")
-    setCantidad(1)
-    alert("Productos agregados al carrito")
-  }
+    agregarAlCarrito(numero_articulo, color, talle, cantidad);
+    setTipoPrecios("minorista");
+    setCantidad(1);
+    setShowModal(true); 
+  };
 
   const isColorDisabled = (color) => {
-    const producto = item.productos.find(producto => producto.color === color && producto.talle === selectedTalle);
+    const producto = item.productos.find(
+      (producto) => producto.color === color && producto.talle === selectedTalle
+    );
     return producto ? producto.stock <= 0 : false;
-};
+  };
 
   return (
     <div className="container">
@@ -63,6 +85,7 @@ const ItemDetail = ({ item }) => {
             <Carousel
               activeIndex={activeIndex}
               onSelect={(selectedIndex, e) => setActiveIndex(selectedIndex)}
+              
             >
               {item.imagens.map((imagen, index) => (
                 <Carousel.Item key={index}>
@@ -93,19 +116,31 @@ const ItemDetail = ({ item }) => {
             <form className="checkTalle">
               {talles.map((talle) => (
                 <label key={talle} className="talleLabel">
-                  <input className="talleInput"
-                    type ="checkbox" 
+                  <input
+                    className="talleInput"
+                    type="checkbox"
                     name="talle"
                     value={talle}
-                    onChange ={() => {
+                    onChange={() => {
                       setSelectedTalle(talle);
-                      const primerColorConStock = colores.find(color => item.productos.some(producto => producto.color === color && producto.talle === talle && producto.stock > 0));
+                      const primerColorConStock = colores.find((color) =>
+                        item.productos.some(
+                          (producto) =>
+                            producto.color === color &&
+                            producto.talle === talle &&
+                            producto.stock > 0
+                        )
+                      );
                       setSelectedColor(primerColorConStock);
-                      const stock = item.productos.find((producto) => producto.talle === talle && producto.color === primerColorConStock).stock;
-                      setSelectedStock(stock)
+                      const stock = item.productos.find(
+                        (producto) =>
+                          producto.talle === talle &&
+                          producto.color === primerColorConStock
+                      ).stock;
+                      setSelectedStock(stock);
                       setCantidad(1);
                     }}
-                    checked={ selectedTalle === talle}
+                    checked={selectedTalle === talle}
                   />
                   {talle}
                 </label>
@@ -123,8 +158,12 @@ const ItemDetail = ({ item }) => {
                     value={color}
                     onChange={() => {
                       setSelectedColor(color);
-                      const stock = item.productos.find((producto) => producto.talle === selectedTalle && producto.color === color).stock;
-                      setSelectedStock(stock)
+                      const stock = item.productos.find(
+                        (producto) =>
+                          producto.talle === selectedTalle &&
+                          producto.color === color
+                      ).stock;
+                      setSelectedStock(stock);
                       setCantidad(1);
                     }}
                     checked={selectedColor === color}
@@ -144,9 +183,24 @@ const ItemDetail = ({ item }) => {
             handleSumar={handleSumar}
             handleRestar={handleRestar}
             handleAgregar={() => {
-              handleAgregarAlCarrito(item.numero_articulo,  selectedColor,  selectedTalle,  cantidad);
+              handleAgregarAlCarrito(
+                item.numero_articulo,
+                selectedColor,
+                selectedTalle,
+                cantidad
+              );
             }}
           />
+          <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title className="modalTitle">Agregado al carrito</Modal.Title>
+            </Modal.Header>
+            <Modal.Footer>
+              <Button className='btn-custom' onClick={() => setShowModal(false)} >
+                Cerrar
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </div>
         <div className="description-container">
           <p className="descripcion">{item.descripcion}</p>

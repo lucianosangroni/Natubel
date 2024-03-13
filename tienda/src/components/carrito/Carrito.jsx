@@ -113,7 +113,7 @@ const Carrito = () => {
                   <td>{formatearNumero(prod.cantidad)}</td>
                   <td>$
                     {(() => {
-                      switch (selectedPrecios) {
+                      switch (selectedPrecios) { 
                         case "minorista":
                           return formatearNumero(prod.cantidad * prod.precio_minorista);
                         case "mayorista":

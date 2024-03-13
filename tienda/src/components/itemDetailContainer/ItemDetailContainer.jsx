@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import ItemDetail from '../itemDetail/ItemDetail';
 import { useParams } from 'react-router-dom';
 import { useData } from '../../context/DataContext';
+import "../itemDetailContainer/itemDetailContainer.css"
+
 
 const ItemDetailContainer = () => {
     const [item, setItem] = useState(null);
@@ -20,7 +22,9 @@ const ItemDetailContainer = () => {
       {item ? (
         <ItemDetail item={item} />
       ) : (
-        <p>Cargando...</p>
+        <div className='volverContainer'>
+          <p className='volver'>Cargando...</p>
+        </div>
       )}
     </div>
   )
