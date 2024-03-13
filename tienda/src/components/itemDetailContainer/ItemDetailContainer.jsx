@@ -12,7 +12,7 @@ const ItemDetailContainer = () => {
       const articuloSeleccionado = articulosData.find(articulo => parseInt(articulo.id) === parseInt(id))
 
       setItem(articuloSeleccionado)
-    }, [id])
+    }, [id, articulosData])
 
 
   return (

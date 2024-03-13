@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../context/CartContext";
+import { Navigate } from 'react-router-dom';
 import "./carrito.css";
-import { Link } from "react-router-dom";
 
 const Carrito = () => {
   const {
     precioTotal,
+    precioTotalMayorista,
+    precioTotalDistribuidor,
     vaciarCarrito,
     cantidadEnCarrito,
     eliminarProducto,
@@ -14,8 +16,11 @@ const Carrito = () => {
     setTipoPrecios
   } = useContext(CartContext);
 
+  const [ compraMinimaMayorista ] = useState(1)
+  const [ compraMinimaDistribuidor ] = useState(1)
   const [ carrito, setCarrito ] = useState([])
   const [ selectedPrecios, setSelectedPrecios ] = useState("minorista")
+  const [ shouldRedirect, setShouldRedirect ] = useState(false)
 
   const handleVaciar = () => {
     const shouldVaciar = window.confirm(
@@ -35,6 +40,8 @@ const Carrito = () => {
   };
 
   useEffect(() => {
+    setShouldRedirect(false)
+
     const nuevoCarrito = verificarStock()
     setCarrito(nuevoCarrito)
 
@@ -47,8 +54,33 @@ const Carrito = () => {
     setSelectedPrecios(tipoPrecios)
   } 
 
+  const formatearNumero = (numero) => {
+    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const handleConfirmarCompra = () => {
+    let tipoPedidor;
+
+    if(precioTotalMayorista() < compraMinimaMayorista){
+      tipoPedidor = "minorista"
+    } else if(precioTotalMayorista() >= compraMinimaMayorista && precioTotalDistribuidor() < compraMinimaDistribuidor) {
+      tipoPedidor = "mayorista"
+    } else if(precioTotalDistribuidor() >= compraMinimaDistribuidor) {
+      tipoPedidor = "distribuidor"
+    }
+
+    if(tipoPedidor !== selectedPrecios) {
+      alert(`El monto de su pedido corresponde con la lista de precios para ${tipoPedidor}. Por favor verifique su pedido con los precios correspondientes.`)
+      setTipoPrecios(tipoPedidor)
+      setSelectedPrecios(tipoPedidor)
+    } else {
+      setShouldRedirect(true)
+    }
+  }
+
   return (
     <div className="margenes">
+      {shouldRedirect && <Navigate to="/formulario" />}
       {carrito.length > 0 ? (
         <> 
           <h1 className="carritoCompras">Carrito de compras</h1>
@@ -56,10 +88,10 @@ const Carrito = () => {
           <button className={selectedPrecios === "mayorista" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("mayorista")}>Mayorista</button>
           <button className={selectedPrecios === "distribuidor" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("distribuidor")}>Distribuidor</button>
           {selectedPrecios === "mayorista" && (
-            <span>Compra minima: $25.000</span>
+            <span>Compra minima: ${formatearNumero(compraMinimaMayorista)}</span>
           )}
           {selectedPrecios === "distribuidor" && (
-            <span>Compra minima: $200.000</span>
+            <span>Compra minima: ${formatearNumero(compraMinimaDistribuidor)}</span>
           )}
           <table className="carritoContainer">
             <thead>
@@ -78,18 +110,16 @@ const Carrito = () => {
                   <td>ART. {prod.numero_articulo}</td>
                   <td>{prod.color}</td>
                   <td>{prod.talle}</td>
-                  <td>{prod.cantidad}</td>
+                  <td>{formatearNumero(prod.cantidad)}</td>
                   <td>$
                     {(() => {
                       switch (selectedPrecios) {
                         case "minorista":
-                          return prod.cantidad * prod.precio_minorista;
+                          return formatearNumero(prod.cantidad * prod.precio_minorista);
                         case "mayorista":
-                          return prod.cantidad * prod.precio_mayorista;
+                          return formatearNumero(prod.cantidad * prod.precio_mayorista);
                         case "distribuidor":
-                          return prod.cantidad * prod.precio_distribuidor;
-                        default:
-                          return prod.cantidad * prod.precio;
+                          return formatearNumero(prod.cantidad * prod.precio_distribuidor);
                       }
                     })()}
                   </td>
@@ -106,13 +136,13 @@ const Carrito = () => {
             </tbody>
           </table>
           <div className="totalContainer"> 
-          <p className="cantidadTotal">Cantidad total: {cantidadEnCarrito()}</p>
-          <p className="precioTotal">Precio total: ${precioTotal(selectedPrecios)}</p>
+          <p className="cantidadTotal">Cantidad total: {formatearNumero(cantidadEnCarrito())}</p>
+          <p className="precioTotal">Precio total: ${formatearNumero(precioTotal(selectedPrecios))}</p>
           </div>
           <div className="button-container">
-            <Link className="linkForm" to="/formulario">
+            <button className="linkForm" onClick={() => handleConfirmarCompra()}>
               Confirmar compra
-            </Link>
+            </button>
             <button onClick={handleVaciar}>Vaciar carrito</button>
           </div>
         </>

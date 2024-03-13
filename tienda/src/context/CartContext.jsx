@@ -52,11 +52,23 @@ export const CartProvider = ({ children }) => {
 
   const precioTotal = (tipoPrecio) => {
     switch(tipoPrecio) {
-      case "minorista": return carrito.reduce((acc, prod) => acc + prod.cantidad * prod.precio_minorista, 0);
-      case "mayorista": return carrito.reduce((acc, prod) => acc + prod.cantidad * prod.precio_mayorista, 0);
-      case "distribuidor": return carrito.reduce((acc, prod) => acc + prod.cantidad * prod.precio_distribuidor, 0);
+      case "minorista": return precioTotalMinorista();
+      case "mayorista": return precioTotalMayorista();
+      case "distribuidor": return precioTotalDistribuidor();
     }
   };
+
+  const precioTotalMinorista = () => {
+    return carrito.reduce((acc, prod) => acc + prod.cantidad * prod.precio_minorista, 0);
+  }
+
+  const precioTotalMayorista = () => {
+    return carrito.reduce((acc, prod) => acc + prod.cantidad * prod.precio_mayorista, 0);
+  }
+
+  const precioTotalDistribuidor = () => {
+    return carrito.reduce((acc, prod) => acc + prod.cantidad * prod.precio_distribuidor, 0);
+  }
 
   const vaciarCarrito = () => {
     setCarrito([]);
@@ -100,6 +112,8 @@ export const CartProvider = ({ children }) => {
         eliminarProducto,
         cantidadEnCarrito,
         precioTotal,
+        precioTotalMayorista,
+        precioTotalDistribuidor,
         vaciarCarrito,
         verificarStock,
         tipoPrecios,
