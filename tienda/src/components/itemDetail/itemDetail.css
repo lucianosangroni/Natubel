@@ -63,7 +63,6 @@
   margin-top: 0.5rem;
   display: flex;
   flex-wrap: wrap;
-  
 }
 
 .talleLabel {
@@ -72,14 +71,11 @@
   font-size: 1rem;
 
   padding: 0.2rem;
-  
 }
 
 .talleInput {
   margin-right: 5px;
-  
 }
-
 
 .checkColor {
   display: flex;
@@ -87,26 +83,22 @@
   margin-top: 0.5rem;
   display: flex;
   flex-wrap: wrap;
-  
 }
 
 .colorLabel {
-    display: block;
-    text-transform: uppercase;
-    font-size: 1rem;
+  display: block;
+  text-transform: uppercase;
+  font-size: 1rem;
 
-    padding: 0.2rem;
-    
+  padding: 0.2rem;
 }
 
 .colorInput {
   margin-right: 5px;
-  
 }
 
 input {
-    accent-color: #fbccd2;
-    
+  accent-color: #fbccd2;
 }
 
 .descripcion {
@@ -164,6 +156,28 @@ input {
   width: max-content;
   border-radius: 0.5rem;
   transition: 0.2s;
+}
+
+.modalTitle {
+  background-color: #fbccd2;
+  color: white;
+  padding: 0.3rem;
+  border-radius: 0.5rem;
+}
+
+.btn-custom {
+  background-color: #fbccd2;
+  color: white;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  border: 2px solid #fbccd2;
+}
+
+.btn-custom:hover {
+  background-color: white !important;
+  color: black !important;
+  border: 2px solid #fbccd2 !important;
 }
 
 @media (max-width: 768px) {

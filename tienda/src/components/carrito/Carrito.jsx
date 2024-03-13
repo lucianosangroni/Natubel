@@ -56,10 +56,10 @@ const Carrito = () => {
           <button className={selectedPrecios === "mayorista" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("mayorista")}>Mayorista</button>
           <button className={selectedPrecios === "distribuidor" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("distribuidor")}>Distribuidor</button>
           {selectedPrecios === "mayorista" && (
-            <span>Compra minima: $25.000</span>
+            <span className="compraMinima">Compra minima: $25.000</span>
           )}
           {selectedPrecios === "distribuidor" && (
-            <span>Compra minima: $200.000</span>
+            <span className="compraMinima">Compra minima: $200.000</span>
           )}
           <table className="carritoContainer">
             <thead>
@@ -81,7 +81,7 @@ const Carrito = () => {
                   <td>{prod.cantidad}</td>
                   <td>$
                     {(() => {
-                      switch (selectedPrecios) {
+                      switch (selectedPrecios) { 
                         case "minorista":
                           return prod.cantidad * prod.precio_minorista;
                         case "mayorista":
