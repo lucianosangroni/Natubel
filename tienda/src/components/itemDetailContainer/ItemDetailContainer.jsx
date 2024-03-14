@@ -14,7 +14,7 @@ const ItemDetailContainer = () => {
       const articuloSeleccionado = articulosData.find(articulo => parseInt(articulo.id) === parseInt(id))
 
       setItem(articuloSeleccionado)
-    }, [id])
+    }, [id, articulosData])
 
 
   return (
@@ -23,7 +23,7 @@ const ItemDetailContainer = () => {
         <ItemDetail item={item} />
       ) : (
         <div className='volverContainer'>
-        <p className='volver'>Volver al catalogo</p>
+        <p className='volver'>Cargando...</p>
         </div>
       )}
     </div>

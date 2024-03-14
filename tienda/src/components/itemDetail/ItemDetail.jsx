@@ -107,17 +107,6 @@ const ItemDetail = ({ item }) => {
               )}
             </Carousel>
           </div>
-          <div className="miniaturas">
-            {item.imagens.map((imagen, index) => (
-              <img
-                key={index}
-                src={imagen.url}
-                alt={`Miniatura ${index + 1}`}
-                className={`miniatura ${index === activeIndex ? "activa" : ""}`}
-                onClick={() => handleMiniaturaClick(index)}
-              />
-            ))}
-          </div>
         </div>
         <div className="infoContainer">
           <h3 className="titulo">ART. {item.numero_articulo}</h3>

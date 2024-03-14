@@ -36,9 +36,16 @@ const FormularioCompra = () => {
           <div className="formulario">
             <label>Email:</label>
             <input
-              type="email"
-              {...register("email", { required: "Este campo es obligatorio" })}
-            />
+                  type="email"
+                  {...register("email", { 
+                    required: "Este campo es obligatorio.",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: 'Correo electrónico inválido'
+                    } 
+                  })}
+                />
+                {errors.email && <p>{errors.email.message}</p>}        
           </div>
           <div className="formulario">
             <label>Nombre completo:</label>
