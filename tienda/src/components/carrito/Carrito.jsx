@@ -16,8 +16,8 @@ const Carrito = () => {
     setTipoPrecios
   } = useContext(CartContext);
 
-  const [ compraMinimaMayorista ] = useState(1)
-  const [ compraMinimaDistribuidor ] = useState(1)
+  const [ compraMinimaMayorista ] = useState(25000)
+  const [ compraMinimaDistribuidor ] = useState(200000)
   const [ carrito, setCarrito ] = useState([])
   const [ selectedPrecios, setSelectedPrecios ] = useState("minorista")
   const [ shouldRedirect, setShouldRedirect ] = useState(false)
@@ -123,8 +123,8 @@ const Carrito = () => {
                       }
                     })()}
                   </td>
-                  <td className="delete-icon">
-                    <img
+                  <td className="delete-icon" style={{padding: "0"}}>
+                    <img className="delete-icon-img"
                       src="/img/trash.svg"
                       alt="Eliminar"
                       onClick={() => handleEliminarProducto(prod.id)}

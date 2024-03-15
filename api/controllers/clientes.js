@@ -1,6 +1,29 @@
 const { clienteModel, personaModel } = require("../modelos");
 const { matchedData } = require("express-validator");
 
+const getItem = async (req, res) => {
+    try {
+        const { email } = req.params
+
+        const persona = await personaModel.findOne({ where: { email } });
+
+        if (!persona) {
+            return res.status(200).send({ message: "Persona no encontrada" });
+        }
+
+        const cliente = await clienteModel.findOne({ where: { persona_id: persona.id }, include: [{model: personaModel}] });
+
+        if (!cliente) {
+            return res.status(200).send({ message: "Cliente no encontrado" });
+        }
+
+        res.status(200).send({ message: "Cliente encontrado", cliente });
+    } catch (e) {
+        console.log("Error al buscar los clientes: ", e)
+        res.status(500).json({ message: 'Error al buscar los clientes' });
+    }
+}
+
 const getItems = async (req, res) => {
     try {
         const clientes = await clienteModel.findAll({include: [{model: personaModel}]})
@@ -16,6 +39,25 @@ const createItem = async (req, res) => {
         req = matchedData(req);
 
         const { nombre, email, telefono, direccion, dni, cuit_cuil, tipo_cliente, forma_de_envio, codigo_postal, ciudad, provincia } = req
+
+        if (cuit_cuil !== "" && cuit_cuil !== null) {
+            const existingPersonaCuit = await personaModel.findOne({ where: { cuit_cuil: cuit_cuil } });
+            if (existingPersonaCuit) {
+                return res.status(200).json({ message: 'Ya existe una persona con el mismo CUIT/CUIL' });
+            }
+        }
+        
+        if (dni !== "" && dni !== null) {
+            const existingPersonaDni = await clienteModel.findOne({ where: { dni: dni } });
+            if (existingPersonaDni) {
+                return res.status(200).json({ message: 'Ya existe una persona con el mismo DNI' });
+            }
+        }
+
+        const existingPersonaNombre = await personaModel.findOne({ where: { nombre: nombre } });
+        if (existingPersonaNombre) {
+            return res.status(200).json({ message: 'Ya existe una persona con el mismo Nombre' });
+        }
 
         const nuevaPersona = await personaModel.create
         (
@@ -68,6 +110,25 @@ const updateItem = async (req, res) => {
             return res.status(404).json({ message: 'Cliente no encontrado' });
         }
 
+        if (cuit_cuil !== "" && cuit_cuil !== null) {
+            const existingPersonaCuit = await personaModel.findOne({ where: { cuit_cuil: cuit_cuil } });
+            if (existingPersonaCuit && existingPersonaCuit.id !== parseInt(persona_id)) {
+                return res.status(200).json({ message: 'Ya existe una persona con el mismo CUIT/CUIL' });
+            }
+        }
+        
+        if (dni !== "" && dni !== null) {
+            const existingPersonaDni = await clienteModel.findOne({ where: { dni: dni } });
+            if (existingPersonaDni && existingPersonaDni.id !== parseInt(cliente_id)) {
+                return res.status(200).json({ message: 'Ya existe una persona con el mismo DNI' });
+            }
+        }
+
+        const existingPersonaNombre = await personaModel.findOne({ where: { nombre: nombre } });
+        if (existingPersonaNombre && existingPersonaNombre.id !== parseInt(persona_id)) {
+            return res.status(200).json({ message: 'Ya existe una persona con el mismo Nombre' });
+        }
+
         await personaModel.update
         (
             {
@@ -112,7 +173,7 @@ const deleteItem = async (req, res) => {
 
         const cliente = await clienteModel.findByPk(cliente_id, {
             include: [{ model: personaModel, attributes: ['id'] }],
-          });
+        });
 
         if (!cliente) {
             return res.status(404).json({ message: 'Cliente no encontrado' });
@@ -146,4 +207,4 @@ const deleteItem = async (req, res) => {
 };
 
 
-module.exports = {getItems, createItem, updateItem, deleteItem};
+module.exports = { getItem, getItems, createItem, updateItem, deleteItem };
