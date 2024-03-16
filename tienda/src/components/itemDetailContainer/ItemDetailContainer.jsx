@@ -15,6 +15,7 @@ const ItemDetailContainer = () => {
 
       setItem(articuloSeleccionado)
     }, [id, articulosData])
+    
 
 
   return (
@@ -23,7 +24,7 @@ const ItemDetailContainer = () => {
         <ItemDetail item={item} />
       ) : (
         <div className='volverContainer'>
-        <p className='volver'>Cargando...</p>
+          <p className='volver'>Cargando...</p>
         </div>
       )}
     </div>

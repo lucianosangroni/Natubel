@@ -1,65 +1,131 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../context/CartContext";
+import { Navigate } from "react-router-dom";
 import "./carrito.css";
-import { Link } from "react-router-dom";
+import Alert from "react-bootstrap/Alert";
 
 const Carrito = () => {
   const {
     precioTotal,
+    precioTotalMayorista,
+    precioTotalDistribuidor,
     vaciarCarrito,
     cantidadEnCarrito,
     eliminarProducto,
     verificarStock,
     tipoPrecios,
-    setTipoPrecios
+    setTipoPrecios,
   } = useContext(CartContext);
 
-  const [ carrito, setCarrito ] = useState([])
-  const [ selectedPrecios, setSelectedPrecios ] = useState("minorista")
+  const [compraMinimaMayorista] = useState(1);
+  const [compraMinimaDistribuidor] = useState(1);
+  const [carrito, setCarrito] = useState([]);
+  const [selectedPrecios, setSelectedPrecios] = useState("minorista");
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+  const [showPrecioAlert, setShowPrecioAlert] = useState(false);
+  const [showVaciarAlert, setShowVaciarAlert] = useState(false);
 
   const handleVaciar = () => {
-    const shouldVaciar = window.confirm(
-      `¿Estas seguro que quieres vaciar el carrito?`
-    );
-    if (!shouldVaciar) {
-      return;
-    }
+    setShowVaciarAlert(true);
+  };
 
+  const vaciarCarritoYActualizar = () => {
     const nuevoCarrito = vaciarCarrito();
-    setCarrito(nuevoCarrito)
+    setCarrito(nuevoCarrito);
   };
 
   const handleEliminarProducto = (productId) => {
     const nuevoCarrito = eliminarProducto(productId);
-    setCarrito(nuevoCarrito)
+    setCarrito(nuevoCarrito);
   };
 
   useEffect(() => {
-    const nuevoCarrito = verificarStock()
-    setCarrito(nuevoCarrito)
+    setShouldRedirect(false);
 
-    const precios = tipoPrecios()
-    setSelectedPrecios(precios)
+    const nuevoCarrito = verificarStock();
+    setCarrito(nuevoCarrito);
+
+    const precios = tipoPrecios();
+    setSelectedPrecios(precios);
   }, []);
 
   const handlePreciosChange = (tipoPrecios) => {
-    setTipoPrecios(tipoPrecios)
-    setSelectedPrecios(tipoPrecios)
-  } 
+    setTipoPrecios(tipoPrecios);
+    setSelectedPrecios(tipoPrecios);
+  };
+
+  const formatearNumero = (numero) => {
+    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const handleConfirmarCompra = () => {
+    let tipoPedidor;
+
+    if (precioTotalMayorista() < compraMinimaMayorista) {
+      tipoPedidor = "minorista";
+    } else if (
+      precioTotalMayorista() >= compraMinimaMayorista &&
+      precioTotalDistribuidor() < compraMinimaDistribuidor
+    ) {
+      tipoPedidor = "mayorista";
+    } else if (precioTotalDistribuidor() >= compraMinimaDistribuidor) {
+      tipoPedidor = "distribuidor";
+    }
+
+    if (tipoPedidor !== selectedPrecios) {
+      setShowPrecioAlert(true);
+      setTipoPrecios(tipoPedidor);
+      setSelectedPrecios(tipoPedidor);
+    } else {
+      setShouldRedirect(true);
+    }
+  };
 
   return (
     <div className="margenes">
+      {shouldRedirect && <Navigate to="/formulario" />}
       {carrito.length > 0 ? (
-        <> 
+        <>
           <h1 className="carritoCompras">Carrito de compras</h1>
-          <button className={selectedPrecios === "minorista" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("minorista")}>Minorista</button>
-          <button className={selectedPrecios === "mayorista" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("mayorista")}>Mayorista</button>
-          <button className={selectedPrecios === "distribuidor" ? "btnPrecios btnPreciosSelected" : "btnPrecios"} onClick={() => handlePreciosChange("distribuidor")}>Distribuidor</button>
+          <button
+            className={
+              selectedPrecios === "minorista"
+                ? "btnPrecios btnPreciosSelected"
+                : "btnPrecios"
+            }
+            onClick={() => handlePreciosChange("minorista")}
+          >
+            Minorista
+          </button>
+          <button
+            className={
+              selectedPrecios === "mayorista"
+                ? "btnPrecios btnPreciosSelected"
+                : "btnPrecios"
+            }
+            onClick={() => handlePreciosChange("mayorista")}
+          >
+            Mayorista
+          </button>
+          <button
+            className={
+              selectedPrecios === "distribuidor"
+                ? "btnPrecios btnPreciosSelected"
+                : "btnPrecios"
+            }
+            onClick={() => handlePreciosChange("distribuidor")}
+          >
+            Distribuidor
+          </button>
           {selectedPrecios === "mayorista" && (
-            <span className="compraMinima">Compra minima: $25.000</span>
+            <span>
+              Compra minima: ${formatearNumero(compraMinimaMayorista)}
+            </span>
           )}
           {selectedPrecios === "distribuidor" && (
-            <span className="compraMinima">Compra minima: $200.000</span>
+            <span>
+              Compra minima: ${formatearNumero(compraMinimaDistribuidor)}
+            </span>
           )}
           <table className="carritoContainer">
             <thead>
@@ -78,18 +144,23 @@ const Carrito = () => {
                   <td>ART. {prod.numero_articulo}</td>
                   <td>{prod.color}</td>
                   <td>{prod.talle}</td>
-                  <td>{prod.cantidad}</td>
-                  <td>$
+                  <td>{formatearNumero(prod.cantidad)}</td>
+                  <td>
+                    $
                     {(() => {
-                      switch (selectedPrecios) { 
+                      switch (selectedPrecios) {
                         case "minorista":
-                          return prod.cantidad * prod.precio_minorista;
+                          return formatearNumero(
+                            prod.cantidad * prod.precio_minorista
+                          );
                         case "mayorista":
-                          return prod.cantidad * prod.precio_mayorista;
+                          return formatearNumero(
+                            prod.cantidad * prod.precio_mayorista
+                          );
                         case "distribuidor":
-                          return prod.cantidad * prod.precio_distribuidor;
-                        default:
-                          return prod.cantidad * prod.precio;
+                          return formatearNumero(
+                            prod.cantidad * prod.precio_distribuidor
+                          );
                       }
                     })()}
                   </td>
@@ -101,19 +172,66 @@ const Carrito = () => {
                     />
                   </td>
                 </tr>
-
               ))}
             </tbody>
           </table>
-          <div className="totalContainer"> 
-          <p className="cantidadTotal">Cantidad total: {cantidadEnCarrito()}</p>
-          <p className="precioTotal">Precio total: ${precioTotal(selectedPrecios)}</p>
+          <div className="totalContainer">
+            <p className="cantidadTotal">
+              Cantidad total: {formatearNumero(cantidadEnCarrito())}
+            </p>
+            <p className="precioTotal">
+              Precio total: ${formatearNumero(precioTotal(selectedPrecios))}
+            </p>
           </div>
           <div className="button-container">
-            <Link className="linkForm" to="/formulario">
+            <button
+              className="linkForm"
+              onClick={() => handleConfirmarCompra()}
+            >
               Confirmar compra
-            </Link>
+            </button>
             <button onClick={handleVaciar}>Vaciar carrito</button>
+          </div>
+          <div className="alertContainer">
+            {showPrecioAlert && (
+              <Alert
+                variant="danger"
+                onClose={() => {
+                  setShowPrecioAlert(false);
+                }}
+                dismissible
+              >
+                El monto de su pedido no corresponde con la lista de precios.
+                Por favor verifique su pedido con los precios correspondientes.
+              </Alert>
+            )}
+            {showVaciarAlert && (
+              <Alert
+                variant="danger"
+                onClose={() => {
+                  setShowVaciarAlert(false);
+                }}
+              >
+                <p>¿Estás seguro de que deseas vaciar el carrito?</p>
+                <div>
+                  <button className="aceptarVaciar"
+                    onClick={() => {
+                      setShowVaciarAlert(false);
+                      vaciarCarritoYActualizar();
+                    }}
+                  >
+                    Aceptar
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowVaciarAlert(false);
+                    }}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </Alert>
+            )}
           </div>
         </>
       ) : (
