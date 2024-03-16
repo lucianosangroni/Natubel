@@ -1,65 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import './mayorista.css';
-import { pedirDatos } from "../../helpers/pedirDatos";
 import GrillaMayorista from '../grillaMayorista/GrillaMayorista';
 import '../grillaMayorista/grillaMayorista.css';
+import { useData } from "../../context/DataContext";
 
 const Mayorista = () => {
-  const [articulos, setArticulos] = useState([]);
-  const [selectedArticulo, setSelectedArticulo] = useState(null);
+  const { articulosData } = useData();
+  const [ selectedArticulo, setSelectedArticulo ] = useState(null);
 
   useEffect(() => {
-    pedirDatos().then((res) => {
-      setArticulos(res)
-      setSelectedArticulo(res[0])
-    });
-  }, []);
-
-  if (!Array.isArray(articulos)) {
-    return <p>No hay productos disponibles para mostrar.</p>;
-  }
+    setSelectedArticulo(articulosData[0])
+  }, [articulosData]);
 
   const handleArticuloClick = (articulo) => {
     setSelectedArticulo(articulo);
   };
-
-  const handleConfirmarProducto = (articulo) => {
-    console.log(articulo)
-  }
-
-  const transformarArticulo = (articulo) => {
-    let articuloTransformado = {
-        id: articulo.id,
-        numero_articulo: articulo.art,
-        productos: [{
-                color: "azul",
-                id: 1,
-                stock: 19,
-                talle: "s"
-            },
-            {
-                color: "rojo",
-                id: 2,
-                stock: 12,
-                talle: "s"
-            },
-            {
-                color: "azul",
-                id: 3,
-                stock: 1,
-                talle: "m"
-            },
-            {
-                color: "rojo",
-                id: 4,
-                stock: 25,
-                talle: "m"
-            },
-        ]
-    }
-
-    return articuloTransformado
-}
 
   return (
     <>
@@ -71,14 +26,14 @@ const Mayorista = () => {
             </tr>
           </thead>
           <tbody>
-            {articulos.map((articulo) => (
+            {articulosData.map((articulo) => (
               <tr key={articulo.id} onClick={() => handleArticuloClick(articulo)}>
                 <td
                   className={`table-cell-productos ${
                     selectedArticulo && selectedArticulo.id === articulo.id ? "selected" : ""
                   }`}
                 >
-                  {articulo.art}
+                ART. {articulo.numero_articulo}
                 </td>
               </tr>
             ))}
@@ -86,8 +41,7 @@ const Mayorista = () => {
         </table>
         {selectedArticulo && (
           <GrillaMayorista
-          articulo={transformarArticulo(selectedArticulo)}
-          onConfirmarProducto={handleConfirmarProducto}
+          articulo={selectedArticulo}
         />
         )}
       </section>

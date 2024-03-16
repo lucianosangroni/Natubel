@@ -24,19 +24,20 @@ export const CartProvider = ({ children }) => {
 
   const agregarAlCarrito = ( numero_articulo, color, talle, cantidad ) => {
     if(cantidad > 0) {
-      const producto = encontrarProducto(numero_articulo, color, talle)
+      setCarrito(prevCarrito => {
+        const producto = encontrarProducto(numero_articulo, color, talle)
+        const estaEnElCarrito = prevCarrito.find(prod => prod.id === producto.id);
 
-      const nuevoCarrito = [...carrito];
-      const estaEnElCarrito = nuevoCarrito.find(prod => prod.id === producto.id);
+        if (estaEnElCarrito) {
+          return prevCarrito.map(prod =>
+            prod.id === producto.id ? { ...prod, cantidad: prod.cantidad + cantidad } : prod
+          );
+        } else {
+          const nuevoItem = { id: producto.id, numero_articulo, color, talle, cantidad, precio_minorista: producto.articulo.precio_minorista, precio_mayorista: producto.articulo.precio_mayorista, precio_distribuidor: producto.articulo.precio_distribuidor }
 
-      if (estaEnElCarrito) {
-        estaEnElCarrito.cantidad += cantidad;
-      } else {
-        const nuevoItem = { id: producto.id, numero_articulo, color, talle, cantidad, precio_minorista: producto.articulo.precio_minorista, precio_mayorista: producto.articulo.precio_mayorista, precio_distribuidor: producto.articulo.precio_distribuidor }
-
-        nuevoCarrito.push(nuevoItem);
-      }
-      setCarrito(nuevoCarrito);
+          return [...prevCarrito, nuevoItem]
+        }
+      })    
     }
   };
 
