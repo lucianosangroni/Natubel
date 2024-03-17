@@ -6,7 +6,6 @@ import { useData } from '../../context/DataContext';
 const FiltroTalle = ({ articulos, onChangeTalle }) => {
     const [ filtroTalle, setFiltroTalle ] = useState(null);
     const [ tallesHabilitados, setTallesHabilitados ] = useState([]);
-    const [ tallesDeshabilitados, setTallesDeshabilitados ] = useState([]);
     const { tallesData } = useData();
 
     useEffect(() => {
@@ -15,8 +14,6 @@ const FiltroTalle = ({ articulos, onChangeTalle }) => {
       if(articulos) {
         const tallesFiltrados = tallesData.filter(talle => articulos.some(articulo => articulo.productos.some(producto => producto.talle === talle && producto.stock > 0)))
         setTallesHabilitados(tallesFiltrados)
-        const tallesRestantes = tallesData.filter(talle => !tallesFiltrados.includes(talle));
-        setTallesDeshabilitados(tallesRestantes)
       } else {
         setTallesHabilitados(tallesData)
       }
@@ -44,11 +41,6 @@ const FiltroTalle = ({ articulos, onChangeTalle }) => {
                 >
                   {talle}
                 </Link>
-              </li>
-            ))}
-            {tallesDeshabilitados.map(talle => (
-              <li style={{ color: '#e9dfdf' }} className="textoCategorias" key={talle}>
-                {talle}
               </li>
             ))}
         </ul>

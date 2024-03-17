@@ -18,6 +18,8 @@ const ItemListContainer = ({ flagCatalogo }) => {
 
   useEffect(() => {
     setArticulos(articulosData)
+    setProductosFiltroColores(articulosData)
+    setProductosFiltroTalles(articulosData)
   }, [articulosData])
 
   useEffect(() => {

@@ -6,9 +6,9 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [ carrito, setCarrito ] = useState([]);
-  const [ selectedPrecios, setSelectedPrecios ] = useState("minorista")
+  const [ selectedPrecios, setSelectedPrecios ] = useState("MINORISTA")
   const { articulosData } = useData();
-
+  const [ flagActualizarWidget, setFlagActualizarWidget ] = useState(0)
 
   const encontrarProducto = (numero_articulo, color, talle) => {
     for (const art of articulosData) {
@@ -41,11 +41,13 @@ export const CartProvider = ({ children }) => {
         }
       })    
     }
+    setFlagActualizarWidget(flagActualizarWidget + 1)
   };
 
   const eliminarProducto = (productId) => {
     const nuevoCarrito = carrito.filter((producto) => producto.id !== productId)
     setCarrito(nuevoCarrito);
+    setFlagActualizarWidget(flagActualizarWidget + 1)
     return nuevoCarrito
   }
 
@@ -55,9 +57,9 @@ export const CartProvider = ({ children }) => {
 
   const precioTotal = (tipoPrecio) => {
     switch(tipoPrecio) {
-      case "minorista": return precioTotalMinorista();
-      case "mayorista": return precioTotalMayorista();
-      case "distribuidor": return precioTotalDistribuidor();
+      case "MINORISTA": return precioTotalMinorista();
+      case "MAYORISTA": return precioTotalMayorista();
+      case "DISTRIBUIDOR": return precioTotalDistribuidor();
     }
   };
 
@@ -75,11 +77,12 @@ export const CartProvider = ({ children }) => {
 
   const vaciarCarrito = () => {
     setCarrito([]);
+    setFlagActualizarWidget(0)
     return []
   };
 
   const verificarStock = () => {
-    let flagAlertCambioCarrito = false;
+    let cambioCarrito = false
 
     for(const cartProduct of carrito) {
       const producto = encontrarProducto(cartProduct.numero_articulo, cartProduct.color, cartProduct.talle)
@@ -87,13 +90,14 @@ export const CartProvider = ({ children }) => {
         if(prod.id === producto.id) {
           if(cartProduct.cantidad > prod.stock) {
             cartProduct.cantidad = prod.stock
-            flagAlertCambioCarrito = true
+            cambioCarrito = true
           }
         }
       }
     }
 
-    if(flagAlertCambioCarrito) {
+    if(cambioCarrito) {
+      setFlagActualizarWidget(flagActualizarWidget + 1)
       alert("Las cantidades de algunos productos de su carrito cambiaron por falta de stock. Por favor verifique su pedido")
     }
 
@@ -120,7 +124,8 @@ export const CartProvider = ({ children }) => {
         vaciarCarrito,
         verificarStock,
         tipoPrecios,
-        setTipoPrecios
+        setTipoPrecios,
+        flagActualizarWidget
       }}
     >{children}</CartContext.Provider>
   );

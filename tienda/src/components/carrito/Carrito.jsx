@@ -7,21 +7,20 @@ import Alert from "react-bootstrap/Alert";
 const Carrito = () => {
   const {
     precioTotal,
-    precioTotalMayorista,
-    precioTotalDistribuidor,
     vaciarCarrito,
     cantidadEnCarrito,
     eliminarProducto,
     verificarStock,
     tipoPrecios,
-    setTipoPrecios,
+    setTipoPrecios
   } = useContext(CartContext);
 
   const [ compraMinimaMayorista ] = useState(25000)
   const [ compraMinimaDistribuidor ] = useState(200000)
   const [ carrito, setCarrito ] = useState([])
-  const [ selectedPrecios, setSelectedPrecios ] = useState("minorista")
+  const [ selectedPrecios, setSelectedPrecios ] = useState("MINORISTA")
   const [ shouldRedirect, setShouldRedirect ] = useState(false)
+  const [ showVaciarAlert, setShowVaciarAlert ] = useState(false)
 
   const handleVaciar = () => {
     setShowVaciarAlert(true);
@@ -57,26 +56,7 @@ const Carrito = () => {
   };
 
   const handleConfirmarCompra = () => {
-    let tipoPedidor;
-
-    if (precioTotalMayorista() < compraMinimaMayorista) {
-      tipoPedidor = "minorista";
-    } else if (
-      precioTotalMayorista() >= compraMinimaMayorista &&
-      precioTotalDistribuidor() < compraMinimaDistribuidor
-    ) {
-      tipoPedidor = "mayorista";
-    } else if (precioTotalDistribuidor() >= compraMinimaDistribuidor) {
-      tipoPedidor = "distribuidor";
-    }
-
-    if (tipoPedidor !== selectedPrecios) {
-      setShowPrecioAlert(true);
-      setTipoPrecios(tipoPedidor);
-      setSelectedPrecios(tipoPedidor);
-    } else {
-      setShouldRedirect(true);
-    }
+    setShouldRedirect(true);
   };
 
   return (
@@ -84,47 +64,51 @@ const Carrito = () => {
       {shouldRedirect && <Navigate to="/formulario" />}
       {carrito.length > 0 ? (
         <>
-          <h1 className="carritoCompras">Carrito de compras</h1>
-          <button
-            className={
-              selectedPrecios === "minorista"
-                ? "btnPrecios btnPreciosSelected"
-                : "btnPrecios"
-            }
-            onClick={() => handlePreciosChange("minorista")}
-          >
-            Minorista
-          </button>
-          <button
-            className={
-              selectedPrecios === "mayorista"
-                ? "btnPrecios btnPreciosSelected"
-                : "btnPrecios"
-            }
-            onClick={() => handlePreciosChange("mayorista")}
-          >
-            Mayorista
-          </button>
-          <button
-            className={
-              selectedPrecios === "distribuidor"
-                ? "btnPrecios btnPreciosSelected"
-                : "btnPrecios"
-            }
-            onClick={() => handlePreciosChange("distribuidor")}
-          >
-            Distribuidor
-          </button>
-          {selectedPrecios === "mayorista" && (
-            <span>
-              Compra minima: ${formatearNumero(compraMinimaMayorista)}
-            </span>
-          )}
-          {selectedPrecios === "distribuidor" && (
-            <span>
-              Compra minima: ${formatearNumero(compraMinimaDistribuidor)}
-            </span>
-          )}
+          <div className="descripcionPreciosContainer">
+            {selectedPrecios === "MAYORISTA" && (
+              <span>
+                Para esta lista de precios se requiere una compra minima de ${formatearNumero(compraMinimaMayorista)} o haber hecho previamente una compra mayorista.
+              </span>
+            )}
+            {selectedPrecios === "DISTRIBUIDOR" && (
+              <span>
+                Para esta lista de precios se requiere una compra minima de ${formatearNumero(compraMinimaDistribuidor)} o haber hecho previamente una compra de distribuidor.
+              </span>
+            )}
+          </div>
+          <div className="listaPreciosContainer">
+            <h1 className="listaPreciosTitulo">Lista de precios: </h1>
+            <button
+              className={
+                selectedPrecios === "MINORISTA"
+                  ? "btnPrecios btnPreciosSelected"
+                  : "btnPrecios"
+              }
+              onClick={() => handlePreciosChange("MINORISTA")}
+            >
+              Minorista
+            </button>
+            <button
+              className={
+                selectedPrecios === "MAYORISTA"
+                  ? "btnPrecios btnPreciosSelected"
+                  : "btnPrecios"
+              }
+              onClick={() => handlePreciosChange("MAYORISTA")}
+            >
+              Mayorista
+            </button>
+            <button
+              className={
+                selectedPrecios === "DISTRIBUIDOR"
+                  ? "btnPrecios btnPreciosSelected"
+                  : "btnPrecios"
+              }
+              onClick={() => handlePreciosChange("DISTRIBUIDOR")}
+            >
+              Distribuidor
+            </button>
+          </div>
           <table className="carritoContainer">
             <thead>
               <tr className="encabezadoCarrito">
@@ -147,15 +131,15 @@ const Carrito = () => {
                     $
                     {(() => {
                       switch (selectedPrecios) {
-                        case "minorista":
+                        case "MINORISTA":
                           return formatearNumero(
                             prod.cantidad * prod.precio_minorista
                           );
-                        case "mayorista":
+                        case "MAYORISTA":
                           return formatearNumero(
                             prod.cantidad * prod.precio_mayorista
                           );
-                        case "distribuidor":
+                        case "DISTRIBUIDOR":
                           return formatearNumero(
                             prod.cantidad * prod.precio_distribuidor
                           );
@@ -191,18 +175,6 @@ const Carrito = () => {
             <button onClick={handleVaciar}>Vaciar carrito</button>
           </div>
           <div className="alertContainer">
-            {showPrecioAlert && (
-              <Alert
-                variant="danger"
-                onClose={() => {
-                  setShowPrecioAlert(false);
-                }}
-                dismissible
-              >
-                El monto de su pedido no corresponde con la lista de precios.
-                Por favor verifique su pedido con los precios correspondientes.
-              </Alert>
-            )}
             {showVaciarAlert && (
               <Alert
                 variant="danger"
