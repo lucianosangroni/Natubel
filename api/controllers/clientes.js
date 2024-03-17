@@ -3,21 +3,59 @@ const { matchedData } = require("express-validator");
 
 const getItem = async (req, res) => {
     try {
-        const { email } = req.params
+        const { email, cuit_cuil, dni, nombre } = req.body
 
         const persona = await personaModel.findOne({ where: { email } });
 
-        if (!persona) {
+        if (persona) {
+            const cliente = await clienteModel.findOne({ where: { persona_id: persona.id }, include: [{model: personaModel}] });
+
+            if (cliente) {
+                if (cuit_cuil !== "" && cuit_cuil !== null) {
+                    const existingPersonaCuit = await personaModel.findOne({ where: { cuit_cuil: cuit_cuil } });
+                    if (existingPersonaCuit &&  existingPersonaCuit.id !== parseInt(persona.id)) {
+                        return res.status(200).json({ message: 'Ya existe una persona con el mismo CUIT/CUIL' });
+                    }
+                }
+                
+                if (dni !== "" && dni !== null) {
+                    const existingPersonaDni = await clienteModel.findOne({ where: { dni: dni } });
+                    if (existingPersonaDni && existingPersonaDni.id !== parseInt(cliente.id)) {
+                        return res.status(200).json({ message: 'Ya existe una persona con el mismo DNI' });
+                    }
+                }
+        
+                const existingPersonaNombre = await personaModel.findOne({ where: { nombre: nombre } });
+                if (existingPersonaNombre && existingPersonaNombre.id !== parseInt(persona.id)) {
+                    return res.status(200).json({ message: 'Ya existe una persona con el mismo Nombre' });
+                }
+
+                res.status(200).send({ message: "Cliente encontrado con éxito", cliente });
+            } else {
+                return res.status(200).send({ message: "Ya existe una persona con el mismo Email" });
+            }
+        } else {
+            if (cuit_cuil !== "" && cuit_cuil !== null) {
+                const existingPersonaCuit = await personaModel.findOne({ where: { cuit_cuil: cuit_cuil } });
+                if(existingPersonaCuit) {
+                    return res.status(200).json({ message: 'Ya existe una persona con el mismo CUIT/CUIL' });
+                }
+            }
+
+            if (dni !== "" && dni !== null) {
+                const existingPersonaDni = await clienteModel.findOne({ where: { dni: dni } });
+                if(existingPersonaDni) {
+                    return res.status(200).json({ message: 'Ya existe una persona con el mismo DNI' });
+                }
+            }
+
+            const existingPersonaNombre = await personaModel.findOne({ where: { nombre: nombre } });
+            if(existingPersonaNombre) {
+                return res.status(200).json({ message: 'Ya existe una persona con el mismo Nombre' });
+            }
+
             return res.status(200).send({ message: "Persona no encontrada" });
         }
-
-        const cliente = await clienteModel.findOne({ where: { persona_id: persona.id }, include: [{model: personaModel}] });
-
-        if (!cliente) {
-            return res.status(200).send({ message: "Cliente no encontrado" });
-        }
-
-        res.status(200).send({ message: "Cliente encontrado", cliente });
     } catch (e) {
         console.log("Error al buscar los clientes: ", e)
         res.status(500).json({ message: 'Error al buscar los clientes' });

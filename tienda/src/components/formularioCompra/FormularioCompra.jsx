@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import "./formularioCompra.css";
 import { useState, useContext, useEffect } from "react";
 import { CartContext } from "../../context/CartContext.jsx"
+import { useData } from "../../context/DataContext.jsx";
 import { apiUrl, tokenBearer } from "../../config/config";
 
 const FormularioCompra = () => {
@@ -14,6 +15,8 @@ const FormularioCompra = () => {
     register: registerCodigo,
     handleSubmit: handleSubmitCodigo
   } = useForm();
+
+  const { refreshData } = useData()
 
   const {
     verificarStock,
@@ -248,6 +251,7 @@ const FormularioCompra = () => {
     .then((result) => {
       setShowCompraFinalizada(true);
       vaciarCarrito();
+      refreshData();
     })
     .catch((error) => {
       console.error("Error en la solicitud POST:", error);

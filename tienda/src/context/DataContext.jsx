@@ -10,6 +10,10 @@ export const DataProvider = ({ children }) => {
     const [ tallesData, setTallesData ] = useState([]);
 
     useEffect(() => {
+        refreshData()
+    }, []);
+
+    const refreshData = () => {
         fetch(`${apiUrl}/categorias`, {
             headers: {
                 Authorization: `Bearer ${tokenBearer}`
@@ -51,10 +55,10 @@ export const DataProvider = ({ children }) => {
         .catch(error => {
             console.error("Error en la solicitud GET para categorías:", error);
         });
-    }, []);
+    }
 
     return (
-        <DataContext.Provider value={{ categoriasData, articulosData, coloresData, tallesData }}>
+        <DataContext.Provider value={{ categoriasData, articulosData, coloresData, tallesData, refreshData }}>
             {children}
         </DataContext.Provider>
     );

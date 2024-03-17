@@ -39,6 +39,9 @@ const createItem = async (req, res) => {
         const talles = JSON.parse(tallesString);
         const colores = JSON.parse(coloresString);
 
+        console.log(req.body)
+        console.log(req.files)
+
         const nuevoArticulo = await articuloModel.create
         (
             {
@@ -74,8 +77,7 @@ const createItem = async (req, res) => {
         }));
 
         const imagenesNuevas = []
-        console.log(URL_PUBLIC)
-        console.log(imagenes)
+
         for(const imagen of imagenes) {
             const nuevaImagen = await imagenModel.create
             (

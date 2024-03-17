@@ -32,10 +32,6 @@ const ItemDetail = ({ item }) => {
   );
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const handleMiniaturaClick = (index) => {
-    setActiveIndex(index);
-  };
-
   useEffect(() => {
     setSelectedTalle(talles[0]);
 
@@ -91,7 +87,7 @@ const ItemDetail = ({ item }) => {
           <div className="carousel-container">
             <Carousel
               activeIndex={activeIndex}
-              onSelect={(selectedIndex, e) => setActiveIndex(selectedIndex)}
+              onSelect={(selectedIndex, e) => setActiveIndex(selectedIndex)} 
             >
               {item.imagens.map((imagen, index) => (
                 <Carousel.Item key={index}>
