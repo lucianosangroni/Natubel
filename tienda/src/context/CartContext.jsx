@@ -1,12 +1,14 @@
 import { createContext, useState } from "react";
 import { useData } from "./DataContext";
 
+
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [ carrito, setCarrito ] = useState([]);
   const [ selectedPrecios, setSelectedPrecios ] = useState("minorista")
   const { articulosData } = useData();
+
 
   const encontrarProducto = (numero_articulo, color, talle) => {
     for (const art of articulosData) {

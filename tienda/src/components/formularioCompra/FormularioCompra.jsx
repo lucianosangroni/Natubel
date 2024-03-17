@@ -33,8 +33,8 @@ const FormularioCompra = () => {
   const [ formulario, setFormulario] = useState(null)
 
   useEffect(() => {
-    const nuevoCarrito = verificarStock()
-    setCarrito(nuevoCarrito)
+    const nuevoCarrito = verificarStock();
+    setCarrito(nuevoCarrito);
   }, []);
 
   const reenviarCodigo = () => {
@@ -261,7 +261,7 @@ const FormularioCompra = () => {
   const validateDni = (value) => {
     if (!value) return true;
     return /^[0-9]{8}$/.test(value);
-  }
+  };
 
   const validateCuit = (value) => {
     if (!value) return true;
@@ -305,7 +305,9 @@ const FormularioCompra = () => {
                     },
                   })}
                 />
-                {errors.email && <p>{errors.email.message}</p>}
+                {errors.email && (
+                  <p className="obligatorio">{errors.email.message}</p>
+                )}
               </div>
               <div className="formulario">
                 <label>Nombre completo:</label>
@@ -313,7 +315,9 @@ const FormularioCompra = () => {
                   type="text"
                   {...registerForm("nombreCompleto", { required: true })}
                 />
-                {errors.nombreCompleto && <p>Este campo es obligatorio.</p>}
+                {errors.nombreCompleto && (
+                  <p className="obligatorio">Este campo es obligatorio.</p>
+                )}
               </div>
               <div className="formulario">
                 <label>Teléfono:</label>
@@ -321,7 +325,9 @@ const FormularioCompra = () => {
                   type="tel"
                   {...registerForm("telefono", { required: true })}
                 />
-                {errors.telefono && <p>Este campo es obligatorio.</p>}
+                {errors.telefono && (
+                  <p className="obligatorio">Este campo es obligatorio.</p>
+                )}
               </div>
               <div className="formulario">
                 <label>DNI:</label>

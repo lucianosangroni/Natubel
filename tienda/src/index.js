@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { DataProvider } from './context/DataContext';
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <DataProvider>

@@ -15,6 +15,7 @@ const ItemDetailContainer = () => {
 
       setItem(articuloSeleccionado)
     }, [id, articulosData])
+    
 
 
   return (

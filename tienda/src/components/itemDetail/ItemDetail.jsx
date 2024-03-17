@@ -4,7 +4,9 @@ import ItemCount from "../itemCount/ItemCount";
 import { CartContext } from "../../context/CartContext";
 import { Link } from "react-router-dom";
 import { useData } from "../../context/DataContext";
-import { Carousel, Modal, Button } from "react-bootstrap";
+import { Carousel } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ItemDetail = ({ item }) => {
   const { agregarAlCarrito, setTipoPrecios } = useContext(CartContext);
@@ -13,7 +15,6 @@ const ItemDetail = ({ item }) => {
   const [selectedTalle, setSelectedTalle] = useState();
   const [selectedColor, setSelectedColor] = useState();
   const [selectedStock, setSelectedStock] = useState(0);
-  const [showModal, setShowModal] = useState(false); 
 
   const talles = Array.from(
     new Set(
@@ -63,7 +64,13 @@ const ItemDetail = ({ item }) => {
     agregarAlCarrito(numero_articulo, color, talle, cantidad);
     setTipoPrecios("minorista");
     setCantidad(1);
-    setShowModal(true); 
+    toast.success("¡Agregado al carrito!", {
+      position: "top-center",
+      hideProgressBar: true,
+      autoClose: 1000, 
+      closeButton: false,
+      
+    });
   };
 
   const isColorDisabled = (color) => {
@@ -186,16 +193,7 @@ const ItemDetail = ({ item }) => {
               );
             }}
           />
-          <Modal show={showModal} onHide={() => setShowModal(false)}>
-            <Modal.Header closeButton>
-              <Modal.Title className="modalTitle">Agregado al carrito</Modal.Title>
-            </Modal.Header>
-            <Modal.Footer>
-              <Button className='btn-custom' onClick={() => setShowModal(false)} >
-                Cerrar
-              </Button>
-            </Modal.Footer>
-          </Modal>
+          <ToastContainer position="top-right" hideProgressBar={false}/>
         </div>
         <div className="description-container">
           <p className="descripcion">{item.descripcion}</p>

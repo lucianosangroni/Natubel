@@ -17,7 +17,7 @@ function App() {
       <CartProvider>
       <BrowserRouter>
       <Navbar />
-            
+    
       <Routes>
         <Route path="/" element={<Inicio/>}/>
         <Route path="/articulo/:id" element={<ItemDetailContainer />}/>
