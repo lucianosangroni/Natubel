@@ -22,6 +22,9 @@ const Carrito = () => {
   const [ carrito, setCarrito ] = useState([])
   const [ selectedPrecios, setSelectedPrecios ] = useState("minorista")
   const [ shouldRedirect, setShouldRedirect ] = useState(false)
+  const [showPrecioAlert, setShowPrecioAlert] = useState(false);
+  const [showVaciarAlert, setShowVaciarAlert] = useState(false);
+  
 
   const handleVaciar = () => {
     setShowVaciarAlert(true);

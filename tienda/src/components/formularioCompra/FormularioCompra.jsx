@@ -278,12 +278,12 @@ const FormularioCompra = () => {
         </div>
       ) : showIngresarCodigo ? (
         <>
-          <p>Ingrese el código que se le envío al mail {email}</p>
+          <p className="ingreseCodigo">Ingrese el código que se le envío al mail {email}</p>
           <form onSubmit={handleSubmitCodigo(onSubmitCodigo)}>
             <input type="text" {...registerCodigo('codigo')}/>
-            <button type="submit">Confirmar</button>
+            <button className="confirmarCodigo" type="submit">Confirmar</button>
           </form>
-          <button onClick={() => reenviarCodigo()}>Reenviar mail</button>
+          <button className="reenviarCodigo" onClick={() => reenviarCodigo()}>Reenviar mail</button>
         </>
       ) : (
         <>

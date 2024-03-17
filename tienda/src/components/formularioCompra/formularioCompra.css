@@ -75,3 +75,20 @@
     padding-top: 1rem;
 }
 
+.ingreseCodigo{
+    font-size: 0.8rem;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    color: #58151C;
+}
+
+.confirmarCodigo{
+    margin-left: 0.5rem;
+    padding: 0.3rem;
+}
+
+.reenviarCodigo {
+    padding: 0.3rem;
+    margin-top: 0.5rem;
+}
+
