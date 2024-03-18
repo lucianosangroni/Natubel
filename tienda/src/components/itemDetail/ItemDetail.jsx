@@ -62,7 +62,7 @@ const ItemDetail = ({ item }) => {
 
   const handleAgregarAlCarrito = (numero_articulo, color, talle, cantidad) => {
     agregarAlCarrito(numero_articulo, color, talle, cantidad);
-    setTipoPrecios("minorista");
+    setTipoPrecios("MINORISTA");
     setCantidad(1);
     toast.success("¡Agregado al carrito!", {
       position: "top-center",
@@ -152,29 +152,34 @@ const ItemDetail = ({ item }) => {
           <div className="colorItemDetail">
             <p>Color: </p>
             <form className="checkColor">
-              {colores.map((color) => (
-                <label key={color} className="colorLabel">
-                  <input
-                    type="checkbox"
-                    name="color"
-                    value={color}
-                    onChange={() => {
-                      setSelectedColor(color);
-                      const stock = item.productos.find(
-                        (producto) =>
-                          producto.talle === selectedTalle &&
-                          producto.color === color
-                      ).stock;
-                      setSelectedStock(stock);
-                      setCantidad(1);
-                    }}
-                    checked={selectedColor === color}
-                    className="colorInput"
-                    disabled={isColorDisabled(color)}
-                  />
-                  {color}
-                </label>
-              ))}
+              {colores.map((color) => {
+                const producto = item.productos.find(producto => producto.talle === selectedTalle && producto.color === color);
+                if(producto && producto.stock > 0) {
+                  return (
+                    <label key={color} className="colorLabel">
+                        <input
+                          type="checkbox"
+                          name="color"
+                          value={color}
+                          onChange={() => {
+                            setSelectedColor(color);
+                            const stock = item.productos.find(
+                              (producto) =>
+                                producto.talle === selectedTalle &&
+                                producto.color === color
+                            ).stock;
+                            setSelectedStock(stock);
+                            setCantidad(1);
+                          }}
+                          checked={selectedColor === color}
+                          className="colorInput"
+                          disabled={isColorDisabled(color)}
+                        />
+                      {color}
+                    </label>
+                  )
+                }
+              })}
             </form>
           </div>
 

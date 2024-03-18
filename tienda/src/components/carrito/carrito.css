@@ -3,17 +3,46 @@
   margin-right: 5rem;
 }
 
-.carritoCompras {
-  background-color: #FBCCD2;
-  color: #58151C;
-  
+.descripcionPreciosContainer {
+  min-height: 50px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.listaPreciosContainer {
+  display: flex;
+  align-items: center;
+  border-radius: 25px;
+  width: fit-content;
+  height: 50px;
+  border: 2px solid #FBCCD2;
+  overflow: hidden;
+}
+
+.listaPreciosTitulo {
+  text-align: center;
+  color: black;
   padding: 1rem;
   width: 10.6rem;
-  height: 3rem;
-  margin-top: 2rem;
+  height: 50px;
   font-size: 1rem;
-  border-radius: 0.5rem;
-  
+  margin: 0;
+}
+
+.btnPrecios {
+  height: 50px;
+  background-color: #fff;
+  color: black;
+  border-radius: 0;
+}
+
+.btnPreciosSelected {
+  background-color: #FBCCD2;
+  color: white;
+}
+
+.btnPreciosSelected:hover {
+  background-color: #FBCCD2;
 }
 
 .carritoContainer {
@@ -25,12 +54,10 @@
 }
 
 .compraMinima {
-  background-color: #FBCCD2;
   font-size: 0.8rem;
   color: black;
   padding: 5px;
-  text-align: center;
-  border-radius: 0.2rem;
+  text-align: start;
   
 }
 
@@ -118,22 +145,13 @@
   }
 
   .carritoVacio {
-    background-color: #f7b0ba;
+    background-color: #FBCCD2;
     color: white;
     width: 17rem;
     font-size: 1.5rem;
     text-align: center;
     padding: 0.5rem;
     border-radius: 0.5rem;
-  }
-
-  .btnPrecios {
-    margin-right: 1rem;
-    margin-top: 2rem;
-  }
-
-  .btnPreciosSelected {
-    border: 1px solid black;
   }
 
   .delete-icon-img:hover {
@@ -145,6 +163,22 @@
     flex-direction: column;
     width: 25rem;
     margin-left: auto;
+    margin-top: 1rem;
+    position: fixed;
+    top: -100%; /* Comienza fuera de la pantalla */
+    transition: top 0.3s ease; /* Agrega una transición suave */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+  }
+
+  .alertContainer.active {
+    top: 0; /* Mueve el alert hacia abajo para que aparezca */
+  }
+
+  .alertVaciar {
+    background-color: white;
+    border: 1px solid #58151C;
   }
 
   .aceptarVaciar {
