@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
 function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBorrarConfirmarProducto, onSetCantidades }) {
-    const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
-    const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
+    const tallesDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
+    const coloresDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
+
+    const talles = tallesDesordenados.sort((a, b) => {
+        if (!isNaN(a) && !isNaN(b)) {
+            return a - b;
+        }
+        
+        const talleOrden = { 's': 1, 'm': 2, 'l': 3, 'xl': 4, 'xxl': 5, 'xxxl': 6, 'xxxxl': 7, 'xxxxxl': 8 };
+        return talleOrden[a.toLowerCase()] - talleOrden[b.toLowerCase()];
+    });
+
+    const colores = coloresDesordenados.sort((a, b) => a.localeCompare(b, 'es', {ignorePunctuation: true}));
+
     const [cantidades, setCantidades] = useState({});
     const inputRefs = {};
 
