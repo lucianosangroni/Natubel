@@ -8,7 +8,6 @@ import { Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 const FormularioCompra = () => {
   const {
     register: registerForm,
@@ -20,7 +19,7 @@ const FormularioCompra = () => {
     handleSubmit: handleSubmitCodigo
   } = useForm();
 
-  const { refreshData } = useData()
+  const { refreshData, montoMinimoMayorista, montoMinimoDistribuidor } = useData()
 
   const {
     verificarStock,
@@ -29,7 +28,8 @@ const FormularioCompra = () => {
     vaciarCarrito,
     precioTotalMayorista,
     precioTotalDistribuidor,
-    setTipoPrecios
+    setTipoPrecios,
+    setMostrarToastPrecios,
   } = useContext(CartContext);
 
   const [ carrito, setCarrito ] = useState([])
@@ -37,8 +37,6 @@ const FormularioCompra = () => {
   const [ showIngresarCodigo, setShowIngresarCodigo ] = useState(false);
   const [ codigo, setCodigo ] = useState(null)
   const [ formulario, setFormulario] = useState(null)
-  const [ compraMinimaMayorista ] = useState(25000)
-  const [ compraMinimaDistribuidor ] = useState(200000)
   const [ shouldRedirect, setShouldRedirect ] = useState(false)
   const [ cliente, setCliente ] = useState(null)
 
@@ -83,7 +81,6 @@ const FormularioCompra = () => {
       hideProgressBar: true,
       autoClose: 1300, 
       closeButton: false,
-      
     });
   }
 
@@ -112,8 +109,8 @@ const FormularioCompra = () => {
     .then(result => {
       if (result.message === "Persona no encontrada") {
         const tipoPreciosQueCorresponde = 
-          precioTotalMayorista() >= compraMinimaMayorista && precioTotalDistribuidor() < compraMinimaDistribuidor ? "MAYORISTA"
-          : precioTotalDistribuidor() >= compraMinimaDistribuidor ? "DISTRIBUIDOR"
+          precioTotalMayorista() >= montoMinimoMayorista && precioTotalDistribuidor() < montoMinimoDistribuidor ? "MAYORISTA"
+          : precioTotalDistribuidor() >= montoMinimoDistribuidor ? "DISTRIBUIDOR"
           : "MINORISTA";
 
           if(tipoPrecios() === tipoPreciosQueCorresponde) {  
@@ -122,14 +119,8 @@ const FormularioCompra = () => {
             setFormulario(formData)
           } else {
             setTipoPrecios(tipoPreciosQueCorresponde)
+            setMostrarToastPrecios(true)
             setShouldRedirect(true)
-            toast.success("El monto de su pedido no corresponde con la lista de precios. Por favor verifique su pedido con los precios correspondientes.", {
-              position: "top-center",
-              hideProgressBar: true,
-              autoClose: 2000, 
-              closeButton: false,
-              
-            });
           }
       } else if (result.message === "Cliente encontrado con éxito") {
         const cliente = result.cliente
@@ -139,12 +130,12 @@ const FormularioCompra = () => {
         switch (cliente.tipo_cliente) {
           case "MINORISTA": 
           tipoPreciosQueCorresponde = 
-            precioTotalMayorista() >= compraMinimaMayorista && precioTotalDistribuidor() < compraMinimaDistribuidor ? "MAYORISTA"
-            : precioTotalDistribuidor() >= compraMinimaDistribuidor ? "DISTRIBUIDOR"
+            precioTotalMayorista() >= montoMinimoMayorista && precioTotalDistribuidor() < montoMinimoDistribuidor ? "MAYORISTA"
+            : precioTotalDistribuidor() >= montoMinimoDistribuidor ? "DISTRIBUIDOR"
             : "MINORISTA";
           break;
           case "MAYORISTA":
-            tipoPreciosQueCorresponde = precioTotalDistribuidor() >= compraMinimaDistribuidor ? "DISTRIBUIDOR" : "MAYORISTA";
+            tipoPreciosQueCorresponde = precioTotalDistribuidor() >= montoMinimoDistribuidor ? "DISTRIBUIDOR" : "MAYORISTA";
           break;
           case "DISTRIBUIDOR":
             tipoPreciosQueCorresponde = "DISTRIBUIDOR"
@@ -158,24 +149,16 @@ const FormularioCompra = () => {
           setCliente(cliente)
         } else {
           setTipoPrecios(tipoPreciosQueCorresponde)
+          setMostrarToastPrecios(true)
           setShouldRedirect(true)
-          toast.success("El monto de su pedido no corresponde con la lista de precios. Por favor verifique su pedido con los precios correspondientes.", {
-            position: "top-center",
-            hideProgressBar: true,
-            autoClose: 2000, 
-            closeButton: false,
-            
-          });
         }
       } else {
-        toast.success(result.message)({
+        toast.warning(result.message, {
           position: "top-center",
           hideProgressBar: true,
           autoClose: 2000, 
           closeButton: false,
-          
         });
-        // alert(result.message)
       }
     })
     .catch(error => {
@@ -187,7 +170,7 @@ const FormularioCompra = () => {
     if(parseInt(CodigoData.codigo) === codigo) {
       enviarPedido()
     } else {
-      toast.success("Codigo incorrecto.", {
+      toast.error("Codigo incorrecto.", {
         position: "top-center",
         hideProgressBar: true,
         autoClose: 1300, 
@@ -230,7 +213,12 @@ const FormularioCompra = () => {
       })
       .then(result => {
         if(result.message !== "Cliente editado con éxito") {
-          alert(result.message)
+          toast.warning(result.message, {
+            position: "top-center",
+            hideProgressBar: true,
+            autoClose: 2000, 
+            closeButton: false,
+          });
         } else {
           crearPedido(cliente.persona_id)
         }
@@ -269,7 +257,12 @@ const FormularioCompra = () => {
       })
       .then((result) => {
         if(result.message !== 'Cliente creado con éxito') {
-          alert(result.message)
+          toast.warning(result.message, {
+            position: "top-center",
+            hideProgressBar: true,
+            autoClose: 2000, 
+            closeButton: false,
+          });
         } else {
           crearPedido(result.persona_id)
         }
@@ -338,6 +331,7 @@ const FormularioCompra = () => {
 
   return (
     <>
+      <ToastContainer position="top-right" hideProgressBar={false}/>
       {shouldRedirect && <Navigate to="/carrito" />}
       <div className="container">
         {showCompraFinalizada ? (
@@ -357,7 +351,6 @@ const FormularioCompra = () => {
               <button className="confirmarCodigo" type="submit">Confirmar</button>
             </form>
             <button className="reenviarCodigo" onClick={() => reenviarCodigo()}>Reenviar mail</button>
-            <ToastContainer position="top-right" hideProgressBar={false}/>
           </>
         ) : (
           <>

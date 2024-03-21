@@ -3,6 +3,9 @@ import { CartContext } from "../../context/CartContext";
 import { Navigate } from "react-router-dom";
 import "./carrito.css";
 import Alert from "react-bootstrap/Alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useData } from '../../context/DataContext';
 
 const Carrito = () => {
   const {
@@ -12,11 +15,15 @@ const Carrito = () => {
     eliminarProducto,
     verificarStock,
     tipoPrecios,
-    setTipoPrecios
+    setTipoPrecios,
+    mostrarToastPrecios,
+    setMostrarToastPrecios,
+    mostrarToastStock,
+    setMostrarToastStock
   } = useContext(CartContext);
 
-  const [ compraMinimaMayorista ] = useState(25000)
-  const [ compraMinimaDistribuidor ] = useState(200000)
+  const { montoMinimoMayorista, montoMinimoDistribuidor } = useData();
+
   const [ carrito, setCarrito ] = useState([])
   const [ selectedPrecios, setSelectedPrecios ] = useState("MINORISTA")
   const [ shouldRedirect, setShouldRedirect ] = useState(false)
@@ -36,15 +43,37 @@ const Carrito = () => {
     setCarrito(nuevoCarrito);
   };
 
-  useEffect(() => {
-    setShouldRedirect(false);
 
+  useEffect(() => {
     const nuevoCarrito = verificarStock();
     setCarrito(nuevoCarrito);
 
     const precios = tipoPrecios();
     setSelectedPrecios(precios);
+
+    if(mostrarToastPrecios) {
+      toast.error(`El monto de su pedido no corresponde con la lista de precios. Por favor verifique su pedido con los precios de ${tipoPrecios().toLowerCase()}.`, {
+        position: "top-center",
+        hideProgressBar: true,
+        autoClose: 4000, 
+        closeButton: false,
+      });
+      setMostrarToastPrecios(false)
+    }
   }, []);
+
+  useEffect(() => {
+    if(mostrarToastStock) {
+      toast.warning(`Las cantidades de algunos productos de su carrito cambiaron por falta de stock. Por favor verifique su pedido.`, {
+        position: "top-center",
+        hideProgressBar: true,
+        autoClose: 4000, 
+        closeButton: false,
+      });
+      setMostrarToastStock(false)
+    }
+  }, [mostrarToastStock]);
+
 
   const handlePreciosChange = (tipoPrecios) => {
     setTipoPrecios(tipoPrecios);
@@ -61,17 +90,18 @@ const Carrito = () => {
 
   return (
     <div className="margenes">
+      <ToastContainer position="top-right" hideProgressBar={false}/>
       {shouldRedirect && <Navigate to="/formulario" />}
       {carrito.length > 0 ? (
         <>
           <div className="descripcionPreciosContainer">
             {selectedPrecios === "MAYORISTA" && (
               <p className="compraMinima">
-                Para esta lista de precios se requiere una compra minima de ${formatearNumero(compraMinimaMayorista)} o haber hecho previamente una compra mayorista.
+                Para esta lista de precios se requiere una compra minima de ${formatearNumero(montoMinimoMayorista)} o haber hecho previamente una compra mayorista.
               </p>
             )}
             {selectedPrecios === "DISTRIBUIDOR" && (
-              <p className="compraMinima">Para esta lista de precios se requiere una compra minima de ${formatearNumero(compraMinimaDistribuidor)} o haber hecho previamente una compra de distribuidor.</p>
+              <p className="compraMinima">Para esta lista de precios se requiere una compra minima de ${formatearNumero(montoMinimoDistribuidor)} o haber hecho previamente una compra de distribuidor.</p>
             )}
           </div>
           <div className="listaPreciosContainer">

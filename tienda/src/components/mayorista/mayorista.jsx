@@ -3,6 +3,7 @@ import './mayorista.css';
 import GrillaMayorista from '../grillaMayorista/GrillaMayorista';
 import '../grillaMayorista/grillaMayorista.css';
 import { useData } from "../../context/DataContext";
+import ResumenDePedido from '../resumenDePedido/ResumenDePedido';
 
 const Mayorista = () => {
   const { articulosData } = useData();
@@ -45,6 +46,7 @@ const Mayorista = () => {
         />
         )}
       </section>
+      <ResumenDePedido/>
     </>
   );
 };
