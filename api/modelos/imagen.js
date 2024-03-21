@@ -8,7 +8,7 @@ const Imagen = sequelize.define(
         url: {
             type: DataTypes.STRING,
             allowNull: false,
-        }
+        },
     },
     {
         tableName: "imagen",

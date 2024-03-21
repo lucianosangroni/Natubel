@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Modal, Button, Form, Table } from "react-bootstrap";
 import ModalCategoriasEditar from "./ModalCategoriasEditar.jsx";
 
-
-
 function ModalCategorias({ data, onClose, onNuevaCategoria, onEditCategoria }) {
   const [nuevaCategoria, setNuevaCategoria] = useState("");
   const [editCategoria, setEditCategoria] = useState(null);

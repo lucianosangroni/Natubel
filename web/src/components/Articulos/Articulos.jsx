@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import NavbarAdm from "../Common/NavbarAdm";
 import ModalProducto from "./ModalProducto";
 import ModalCategorias from "./ModalCategorias";
+import ModalConfig from "./ModalConfig";
 import ListaArticulos from "../Common/ListaArticulos";
 import GrillaProducto from "./GrillaProducto";
 import { apiUrl, bearerToken } from "../../config/config";
@@ -12,6 +13,7 @@ const ListadoProductos = () => {
   const [categorias, setCategorias] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isCategoriasModalOpen, setIsCategoriasModalOpen] = useState(false);
+  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false)
 
   //OBTENER ARTICULOS DB
   useEffect(() => {
@@ -268,6 +270,10 @@ const ListadoProductos = () => {
     setIsCategoriasModalOpen(true);
   }
 
+  const handleConfig = () => {
+    setIsConfigModalOpen(true)
+  }
+
   const handleGenerarPDFCliente = () => {
     fetch(`${apiUrl}/pdf/stock/cliente`, {
       headers: {
@@ -373,6 +379,7 @@ const ListadoProductos = () => {
             categorias={categorias}
           />
         )}
+        <Button onClick={handleConfig} id="btnDescargarStock" style={{right: "555px"}}>Configuración</Button>
         <Button onClick={handleGenerarPDFCliente} id="btnDescargarStock" style={{right: "425px"}}>Stock Cliente</Button>
         <Button onClick={handleGenerarPDFAdmin} id="btnDescargarStock" style={{right: "295px"}}>Stock Admin</Button>
         <Button onClick={handleCategorias} id="btnDescargarStock" style={{right: "180px"}}>Categorias</Button>
@@ -382,6 +389,11 @@ const ListadoProductos = () => {
           onClose={() => setIsCategoriasModalOpen(false)}
           onNuevaCategoria={(nuevaCategoria) => handleNuevaCategoria(nuevaCategoria)}
           onEditCategoria={(nuevaCategoria) => handleEditCategoria(nuevaCategoria)}
+        />
+        )}
+        {isConfigModalOpen && (
+        <ModalConfig
+          onClose={() => setIsConfigModalOpen(false)}
         />
         )}
 

@@ -111,6 +111,7 @@ function ModalProducto({ onAddProducto, categorias }) {
   const handleTalleChange = (e, index) => {
     const newTalles = [...newProduct.talles];
     newTalles[index] = e.target.value;
+
     setNewProduct({
       ...newProduct,
       talles: newTalles,
@@ -203,14 +204,14 @@ function ModalProducto({ onAddProducto, categorias }) {
                       onChange={(e) => handleCategoriaChange(e, index)}
                     >
                       <option value="">Selecciona una categoría</option>
-                      {categorias.map((cat, catIndex) => {
+                       {categorias.map((cat, catIndex) => {
                         const esVisible = !newProduct.categorias.includes(cat.id.toString());
                         return (
                             <option key={catIndex} value={cat.id} hidden={!esVisible}>
                                 {cat.nombre}
                             </option>
                         );
-                      })}
+                       })}
                     </Form.Select>
                     {newProduct.categorias.length > 1 && (
                       <Button id="boton-menos" onClick={() => removeCategoriaField(index)}>

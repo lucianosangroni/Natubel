@@ -1,0 +1,188 @@
+.margenes {
+  margin-left: 5rem;
+  margin-right: 5rem;
+}
+
+.descripcionPreciosContainer {
+  min-height: 50px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.listaPreciosContainer {
+  display: flex;
+  align-items: center;
+  border-radius: 25px;
+  width: fit-content;
+  height: 50px;
+  border: 2px solid #FBCCD2;
+  overflow: hidden;
+}
+
+.listaPreciosTitulo {
+  text-align: center;
+  color: black;
+  padding: 1rem;
+  width: 10.6rem;
+  height: 50px;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.btnPrecios {
+  height: 50px;
+  background-color: #fff;
+  color: black;
+  border-radius: 0;
+}
+
+.btnPreciosSelected {
+  background-color: #FBCCD2;
+  color: white;
+}
+
+.btnPreciosSelected:hover {
+  background-color: #FBCCD2;
+}
+
+.carritoContainer {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    margin-bottom: 20px;
+
+}
+
+.compraMinima {
+  font-size: 0.8rem;
+  color: black;
+  padding: 5px;
+  text-align: start;
+  
+}
+
+.encabezadoCarrito {
+    background-color: #FBCCD2;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .encabezadoCarrito th {
+    padding: 10px;
+  }
+
+
+  .artContainer td {
+    padding: 10px;
+    text-align: center; 
+    
+  }
+
+  .button-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: end; 
+    margin-top: 8rem; 
+    margin-bottom: 2rem;
+    
+  }
+
+  .totalContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-left: auto;
+    border: 1px solid black;
+    width: 14rem;
+    padding: 0.3rem;
+    background-color: #FBCCD2;
+  }
+
+  .cantidadTotal {
+    padding-left: 1rem;
+    color: #58151C;
+  }
+
+  .precioTotal{
+    padding-left: 1rem;
+    color: #58151C;
+  }
+
+  .linkForm {
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #FBCCD2;
+    color: white;
+    border-radius: 0.5rem;
+    padding: 10px 15px;
+}
+
+.linkForm:hover {
+  background-color: #f7b0ba;
+}
+
+  button {
+    background-color: #FBCCD2;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #f7b0ba;
+  }
+
+  .carritoVacioContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10rem;
+  }
+
+  .carritoVacio {
+    background-color: #FBCCD2;
+    color: white;
+    width: 17rem;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+  }
+
+  .delete-icon-img:hover {
+    cursor: pointer;
+  }
+
+  .alertContainer {
+    display: flex;
+    flex-direction: column;
+    width: 25rem;
+    margin-left: auto;
+    margin-top: 1rem;
+    position: fixed;
+    top: -100%; /* Comienza fuera de la pantalla */
+    transition: top 0.3s ease; /* Agrega una transición suave */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+  }
+
+  .alertContainer.active {
+    top: 0; /* Mueve el alert hacia abajo para que aparezca */
+  }
+
+  .alertVaciar {
+    background-color: white;
+    border: 1px solid #58151C;
+  }
+
+  .aceptarVaciar {
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+  }
+

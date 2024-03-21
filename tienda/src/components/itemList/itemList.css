@@ -1,0 +1,73 @@
+.containerItemList {   
+    display: flex;
+    padding-inline: 1rem;
+    
+} 
+
+.categoriaFiltros {
+    margin-top: 3rem;
+}
+
+.main-title {
+    background-color: #FBCCD2;
+    color: white;
+    padding: 0.5rem;
+    width: 13rem;
+    height: 2rem;
+    margin-top: 2rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    margin-left: 1.5rem;
+}
+
+.productos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    height: 100%;
+    gap: 1rem;
+    padding-block: 3rem;
+    
+}
+
+.productos img {
+    width: 100%; 
+    object-fit: contain;
+}
+
+.buttonVerMas {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    
+}
+
+.buttonVerMas button {
+    font-size: 0.8rem;
+}
+
+.ordenarMayorMenor {
+    display: flex;
+    justify-content: end;
+    margin-right: 2rem;
+    margin-top: 2rem;
+}
+
+.noHayArtContainer {
+    display: flex; /* Utiliza un modelo de diseño flexible para alinear los elementos internos */
+    justify-content: center; /* Centra los elementos horizontalmente dentro del contenedor */
+    align-items: start;
+    padding-inline: 1rem;
+    margin-top: 3rem;
+
+}
+
+.noHayArticulos {
+    background-color: #FBCCD2;
+    color: white;
+    padding: 0.5rem;
+    width: 16rem;
+    height: 2.5rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+}

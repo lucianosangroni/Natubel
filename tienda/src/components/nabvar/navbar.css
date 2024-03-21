@@ -1,0 +1,78 @@
+    .encabezado{
+        font-size: 0.6rem;
+        text-align: center;
+        padding-left: 5rem;
+        margin-bottom: 0;
+    }
+    
+    .navbar {
+        display: flex;
+        align-items: center;
+        background-color: #FBCCD2;
+    }
+
+    .logo {
+        text-decoration: none;
+        color: white;
+        font-size: 2rem;
+        margin-left: 2rem;
+        
+    }
+
+    .logo h1 {
+        margin-bottom: 0;
+    }
+
+    .menu {
+        list-style-type: none;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 0;
+        padding: 0;
+    }
+
+    .menu-link {
+        text-decoration: none;
+        color: white;
+        font-size: 1.2rem;
+    }
+    
+    .menu-link:hover {
+        text-decoration: underline;
+    }
+
+    .redesWhatsapp {
+        position: fixed; 
+        bottom: 2.8rem;
+        right: 0.1px;
+        z-index: 1000;
+        
+    }
+    .redesWhatsapp img{
+        width: 3rem;
+        
+    }
+
+    @media (max-width: 768px) {
+        .navbarMobileContainer {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            margin-top: 0.5rem;
+            
+        }
+        .logo {
+            justify-content: center; 
+            margin-left: 0; 
+        }
+        .encabezadoMobile {
+            font-size: 0.6rem;
+            text-align: center;
+            margin-bottom: 0;
+            background-color: rgba(255, 255, 255, 0.7);
+
+        }
+    }
+
+ 

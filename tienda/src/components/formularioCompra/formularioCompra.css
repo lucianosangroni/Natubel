@@ -1,0 +1,94 @@
+.container {
+    max-width: 1140px;
+    padding-inline: 1.5rem;
+    margin: 5rem auto;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    align-items: center;
+    justify-content: start;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+}
+
+.formulario label {
+    background-color: #FBCCD2;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    width: 150px;
+}
+
+.formulario input {
+    padding: .5rem;
+    width: 18rem;
+    border-radius: .5rem;
+    border: 2px solid rgb(209, 208, 208);
+}
+
+.formulario input:focus {
+    outline: 0;
+    border: 2px solid #FBCCD2;
+    
+}
+
+.container-enviar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.enviar {
+    background-color: #FBCCD2;
+    width: auto;
+    height: auto;
+    color: white;
+    border-radius: .5rem;
+    font-size: 1rem;
+
+}
+
+.compraFinalizadaContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30rem;
+}
+
+.compraFinalizada{
+    background-color: #FBCCD2;
+    padding: 0.5rem;
+    margin: 2rem;
+    border-radius: 0.5rem;
+    color: white;
+    font-weight: bold;
+    width: 15rem;
+    text-align: center;
+}
+
+.obligatorio {
+    font-size: 0.7rem;
+    padding-top: 1rem;
+}
+
+.ingreseCodigo{
+    font-size: 0.8rem;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    color: #58151C;
+}
+
+.confirmarCodigo{
+    margin-left: 0.5rem;
+    padding: 0.3rem;
+}
+
+.reenviarCodigo {
+    padding: 0.3rem;
+    margin-top: 0.5rem;
+}
+
