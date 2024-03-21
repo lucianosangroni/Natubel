@@ -7,23 +7,20 @@ import ModalCliente from "./ModalCliente";
 import ModalClienteEditar from "./ModalClienteEditar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { apiUrl } from "../../config/config";
+import { apiUrl, bearerToken } from "../../config/config";
 
 const ListadoClientes = () => {
   const columns = useMemo(() => COLUMNSCLIENTES, []);
   const [data, setData] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
-  
-
-  const jwt = localStorage.getItem('jwt')
 
   //OBTENER CLIENTES DB
   useEffect(() => {
     fetch(`${apiUrl}/clientes`, 
     {
       headers: {
-        Authorization: `Bearer ${jwt}`
+        Authorization: `Bearer ${bearerToken}`
       }
     })
     .then((response) => {
@@ -61,7 +58,7 @@ const ListadoClientes = () => {
     .catch((error) => {
       console.error("Error en la solicitud GET:", error)
     });
-  }, [jwt]);
+  }, []);
 
   //AGREGAR CLIENTE DB
   const handleAddCliente = (newCliente) => {
@@ -84,7 +81,7 @@ const ListadoClientes = () => {
       method: "POST",
       headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${jwt}`
+          Authorization: `Bearer ${bearerToken}`
       },
       body: JSON.stringify(requestData)
     })
@@ -135,7 +132,7 @@ const ListadoClientes = () => {
       method: "PUT",
       headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${jwt}`
+          Authorization: `Bearer ${bearerToken}`
       },
       body: JSON.stringify(requestData)
     })
@@ -167,7 +164,7 @@ const ListadoClientes = () => {
     //  fetch(`${apiUrl}/clientes/${row.original.id}`, {
     //    method: "DELETE",
     //    headers: {
-    //      Authorization: `Bearer ${jwt}`
+    //      Authorization: `Bearer ${bearerToken}`
     //    }
     //  })
     //  .then((response) => {

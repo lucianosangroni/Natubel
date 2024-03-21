@@ -2,7 +2,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useEffect, useState } from "react";
-import { apiUrl } from "../../config/config";
+import { apiUrl, bearerToken } from "../../config/config";
 
 function ModalRemito({ pedido_id, onClose }) {
     const [remito, setRemito] = useState({
@@ -13,12 +13,10 @@ function ModalRemito({ pedido_id, onClose }) {
       });
       const [remitoExistente, setRemitoExistente] = useState(null);
 
-    const jwt = localStorage.getItem('jwt')
-
     useEffect(() => {
         fetch(`${apiUrl}/remitos/${pedido_id}`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${bearerToken}`,
         }
       })
       .then((response) => {
@@ -48,7 +46,7 @@ function ModalRemito({ pedido_id, onClose }) {
       .catch((error) => {
         console.error('Error en la solicitud GET:', error);
       });
-    }, [jwt, pedido_id]);
+    }, [pedido_id]);
 
   const handleSave = () => {
     if (remito.descuento && remito.dias_vencimiento && remito.cantidad_cajas) {
@@ -81,7 +79,7 @@ function ModalRemito({ pedido_id, onClose }) {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${jwt}`
+            Authorization: `Bearer ${bearerToken}`
         },
         body: JSON.stringify(requestData)
       })
@@ -114,7 +112,7 @@ function ModalRemito({ pedido_id, onClose }) {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${jwt}`
+                Authorization: `Bearer ${bearerToken}`
             },
             body: JSON.stringify(requestData)
           })
@@ -137,7 +135,7 @@ function ModalRemito({ pedido_id, onClose }) {
   const generarPdfRemito = () => {
     fetch(`${apiUrl}/pdf/remito/${pedido_id}`, {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${bearerToken}`,
         }
       })
       .then((response) => {

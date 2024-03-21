@@ -5,16 +5,16 @@ const getItems = async (req, res) => {
     try {
         const pedidos = await pedidoModel.findAll({
             include: [
-              {
-                model: productoModel,
-                through: {
-                  model: productoXPedidoModel,
-                  attributes: ['cantidad', 'precio_unitario'],
+                {
+                    model: productoModel,
+                    through: {
+                        model: productoXPedidoModel,
+                        attributes: ['cantidad', 'precio_unitario'],
+                    },
                 },
-              },
             ],
-          })
-          
+        })
+        
         for (const pedido of pedidos) {
             const persona = await personaModel.findOne({
                 where: { id: pedido.persona_id },

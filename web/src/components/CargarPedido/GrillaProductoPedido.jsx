@@ -11,7 +11,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
         onSetCantidades({});
         const initialProductKey = `${colores[0]}-${talles[0]}`;
         inputRefs[initialProductKey].current.focus();
-      }, [articulo]);
+    }, [articulo]);
 
     const filtrarDiccionario = (diccionario) => {
         const claves = Object.keys(diccionario)
@@ -84,7 +84,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
     }
 
     return (
-      <>
+    <>
         <table className="table-grilla">
             <thead >
                 <tr >
@@ -96,7 +96,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
             </thead>
             <tbody>
                 {colores.map((color, index) => (
-                  <tr key={index}>
+                <tr key={index}>
                     <td>{color}</td>
                     {talles.map((talle, talleIndex) => {
                         const matchingProduct = articulo.productos.find(
@@ -122,13 +122,13 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
                             </td>
                         );
                     })}
-                  </tr>
+                </tr>
                 ))}
-              </tbody>
+            </tbody>
         </table>
         <button className="confirmarCargarPedido" onClick={handleConfirmarProducto}>Confirmar</button>
-      </>
+    </>
     );
-  }
+}
 
 export default GrillaProductoPedido;
