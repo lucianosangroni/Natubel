@@ -27,7 +27,7 @@ const Login = () => {
         .then((result) => {
           if(result.jwt) {
             login(result.jwt);
-            navigate('/admin/cargar-pedido');
+            navigate('/cargar-pedido');
           }
         })
         .catch((error) => {
@@ -35,7 +35,7 @@ const Login = () => {
         });
     };
 
-    return isAuthenticated ? <Navigate to="/admin/cargar-pedido" /> : (
+    return isAuthenticated ? <Navigate to="/cargar-pedido" /> : (
         <div className="contenedor-login">
           <h2 className="iniciar-sesion-titulo">Iniciar Sesion</h2>
           <label className="usuario"> 

@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('username');
     setAuthenticated(false);
-    navigate('/admin/login');
+    navigate('/login');
   }, [navigate, setAuthenticated]);
 
   const decode = (token) => {

@@ -23,19 +23,19 @@ function NavbarAdm({ selected }) {
         <Container className="navBarElementsContainer" style={{ margin: 0 }}>
           <h4 className="navUsername">{localStorage.getItem('username')}</h4>
           <Nav className="navPantallasContainer">
-              <Nav.Link className={`botonNav ${selected === 'Cargar Pedido' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/cargar-pedido">
+              <Nav.Link className={`botonNav ${selected === 'Cargar Pedido' ? 'selectedNavBar' : ''}`} as={Link} to="/cargar-pedido">
                 Cargar Pedido
               </Nav.Link>
-              <Nav.Link className={`botonNav ${selected === 'Proveedores' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/proveedores">
+              <Nav.Link className={`botonNav ${selected === 'Proveedores' ? 'selectedNavBar' : ''}`} as={Link} to="/proveedores">
                 Proveedores
               </Nav.Link>
-              <Nav.Link className={`botonNav ${selected === 'Clientes' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/clientes">
+              <Nav.Link className={`botonNav ${selected === 'Clientes' ? 'selectedNavBar' : ''}`} as={Link} to="/clientes">
                 Clientes
               </Nav.Link>
-              <Nav.Link className={`botonNav ${selected === 'Articulos' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/articulos">
+              <Nav.Link className={`botonNav ${selected === 'Articulos' ? 'selectedNavBar' : ''}`} as={Link} to="/articulos">
                 Artículos
               </Nav.Link>
-              <Nav.Link className={`botonNav ${selected === 'Pedidos' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/pedidos">
+              <Nav.Link className={`botonNav ${selected === 'Pedidos' ? 'selectedNavBar' : ''}`} as={Link} to="/pedidos">
                 Pedidos
               </Nav.Link>
           </Nav>

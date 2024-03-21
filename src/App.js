@@ -7,7 +7,6 @@ import Pedidos from './components/Pedidos/Pedidos';
 import Login from './components/Login/Login';
 import ProtectedRoute from './routes/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
-import Mantenimiento from './components/Mantenimiento/Mantenimiento';
 
 function App() {
     return (
@@ -16,23 +15,22 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path='' element={<Mantenimiento/>}/>
-            <Route path='admin' element={<Navigate to='/admin/login'/>}/>
-            <Route path='admin/login' element={<Login/>}/>
+            <Route path='' element={<Navigate to='/login'/>}/>
+            <Route path='login' element={<Login/>}/>
             <Route element={<ProtectedRoute/>}>
-              <Route path="admin/cargar-pedido" element={<CargarPedido/>} />
+              <Route path="cargar-pedido" element={<CargarPedido/>} />
             </Route>
             <Route element={<ProtectedRoute/>}>
-              <Route path="admin/proveedores" element={<Proveedores/>} />
+              <Route path="proveedores" element={<Proveedores/>} />
             </Route>
             <Route element={<ProtectedRoute/>}>
-              <Route path="admin/clientes" element={<Clientes/>} />
+              <Route path="clientes" element={<Clientes/>} />
             </Route>
             <Route element={<ProtectedRoute/>}>
-              <Route path="admin/articulos" element={<Articulos/>} />
+              <Route path="articulos" element={<Articulos/>} />
             </Route>
             <Route element={<ProtectedRoute/>}>
-              <Route path="admin/pedidos" element={<Pedidos/>} />
+              <Route path="pedidos" element={<Pedidos/>} />
             </Route>
           </Routes>
         </AuthProvider>
