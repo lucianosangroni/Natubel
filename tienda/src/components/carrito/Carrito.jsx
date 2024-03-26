@@ -19,7 +19,7 @@ const Carrito = () => {
     mostrarToastPrecios,
     setMostrarToastPrecios,
     mostrarToastStock,
-    setMostrarToastStock
+    setMostrarToastStock,
   } = useContext(CartContext);
 
   const { montoMinimoMayorista, montoMinimoDistribuidor } = useData();
@@ -74,7 +74,6 @@ const Carrito = () => {
     }
   }, [mostrarToastStock]);
 
-
   const handlePreciosChange = (tipoPrecios) => {
     setTipoPrecios(tipoPrecios);
     setSelectedPrecios(tipoPrecios);
@@ -114,7 +113,7 @@ const Carrito = () => {
               }
               onClick={() => handlePreciosChange("MINORISTA")}
             >
-              Minorista
+              MINORISTA
             </button>
             <button
               className={
@@ -124,7 +123,7 @@ const Carrito = () => {
               }
               onClick={() => handlePreciosChange("MAYORISTA")}
             >
-              Mayorista
+              MAYORISTA
             </button>
             <button
               className={
@@ -134,7 +133,7 @@ const Carrito = () => {
               }
               onClick={() => handlePreciosChange("DISTRIBUIDOR")}
             >
-              Distribuidor
+              DISTRIBUIDOR
             </button>
           </div>
           <table className="carritoContainer">

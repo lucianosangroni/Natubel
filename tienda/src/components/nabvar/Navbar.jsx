@@ -7,10 +7,12 @@ import MenuDesplegable from "../menuDesplegable/MenuDesplegable";
 import whatsapp from "./whatsapp.svg";
 import styled from "styled-components";
 import BurguerButton from "./BurguerButton";
+import { useData } from '../../context/DataContext';
 
 const Navbar = () => {
   const [clicked, setClicked] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const { montoMinimoMayorista, montoMinimoDistribuidor } = useData();
 
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 768);
@@ -28,24 +30,28 @@ const Navbar = () => {
     setClicked(!clicked);
   };
 
+  const formatearNumero = (numero) => {
+    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   return (
     <>
       {isMobile ? (
         <NavContainer>
           <p className="encabezadoMobile">
-            MINIMO DE COMPRAS MAYORISTAS $25.000 || PARA COMPRAS MAYORES A
-            $200.000. HACE TU PEDIDO Y ESCRIBINOS A NUESTRO WHATSAPP
+            MINIMO DE COMPRAS MAYORISTAS ${formatearNumero(montoMinimoMayorista)} || PARA COMPRAS MAYORES A
+            ${formatearNumero(montoMinimoDistribuidor)}. HACE TU PEDIDO Y ESCRIBINOS A NUESTRO WHATSAPP
           </p>
           <div className={`links ${clicked ? "active" : ""}`}>
-            <a onClick={handleClick} href="/">
+            <Link onClick={handleClick} href="/">
               Inicio
-            </a>
-            <a onClick={handleClick} href="/catalogo">
+            </Link>
+            <Link onClick={handleClick} href="/catalogo">
               Catalogo
-            </a>
-            <a onClick={handleClick} href="/mayorista">
+            </Link>
+            <Link onClick={handleClick} href="/mayorista">
               Mayorista
-            </a>
+            </Link>
           </div>
           <div className="navbarMobileContainer">
             <div className="burguer">
@@ -72,8 +78,8 @@ const Navbar = () => {
       ) : (
         <>
           <p className="encabezado">
-            MINIMO DE COMPRAS MAYORISTAS $25.000 || PARA COMPRAS MAYORES A
-            $200.000. HACE TU PEDIDO Y ESCRIBINOS A NUESTRO WHATSAPP
+            MINIMO DE COMPRAS MAYORISTAS ${formatearNumero(montoMinimoMayorista)} || PARA COMPRAS MAYORES A
+            ${formatearNumero(montoMinimoDistribuidor)}. HACE TU PEDIDO Y ESCRIBINOS A NUESTRO WHATSAPP
           </p>
           <nav className="navbar">
             <Link to="/" className="logo">

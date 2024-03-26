@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useData } from "./DataContext";
 
 
@@ -11,6 +11,11 @@ export const CartProvider = ({ children }) => {
   const [ flagActualizarWidget, setFlagActualizarWidget ] = useState(0)
   const [ mostrarToastPrecios, setMostrarToastPrecios ] = useState(false)
   const [ mostrarToastStock, setMostrarToastStock ] = useState(false)
+
+  useEffect(() => {
+    const nuevoCarrito = verificarStock()
+    setCarrito(nuevoCarrito)
+  }, [articulosData])
 
   const encontrarProducto = (numero_articulo, color, talle) => {
     for (const art of articulosData) {
@@ -88,13 +93,18 @@ export const CartProvider = ({ children }) => {
 
     for(const cartProduct of carrito) {
       const producto = encontrarProducto(cartProduct.numero_articulo, cartProduct.color, cartProduct.talle)
-      for(const prod of producto.articulo.productos) {
-        if(prod.id === producto.id) {
-          if(cartProduct.cantidad > prod.stock) {
-            cartProduct.cantidad = prod.stock
-            cambioCarrito = true
+      if(producto) {
+        for(const prod of producto.articulo.productos) {
+          if(prod.id === producto.id) {
+            if(cartProduct.cantidad > prod.stock) {
+              cartProduct.cantidad = prod.stock
+              cambioCarrito = true
+            }
           }
         }
+      } else {
+        cartProduct.cantidad = 0
+        cambioCarrito = true
       }
     }
 
@@ -103,7 +113,10 @@ export const CartProvider = ({ children }) => {
       setMostrarToastStock(true)
     }
 
-    return carrito
+    const nuevoCarrito = carrito.filter(prod => prod.cantidad > 0)
+    setCarrito(nuevoCarrito)
+
+    return nuevoCarrito
   }
 
   const tipoPrecios = () => {
@@ -132,7 +145,7 @@ export const CartProvider = ({ children }) => {
         setMostrarToastPrecios,
         mostrarToastStock,
         setMostrarToastStock,
-        carrito
+        carrito,
       }}
     >{children}</CartContext.Provider>
   );

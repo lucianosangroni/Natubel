@@ -41,6 +41,10 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
         imagenes: articulo.imagenes
       }
     );
+
+    setSelectedFiles([])
+    setOldFiles(articulo.imagenes)
+    setPreviewImages([])
   }, [articulo]);
 
   const handleClose = () => {

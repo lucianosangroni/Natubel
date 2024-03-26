@@ -7,9 +7,10 @@ const FiltroColor = ({ articulos, onChangeColor }) => {
   const [ filtroColor, setFiltroColor ] = useState(null);
   const [ coloresHabilitados, setColoresHabilitados ] = useState([])
   const { coloresData } = useData();
+  const [ colores, setColores ] = useState([])
 
   useEffect(() => {
-    setFiltroColor(null)
+    setColores([])
 
     if(articulos) {
       const coloresFiltrados = coloresData.filter(color => articulos.some(articulo => articulo.productos.some(producto => producto.color === color && producto.stock > 0)))
@@ -18,6 +19,29 @@ const FiltroColor = ({ articulos, onChangeColor }) => {
       setColoresHabilitados(coloresData)
     }
   }, [articulos])
+
+  useEffect(() => {
+    const coloresOrdenados = coloresHabilitados.sort((a, b) => {
+      if (a < b) {
+        return -1
+      }
+      if (a > b) {
+        return 1
+      }
+      return 0
+    })
+
+    const coloresUnicos = new Set()
+
+    coloresOrdenados.forEach(color => {
+      const colorMayus = color.toUpperCase()
+      if(!coloresUnicos.has(colorMayus)) {
+        coloresUnicos.add(colorMayus)
+      }
+    })
+
+    setColores(Array.from(coloresUnicos))
+  }, [coloresHabilitados])
 
   const handleFiltroColor = (color) => {
     if(filtroColor === color) {
@@ -33,7 +57,7 @@ const FiltroColor = ({ articulos, onChangeColor }) => {
     <div className="categoriaLateral">
       <ul className="menuLateralColor">
         <p className="menuLateralTitulo">Colores</p>
-        {coloresHabilitados.map(color => (
+        {colores.map(color => (
           <li className="textoCategorias" key={color}>
             <Link
               className={`menu-link ${filtroColor === color ? "seleccionada" : ""}`}

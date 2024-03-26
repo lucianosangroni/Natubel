@@ -45,17 +45,19 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
             <p className="noHayArticulos">En este momento, no hay stock</p>
           </div>
         )}
-        <div className="productos">
-          {productos.slice(0, visibleProducts).map((prod) => (
-            <Item producto={prod} key={prod.id} />
-          ))}
+        <div className="productosContainer">
+          <div className="productos">
+            {productos.slice(0, visibleProducts).map((prod) => (
+              <Item producto={prod} key={prod.id} />
+            ))}
+          </div>
+          {visibleProducts < productos.length && (
+              <div className="buttonVerMas">
+                <button onClick={handleLoadMore}>Ver más</button>
+              </div>
+            )}
         </div>
       </div>
-      {visibleProducts < productos.length && (
-        <div className="buttonVerMas">
-          <button onClick={handleLoadMore}>Ver más</button>
-        </div>
-      )}
     </div>
   );
 };

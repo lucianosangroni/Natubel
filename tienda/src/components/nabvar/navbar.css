@@ -51,7 +51,7 @@
     }
     .redesWhatsapp img{
         width: 3rem;
-        
+        margin-right: 1rem;
     }
 
     @media (max-width: 768px) {

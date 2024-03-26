@@ -45,12 +45,17 @@
     font-style: italic;
 }
 
-.redesFace {
-    margin-right: 1rem;
-    width: 2rem;
+.redes-container {
+    display: flex; 
+    gap: 1rem;
+    justify-content: center;
 }
 
-.redesInsta {
+.redes-container a {
+    display: inline-block;
+}
+
+.redes-container img {
     width: 2rem;
 }
 

@@ -39,9 +39,6 @@ const createItem = async (req, res) => {
         const talles = JSON.parse(tallesString);
         const colores = JSON.parse(coloresString);
 
-        console.log(req.body)
-        console.log(req.files)
-
         const nuevoArticulo = await articuloModel.create
         (
             {

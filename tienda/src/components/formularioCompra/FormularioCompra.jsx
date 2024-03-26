@@ -19,7 +19,7 @@ const FormularioCompra = () => {
     handleSubmit: handleSubmitCodigo
   } = useForm();
 
-  const { refreshData, montoMinimoMayorista, montoMinimoDistribuidor } = useData()
+  const { refreshData, montoMinimoMayorista, montoMinimoDistribuidor, articulosData } = useData()
 
   const {
     verificarStock,
@@ -34,6 +34,7 @@ const FormularioCompra = () => {
 
   const [ carrito, setCarrito ] = useState([])
   const [ showCompraFinalizada, setShowCompraFinalizada ] = useState(false);
+  const [ showFalloPedido, setShowFalloPedido ] = useState(false)
   const [ showIngresarCodigo, setShowIngresarCodigo ] = useState(false);
   const [ codigo, setCodigo ] = useState(null)
   const [ formulario, setFormulario] = useState(null)
@@ -309,9 +310,14 @@ const FormularioCompra = () => {
       return response.json();
     })
     .then((result) => {
-      setShowCompraFinalizada(true);
-      vaciarCarrito();
-      refreshData();
+      if(result.message === "Pedido creado con éxito") {
+        setShowCompraFinalizada(true);
+        vaciarCarrito();
+        refreshData();
+      } else {
+        refreshData();
+        setShowFalloPedido(true)
+      }
     })
     .catch((error) => {
       console.error("Error en la solicitud POST:", error);
@@ -340,6 +346,15 @@ const FormularioCompra = () => {
               <p>
                 Pedido exitoso! En breve nos comunicaremos para coordinar
                 el pago y el envío. ¡Muchas gracias!
+              </p>
+            </div>
+          </div>
+        ) : showFalloPedido ? (
+          <div className="compraFinalizadaContainer">
+            <div className="compraFinalizada">
+              <p>
+                Detectamos una falta de stock al momento de confirmar tu pedido. 
+                Verifica los productos de tu pedido en el carrito y vuelve a intentarlo.
               </p>
             </div>
           </div>

@@ -181,8 +181,13 @@
     border: 1px solid #58151C;
   }
 
+  .alertVaciar div {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .aceptarVaciar {
     margin-right: 0.5rem;
-    margin-top: 0.5rem;
   }
 

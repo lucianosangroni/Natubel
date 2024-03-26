@@ -20,18 +20,20 @@
     margin-left: 1.5rem;
 }
 
+.productosContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .productos {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     height: 100%;
     gap: 1rem;
     padding-block: 3rem;
     
-}
-
-.productos img {
-    width: 100%; 
-    object-fit: contain;
 }
 
 .buttonVerMas {
@@ -39,7 +41,6 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 2rem;
-    
 }
 
 .buttonVerMas button {
@@ -71,3 +72,26 @@
     font-size: 1rem;
     border-radius: 0.5rem;
 }
+
+@media (max-width: 1080px) {
+    .productos {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }}
+
+    @media (max-width: 768px) {
+        .productos {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }}
+
+        @media (max-width: 650px) {
+            .productos {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }}
+            @media (max-width: 500px) {
+                .productos {
+                    display: grid;
+                    grid-template-columns: repeat(1, 1fr);
+                }}

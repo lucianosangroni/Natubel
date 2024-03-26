@@ -218,14 +218,16 @@ const ItemDetail = ({ item }) => {
             .slice(0, 3)
             .map((artRelacionado) => (
               <div key={artRelacionado.id}>
-                {artRelacionado.imagens.length > 0 ? (
-                  <img src={artRelacionado.imagens[0].url} alt={"sin imagen"} />
-                ) : (
-                  <img
-                    src={"http://localhost:3001/no-hay-foto.png"}
-                    alt={"sin imagen"}
-                  />
-                )}
+                <div className="imgContainer">
+                  {artRelacionado.imagens.length > 0 ? (
+                    <img src={artRelacionado.imagens[0].url} alt={"sin imagen"} />
+                  ) : (
+                    <img
+                      src={"http://localhost:3001/no-hay-foto.png"}
+                      alt={"sin imagen"}
+                    />
+                  )}
+                </div>
                 <h4>ART. {artRelacionado.numero_articulo}</h4>
                 <p>${artRelacionado.precio_minorista}</p>
                 <div className="detalleContainer">

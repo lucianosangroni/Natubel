@@ -134,11 +134,17 @@ input {
   gap: 2rem;
 }
 
+.imgContainer {
+  width: 10rem;
+  height: 10rem;
+  overflow: hidden;
+}
+
 .productosRelacionadosLista img {
   width: 100%;
-  height: 10rem;
-  margin-bottom: 1rem;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 .productosRelacionadosLista p {
   padding-bottom: 0.2rem;

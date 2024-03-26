@@ -4,6 +4,8 @@ import './galeriaImagenes.css';
 
 function UncontrolledExample() {
   return (
+    <>
+    {/*
     <Carousel className='imgContianer'>
       <Carousel.Item className='imgItem'>
       <img className='imgGaleria' src="/img/fotoHorizontal1.jpg" alt="modelo" />
@@ -28,7 +30,8 @@ function UncontrolledExample() {
           </p>
         </Carousel.Caption>
       </Carousel.Item>
-    </Carousel>
+    </Carousel>*/}
+    </>
   );
 }
 

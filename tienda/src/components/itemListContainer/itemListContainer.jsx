@@ -39,7 +39,7 @@ const ItemListContainer = ({ flagCatalogo }) => {
     } else {
       if (talle) {
         articulosFiltrados = articulosFiltrados.filter((articulo) => {
-          const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
+          const talles = Array.from(new Set(articulo.productos.map((producto) => isNaN(producto.talle) ? producto.talle.toUpperCase() : producto.talle)));
           return talles.includes(talle)
         });
       }
@@ -50,7 +50,7 @@ const ItemListContainer = ({ flagCatalogo }) => {
       } else {
         if (color) {
           articulosFiltrados = articulosFiltrados.filter((articulo) => {
-            const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
+            const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color.toUpperCase())));
             return colores.includes(color)
           });
         }
@@ -70,6 +70,7 @@ const ItemListContainer = ({ flagCatalogo }) => {
   }
 
   const handleChangeColor = (color) => {
+    console.log(color)
     setColor(color)
   }
 
