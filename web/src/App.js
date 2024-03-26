@@ -7,7 +7,6 @@ import Pedidos from './components/Pedidos/Pedidos';
 import Login from './components/Login/Login';
 import ProtectedRoute from './routes/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
-import Mantenimiento from './components/Mantenimiento/Mantenimiento';
 
 function App() {
     return (
@@ -16,7 +15,7 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path='' element={<Mantenimiento/>}/>
+            <Route path='' element={<Navigate to='/admin/login'/>}/>
             <Route path='admin' element={<Navigate to='/admin/login'/>}/>
             <Route path='admin/login' element={<Login/>}/>
             <Route element={<ProtectedRoute/>}>

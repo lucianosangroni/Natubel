@@ -27,12 +27,12 @@ const getItem = async (req, res) => {
         
                 const existingPersonaNombre = await personaModel.findOne({ where: { nombre: nombre } });
                 if (existingPersonaNombre && existingPersonaNombre.id !== parseInt(persona.id)) {
-                    return res.status(200).json({ message: 'Ya existe una persona con el mismo Nombre' });
+                    return res.status(200).json({ message: 'Ya existe una persona con el mismo nombre' });
                 }
 
                 res.status(200).send({ message: "Cliente encontrado con éxito", cliente });
             } else {
-                return res.status(200).send({ message: "Ya existe una persona con el mismo Email" });
+                return res.status(200).send({ message: "Ya existe una persona con el mismo email" });
             }
         } else {
             if (cuit_cuil !== "" && cuit_cuil !== null) {
@@ -51,7 +51,7 @@ const getItem = async (req, res) => {
 
             const existingPersonaNombre = await personaModel.findOne({ where: { nombre: nombre } });
             if(existingPersonaNombre) {
-                return res.status(200).json({ message: 'Ya existe una persona con el mismo Nombre' });
+                return res.status(200).json({ message: 'Ya existe una persona con el mismo nombre' });
             }
 
             return res.status(200).send({ message: "Persona no encontrada" });
@@ -94,7 +94,7 @@ const createItem = async (req, res) => {
 
         const existingPersonaNombre = await personaModel.findOne({ where: { nombre: nombre } });
         if (existingPersonaNombre) {
-            return res.status(200).json({ message: 'Ya existe una persona con el mismo Nombre' });
+            return res.status(200).json({ message: 'Ya existe una persona con el mismo nombre' });
         }
 
         const nuevaPersona = await personaModel.create
@@ -164,7 +164,7 @@ const updateItem = async (req, res) => {
 
         const existingPersonaNombre = await personaModel.findOne({ where: { nombre: nombre } });
         if (existingPersonaNombre && existingPersonaNombre.id !== parseInt(persona_id)) {
-            return res.status(200).json({ message: 'Ya existe una persona con el mismo Nombre' });
+            return res.status(200).json({ message: 'Ya existe una persona con el mismo nombre' });
         }
 
         await personaModel.update

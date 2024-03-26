@@ -69,7 +69,6 @@ const ItemDetail = ({ item }) => {
       hideProgressBar: true,
       autoClose: 1000, 
       closeButton: false,
-      
     });
   };
 

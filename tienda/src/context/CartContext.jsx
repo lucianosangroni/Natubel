@@ -9,6 +9,8 @@ export const CartProvider = ({ children }) => {
   const [ selectedPrecios, setSelectedPrecios ] = useState("MINORISTA")
   const { articulosData } = useData();
   const [ flagActualizarWidget, setFlagActualizarWidget ] = useState(0)
+  const [ mostrarToastPrecios, setMostrarToastPrecios ] = useState(false)
+  const [ mostrarToastStock, setMostrarToastStock ] = useState(false)
 
   const encontrarProducto = (numero_articulo, color, talle) => {
     for (const art of articulosData) {
@@ -98,7 +100,7 @@ export const CartProvider = ({ children }) => {
 
     if(cambioCarrito) {
       setFlagActualizarWidget(flagActualizarWidget + 1)
-      alert("Las cantidades de algunos productos de su carrito cambiaron por falta de stock. Por favor verifique su pedido")
+      setMostrarToastStock(true)
     }
 
     return carrito
@@ -125,7 +127,12 @@ export const CartProvider = ({ children }) => {
         verificarStock,
         tipoPrecios,
         setTipoPrecios,
-        flagActualizarWidget
+        flagActualizarWidget,
+        mostrarToastPrecios,
+        setMostrarToastPrecios,
+        mostrarToastStock,
+        setMostrarToastStock,
+        carrito
       }}
     >{children}</CartContext.Provider>
   );
