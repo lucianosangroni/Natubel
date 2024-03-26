@@ -2,6 +2,7 @@
     display: flex;
     padding-inline: 1rem;
     
+    
 } 
 
 .categoriaFiltros {
@@ -22,7 +23,8 @@
 
 .productos {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
+    width: 100%;
     height: 100%;
     gap: 1rem;
     padding-block: 3rem;
@@ -71,3 +73,17 @@
     font-size: 1rem;
     border-radius: 0.5rem;
 }
+
+@media (max-width: 768px) {
+    .productos {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+        height: 100%;
+        gap: 1rem;
+        padding-block: 3rem;
+        
+    }
+    
+  }
+  

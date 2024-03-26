@@ -5,6 +5,7 @@ import { CartContext } from "../../context/CartContext.jsx"
 import { useData } from "../../context/DataContext.jsx";
 import { apiUrl, tokenBearer } from "../../config/config";
 import { Navigate } from "react-router-dom";
+import Alert from "react-bootstrap/Alert";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -160,12 +161,12 @@ const FormularioCompra = () => {
           setTipoPrecios(tipoPreciosQueCorresponde)
           setShouldRedirect(true)
           toast.success("El monto de su pedido no corresponde con la lista de precios. Por favor verifique su pedido con los precios correspondientes.", {
-            position: "top-center",
-            hideProgressBar: true,
-            autoClose: 2000, 
-            closeButton: false,
+             position: "top-center",
+             hideProgressBar: true,
+             autoClose: 2000, 
+             closeButton: false,
             
-          });
+           });
         }
       } else {
         toast.success(result.message)({
