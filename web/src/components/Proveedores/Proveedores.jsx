@@ -8,15 +8,19 @@ import ModalProveedoresEditar from "./ModalProveedoresEditar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { apiUrl, bearerToken } from "../../config/config";
+import Loading from "../Common/Loading";
 
 const ListadoProveedores = () => {
   const columns = useMemo(() => COLUMNSPROVE, []);
   const [data, setData] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false)
 
   //OBTENER PROVEEDORES DB
   useEffect(() => {
+    setIsLoading(true)
+
     fetch(`${apiUrl}/proveedores`, 
     {
       headers: {
@@ -47,14 +51,19 @@ const ListadoProveedores = () => {
       }
 
       setData(proveedores)
+
+      setIsLoading(false)
     })
     .catch((error) => {
+      setIsLoading(false)
       console.error("Error en la solicitud GET:", error);
     });
   }, []);
 
   //AGREGAR PROVEEDOR DB
   const handleAddProveedor = (newProveedor) => {
+    setIsLoading(true)
+
     const requestData = 
     {
       nombre: newProveedor.nombre,
@@ -82,8 +91,11 @@ const ListadoProveedores = () => {
     .then((result) => {
       newProveedor.id = result.id
       setData((prevData) => [...prevData, newProveedor]);
+      
+      setIsLoading(false)
     })
     .catch((error) => {
+        setIsLoading(false)
         console.error("Error en la solicitud POST:", error);
     });
   };
@@ -98,6 +110,8 @@ const ListadoProveedores = () => {
 
   //EDITAR PROVEEDOR DB
   const updateTableRow = (newData) => {
+    setIsLoading(true)
+
     const requestData = 
     {
       nombre: newData.nombre,
@@ -128,8 +142,11 @@ const ListadoProveedores = () => {
         updatedData[newData.index] = newData;
         return updatedData;
       });
+
+      setIsLoading(false)
     })
     .catch(error => {
+        setIsLoading(false)
         console.error("Error en la solicitud PUT:", error);
     });
   };
@@ -195,6 +212,7 @@ const ListadoProveedores = () => {
 
   return (
     <>
+      {isLoading && <Loading/>}
       <NavbarAdm selected={'Proveedores'}/>
       <GlobalFilter  filter={globalFilter} setFilter={setGlobalFilter} />
       <div className="tableDivContainer">

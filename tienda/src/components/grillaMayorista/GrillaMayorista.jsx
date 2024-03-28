@@ -1,9 +1,36 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../context/CartContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function GrillaMayorista({ articulo }) {
-    const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
-    const colores = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
+    const tallesDesordenados = Array.from(new Set(articulo.productos.filter((producto) => producto.stock > 0).map((producto) => producto.talle)));
+    const coloresDesordenados = Array.from(new Set(articulo.productos.filter((producto) => producto.stock > 0).map((producto) => producto.color)));
+    const colores = coloresDesordenados.sort((a, b) => {
+        if (a < b) {
+            return -1
+        }
+        if (a > b) {
+            return 1
+        }
+        return 0
+    })
+    const talles = tallesDesordenados.sort((a, b) => {
+        const isNumberA = !isNaN(a);
+        const isNumberB = !isNaN(b);
+        const talleOrden = { 'UNICO': 1 ,'S': 2, 'M': 3, 'L': 4, 'XL': 5, 'XXL': 6, 'XXXL': 7, 'XXXXL': 8, 'XXXXXL': 9 };
+
+        if (isNumberA && isNumberB) {
+            return a - b;
+        }  else if (isNumberA || isNumberB) {
+            return isNumberA ? 1 : -1;
+        } else {
+            const aMayus = a.toUpperCase()
+            const bMayus = b.toUpperCase()
+            return talleOrden[aMayus] - talleOrden[bMayus];
+        }
+    })
+
     const [cantidades, setCantidades] = useState({});
     const inputRefs = {};
     const { agregarAlCarrito } = useContext(CartContext);
@@ -82,24 +109,30 @@ function GrillaMayorista({ articulo }) {
             agregarAlCarrito(articulo.numero_articulo, color, talle, cantidad)
         }
 
-        alert("Agregado al carrito")
+        toast.success("¡Agregado al carrito!", {
+            position: "top-center",
+            hideProgressBar: true,
+            autoClose: 1000, 
+            closeButton: false,
+        });
     }
 
     return (
     <>
+        <ToastContainer position="top-right" hideProgressBar={false}/>
         <table className="table-grilla">
             <thead >
                 <tr >
                     <th id="articulo-grilla-elegido" >ART. {articulo.numero_articulo}</th>
                     {talles.map((talle, index) => (
-                        <th key={index}>{talle}</th>
+                        <th key={index}>{talle.toUpperCase()}</th>
                     ))}
                 </tr>
             </thead>
             <tbody>
                 {colores.map((color, index) => (
                     <tr key={index}>
-                        <td>{color}</td>
+                        <td>{color.toUpperCase()}</td>
                         {talles.map((talle, talleIndex) => {
                             const matchingProduct = articulo.productos.find(
                                 (producto) => producto.color === color && producto.talle === talle

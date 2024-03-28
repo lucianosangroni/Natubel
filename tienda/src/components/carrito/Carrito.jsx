@@ -43,9 +43,12 @@ const Carrito = () => {
     setCarrito(nuevoCarrito);
   };
 
-
   useEffect(() => {
     const nuevoCarrito = verificarStock();
+    
+    const carritoOrdenado = nuevoCarrito.sort((a, b) => ordenarProductos(a, b))
+
+
     setCarrito(nuevoCarrito);
 
     const precios = tipoPrecios();
@@ -61,6 +64,55 @@ const Carrito = () => {
       setMostrarToastPrecios(false)
     }
   }, []);
+
+  const ordenarProductos = (a, b) => {
+    const obtenerNumero = numArticulo => parseInt(numArticulo.match(/\d+/)[0]);
+    const obtenerLetra = numArticulo => {
+      const letra = (numArticulo.match(/[A-Za-z]/) || [])[0];
+      return letra ? letra.toUpperCase() : letra;
+    };
+    const ordenLetras = { 'UNICO': 0, 'E': 1, 'S': 2, 'M': 3, 'L': 4, 'XL': 5, 'XXL': 6, 'XXXL': 7, 'XXXXL': 8, 'XXXXXL': 9 };
+
+    const numeroA = obtenerNumero(a.numero_articulo)
+    const letraA = obtenerLetra(a.numero_articulo)
+    const numeroB = obtenerNumero(b.numero_articulo)
+    const letraB = obtenerLetra(b.numero_articulo)
+
+    if (numeroA !== numeroB) {
+      return numeroA - numeroB;
+    }
+
+    if(letraA !== letraB) {
+      if (letraA && letraB) {
+        return ordenLetras[letraA] - ordenLetras[letraB];
+      } else if (letraA) {
+        return 1;
+      } else if (letraB) {
+        return -1;
+      }
+    }
+
+    const talleA = a.talle.toUpperCase();
+    const talleB = b.talle.toUpperCase();
+    const esNumeroA = !isNaN(parseInt(a.talle));
+    const esNumeroB = !isNaN(parseInt(b.talle));
+    
+    if(talleA !== talleB) {
+      if (esNumeroA && esNumeroB) {
+        return parseInt(a.talle) - parseInt(b.talle);
+      } else if (esNumeroA) {
+        return 1;
+      } else if (esNumeroB) {
+        return -1;
+      }
+
+      return ordenLetras[talleA] - ordenLetras[talleB];
+    }
+    
+    const colorA = a.color.toUpperCase()
+    const colorB = b.color.toUpperCase()
+    return colorA.localeCompare(colorB)
+  }
 
   useEffect(() => {
     if(mostrarToastStock) {
@@ -140,8 +192,8 @@ const Carrito = () => {
             <thead>
               <tr className="encabezadoCarrito">
                 <th>Articulo</th>
-                <th>Color</th>
                 <th>Talle</th>
+                <th>Color</th>
                 <th>Cantidad</th>
                 <th>Precio</th>
                 <th></th>
@@ -151,8 +203,8 @@ const Carrito = () => {
               {carrito.map((prod) => (
                 <tr className="artContainer" key={prod.id}>
                   <td>ART. {prod.numero_articulo}</td>
-                  <td>{prod.color}</td>
-                  <td>{prod.talle}</td>
+                  <td>{prod.talle.toUpperCase()}</td>
+                  <td>{prod.color.toUpperCase()}</td>
                   <td>{formatearNumero(prod.cantidad)}</td>
                   <td>
                     $

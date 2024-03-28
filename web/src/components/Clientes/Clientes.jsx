@@ -8,15 +8,19 @@ import ModalClienteEditar from "./ModalClienteEditar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { apiUrl, bearerToken } from "../../config/config";
+import Loading from "../Common/Loading";
 
 const ListadoClientes = () => {
   const columns = useMemo(() => COLUMNSCLIENTES, []);
   const [data, setData] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false)
 
   //OBTENER CLIENTES DB
   useEffect(() => {
+    setIsLoading(true)
+
     fetch(`${apiUrl}/clientes`, 
     {
       headers: {
@@ -54,14 +58,19 @@ const ListadoClientes = () => {
       }
 
       setData(clientes)
+
+      setIsLoading(false)
     })
     .catch((error) => {
+      setIsLoading(false)
       console.error("Error en la solicitud GET:", error)
     });
   }, []);
 
   //AGREGAR CLIENTE DB
   const handleAddCliente = (newCliente) => {
+    setIsLoading(true)
+
     const requestData = 
     {
       nombre: newCliente.nombre,
@@ -96,8 +105,11 @@ const ListadoClientes = () => {
       newCliente.id = result.id
       newCliente.persona_id = result.persona_id
       setData((prevData) => [...prevData, newCliente]);
+
+      setIsLoading(false)
     })
     .catch(error => {
+        setIsLoading(false)
         console.error("Error en la solicitud POST:", error);
     });
   };
@@ -110,8 +122,10 @@ const ListadoClientes = () => {
     setIsEditModalOpen(true);
   };
 
-  //EDITAR PROVEEDOR DB
+  //EDITAR CLIENTE DB
   const updateTableRow = (newData) => {
+    setIsLoading(true)
+
     const requestData = 
     {
       nombre: newData.nombre,
@@ -149,8 +163,11 @@ const ListadoClientes = () => {
         updatedData[newData.index] = newData;
         return updatedData;
       });
+
+      setIsLoading(false)
     })
     .catch(error => {
+        setIsLoading(false)
         console.error("Error en la solicitud PUT:", error);
     });
   };
@@ -216,6 +233,7 @@ const ListadoClientes = () => {
 
   return (
     <>
+      {isLoading && <Loading/>}
       <NavbarAdm selected={'Clientes'}/>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
       <div className="tableDivContainer">

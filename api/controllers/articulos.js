@@ -20,7 +20,25 @@ const getItems = async (req, res) => {
                         model: categoriaModel,
                     },
                 ], 
-                order: sequelize.literal("CAST(SUBSTRING_INDEX(numero_articulo, ' ', 1) AS UNSIGNED), SUBSTRING_INDEX(numero_articulo, ' ', -1) ASC")
+                order: [
+                    sequelize.literal("CAST(SUBSTRING_INDEX(numero_articulo, ' ', 1) AS UNSIGNED)"),
+                    sequelize.literal("CASE " +
+                    "WHEN numero_articulo REGEXP '^[0-9]+$' THEN 1 " +
+                    "ELSE " +
+                        "CASE " +
+                            "WHEN numero_articulo LIKE '%E' THEN 2 " +
+                            "WHEN numero_articulo LIKE '%S' THEN 3 " +
+                            "WHEN numero_articulo LIKE '%M' THEN 4 " +
+                            "WHEN numero_articulo LIKE '%L' THEN 5 " +
+                            "WHEN numero_articulo LIKE '%XL' THEN 6 " +
+                            "WHEN numero_articulo LIKE '%XXL' THEN 7 " +
+                            "WHEN numero_articulo LIKE '%XXXL' THEN 8 " +
+                            "WHEN numero_articulo LIKE '%XXXXL' THEN 9 " +
+                            "WHEN numero_articulo LIKE '%XXXXXL' THEN 10 " +
+                            "ELSE 11 " +
+                        "END " +
+                    "END"),
+                ]
             }
         )
 

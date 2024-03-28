@@ -39,7 +39,7 @@ const ItemListContainer = ({ flagCatalogo }) => {
     } else {
       if (talle) {
         articulosFiltrados = articulosFiltrados.filter((articulo) => {
-          const talles = Array.from(new Set(articulo.productos.map((producto) => isNaN(producto.talle) ? producto.talle.toUpperCase() : producto.talle)));
+          const talles = Array.from(new Set(articulo.productos.map((producto) => producto.talle.toUpperCase())));
           return talles.includes(talle)
         });
       }

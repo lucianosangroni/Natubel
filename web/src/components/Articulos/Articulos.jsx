@@ -7,6 +7,7 @@ import ListaArticulos from "../Common/ListaArticulos";
 import GrillaProducto from "./GrillaProducto";
 import { apiUrl, bearerToken } from "../../config/config";
 import { Button } from "react-bootstrap";
+import Loading from "../Common/Loading";
 
 const ListadoProductos = () => {
   const [data, setData] = useState([]);
@@ -14,9 +15,12 @@ const ListadoProductos = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isCategoriasModalOpen, setIsCategoriasModalOpen] = useState(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   //OBTENER ARTICULOS DB
   useEffect(() => {
+    setIsLoading(true)
+
     const fetchData = async () => {
       try {
         let flag_error = false;
@@ -67,10 +71,13 @@ const ListadoProductos = () => {
 
         setCategorias(resultCategorias);
 
+        setIsLoading(false)
         if (flag_error) {
           alert("Error al buscar los datos, intente nuevamente");
+          setIsLoading(false)
         }
       } catch (error) {
+        setIsLoading(false)
         console.error("Error en la obtención de datos:", error);
         alert("Error al buscar los datos, intente nuevamente");
       }
@@ -81,6 +88,8 @@ const ListadoProductos = () => {
 
   //AGREGAR ARTICULO DB
   const handleAddArticulo = (newArticulo) => {
+    setIsLoading(true)
+
     const formData = new FormData();
 
     formData.append('numero_articulo', newArticulo.numero_articulo);
@@ -127,14 +136,19 @@ const ListadoProductos = () => {
         };
         setData((prevData) => [...prevData, newArticuloData]);
         setSelectedProduct(newArticuloData);
+
+        setIsLoading(false)
       })
       .catch((error) => {
+        setIsLoading(false)
         console.error("Error en la solicitud POST:", error);
       });
   };
 
   //EDITAR ARTICULO DB
   const handleEditProducto = (editProduct) => {
+    setIsLoading(true)
+
     const productos = editProduct.productos.map(({ id, talle, color }) => ({
       producto_id: id,
       talle,
@@ -198,8 +212,11 @@ const ListadoProductos = () => {
         });
 
         setSelectedProduct(editArticuloData);
+
+        setIsLoading(false)
       })
       .catch((error) => {
+        setIsLoading(false)
         console.error("Error en la solicitud PUT:", error);
       });
   };
@@ -238,6 +255,8 @@ const ListadoProductos = () => {
   };
 
   const handleGenerarPDFAdmin = () => {
+    setIsLoading(true)
+
     fetch(`${apiUrl}/pdf/stock/admin`, {
       headers: {
         Authorization: `Bearer ${bearerToken}`,
@@ -260,8 +279,11 @@ const ListadoProductos = () => {
       }
 
       URL.revokeObjectURL(url);
+
+      setIsLoading(false)
     })
     .catch((error) => {
+      setIsLoading(false)
       console.error('Error en la solicitud GET:', error);
     });
   }
@@ -275,6 +297,8 @@ const ListadoProductos = () => {
   }
 
   const handleGenerarPDFCliente = () => {
+    setIsLoading(true)
+
     fetch(`${apiUrl}/pdf/stock/cliente`, {
       headers: {
         Authorization: `Bearer ${bearerToken}`,
@@ -297,8 +321,11 @@ const ListadoProductos = () => {
       }
 
       URL.revokeObjectURL(url);
+
+      setIsLoading(false)
     })
     .catch((error) => {
+      setIsLoading(false)
       console.error('Error en la solicitud GET:', error);
     });
   }
@@ -368,6 +395,7 @@ const ListadoProductos = () => {
 
   return (
     <>
+      {isLoading && <Loading/>}
       <NavbarAdm selected={'Articulos'}/>
       <div className="table-productos-contenedor">
         <ListaArticulos articulos={data} onArticuloClick={handleArticuloClick} selectedArticulo={selectedProduct}/>

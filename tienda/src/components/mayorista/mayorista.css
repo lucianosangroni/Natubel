@@ -1,12 +1,24 @@
+.contenedor-inicial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.explicacion-inicial {
+  background-color: #FBCCD2;
+  margin-top: 1rem;
+  color: white;
+  font-size: 20px;
+  width: fit-content;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
 .mayoristaContainer {
     margin: 20px;
   }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
+
   th, td {
     border: 1px solid #010101;
     padding: 8px;
@@ -55,4 +67,26 @@
 
   .table-cell-productos.selected {
     background-color: #fde6ea;
+  }
+
+  .contenedor-tabla-grilla {
+    display: flex;
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 1rem;
+    border: 1px solid #000;
+  }
+
+  .scrollable-list-container {
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .table-cargarPedido-contenedor {
+    overflow-y: auto;
+    border: 1px solid #000000;
+    border-collapse: collapse;
+    margin: 2rem;
+    padding: 2rem;
   }

@@ -40,7 +40,7 @@ const FiltroTalle = ({ articulos, onChangeTalle }) => {
       const tallesUnicos = new Set()
   
       tallesOrdenados.forEach(talle => {
-        const talleMayus = isNaN(talle) ? talle.toUpperCase() : talle
+        const talleMayus = talle.toUpperCase()
         if(!tallesUnicos.has(talleMayus)) {
           tallesUnicos.add(talleMayus)
         }

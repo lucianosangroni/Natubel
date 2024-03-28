@@ -5,6 +5,7 @@ import GrillaProductoPedido from "./GrillaProductoPedido";
 import GrillasProductosConfirmados from "./GrillaProductoConfirmado";
 import { apiUrl, bearerToken } from "../../config/config";
 import ListaArticulos from "../Common/ListaArticulos";
+import Loading from "../Common/Loading";
 
 const CargarPedido = () => {
   const [data, setData] = useState([]);
@@ -16,9 +17,12 @@ const CargarPedido = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productosConfirmados, setProductosConfirmados] = useState([]);
   const [cantidadesArticuloActual, setCantidadesArticuloActual] = useState({});
+  const [isLoading, setIsLoading] = useState(false)
 
   ////OBTENER ARTICULOS, CLIENTES Y PROVEEDORES DB
   useEffect(() => {
+    setIsLoading(true)
+
     let flag_error = false;
 
     const fetchArticulos = fetch(`${apiUrl}/articulos`, {
@@ -105,6 +109,7 @@ const CargarPedido = () => {
       });
 
     Promise.all([fetchArticulos, fetchClientes, fetchProveedores]).then(() => {
+      setIsLoading(false)
       if (flag_error) {
         alert("Error al buscar los datos, intente nuevamente");
       }
@@ -141,6 +146,8 @@ const CargarPedido = () => {
   );
 
   const handleConfirmarProducto = (articulo, cantidades) => {
+    console.log(cantidades)
+
     const productoExistenteIndex = productosConfirmados.findIndex(
       (producto) => producto.numero_articulo === articulo.numero_articulo
     );
@@ -265,6 +272,8 @@ const CargarPedido = () => {
       return;
     }
 
+    setIsLoading(true)
+
     const precio_total = calcularPrecioTotal();
     const productos = getProductos();
     const creador = localStorage.getItem("username");
@@ -299,8 +308,11 @@ const CargarPedido = () => {
         setTipoPedidor("cliente");
         setFiltroBusqueda("");
         setSelectedProduct(data[0]);
+
+        setIsLoading(false)
       })
       .catch((error) => {
+        setIsLoading(false)
         console.error("Error en la solicitud POST:", error);
       });
   };
@@ -341,6 +353,7 @@ const CargarPedido = () => {
 
   return (
     <>
+      {isLoading && <Loading/>}
       <NavbarAdm selected={'Cargar Pedido'}/>
       <div className="contenedor-botones">
         <button

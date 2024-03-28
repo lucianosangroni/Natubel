@@ -3,10 +3,12 @@ import GrillaProductosDePedido from "./GrillaProductosDePedido";
 import { apiUrl, bearerToken } from "../../config/config";
 import ListaArticulos from "../Common/ListaArticulos";
 import ModalRemito from "./ModalRemito";
+import Loading from "../Common/Loading";
 
 function ListaProductosDePedido({ pedido, onCambiarEstado }) {
     const [selectedArticulo, setSelectedArticulo] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
       setSelectedArticulo(pedido.articulos[0])
@@ -68,6 +70,8 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
     }
 
     const generarPdfPedido = () => {
+      setIsLoading(true)
+
       fetch(`${apiUrl}/pdf/nota-pedido/${pedido.numero_pedido}`, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
@@ -90,8 +94,11 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
         }
   
         URL.revokeObjectURL(url);
+
+        setIsLoading(false)
       })
       .catch((error) => {
+        setIsLoading(false)
         console.error('Error en la solicitud GET:', error);
       });
     }
@@ -102,6 +109,7 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
 
     return (
       <>
+        {isLoading && <Loading/>}
       <div className="table-productos-contenedor">
         <ListaArticulos articulos={pedido.articulos} onArticuloClick={handleArticuloClick} selectedArticulo={selectedArticulo}/>
 
