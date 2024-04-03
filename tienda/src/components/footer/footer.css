@@ -24,6 +24,7 @@
     display: flex;
     gap: 1rem;
     margin-bottom: 0.3rem;
+    margin-top: 0.5rem;
 }
 
 .dir {
@@ -49,6 +50,7 @@
     display: flex; 
     gap: 1rem;
     justify-content: center;
+    margin-top: 0.5rem;
 }
 
 .redes-container a {
@@ -70,4 +72,46 @@
     .footerNatubel {
         display: none;
     }
+}
+
+@media (max-width: 550px) {
+    .footerNovedades p{
+        width: 14rem;
+        font-size: 0.7rem;
+
+    }
+    .contactanos p{
+        font-size: 0.8rem;   
+    }
+    .redes-container {
+        margin-top: 0.5rem;
+    }
+    .redes-container img {
+        width: 1.5rem;
+    }
+    .tel p{
+       font-size: 0.7rem;
+    }
+    .mail {
+        margin-top: 0.5rem;
+      }
+    
+    .mail p{
+        font-size: 0.7rem;
+     }
+    
+    .dir p{
+        font-size: 0.7rem;
+     }
+     .tel img{
+        width: 0.7rem;
+     }
+     
+     .mail img{
+        width: 0.7rem;
+      }
+     
+     .dir img{
+        width: 0.7rem;
+      }
 }

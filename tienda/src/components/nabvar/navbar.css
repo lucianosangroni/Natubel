@@ -74,5 +74,15 @@
 
         }
     }
+    @media (max-width: 550px) {
+        .redesWhatsapp img{
+            width: 2rem;
+            margin-right: 2rem;
+        }
+        .redesWhatsapp {
+            position: fixed; 
+            bottom: 2.5rem;            
+        }
+    }
 
  

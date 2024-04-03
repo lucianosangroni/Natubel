@@ -43,13 +43,13 @@ const Navbar = () => {
             ${formatearNumero(montoMinimoDistribuidor)}. HACE TU PEDIDO Y ESCRIBINOS A NUESTRO WHATSAPP
           </p>
           <div className={`links ${clicked ? "active" : ""}`}>
-            <Link onClick={handleClick} href="/">
+          <Link onClick={handleClick} to="/">
               Inicio
             </Link>
-            <Link onClick={handleClick} href="/catalogo">
+            <Link onClick={handleClick} to="/catalogo">
               Catalogo
             </Link>
-            <Link onClick={handleClick} href="/mayorista">
+            <Link onClick={handleClick} to="/mayorista">
               Mayorista
             </Link>
           </div>
