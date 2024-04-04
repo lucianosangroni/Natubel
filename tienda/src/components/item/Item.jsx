@@ -9,7 +9,7 @@ const Item = ( { producto } ) => {
         {producto.imagens.length > 0 ? (
           <img src={producto.imagens[0].url} alt={"sin imagen"} />
         ) : (
-          <img src={"http://localhost:3001/no-hay-foto.png"} alt={"sin imagen"} />
+          <img src={`/img/no-hay-foto.png`} alt={"sin imagen"} />
         )}
       </div>
       <div className='productoInicio'>

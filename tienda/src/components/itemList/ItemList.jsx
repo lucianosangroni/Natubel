@@ -7,10 +7,10 @@ import FiltroTalle from "../filtroTalle/FiltroTalle";
 import OrdenarMayorMenor from "../ordenarMayorMenor/OrdenarMayorMenor";
 
 const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, setProductosContainer, flagCatalogo, onChangeTalleContainer, onChangeColorContainer, flagOrdenar }) => {
-  const [visibleProducts, setVisibleProducts] = useState(16);
+  const [visibleProducts, setVisibleProducts] = useState(30);
 
   const handleLoadMore = () => {
-    setVisibleProducts((prevVisible) => prevVisible + 16);
+    setVisibleProducts((prevVisible) => prevVisible + 15);
   };
 
   const setProductos = (productosOrdenados) => {

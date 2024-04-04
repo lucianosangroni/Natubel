@@ -116,7 +116,7 @@ const ItemDetail = ({ item }) => {
                   <Carousel.Item>
                     <img
                       className="d-block w-100"
-                      src={"http://localhost:3001/no-hay-foto.png"}
+                      src={`/img/no-hay-foto.png`}
                       alt={"sin imagen"}
                     />
                   </Carousel.Item>
@@ -237,7 +237,7 @@ const ItemDetail = ({ item }) => {
                       <img src={artRelacionado.imagens[0].url} alt={"sin imagen"} />
                     ) : (
                       <img
-                        src={"http://localhost:3001/no-hay-foto.png"}
+                        src={`/img/no-hay-foto.png`}
                         alt={"sin imagen"}
                       />
                     )}

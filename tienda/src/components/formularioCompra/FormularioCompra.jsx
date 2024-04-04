@@ -5,7 +5,6 @@ import { CartContext } from "../../context/CartContext.jsx"
 import { useData } from "../../context/DataContext.jsx";
 import { apiUrl, tokenBearer } from "../../config/config";
 import { Navigate } from "react-router-dom";
-import Alert from "react-bootstrap/Alert";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -20,7 +19,7 @@ const FormularioCompra = () => {
     handleSubmit: handleSubmitCodigo
   } = useForm();
 
-  const { refreshData, montoMinimoMayorista, montoMinimoDistribuidor, articulosData } = useData()
+  const { refreshData, montoMinimoMayorista, montoMinimoDistribuidor } = useData()
 
   const {
     verificarStock,

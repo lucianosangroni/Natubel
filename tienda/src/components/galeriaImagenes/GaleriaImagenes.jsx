@@ -5,17 +5,6 @@ import "./galeriaImagenes.css";
 function UncontrolledExample() {
   return (
     <Carousel className="imgContianer">
-      <Carousel.Item className="imgItem">
-        <img
-          className="imgGaleria"
-          src="/img/fotoHorizontal1.jpg"
-          alt="modelo"
-        />
-        <Carousel.Caption>
-          {/* <h3>Conjunto animal print</h3>
-          <p>Conjunto taza soft con base de algodon Lycra Animal print con colaless</p> */}
-        </Carousel.Caption>
-      </Carousel.Item>
       <Carousel.Item>
         <img
           className="imgGaleria"
