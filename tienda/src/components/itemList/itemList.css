@@ -1,98 +1,108 @@
-.containerItemList {   
-    display: flex;
-    padding-inline: 1rem;
-    
-    
-} 
+.containerItemList {
+  display: flex;
+  padding-inline: 1rem;
+}
 
 .categoriaFiltros {
-    margin-top: 3rem;
+  margin-top: 3rem;
 }
 
 .main-title {
-    background-color: #FBCCD2;
-    color: white;
-    padding: 0.5rem;
-    width: 13rem;
-    height: 2rem;
-    margin-top: 2rem;
-    font-size: 1rem;
-    border-radius: 0.5rem;
-    margin-left: 1.5rem;
+  background-color: #fbccd2;
+  color: white;
+  padding: 0.5rem;
+  width: 13rem;
+  height: 2rem;
+  margin-top: 2rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  margin-left: 1.5rem;
 }
 
 .productosContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .productos {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    height: 100%;
-    gap: 1rem;
-    padding-block: 3rem;
-    
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: 100%;
+  gap: 1rem;
+  padding-block: 3rem;
 }
 
 .buttonVerMas {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
 .buttonVerMas button {
-    font-size: 0.8rem;
+  font-size: 0.8rem;
 }
 
 .ordenarMayorMenor {
-    display: flex;
-    justify-content: end;
-    margin-right: 2rem;
-    margin-top: 2rem;
+  display: flex;
+  justify-content: end;
+  margin-right: 2rem;
+  margin-top: 2rem;
 }
 
 .noHayArtContainer {
-    display: flex; /* Utiliza un modelo de diseño flexible para alinear los elementos internos */
-    justify-content: center; /* Centra los elementos horizontalmente dentro del contenedor */
-    align-items: start;
-    padding-inline: 1rem;
-    margin-top: 3rem;
-
+  display: flex; /* Utiliza un modelo de diseño flexible para alinear los elementos internos */
+  justify-content: center; /* Centra los elementos horizontalmente dentro del contenedor */
+  align-items: start;
+  padding-inline: 1rem;
+  margin-top: 3rem;
 }
 
 .noHayArticulos {
-    background-color: #FBCCD2;
-    color: white;
-    padding: 0.5rem;
-    width: 16rem;
-    height: 2.5rem;
-    font-size: 1rem;
-    border-radius: 0.5rem;
+  background-color: #fbccd2;
+  color: white;
+  padding: 0.5rem;
+  width: 16rem;
+  height: 2.5rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
 }
 
 @media (max-width: 1080px) {
-    .productos {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-    }}
+  .productos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
 
-    @media (max-width: 768px) {
-        .productos {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-        }}
+@media (max-width: 768px) {
+  .productos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 
-        @media (max-width: 650px) {
-            .productos {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-            }}
-            @media (max-width: 500px) {
-                .productos {
-                    display: grid;
-                    grid-template-columns: repeat(1, 1fr);
-                }}
+@media (max-width: 650px) {
+  .productos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 500px) {
+  .productos {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+@media (max-width: 566px) {
+  .productos {
+    display: flex;
+    flex-direction: column;
+  }
+
+}
+
+
+

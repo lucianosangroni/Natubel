@@ -6,7 +6,7 @@
 
 .enviamosPagaSeguridad{
     display: flex;
-    justify-content: center;
+    justify-content: center; 
     text-align: center;
     gap: 1rem;
     margin-top: 6rem;
@@ -29,4 +29,26 @@
 .enviamosPagaSeguridad p {
     font-size: 0.8rem;
     color: #FBCCD2;
+}
+
+@media (max-width: 566px) {
+    .enviamosPagaSeguridad {
+        flex-direction: column; 
+        align-items: center;
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+    }
+    .enviamosPagaSeguridad img {
+        width: 1.6rem;
+        
+    }
+    
+    .enviamosPagaSeguridad h3 {
+        font-size: 1rem;
+    }
+    
+    .enviamosPagaSeguridad p {
+        font-size: 0.6rem;
+    }
+
 }

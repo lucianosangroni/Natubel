@@ -55,3 +55,25 @@
     font-style: italic;
     font-weight: bold;
 }
+
+@media (max-width: 566px) {
+    .enviamosPagaSeguridad {
+        flex-direction: column; 
+        align-items: center;
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+    }
+    .menuLateral {
+        width: 6rem;       
+    }
+    .menuLateralTitulo{
+        font-size: 14px;
+    }
+    .textoCategorias a {
+        font-size: 0.7rem; 
+    }
+    .menuLateralColor {
+        width: 6rem;
+    }
+
+}
