@@ -3,9 +3,10 @@ import ItemList from "../itemList/ItemList";
 import "./itemListContainer.css";
 import { useParams } from "react-router-dom";
 import { useData } from '../../context/DataContext';
+import Loading from "../loading/Loading";
 
 const ItemListContainer = ({ flagCatalogo }) => {
-  const { articulosData } = useData();
+  const { articulosData, isInitialLoading } = useData();
   const [ articulos, setArticulos ] = useState(articulosData);
   const [ color, setColor ] = useState(null)
   const [ talle, setTalle ] = useState(null)
@@ -76,6 +77,7 @@ const ItemListContainer = ({ flagCatalogo }) => {
 
   return (
     <div>
+      {isInitialLoading && <Loading/>}
       <ItemList productos={articulos} productosFiltroTalles={productosFiltroTalles} productosFiltroColores={productosFiltroColores} flagCatalogo={flagCatalogo} setProductosContainer={handleSetProductos} onChangeTalleContainer={handleChangeTalle} onChangeColorContainer={handleChangeColor} flagOrdenar={flagOrdenar} />
     </div>
   );

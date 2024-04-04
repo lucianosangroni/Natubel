@@ -4,9 +4,10 @@ import GrillaMayorista from '../grillaMayorista/GrillaMayorista';
 import '../grillaMayorista/grillaMayorista.css';
 import { useData } from "../../context/DataContext";
 import ResumenDePedido from '../resumenDePedido/ResumenDePedido';
+import Loading from "../loading/Loading";
 
 const Mayorista = () => {
-  const { articulosData } = useData();
+  const { articulosData, isInitialLoading } = useData();
   const [ selectedArticulo, setSelectedArticulo ] = useState(null);
 
   useEffect(() => {
@@ -19,6 +20,7 @@ const Mayorista = () => {
 
   return (
     <>
+      {isInitialLoading && <Loading/>}
       <div className='contenedor-inicial'>
         <h1 className='explicacion-inicial'>SI YA SABES LO QUE BUSCAS REALIZA TU PEDIDO MÁS RÁPIDAMENTE</h1>
       </div>

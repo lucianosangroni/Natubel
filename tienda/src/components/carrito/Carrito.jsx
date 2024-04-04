@@ -6,6 +6,7 @@ import Alert from "react-bootstrap/Alert";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useData } from '../../context/DataContext';
+import Loading from "../loading/Loading";
 
 const Carrito = () => {
   const {
@@ -22,7 +23,7 @@ const Carrito = () => {
     setMostrarToastStock,
   } = useContext(CartContext);
 
-  const { montoMinimoMayorista, montoMinimoDistribuidor } = useData();
+  const { montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading } = useData();
 
   const [ carrito, setCarrito ] = useState([])
   const [ selectedPrecios, setSelectedPrecios ] = useState("MINORISTA")
@@ -141,6 +142,7 @@ const Carrito = () => {
 
   return (
     <div className="margenes">
+      {isInitialLoading && <Loading/>}
       <ToastContainer position="top-right" hideProgressBar={false}/>
       {shouldRedirect && <Navigate to="/formulario" />}
       {carrito.length > 0 ? (

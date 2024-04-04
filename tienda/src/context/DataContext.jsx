@@ -10,12 +10,15 @@ export const DataProvider = ({ children }) => {
     const [ tallesData, setTallesData ] = useState([]);
     const [ montoMinimoMayorista, setMontoMinimoMayorista ] = useState(0)
     const [ montoMinimoDistribuidor, setMontoMinimoDistribuidor ] = useState(0)
+    const [ isInitialLoading, setIsInitialLoading ] = useState(true)
 
     useEffect(() => {
         refreshData()
     }, []);
 
     const refreshData = () => {
+        setIsInitialLoading(true)
+
         fetch(`${apiUrl}/config`, {
             headers: {
                 Authorization: `Bearer ${tokenBearer}`
@@ -66,6 +69,8 @@ export const DataProvider = ({ children }) => {
                     setCategoriasData(categoriasConStock);
                     setMontoMinimoMayorista(configData.montoMinimoMayorista)
                     setMontoMinimoDistribuidor(configData.montoMinimoDistribuidor)
+                    
+                    setIsInitialLoading(false)
                 })
                 .catch(error => {
                     console.error("Error en la solicitud GET para artículos:", error);
@@ -81,7 +86,7 @@ export const DataProvider = ({ children }) => {
     }
 
     return (
-        <DataContext.Provider value={{ categoriasData, articulosData, coloresData, tallesData, refreshData, montoMinimoMayorista, montoMinimoDistribuidor }}>
+        <DataContext.Provider value={{ categoriasData, articulosData, coloresData, tallesData, refreshData, montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading }}>
             {children}
         </DataContext.Provider>
     );

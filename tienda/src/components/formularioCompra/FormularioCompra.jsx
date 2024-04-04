@@ -7,6 +7,7 @@ import { apiUrl, tokenBearer } from "../../config/config";
 import { Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loading from "../loading/Loading";
 
 const FormularioCompra = () => {
   const {
@@ -19,7 +20,7 @@ const FormularioCompra = () => {
     handleSubmit: handleSubmitCodigo
   } = useForm();
 
-  const { refreshData, montoMinimoMayorista, montoMinimoDistribuidor } = useData()
+  const { refreshData, montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading } = useData()
 
   const {
     verificarStock,
@@ -344,6 +345,7 @@ const FormularioCompra = () => {
 
   return (
     <>
+      {isInitialLoading && <Loading/>}
       <ToastContainer position="top-right" hideProgressBar={false}/>
       {shouldRedirect && <Navigate to="/carrito" />}
       <div className="container">
