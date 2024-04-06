@@ -15,7 +15,7 @@
 }
 
 #articulo-grilla-elegido {
-    background-color: #FBCCD2;
+    background-color: #70848b;
     color: white;
     font-weight: bold !important;
 }
@@ -37,7 +37,7 @@
     height: 100%;
     padding: 0.5rem;
     border-radius: 0.5rem;
-    background-color: #FBCCD2;
+    background-color: #70848b;
     margin-bottom: 1rem;
     margin-right: 1rem;
     margin-top: auto;

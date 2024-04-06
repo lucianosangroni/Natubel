@@ -23,12 +23,12 @@
 .enviamosPagaSeguridad h3 {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #FBCCD2;
+    color: #70848b;
 }
 
 .enviamosPagaSeguridad p {
     font-size: 0.8rem;
-    color: #FBCCD2;
+    color: #70848b;
 }
 
 @media (max-width: 566px) {

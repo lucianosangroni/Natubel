@@ -5,10 +5,10 @@
 }
 
 .explicacion-inicial {
-  background-color: #FBCCD2;
+  background-color: #70848b;
   margin-top: 1rem;
   color: white;
-  font-size: 15px;
+  font-size: 10px;
   width: fit-content;
   padding: 0.3rem 0.5rem;
   border-radius: 0.5rem;
@@ -23,6 +23,7 @@
     border: 1px solid #010101;
     padding: 8px;
     text-align: center;
+    font-size: 13px;
   }
   
   /* Estilo específico para el encabezado de la tabla */
@@ -51,7 +52,7 @@
 
   .table-header-productos {
     border: 1px solid #010101;
-    background-color: #FBCCD2;
+    background-color: #70848b;
     font-weight: bold;
   }
 
@@ -66,7 +67,7 @@
   }
 
   .table-cell-productos.selected {
-    background-color: #fde6ea;
+    background-color: #d2dfe4;
   }
 
   .contenedor-tabla-grilla {

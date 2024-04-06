@@ -13,7 +13,7 @@
 }
 
 .item-count button, .agregar-al-carrito, .enviar {
-    background-color: #FBCCD2;
+    background-color: #70848b;
     border: 0;
     width: 2rem;
     height: 2rem;
@@ -26,7 +26,7 @@
     justify-content: center;
     text-align: center;
     line-height: 1;
-    border: 2px solid #FBCCD2;
+    border: 2px solid #70848b;
     transition: .2s;
 }
 

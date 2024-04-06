@@ -1,4 +1,16 @@
-    .encabezado{
+   /* colores catalogo
+   #c4b8aa
+   #6b4e50 
+   #70848b  
+   #a2aaa9 
+   #5e3f41  
+   #d1c2dc  
+   #f9d0dc 
+   #463d44 
+   #41494d */
+
+
+   .encabezado{
         font-size: 0.6rem;
         text-align: center;
         padding-left: 5rem;
@@ -8,7 +20,7 @@
     .navbar {
         display: flex;
         align-items: center;
-        background-color: #FBCCD2;
+        background-color: #70848b;
     }
 
     .logo {
@@ -60,6 +72,7 @@
             justify-content: space-between;
             align-items: end;
             margin-top: 0.5rem;
+            background-color: #70848b;
             
         }
         .logo {

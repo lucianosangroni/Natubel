@@ -15,7 +15,7 @@
 }
 
 .formulario label {
-    background-color: #FBCCD2;
+    background-color: #70848b;
     padding: 0.5rem;
     border-radius: 0.5rem;
     width: 150px;
@@ -30,7 +30,7 @@
 
 .formulario input:focus {
     outline: 0;
-    border: 2px solid #FBCCD2;
+    border: 2px solid #70848b;
     
 }
 
@@ -43,7 +43,7 @@
 }
 
 .enviar {
-    background-color: #FBCCD2;
+    background-color: #70848b;
     width: auto;
     height: auto;
     color: white;
@@ -60,7 +60,7 @@
 }
 
 .compraFinalizada{
-    background-color: #FBCCD2;
+    background-color: #70848b;
     padding: 0.5rem;
     margin: 2rem;
     border-radius: 0.5rem;

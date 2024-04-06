@@ -128,7 +128,7 @@ export default Navbar;
 
 const NavContainer = styled.nav`
   padding: 0.4rem;
-  background-color: #fbccd2;
+  background-color: #70848b;
   displey: flex;
   align-items: center;
   justify-content: space-between;
@@ -193,7 +193,7 @@ const NavContainer = styled.nav`
 `;
 
 const BgDiv = styled.div`
-  background-color: #fbccd2;
+  background-color: #70848b;
   position: absolute;
   top: -1000px;
   left: -1000px;
