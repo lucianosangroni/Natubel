@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Item from "../item/Item";
 import "./itemList.css";
 import CategoriasLateral from "../categoriasLateral/CategoriasLateral";
@@ -8,6 +8,19 @@ import OrdenarMayorMenor from "../ordenarMayorMenor/OrdenarMayorMenor";
 
 const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, setProductosContainer, flagCatalogo, onChangeTalleContainer, onChangeColorContainer, flagOrdenar }) => {
   const [visibleProducts, setVisibleProducts] = useState(30);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 768);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleLoadMore = () => {
     setVisibleProducts((prevVisible) => prevVisible + 15);
@@ -27,37 +40,96 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
 
   return (
     <div>
-      <div className="ordenarMayorMenor">
-      <OrdenarMayorMenor productos={productos} setProductos={setProductos} flagOrdenar={flagOrdenar} />
-      </div>
-      <div className="containerItemList">
-        <div className="categoriaFiltros">
-          <CategoriasLateral />
-          {flagCatalogo && (
-            <>
-              <FiltroTalle articulos={productosFiltroTalles} onChangeTalle={handleChangeTalle}/>
-              <FiltroColor articulos={productosFiltroColores} onChangeColor={handleChangeColor}/>
-            </>
+      {isMobile ? (
+        
+        <div>
+                    <div className="ordenarMayorMenor">
+            <OrdenarMayorMenor
+              productos={productos}
+              setProductos={setProductos}
+              flagOrdenar={flagOrdenar}
+            />
+          </div>
+          <div className="containerItemList">
+          <div className="categoriaFiltros">
+              <CategoriasLateral />
+              {flagCatalogo && (
+                <>
+                  <FiltroTalle
+                    articulos={productosFiltroTalles}
+                    onChangeTalle={handleChangeTalle}
+                  />
+                  <FiltroColor
+                    articulos={productosFiltroColores}
+                    onChangeColor={handleChangeColor}
+                  />
+                </>
+              )}
+            </div>
+          {productos.length === 0 && (
+            <div className="noHayArtContainer">
+              <p className="noHayArticulos">En este momento, no hay stock</p>
+            </div>
           )}
-        </div>
-        {productos.length === 0 && (
-          <div className="noHayArtContainer">
-            <p className="noHayArticulos">En este momento, no hay stock</p>
-          </div>
-        )}
-        <div className="productosContainer">
-          <div className="productos">
-            {productos.slice(0, visibleProducts).map((prod) => (
-              <Item producto={prod} key={prod.id} />
-            ))}
-          </div>
-          {visibleProducts < productos.length && (
+          <div className="productosContainer">
+            <div className="productos">
+              {productos.slice(0, visibleProducts).map((prod) => (
+                <Item producto={prod} key={prod.id} />
+              ))}
+            </div>
+            {visibleProducts < productos.length && (
               <div className="buttonVerMas">
                 <button onClick={handleLoadMore}>Ver más</button>
               </div>
             )}
+          </div>
         </div>
-      </div>
+        </div>
+      ) : (
+        <>
+          <div className="ordenarMayorMenor">
+            <OrdenarMayorMenor
+              productos={productos}
+              setProductos={setProductos}
+              flagOrdenar={flagOrdenar}
+            />
+          </div>
+          <div className="containerItemList">
+            <div className="categoriaFiltros">
+              <CategoriasLateral />
+              {flagCatalogo && (
+                <>
+                  <FiltroTalle
+                    articulos={productosFiltroTalles}
+                    onChangeTalle={handleChangeTalle}
+                  />
+                  <FiltroColor
+                    articulos={productosFiltroColores}
+                    onChangeColor={handleChangeColor}
+                  />
+                </>
+              )}
+            </div>
+            {productos.length === 0 && (
+              <div className="noHayArtContainer">
+                <p className="noHayArticulos">En este momento, no hay stock</p>
+              </div>
+            )}
+            <div className="productosContainer">
+              <div className="productos">
+                {productos.slice(0, visibleProducts).map((prod) => (
+                  <Item producto={prod} key={prod.id} />
+                ))}
+              </div>
+              {visibleProducts < productos.length && (
+                <div className="buttonVerMas">
+                  <button onClick={handleLoadMore}>Ver más</button>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
