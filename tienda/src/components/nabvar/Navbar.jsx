@@ -11,11 +11,11 @@ import { useData } from '../../context/DataContext';
 
 const Navbar = () => {
   const [clicked, setClicked] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 769);
   const { montoMinimoMayorista, montoMinimoDistribuidor } = useData();
 
   const handleResize = () => {
-    setIsMobile(window.innerWidth <= 768);
+    setIsMobile(window.innerWidth <= 769);
   };
 
   useEffect(() => {
@@ -49,8 +49,8 @@ const Navbar = () => {
             <Link onClick={handleClick} to="/catalogo">
               Catalogo
             </Link>
-            <Link onClick={handleClick} to="/mayorista">
-              Mayorista
+            <Link onClick={handleClick} to="/carrito">
+              Carrito
             </Link>
           </div>
           <div className="navbarMobileContainer">
@@ -139,7 +139,7 @@ const NavContainer = styled.nav`
     margin-rigth: 1rem;
   }
   .burguer {
-    @media (min-width: 768px) {
+    @media (min-width: 769px) {
       display: none;
     }
   }
@@ -157,7 +157,7 @@ const NavContainer = styled.nav`
       font-size: 2rem;
       display: block;
     }
-    @media (min-width: 768px) {
+    @media (min-width: 769px) {
       position: initial;
       margin: 0;
       a {
@@ -169,7 +169,7 @@ const NavContainer = styled.nav`
     }
   }
   .links.active {
-    z-index: 2;
+    z-index: 11;
     width: 100%;
     display: block;
     position: absolute;
@@ -186,7 +186,7 @@ const NavContainer = styled.nav`
     }
   }
   .burguer {
-    @media (min-width: 768px) {
+    @media (min-width: 769px) {
       display: none;
     }
   }
@@ -199,7 +199,7 @@ const BgDiv = styled.div`
   left: -1000px;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 10;
   transition: all 0.6s ease;
 
   &.active {

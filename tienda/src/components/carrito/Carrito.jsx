@@ -49,8 +49,7 @@ const Carrito = () => {
     
     const carritoOrdenado = nuevoCarrito.sort((a, b) => ordenarProductos(a, b))
 
-
-    setCarrito(nuevoCarrito);
+    setCarrito(carritoOrdenado);
 
     const precios = tipoPrecios();
     setSelectedPrecios(precios);
@@ -147,48 +146,50 @@ const Carrito = () => {
       {shouldRedirect && <Navigate to="/formulario" />}
       {carrito.length > 0 ? (
         <>
-          <div className="descripcionPreciosContainer">
-            {selectedPrecios === "MAYORISTA" && (
-              <p className="compraMinima">
-                Para esta lista de precios se requiere una compra minima de ${formatearNumero(montoMinimoMayorista)} o haber hecho previamente una compra mayorista.
-              </p>
-            )}
-            {selectedPrecios === "DISTRIBUIDOR" && (
-              <p className="compraMinima">Para esta lista de precios se requiere una compra minima de ${formatearNumero(montoMinimoDistribuidor)} o haber hecho previamente una compra de distribuidor.</p>
-            )}
-          </div>
-          <div className="listaPreciosContainer">
-            <h1 className="listaPreciosTitulo">Lista de precios: </h1>
-            <button
-              className={
-                selectedPrecios === "MINORISTA"
-                  ? "btnPrecios btnPreciosSelected"
-                  : "btnPrecios"
-              }
-              onClick={() => handlePreciosChange("MINORISTA")}
-            >
-              MINORISTA
-            </button>
-            <button
-              className={
-                selectedPrecios === "MAYORISTA"
-                  ? "btnPrecios btnPreciosSelected"
-                  : "btnPrecios"
-              }
-              onClick={() => handlePreciosChange("MAYORISTA")}
-            >
-              MAYORISTA
-            </button>
-            <button
-              className={
-                selectedPrecios === "DISTRIBUIDOR"
-                  ? "btnPrecios btnPreciosSelected"
-                  : "btnPrecios"
-              }
-              onClick={() => handlePreciosChange("DISTRIBUIDOR")}
-            >
-              DISTRIBUIDOR
-            </button>
+          <div className="preciosContainer">
+            <div className="descripcionPreciosContainer">
+              {selectedPrecios === "MAYORISTA" && (
+                <p className="compraMinima">
+                  Para esta lista de precios se requiere una compra minima de ${formatearNumero(montoMinimoMayorista)} o haber hecho previamente una compra mayorista.
+                </p>
+              )}
+              {selectedPrecios === "DISTRIBUIDOR" && (
+                <p className="compraMinima">Para esta lista de precios se requiere una compra minima de ${formatearNumero(montoMinimoDistribuidor)} o haber hecho previamente una compra de distribuidor.</p>
+              )}
+            </div>
+            <div className="listaPreciosContainer">
+              <h1 className="listaPreciosTitulo">Lista de precios: </h1>
+              <button
+                className={
+                  selectedPrecios === "MINORISTA"
+                    ? "btnPrecios btnPreciosSelected"
+                    : "btnPrecios"
+                }
+                onClick={() => handlePreciosChange("MINORISTA")}
+              >
+                MINORISTA
+              </button>
+              <button
+                className={
+                  selectedPrecios === "MAYORISTA"
+                    ? "btnPrecios btnPreciosSelected"
+                    : "btnPrecios"
+                }
+                onClick={() => handlePreciosChange("MAYORISTA")}
+              >
+                MAYORISTA
+              </button>
+              <button
+                className={
+                  selectedPrecios === "DISTRIBUIDOR"
+                    ? "btnPrecios btnPreciosSelected"
+                    : "btnPrecios"
+                }
+                onClick={() => handlePreciosChange("DISTRIBUIDOR")}
+              >
+                DISTRIBUIDOR
+              </button>
+            </div>
           </div>
           <table className="carritoContainer">
             <thead>

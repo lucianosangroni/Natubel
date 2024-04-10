@@ -374,7 +374,7 @@ const FormularioCompra = () => {
               <input type="text" {...registerCodigo('codigo')}/>
               <button className="confirmarCodigo" type="submit">Confirmar</button>
             </form>
-            <button className="reenviarCodigo" onClick={() => reenviarCodigo()}>Reenviar mail</button>
+            <button className="reenviarCodigo" onClick={() => reenviarCodigo()}>Reenviar código</button>
           </>
         ) : (
           <>

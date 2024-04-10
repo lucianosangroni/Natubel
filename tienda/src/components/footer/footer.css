@@ -68,7 +68,7 @@
     
 }
 
-@media (max-width: 768px) {
+@media (max-width: 769px) {
     .footerNatubel {
         display: none;
     }
@@ -114,4 +114,12 @@
      .dir img{
         width: 0.7rem;
       }
+}
+
+@media (max-width: 405px) {
+    .footerNovedades p{
+        width: 10rem;
+        font-size: 0.7rem;
+
+    }
 }

@@ -192,26 +192,43 @@ button:hover {
 }
 
 @media (max-width: 727px) {
-  .listaPreciosContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 25px;
-    width: fit-content;
-    height: 11rem;
-    border: 2px solid #70848b;
-    overflow: hidden;
-  }
   .margenes {
     margin-left: 1rem;
     margin-right: 1rem;
   }
 }
 
-@media (max-width: 460px) {
-  .carritoContainer {
-    width: 1rem;
-    border-collapse: collapse;
+@media (max-width: 450px) {
+  .listaPreciosContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 25px;
+    width: 140px;
+    height: 11rem;
+    border: 2px solid #70848b;
+    overflow: hidden;
   }
 
+  .compraMinima {
+    text-align: center;
+  }
+
+  .btnPrecios {
+    width: 110px;
+    border-radius: 0.5rem;
+  }
+
+  .preciosContainer {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-direction: row-reverse;
+  }
+  
+  .descripcionPreciosContainer {
+    width: 140px;
+  }
 }

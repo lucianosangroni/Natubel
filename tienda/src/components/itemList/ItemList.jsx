@@ -7,11 +7,11 @@ import FiltroTalle from "../filtroTalle/FiltroTalle";
 import OrdenarMayorMenor from "../ordenarMayorMenor/OrdenarMayorMenor";
 
 const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, setProductosContainer, flagCatalogo, onChangeTalleContainer, onChangeColorContainer, flagOrdenar }) => {
-  const [visibleProducts, setVisibleProducts] = useState(30);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [visibleProducts, setVisibleProducts] = useState(40);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 440);
 
   const handleResize = () => {
-    setIsMobile(window.innerWidth <= 768);
+    setIsMobile(window.innerWidth <= 440);
   };
 
   useEffect(() => {
@@ -39,11 +39,10 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
   }
 
   return (
-    <div>
+    <>
       {isMobile ? (
-        
-        <div>
-                    <div className="ordenarMayorMenor">
+        <>
+          <div className="ordenarMayorMenor">
             <OrdenarMayorMenor
               productos={productos}
               setProductos={setProductos}
@@ -51,40 +50,25 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
             />
           </div>
           <div className="containerItemList">
-          <div className="categoriaFiltros">
-              <CategoriasLateral />
-              {flagCatalogo && (
-                <>
-                  <FiltroTalle
-                    articulos={productosFiltroTalles}
-                    onChangeTalle={handleChangeTalle}
-                  />
-                  <FiltroColor
-                    articulos={productosFiltroColores}
-                    onChangeColor={handleChangeColor}
-                  />
-                </>
-              )}
-            </div>
-          {productos.length === 0 && (
-            <div className="noHayArtContainer">
-              <p className="noHayArticulos">En este momento, no hay stock</p>
-            </div>
-          )}
-          <div className="productosContainer">
-            <div className="productos">
-              {productos.slice(0, visibleProducts).map((prod) => (
-                <Item producto={prod} key={prod.id} />
-              ))}
-            </div>
-            {visibleProducts < productos.length && (
-              <div className="buttonVerMas">
-                <button onClick={handleLoadMore}>Ver más</button>
+            {productos.length === 0 && (
+              <div className="noHayArtContainer">
+                <p className="noHayArticulos">Cargando...</p>
               </div>
             )}
+            <div className="productosContainer">
+              <div className="productos">
+                {productos.slice(0, visibleProducts).map((prod) => (
+                  <Item producto={prod} key={prod.id} />
+                ))}
+              </div>
+              {visibleProducts < productos.length && (
+                <div className="buttonVerMas">
+                  <button onClick={handleLoadMore}>Ver más</button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-        </div>
+        </>
       ) : (
         <>
           <div className="ordenarMayorMenor">
@@ -112,7 +96,7 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
             </div>
             {productos.length === 0 && (
               <div className="noHayArtContainer">
-                <p className="noHayArticulos">En este momento, no hay stock</p>
+                <p className="noHayArticulos">Cargando...</p>
               </div>
             )}
             <div className="productosContainer">
@@ -129,8 +113,8 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
             </div>
           </div>
         </>
-      )}
-    </div>
+      )} 
+    </>
   );
 };
 
