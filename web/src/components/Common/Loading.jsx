@@ -3,11 +3,11 @@ import React, { useEffect } from "react";
 const Loading = () => {
     useEffect(() => {
         // Añadir clase al body para deshabilitar scroll
-        document.body.classList.add('loading');
+        document.body.style.overflow = 'hidden';
 
         return () => {
             // Eliminar clase al desmontar el componente
-            document.body.classList.remove('loading');
+            document.body.style.overflow = 'visible';
         };
     }, []);
 

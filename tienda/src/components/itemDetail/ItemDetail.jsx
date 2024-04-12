@@ -229,7 +229,7 @@ const ItemDetail = ({ item }) => {
                   art.id !== item.id
                 );
               })
-              .slice(0, 3)
+              .slice(0, 4)
               .map((artRelacionado) => (
                 <div key={artRelacionado.id}>
                   <div className="imgContainer">

@@ -1,6 +1,7 @@
 .containerItemList {
   display: flex;
   padding-inline: 1rem;
+  justify-content: center;
 }
 
 .categoriaFiltros {
@@ -8,7 +9,7 @@
 }
 
 .main-title {
-  background-color: #fbccd2;
+  background-color: #70848b;
   color: white;
   padding: 0.5rem;
   width: 13rem;
@@ -53,15 +54,15 @@
 }
 
 .noHayArtContainer {
-  display: flex; /* Utiliza un modelo de diseño flexible para alinear los elementos internos */
-  justify-content: center; /* Centra los elementos horizontalmente dentro del contenedor */
+  display: flex; 
+  justify-content: center; 
   align-items: start;
   padding-inline: 1rem;
   margin-top: 3rem;
 }
 
 .noHayArticulos {
-  background-color: #fbccd2;
+  background-color: #70848b;
   color: white;
   padding: 0.5rem;
   width: 16rem;
@@ -77,7 +78,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 769px) {
   .productos {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -89,17 +90,28 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
+
 }
 @media (max-width: 500px) {
   .productos {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
+    
+  }
+  .producto {
+    display: flex;
+    flex-direction: row;
+    
   }
 }
 @media (max-width: 566px) {
   .productos {
     display: flex;
     flex-direction: column;
+  }
+  .producto {
+    display: flex;
+    flex-direction: row;    
   }
 
 }

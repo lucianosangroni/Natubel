@@ -4,7 +4,7 @@
     justify-content: center;
     gap: 0.5rem;
     text-decoration: none;
-    margin-right: 1rem;
+    margin-right: 2rem;
 }
 
 .carrito {
@@ -21,7 +21,7 @@
 
 }
 
-@media only screen and (max-width: 768px) { 
+@media only screen and (max-width: 769px) { 
     .carrito-container{
         display: flex;
         align-items: center;

@@ -35,7 +35,7 @@ const Burguer = styled.div`
     width: 100%;
     height: 4px;
     transition-duration: 500ms;
-    z-index: 2;
+    z-index: 11;
   }
   .nav-icon-5 span:nth-child(1) {
     top: 0px;

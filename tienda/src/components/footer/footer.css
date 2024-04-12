@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #FBCCD2;
+    background-color: #70848b;
     padding: 0.5rem;
     margin-top: 250px;
     
@@ -68,7 +68,7 @@
     
 }
 
-@media (max-width: 768px) {
+@media (max-width: 769px) {
     .footerNatubel {
         display: none;
     }
@@ -114,4 +114,12 @@
      .dir img{
         width: 0.7rem;
       }
+}
+
+@media (max-width: 405px) {
+    .footerNovedades p{
+        width: 10rem;
+        font-size: 0.7rem;
+
+    }
 }

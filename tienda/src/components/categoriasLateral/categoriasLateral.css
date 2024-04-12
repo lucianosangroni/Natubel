@@ -10,7 +10,7 @@
     flex-direction: column;
     width: 9rem;
     border-radius: 0.5rem;
-    background-color: #FBCCD2;
+    background-color: #70848b;
     list-style-type: none;
     padding: 0.3rem;
     
@@ -21,7 +21,7 @@
     flex-direction: column;
     width: 9rem;
     border-radius: 0.5rem;
-    background-color: #FBCCD2;
+    background-color: #70848b;
     list-style-type: none;
     padding: 0.3rem;
 }
@@ -41,7 +41,7 @@
 }
 
 .seleccionada {
-    background-color:#f7b0ba;
+    background-color:#70848b;
     font-weight: bold;
     border-radius: 0.5rem;
     margin-left: 1rem;
