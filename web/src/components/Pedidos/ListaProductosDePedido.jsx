@@ -129,10 +129,12 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
           <button className={`boton-estados pedido ${pedido.estado === 'PEDIDO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('PEDIDO')}>Pedido</button>
           <button className="boton-estados cancelado" onClick={() => cambiarEstado('CANCELADO')} style={{ marginBottom: 20 }}>Cancelado</button>
         </div>
-        {pedido.tipo !== "PROVEEDOR" && (<div className="contenerdor-btns-pdfs-pedido">
+        <div className="contenerdor-btns-pdfs-pedido">
           <button className="boton-estados" onClick={() => generarPdfPedido()} style={{ width: 150 }}>Nota De Pedido</button>
-          <button className="boton-estados" onClick={() => openModalRemito()} style={{ width: 150 }}>Remito</button>
-        </div>)}
+          {pedido.tipo !== "PROVEEDOR" && (
+            <button className="boton-estados" onClick={() => openModalRemito()} style={{ width: 150 }}>Remito</button>
+          )}
+        </div>
         </>
         )}
       </div>

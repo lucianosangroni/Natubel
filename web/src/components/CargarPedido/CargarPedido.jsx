@@ -146,8 +146,6 @@ const CargarPedido = () => {
   );
 
   const handleConfirmarProducto = (articulo, cantidades) => {
-    console.log(cantidades)
-
     const productoExistenteIndex = productosConfirmados.findIndex(
       (producto) => producto.numero_articulo === articulo.numero_articulo
     );
