@@ -4,11 +4,15 @@
     margin: 0 auto;
 }
 
-.enviamosPagaSeguridad{
+ .enviamosPagaSeguridad{
     display: flex;
     justify-content: center; 
     text-align: center;
-    gap: 1rem;
+    background-color: rgba(112, 132, 139, 0.3);
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    position: relative;
+    overflow: hidden;
     margin-top: 6rem;
     margin-bottom: 4rem;
 }
@@ -29,12 +33,32 @@
 .enviamosPagaSeguridad p {
     font-size: 0.8rem;
     color: #70848b;
-}
+} 
+  
+  .slide-container {
+    display: flex;
+    gap: 10rem;
+    align-items: center;
+    animation: slide-in 30s linear infinite;
+  }
+
+  .a {
+    width: 20rem;
+  }
+
+  
+  @keyframes slide-in {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
 
 @media (max-width: 566px) {
     .enviamosPagaSeguridad {
-        flex-direction: column; 
-        align-items: center;
         margin-top: 3rem;
         margin-bottom: 3rem;
     }

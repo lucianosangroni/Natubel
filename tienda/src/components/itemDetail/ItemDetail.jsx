@@ -17,32 +17,54 @@ const ItemDetail = ({ item }) => {
   const [selectedStock, setSelectedStock] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const tallesDesordenados = Array.from(new Set(item.productos.filter((producto) => producto.stock > 0).map((producto) => producto.talle)));
-  const coloresDesordenados = Array.from(new Set(item.productos.filter((producto) => producto.stock > 0).map((producto) => producto.color)));
+  const tallesDesordenados = Array.from(
+    new Set(
+      item.productos
+        .filter((producto) => producto.stock > 0)
+        .map((producto) => producto.talle)
+    )
+  );
+  const coloresDesordenados = Array.from(
+    new Set(
+      item.productos
+        .filter((producto) => producto.stock > 0)
+        .map((producto) => producto.color)
+    )
+  );
   const colores = coloresDesordenados.sort((a, b) => {
     if (a < b) {
-      return -1
+      return -1;
     }
     if (a > b) {
-      return 1
+      return 1;
     }
-    return 0
-  })
+    return 0;
+  });
   const talles = tallesDesordenados.sort((a, b) => {
     const isNumberA = !isNaN(a);
     const isNumberB = !isNaN(b);
-    const talleOrden = { 'UNICO': 1 ,'S': 2, 'M': 3, 'L': 4, 'XL': 5, 'XXL': 6, 'XXXL': 7, 'XXXXL': 8, 'XXXXXL': 9 };
+    const talleOrden = {
+      UNICO: 1,
+      S: 2,
+      M: 3,
+      L: 4,
+      XL: 5,
+      XXL: 6,
+      XXXL: 7,
+      XXXXL: 8,
+      XXXXXL: 9,
+    };
 
     if (isNumberA && isNumberB) {
       return a - b;
-    }  else if (isNumberA || isNumberB) {
+    } else if (isNumberA || isNumberB) {
       return isNumberA ? 1 : -1;
     } else {
-      const aMayus = a.toUpperCase()
-      const bMayus = b.toUpperCase()
+      const aMayus = a.toUpperCase();
+      const bMayus = b.toUpperCase();
       return talleOrden[aMayus] - talleOrden[bMayus];
     }
-  })
+  });
 
   useEffect(() => {
     setSelectedTalle(talles[0]);
@@ -79,7 +101,7 @@ const ItemDetail = ({ item }) => {
     toast.success("¡Agregado al carrito!", {
       position: "top-center",
       hideProgressBar: true,
-      autoClose: 1000, 
+      autoClose: 1000,
       closeButton: false,
     });
   };
@@ -93,15 +115,15 @@ const ItemDetail = ({ item }) => {
 
   return (
     <>
-      <ToastContainer position="top-right" hideProgressBar={false}/>
-    
+      <ToastContainer position="top-right" hideProgressBar={false} />
+
       <div className="container">
         <div className="producto-detalle">
           <div className="contenedor-carousel">
             <div className="carousel-container">
               <Carousel
                 activeIndex={activeIndex}
-                onSelect={(selectedIndex, e) => setActiveIndex(selectedIndex)} 
+                onSelect={(selectedIndex, e) => setActiveIndex(selectedIndex)}
               >
                 {item.imagens.map((imagen, index) => (
                   <Carousel.Item key={index}>
@@ -167,31 +189,35 @@ const ItemDetail = ({ item }) => {
               <p>Color: </p>
               <form className="checkColor">
                 {colores.map((color) => {
-                  const producto = item.productos.find(producto => producto.talle === selectedTalle && producto.color === color);
-                  if(producto && producto.stock > 0) {
+                  const producto = item.productos.find(
+                    (producto) =>
+                      producto.talle === selectedTalle &&
+                      producto.color === color
+                  );
+                  if (producto && producto.stock > 0) {
                     return (
                       <label key={color} className="colorLabel">
-                          <input
-                            type="checkbox"
-                            name="color"
-                            value={color}
-                            onChange={() => {
-                              setSelectedColor(color);
-                              const stock = item.productos.find(
-                                (producto) =>
-                                  producto.talle === selectedTalle &&
-                                  producto.color === color
-                              ).stock;
-                              setSelectedStock(stock);
-                              setCantidad(1);
-                            }}
-                            checked={selectedColor === color}
-                            className="colorInput"
-                            disabled={isColorDisabled(color)}
-                          />
+                        <input
+                          type="checkbox"
+                          name="color"
+                          value={color}
+                          onChange={() => {
+                            setSelectedColor(color);
+                            const stock = item.productos.find(
+                              (producto) =>
+                                producto.talle === selectedTalle &&
+                                producto.color === color
+                            ).stock;
+                            setSelectedStock(stock);
+                            setCantidad(1);
+                          }}
+                          checked={selectedColor === color}
+                          className="colorInput"
+                          disabled={isColorDisabled(color)}
+                        />
                         {color}
                       </label>
-                    )
+                    );
                   }
                 })}
               </form>
@@ -229,17 +255,17 @@ const ItemDetail = ({ item }) => {
                   art.id !== item.id
                 );
               })
-              .slice(0, 4)
+              .slice(0, window.innerWidth < 480 ? 1 : 4)
               .map((artRelacionado) => (
                 <div key={artRelacionado.id}>
                   <div className="imgContainer">
                     {artRelacionado.imagens.length > 0 ? (
-                      <img src={artRelacionado.imagens[0].url} alt={"sin imagen"} />
-                    ) : (
                       <img
-                        src={`/img/no-hay-foto.png`}
+                        src={artRelacionado.imagens[0].url}
                         alt={"sin imagen"}
                       />
+                    ) : (
+                      <img src={`/img/no-hay-foto.png`} alt={"sin imagen"} />
                     )}
                   </div>
                   <h4>ART. {artRelacionado.numero_articulo}</h4>

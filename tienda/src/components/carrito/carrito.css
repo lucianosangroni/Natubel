@@ -3,6 +3,10 @@
   margin-right: 5rem;
 }
 
+.preciosContainer {
+  height: 15rem;
+}
+
 .descripcionPreciosContainer {
   min-height: 50px;
   margin-top: 10px;

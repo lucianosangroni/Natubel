@@ -58,7 +58,6 @@
 
 @media (max-width: 566px) {
     .enviamosPagaSeguridad {
-        flex-direction: column; 
         align-items: center;
         margin-top: 3rem;
         margin-bottom: 3rem;
