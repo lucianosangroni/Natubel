@@ -2,7 +2,6 @@ import React from "react";
 import "./footer.css";
 import telephone from "./telephone.svg";
 import mail from "./mail.svg";
-import map from "./map.svg";
 import face from "./facebook.svg";
 import insta from "./instagram.svg";
 
@@ -19,10 +18,6 @@ const Footer = () => {
           <div className="tel">
             <img src={telephone} alt="telefono" />
             <p>11 - 3467 4234</p>
-          </div>
-          <div className="dir">
-            <img src={map} alt="ubicacion" />
-            <p>Alsina 833 CABA</p>
           </div>
         </div>
         <div className="footerNatubel">

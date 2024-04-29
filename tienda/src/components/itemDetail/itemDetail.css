@@ -205,7 +205,7 @@ input {
     flex-direction: column;
   }
   .descripcion {
-    width: 25rem;
+    width: 22rem;
   }
   .infoContainer {
     width: 20rem;
@@ -245,4 +245,5 @@ input {
     flex-direction: column;
     
   }
+
 }
