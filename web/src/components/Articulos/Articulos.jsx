@@ -8,10 +8,12 @@ import GrillaProducto from "./GrillaProducto";
 import { apiUrl, bearerToken } from "../../config/config";
 import { Button } from "react-bootstrap";
 import Loading from "../Common/Loading";
+import { useData } from "../../context/DataContext";
 
 const ListadoProductos = () => {
-  const [data, setData] = useState([]);
-  const [categorias, setCategorias] = useState([]);
+  const { articulosData, categoriasData, refreshCategorias, refreshArticulos, isInitialLoading } = useData()
+  const [data, setData] = useState(articulosData);
+  const [categorias, setCategorias] = useState(categoriasData);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isCategoriasModalOpen, setIsCategoriasModalOpen] = useState(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false)
@@ -19,72 +21,10 @@ const ListadoProductos = () => {
 
   //OBTENER ARTICULOS DB
   useEffect(() => {
-    setIsLoading(true)
-
-    const fetchData = async () => {
-      try {
-        let flag_error = false;
-
-        const responseArticulos = await fetch(`${apiUrl}/articulos`, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        });
-
-        if (!responseArticulos.ok) {
-          flag_error = true;
-        }
-
-        const resultArticulos = await responseArticulos.json();
-
-        const articulos = resultArticulos.map((dataResult) => {
-          const productos = dataResult.productos.map(
-            ({ id, color, talle, stock }) => ({ id, color, talle, stock })
-          );
-          return {
-            id: dataResult.id,
-            numero_articulo: dataResult.numero_articulo,
-            categorias: dataResult.categoria,
-            descripcion: dataResult.descripcion,
-            precio_minorista: dataResult.precio_minorista,
-            precio_mayorista: dataResult.precio_mayorista,
-            precio_distribuidor: dataResult.precio_distribuidor,
-            productos,
-            imagenes: dataResult.imagens
-          };
-        });
-
-        setData(articulos);
-        setSelectedProduct(articulos[0]);
-
-        const responseCategorias = await fetch(`${apiUrl}/categorias`, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        });
-
-        if (!responseCategorias.ok) {
-          flag_error = true;
-        }
-
-        const resultCategorias = await responseCategorias.json();
-
-        setCategorias(resultCategorias);
-
-        setIsLoading(false)
-        if (flag_error) {
-          alert("Error al buscar los datos, intente nuevamente");
-          setIsLoading(false)
-        }
-      } catch (error) {
-        setIsLoading(false)
-        console.error("Error en la obtención de datos:", error);
-        alert("Error al buscar los datos, intente nuevamente");
-      }
-    };
-
-    fetchData();
-  }, []);
+    setData(articulosData);
+    setSelectedProduct(articulosData[0]);
+    setCategorias(categoriasData)
+  }, [categoriasData, articulosData]);
 
   //AGREGAR ARTICULO DB
   const handleAddArticulo = (newArticulo) => {
@@ -93,7 +33,7 @@ const ListadoProductos = () => {
     const formData = new FormData();
 
     formData.append('numero_articulo', newArticulo.numero_articulo);
-    const categoriasInt = newArticulo.categorias.map((categoria) => parseInt(categoria, 10));
+    const categoriasInt = newArticulo.categoria.map((categoria) => parseInt(categoria, 10));
     formData.append('categorias', JSON.stringify(categoriasInt));
     formData.append('descripcion', newArticulo.descripcion);
     formData.append('precio_minorista', parseFloat(newArticulo.precio_minorista));
@@ -102,7 +42,7 @@ const ListadoProductos = () => {
     formData.append('talles', JSON.stringify(newArticulo.talles));
     formData.append('colores', JSON.stringify(newArticulo.colores));
 
-    newArticulo.imagenes.forEach((file) => {
+    newArticulo.imagens.forEach((file) => {
       formData.append('files', file);
     });
 
@@ -121,20 +61,23 @@ const ListadoProductos = () => {
         return response.json();
       })
       .then((result) => {
-        const categoriasNewArticulo = categorias.filter(cat => newArticulo.categorias.includes(cat.id.toString()))
+        const categoriasNewArticulo = categorias.filter(cat => newArticulo.categoria.includes(cat.id.toString()))
 
         const newArticuloData = {
           id: result.id,
           numero_articulo: newArticulo.numero_articulo,
-          categorias: categoriasNewArticulo,
+          categoria: categoriasNewArticulo,
           descripcion: newArticulo.descripcion,
           precio_minorista: newArticulo.precio_minorista,
           precio_mayorista: newArticulo.precio_mayorista,
           precio_distribuidor: newArticulo.precio_distribuidor,
           productos: result.productos,
-          imagenes: result.imagenes
+          imagens: result.imagenes
         };
-        setData((prevData) => [...prevData, newArticuloData]);
+        const dataActualizada = [...data, newArticuloData];
+        
+        setData(dataActualizada);
+        refreshArticulos(dataActualizada)
         setSelectedProduct(newArticuloData);
 
         setIsLoading(false)
@@ -158,7 +101,7 @@ const ListadoProductos = () => {
     const formData = new FormData();
 
     formData.append('numero_articulo', editProduct.numero_articulo);
-    const categoriasInt = editProduct.categorias.map((categoria) => parseInt(categoria, 10));
+    const categoriasInt = editProduct.categoria.map((categoria) => parseInt(categoria, 10));
     formData.append('categorias', JSON.stringify(categoriasInt));
     formData.append('descripcion', editProduct.descripcion);
     formData.append('precio_minorista', parseFloat(editProduct.precio_minorista));
@@ -188,29 +131,28 @@ const ListadoProductos = () => {
         return response.json();
       })
       .then((result) => {
-        const categoriasEditArticulo = categorias.filter(cat => editProduct.categorias.includes(cat.id))
-        const nuevasImagenes = editProduct.imagenes.filter(imagen => !editProduct.imagenesRemove.includes(imagen.id))
+        const categoriasEditArticulo = categorias.filter(cat => editProduct.categoria.includes(cat.id))
+        const nuevasImagenes = editProduct.imagens.filter(imagen => !editProduct.imagenesRemove.includes(imagen.id))
         nuevasImagenes.push(...result.imagenesNuevas);
 
         const editArticuloData = {
           id: editProduct.id,
           numero_articulo: editProduct.numero_articulo,
-          categorias: categoriasEditArticulo,
+          categoria: categoriasEditArticulo,
           descripcion: editProduct.descripcion,
           precio_minorista: editProduct.precio_minorista,
           precio_mayorista: editProduct.precio_mayorista,
           precio_distribuidor: editProduct.precio_distribuidor,
           productos: result.productos,
-          imagenes: nuevasImagenes,
+          imagens: nuevasImagenes,
         };
 
-        setData((prevData) => {
-          const updatedData = prevData.map((art) =>
-            art.id === editArticuloData.id ? editArticuloData : art
-          );
-          return updatedData;
-        });
+        const dataActualizada = data.map((art) =>
+          art.id === editArticuloData.id ? editArticuloData : art
+        );
 
+        setData(dataActualizada);
+        refreshArticulos(dataActualizada)
         setSelectedProduct(editArticuloData);
 
         setIsLoading(false)
@@ -352,6 +294,7 @@ const ListadoProductos = () => {
       })
       .then((result) => {
         const newCategorias = [...categorias, {nombre: nuevaCategoria, id: result.id}]
+        refreshCategorias(newCategorias)
         setCategorias(newCategorias)
       })
       .catch((error) => {
@@ -386,6 +329,7 @@ const ListadoProductos = () => {
             : categoria
         );
 
+        refreshCategorias(categoriasActualizadas)
         setCategorias(categoriasActualizadas);
       })
       .catch((error) => {
@@ -395,7 +339,7 @@ const ListadoProductos = () => {
 
   return (
     <>
-      {isLoading && <Loading/>}
+      {(isLoading || isInitialLoading) && <Loading/>}
       <NavbarAdm selected={'Articulos'}/>
       <div className="table-productos-contenedor">
         <ListaArticulos articulos={data} onArticuloClick={handleArticuloClick} selectedArticulo={selectedProduct}/>

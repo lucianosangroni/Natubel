@@ -1,30 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext  } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { apiUrl, bearerToken } from "../../config/config";
+import { useData } from "../../context/DataContext";
 
 function ModalConfig({ onClose }) {
-    const [ data, setData ] = useState({montoMinimoMayorista: "", montoMinimoDistribuidor: ""})
-
-    useEffect(() => {
-        fetch(`${apiUrl}/config`, {
-            headers: {
-                Authorization: `Bearer ${bearerToken}`
-            }
-        })
-        .then((response) => {
-            if (!response.ok) {
-                alert("Error al buscar los datos, intente nuevamente")
-                throw new Error("Error en la solicitud GET");
-            }
-        return response.json();
-        })
-        .then((result) => {
-            setData(result)
-        })
-        .catch((error) => {
-            console.error("Error en la solicitud GET:", error)
-        });
-    }, [])
+    const { montoMinimoMayorista, montoMinimoDistribuidor, refreshConfig } = useData();
+    const [ data, setData ] = useState({montoMinimoMayorista, montoMinimoDistribuidor})
 
     const handleSave = () => {
         if(data.montoMinimoMayorista !== "" && data.montoMinimoDistribuidor !== "") {
@@ -49,6 +30,7 @@ function ModalConfig({ onClose }) {
                 return response.json();
             })
             .then((result) => {
+                refreshConfig(data.montoMinimoMayorista, data.montoMinimoDistribuidor)
                 onClose()
             })
             .catch((error) => {

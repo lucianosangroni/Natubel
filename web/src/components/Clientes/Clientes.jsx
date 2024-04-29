@@ -9,63 +9,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { apiUrl, bearerToken } from "../../config/config";
 import Loading from "../Common/Loading";
+import { useData } from "../../context/DataContext";
 
 const ListadoClientes = () => {
+  const { isInitialLoading, clientesData, refreshClientes } = useData()
   const columns = useMemo(() => COLUMNSCLIENTES, []);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(clientesData);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
   const [isLoading, setIsLoading] = useState(false)
 
   //OBTENER CLIENTES DB
   useEffect(() => {
-    setIsLoading(true)
-
-    fetch(`${apiUrl}/clientes`, 
-    {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`
-      }
-    })
-    .then((response) => {
-      if (!response.ok) {
-        alert("Error al buscar los datos, intente nuevamente")
-        throw new Error("Error en la solicitud GET");
-      }
-      return response.json();
-    })
-    .then((result) => {
-      const clientes = []
-      for (const dataResult of result) {
-        const cliente = 
-        {
-          id: dataResult.id,
-          persona_id: dataResult.persona_id,
-          nombre: dataResult.persona.nombre,
-          cuit_cuil: dataResult.persona.cuit_cuil,
-          direccion: dataResult.persona.direccion,
-          codigo_postal: dataResult.codigo_postal,
-          telefono: dataResult.persona.telefono,
-          dni: dataResult.dni,
-          ciudad: dataResult.ciudad,
-          provincia: dataResult.provincia,
-          forma_de_envio: dataResult.forma_de_envio,
-          email: dataResult.persona.email,
-          tipo_cliente: dataResult.tipo_cliente,
-        }
-
-        clientes.push(cliente)
-      }
-
-      setData(clientes)
-
-      setIsLoading(false)
-    })
-    .catch((error) => {
-      setIsLoading(false)
-      console.error("Error en la solicitud GET:", error)
-    });
-  }, []);
+    setData(clientesData)
+  }, [clientesData]);
 
   //AGREGAR CLIENTE DB
   const handleAddCliente = (newCliente) => {
@@ -104,7 +61,10 @@ const ListadoClientes = () => {
     .then((result) => {
       newCliente.id = result.id
       newCliente.persona_id = result.persona_id
-      setData((prevData) => [...prevData, newCliente]);
+
+      const dataActualizada = [...data, newCliente]
+      setData(dataActualizada);
+      refreshClientes(dataActualizada)
 
       setIsLoading(false)
     })
@@ -158,11 +118,11 @@ const ListadoClientes = () => {
       return response.json();
     })
     .then(() => {
-      setData((prevData) => {
-        const updatedData = [...prevData];
-        updatedData[newData.index] = newData;
-        return updatedData;
-      });
+      const dataActualizada = [...data];
+      dataActualizada[newData.index] = newData;
+
+      setData(dataActualizada);
+      refreshClientes(dataActualizada)
 
       setIsLoading(false)
     })
@@ -233,7 +193,7 @@ const ListadoClientes = () => {
 
   return (
     <>
-      {isLoading && <Loading/>}
+      {(isLoading || isInitialLoading) && <Loading/>}
       <NavbarAdm selected={'Clientes'}/>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
       <div className="tableDivContainer">
