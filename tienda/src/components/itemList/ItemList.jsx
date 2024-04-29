@@ -5,10 +5,19 @@ import CategoriasLateral from "../categoriasLateral/CategoriasLateral";
 import FiltroColor from "../filtroColor/FiltroColor";
 import FiltroTalle from "../filtroTalle/FiltroTalle";
 import OrdenarMayorMenor from "../ordenarMayorMenor/OrdenarMayorMenor";
+import ModalFiltrosCelu from "../modalFiltrosCelu/ModalFiltrosCelu";
+import { useData } from '../../context/DataContext';
+import { Navigate } from "react-router-dom";
 
 const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, setProductosContainer, flagCatalogo, onChangeTalleContainer, onChangeColorContainer, flagOrdenar }) => {
   const [visibleProducts, setVisibleProducts] = useState(40);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 440);
+  const [busqueda, setBusqueda] = useState('');
+  const [productosBuscados, setProductosBuscados] = useState(productos)
+  const [showModalFiltros, setShowModalFiltros] = useState(false);
+  const { categoriasData } = useData();
+  const [shouldRedirect, setShouldRedirect] = useState(false)
+  const [categoriaRedirect, setCategoriaRedirect] = useState("")
 
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 440);
@@ -21,6 +30,17 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    setProductosBuscados(productos)
+  }, [productos]);
+
+  const handleBusquedaChange = (e) => {
+    setBusqueda(e.target.value);
+
+    const productosFiltrados = productos.filter(prod => prod.numero_articulo.includes(e.target.value))
+    setProductosBuscados(productosFiltrados)
+  };
 
   const handleLoadMore = () => {
     setVisibleProducts((prevVisible) => prevVisible + 15);
@@ -38,26 +58,76 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
     onChangeColorContainer(color)
   }
 
+  const toggleModal = () => {
+    setShowModalFiltros(!showModalFiltros);
+  };
+
+  const handleSaveModalFiltrosCelu = (filtros) => {
+    if (filtros.orden === "Mayor precio") {
+      const productosOrdenados = [...productos].sort((a, b) => b.precio_minorista - a.precio_minorista);
+      setProductos(productosOrdenados)
+    } else if (filtros.orden === "Menor precio") {
+      const productosOrdenados = [...productos].sort((a, b) => a.precio_minorista - b.precio_minorista);
+      setProductos(productosOrdenados);
+    }
+
+    handleChangeTalle(filtros.talle)
+    handleChangeColor(filtros.color)
+  }
+
+  const handleRedirectCategoria = (categoria) => {
+    setCategoriaRedirect(categoria)
+    setShouldRedirect(true)
+  }
+
   return (
     <>
+      {shouldRedirect && <Navigate to={`/catalogo/${categoriaRedirect}`} />}
       {isMobile ? (
         <>
-          <div className="ordenarMayorMenor">
-            <OrdenarMayorMenor
-              productos={productos}
-              setProductos={setProductos}
-              flagOrdenar={flagOrdenar}
+          {showModalFiltros && (
+            <ModalFiltrosCelu
+              onClose={toggleModal}
+              categorias={categoriasData}
+              onSave={handleSaveModalFiltrosCelu}
+              redirectCategoria={handleRedirectCategoria}
             />
-          </div>
+          )}
+          {flagCatalogo && (
+            <>
+              <div className='globalFilter'>
+                <span role="img" aria-label="lupa" className="search-icon">
+                🔍
+                </span>
+                <input
+                  type="text"
+                  value={busqueda}
+                  onChange={handleBusquedaChange}
+                  placeholder="Buscar..."
+                />
+                <div className='globalFilter'>
+                  <button className="btnFiltrosCelu" onClick={toggleModal}>
+                    Filtros
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+          
           <div className="containerItemList">
             {productos.length === 0 && (
               <div className="noHayArtContainer">
-                <p className="noHayArticulos">Cargando...</p>
+                <p className="noHayArticulos">No hay articulos</p>
+              </div>
+            )}
+            {productosBuscados.length === 0 && productos.length > 0 && (
+              <div className="noHayArtContainer">
+                <p className="noHayArticulos">No existe el articulo buscado</p>
               </div>
             )}
             <div className="productosContainer">
               <div className="productos">
-                {productos.slice(0, visibleProducts).map((prod) => (
+                {productosBuscados.slice(0, visibleProducts).map((prod) => (
                   <Item producto={prod} key={prod.id} />
                 ))}
               </div>
@@ -71,6 +141,19 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
         </>
       ) : (
         <>
+          {flagCatalogo && (
+            <div className='globalFilter'>
+              <span role="img" aria-label="lupa" className="search-icon">
+              🔍
+              </span>
+              <input
+                type="text"
+                value={busqueda}
+                onChange={handleBusquedaChange}
+                placeholder="Buscar..."
+              />
+            </div>
+          )}
           <div className="ordenarMayorMenor">
             <OrdenarMayorMenor
               productos={productos}
@@ -99,9 +182,14 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
                 <p className="noHayArticulos">Cargando...</p>
               </div>
             )}
+            {productosBuscados.length === 0 && productos.length > 0 && (
+              <div className="noHayArtContainer">
+                <p className="noHayArticulos">No existe el articulo buscado</p>
+              </div>
+            )}
             <div className="productosContainer">
               <div className="productos">
-                {productos.slice(0, visibleProducts).map((prod) => (
+                {productosBuscados.slice(0, visibleProducts).map((prod) => (
                   <Item producto={prod} key={prod.id} />
                 ))}
               </div>

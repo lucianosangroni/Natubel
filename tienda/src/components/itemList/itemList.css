@@ -71,6 +71,34 @@
   border-radius: 0.5rem;
 }
 
+.globalFilter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  gap: .5rem;
+}
+
+.globalFilter-input {
+  margin: 1rem;
+  border-radius: 5px;
+  padding: 0.2rem;
+  border: 1px solid black;
+}
+
+.search-icon {
+  align-items: center;
+  background-color: #99adb4;
+  border-radius: 5px;
+  padding: 0.2rem;
+  border: 1px solid black;
+}
+
+.btnFiltrosCelu {
+  margin-left: 2rem;
+}
+
 @media (max-width: 1080px) {
   .productos {
     display: grid;
