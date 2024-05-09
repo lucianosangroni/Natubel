@@ -1,22 +1,21 @@
 .producto {
   display: flex;
   flex-direction: column;
-  border-radius: 1rem;
+  align-items: center;
   overflow: hidden;
+  width: 15rem;
 }
 
 .imgContainer {
-  width: 10rem;
-  height: 10rem;
   overflow: hidden;
 }
 
 .producto div {
-  margin: 1rem;
+  margin: 0.5em;
   background-color: white;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  
 }
 
 .producto img {

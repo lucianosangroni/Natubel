@@ -132,11 +132,13 @@ const NavContainer = styled.nav`
   displey: flex;
   align-items: center;
   justify-content: space-between;
+  
 
   a {
     color: white;
     text-decoration: none;
     margin-rigth: 1rem;
+    
   }
   .burguer {
     @media (min-width: 769px) {

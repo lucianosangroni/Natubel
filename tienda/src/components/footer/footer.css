@@ -1,14 +1,11 @@
 .footerContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     background-color: #70848b;
     padding: 0.5rem;
-    margin-top: 250px;
+    margin-top: 150px;
     
 }
 
-.contactanos {
+/* .contactanos {
     color: white;
     margin: 0.3rem;    
     
@@ -30,20 +27,23 @@
 .dir {
     display: flex;
     gap: 1rem;
-}
+} */
 
-.footerNatubelTitulo {
+/* .footerNatubelTitulo {
     color: white;
     font-size: 3rem;
     margin-bottom: 0;
-}
+} */
 
 .footerNovedades {
     color: white;
-    width: 15rem;
-    font-size: 0.8rem;
+    width: 25rem;
+    padding-top: 2rem;
+    padding-bottom: 0.5rem;
+    font-size: 1.7rem;
     text-align: center;
     font-style: italic;
+    margin: auto;
 }
 
 .redes-container {
@@ -55,10 +55,12 @@
 
 .redes-container a {
     display: inline-block;
+    
 }
 
 .redes-container img {
-    width: 2rem;
+    width: 2.6rem;
+    
 }
 
 .copyrigth {

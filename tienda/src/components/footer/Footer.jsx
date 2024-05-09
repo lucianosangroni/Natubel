@@ -9,7 +9,7 @@ const Footer = () => {
   return (
     <div>
       <div className="footerContainer">
-        <div className="contactanos">
+        {/* <div className="contactanos">
           <p>CONTACTANOS</p>
           <div className="mail">
             <img src={mail} alt="mail" />
@@ -18,13 +18,13 @@ const Footer = () => {
           <div className="tel">
             <img src={telephone} alt="telefono" />
             <p>11 - 3467 4234</p>
-          </div>
+          </div> 
         </div>
         <div className="footerNatubel">
-          <h1 className="footerNatubelTitulo">NATUBEL</h1>
-        </div>
+          <h1 className="footerNatubelTitulo">NATUBEL</h1> 
+        </div> */}
         <div className="footerNovedades">
-          <p>ENTERATE DE LAS ULTIMAS NOVEDADES!</p>
+          <p>¡ENTERATE DE LAS ULTIMAS NOVEDADES!</p>
           <div className="redes-container">
             <a href="https://www.instagram.com/natubeloficial/" target="_blank" rel="noopener noreferrer">
               <img src={face} alt="facebook" />
