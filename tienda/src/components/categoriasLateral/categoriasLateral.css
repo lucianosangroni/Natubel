@@ -1,7 +1,7 @@
 .categoriaLateral {
     max-width: 1000px;
     margin: 0 auto;
-    
+
 }
 
 .menuLateral {
@@ -9,9 +9,8 @@
     flex-direction: column;
     width: 9rem;
     border-radius: 0.5rem;
-    background-color: #70848b;
     list-style-type: none;
-    padding: 0.3rem;
+    
     
 }
 
@@ -20,15 +19,8 @@
     flex-direction: column;
     width: 9rem;
     border-radius: 0.5rem;
-    background-color: #70848b;
-    list-style-type: none;
+    list-style-type: circle;
     padding: 0.3rem;
-}
-
-
-.menu-link {
-    text-decoration: none;
-    
 }
 
 .textoCategorias a {
@@ -40,7 +32,6 @@
 }
 
 .seleccionada {
-    background-color:#70848b;
     font-weight: bold;
     border-radius: 0.5rem;
     margin-left: 1rem;
@@ -50,7 +41,7 @@
 }
 
 .menuLateralTitulo{
-    color: white;
+    color: black;
     font-style: italic;
     font-weight: bold;
 }

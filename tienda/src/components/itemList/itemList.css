@@ -50,6 +50,7 @@
   justify-content: end;
   margin-right: 2rem;
   margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 .noHayArtContainer {
@@ -74,7 +75,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 6rem;
   margin-bottom: 2rem;
   gap: .5rem;
 }

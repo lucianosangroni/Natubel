@@ -15,12 +15,18 @@
         text-align: center;
         padding-left: 5rem;
         margin-bottom: 0;
+        
     }
     
     .navbar {
         display: flex;
         align-items: center;
         background-color: #70848b;
+        position: fixed !important; 
+        top: 0; 
+        width: 100%; 
+        z-index: 1000; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         
     }
 
@@ -47,7 +53,8 @@
 
     .menu-link {
         text-decoration: none;
-        color: white;
+        list-style-type: circle;
+        color: black;
         font-size: 1.5rem;
     }
     

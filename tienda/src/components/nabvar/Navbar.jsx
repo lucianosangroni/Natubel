@@ -129,9 +129,13 @@ export default Navbar;
 const NavContainer = styled.nav`
   padding: 0.4rem;
   background-color: #70848b;
-  displey: flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
+  position: fixed; 
+  top: 0; 
+  width: 100%; 
+  z-index: 1000; 
   
 
   a {

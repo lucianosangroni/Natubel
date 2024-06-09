@@ -1,5 +1,6 @@
 .desplegable{
     background-color: #70848b !important;
+    color: black !important;
     border: none !important;
     font-size: 1.5rem !important;
     font-family: sans-serif;
@@ -12,8 +13,7 @@
 
 .desplegable-menu{
     text-decoration: none;
-    background-color: #70848b;
-    color: white;
+    color: black;
     padding: 0.3rem;
     border-radius: 0.5rem;
     font-size: 0.8rem !important;
