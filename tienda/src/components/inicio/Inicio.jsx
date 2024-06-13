@@ -14,7 +14,7 @@ const Inicio = () => {
   return (
     <>
       {isInitialLoading && <Loading/>}
-      <div>
+      <div style={{ marginTop: "1rem" }}>
         <UncontrolledExample />
         <div className="enviamosPagaSeguridad">
   <div className="slide-container">

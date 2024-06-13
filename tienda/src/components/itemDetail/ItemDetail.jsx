@@ -148,7 +148,7 @@ const ItemDetail = ({ item }) => {
           </div>
           <div className="infoContainer">
             <h3 className="titulo">ART. {item.numero_articulo}</h3>
-            <p className="precio">${item.precio_minorista}</p>
+            <p className="precio">${item.precio_mayorista}</p>
             <div className="tallesItemDetail">
               <p>Talle: </p>
               <form className="checkTalle">
