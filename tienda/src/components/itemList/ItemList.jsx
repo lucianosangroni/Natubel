@@ -5,19 +5,12 @@ import CategoriasLateral from "../categoriasLateral/CategoriasLateral";
 import FiltroColor from "../filtroColor/FiltroColor";
 import FiltroTalle from "../filtroTalle/FiltroTalle";
 import OrdenarMayorMenor from "../ordenarMayorMenor/OrdenarMayorMenor";
-import ModalFiltrosCelu from "../modalFiltrosCelu/ModalFiltrosCelu";
-import { useData } from '../../context/DataContext';
-import { Navigate } from "react-router-dom";
 
 const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, setProductosContainer, flagCatalogo, onChangeTalleContainer, onChangeColorContainer, flagOrdenar }) => {
   const [visibleProducts, setVisibleProducts] = useState(40);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 440);
   const [busqueda, setBusqueda] = useState('');
   const [productosBuscados, setProductosBuscados] = useState(productos)
-  const [showModalFiltros, setShowModalFiltros] = useState(false);
-  const { categoriasData } = useData();
-  const [shouldRedirect, setShouldRedirect] = useState(false)
-  const [categoriaRedirect, setCategoriaRedirect] = useState("")
 
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 440);
@@ -58,102 +51,21 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
     onChangeColorContainer(color)
   }
 
-  const toggleModal = () => {
-    setShowModalFiltros(!showModalFiltros);
-  };
-
-  const handleSaveModalFiltrosCelu = (filtros) => {
-    if (filtros.orden === "Mayor precio") {
-      const productosOrdenados = [...productos].sort((a, b) => b.precio_minorista - a.precio_minorista);
-      setProductos(productosOrdenados)
-    } else if (filtros.orden === "Menor precio") {
-      const productosOrdenados = [...productos].sort((a, b) => a.precio_minorista - b.precio_minorista);
-      setProductos(productosOrdenados);
-    }
-
-    handleChangeTalle(filtros.talle)
-    handleChangeColor(filtros.color)
-  }
-
-  const handleRedirectCategoria = (categoria) => {
-    setCategoriaRedirect(categoria)
-    setShouldRedirect(true)
-  }
-
   return (
     <>
-      {shouldRedirect && <Navigate to={`/catalogo/${categoriaRedirect}`} />}
-      {isMobile ? (
+      {flagCatalogo && (
         <>
-          {showModalFiltros && (
-            <ModalFiltrosCelu
-              onClose={toggleModal}
-              categorias={categoriasData}
-              onSave={handleSaveModalFiltrosCelu}
-              redirectCategoria={handleRedirectCategoria}
+          <div className='globalFilter'>
+            <span role="img" aria-label="lupa" className="search-icon">
+            🔍
+            </span>
+            <input
+              type="text"
+              value={busqueda}
+              onChange={handleBusquedaChange}
+              placeholder="Buscar..."
             />
-          )}
-          {flagCatalogo && (
-            <>
-              <div className='globalFilter'>
-                <span role="img" aria-label="lupa" className="search-icon">
-                🔍
-                </span>
-                <input
-                  type="text"
-                  value={busqueda}
-                  onChange={handleBusquedaChange}
-                  placeholder="Buscar..."
-                />
-                <div className='globalFilter'>
-                  <button className="btnFiltrosCelu" onClick={toggleModal}>
-                    Filtros
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
-          
-          <div className="containerItemList">
-            {productos.length === 0 && (
-              <div className="noHayArtContainer">
-                <p className="noHayArticulos">No hay articulos</p>
-              </div>
-            )}
-            {productosBuscados.length === 0 && productos.length > 0 && (
-              <div className="noHayArtContainer">
-                <p className="noHayArticulos">No existe el articulo buscado</p>
-              </div>
-            )}
-            <div className="productosContainer">
-              <div className="productos">
-                {productosBuscados.slice(0, visibleProducts).map((prod) => (
-                  <Item producto={prod} key={prod.id} />
-                ))}
-              </div>
-              {visibleProducts < productos.length && (
-                <div className="buttonVerMas">
-                  <button onClick={handleLoadMore}>Ver más</button>
-                </div>
-              )}
-            </div>
           </div>
-        </>
-      ) : (
-        <>
-          {flagCatalogo && (
-            <div className='globalFilter'>
-              <span role="img" aria-label="lupa" className="search-icon">
-              🔍
-              </span>
-              <input
-                type="text"
-                value={busqueda}
-                onChange={handleBusquedaChange}
-                placeholder="Buscar..."
-              />
-            </div>
-          )}
           <div className="ordenarMayorMenor">
             <OrdenarMayorMenor
               productos={productos}
@@ -161,47 +73,49 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
               flagOrdenar={flagOrdenar}
             />
           </div>
-          <div className="containerItemList">
-            <div className="categoriaFiltros">
-              <CategoriasLateral />
-              {flagCatalogo && (
-                <>
-                  <FiltroTalle
-                    articulos={productosFiltroTalles}
-                    onChangeTalle={handleChangeTalle}
-                  />
-                  <FiltroColor
-                    articulos={productosFiltroColores}
-                    onChangeColor={handleChangeColor}
-                  />
-                </>
-              )}
-            </div>
-            {productos.length === 0 && (
-              <div className="noHayArtContainer">
-                <p className="noHayArticulos">Cargando...</p>
-              </div>
-            )}
-            {productosBuscados.length === 0 && productos.length > 0 && (
-              <div className="noHayArtContainer">
-                <p className="noHayArticulos">No existe el articulo buscado</p>
-              </div>
-            )}
-            <div className="productosContainer">
-              <div className="productos">
-                {productosBuscados.slice(0, visibleProducts).map((prod) => (
-                  <Item producto={prod} key={prod.id} />
-                ))}
-              </div>
-              {visibleProducts < productos.length && (
-                <div className="buttonVerMas">
-                  <button onClick={handleLoadMore}>Ver más</button>
-                </div>
-              )}
-            </div>
-          </div>
         </>
-      )} 
+      )}
+      <div className="containerItemList">
+        {!isMobile && (
+          <div className="categoriaFiltros">
+            <CategoriasLateral />
+            {flagCatalogo && (
+              <>
+                <FiltroTalle
+                  articulos={productosFiltroTalles}
+                  onChangeTalle={handleChangeTalle}
+                />
+                <FiltroColor
+                  articulos={productosFiltroColores}
+                  onChangeColor={handleChangeColor}
+                />
+              </>
+          )}
+        </div>
+        )}
+        {productos.length === 0 && (
+          <div className="noHayArtContainer">
+            <p className="noHayArticulos">Cargando...</p>
+          </div>
+        )}
+        {productosBuscados.length === 0 && productos.length > 0 && (
+          <div className="noHayArtContainer">
+            <p className="noHayArticulos">No existe el articulo buscado</p>
+          </div>
+        )}
+        <div className="productosContainer">
+          <div className="productos">
+            {productosBuscados.slice(0, visibleProducts).map((prod) => (
+              <Item producto={prod} key={prod.id} />
+            ))}
+          </div>
+          {visibleProducts < productos.length && (
+            <div className="buttonVerMas">
+              <button onClick={handleLoadMore}>Ver más</button>
+            </div>
+          )}
+        </div>
+      </div>
     </>
   );
 };

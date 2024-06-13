@@ -1,6 +1,7 @@
 .containerItemList {
   display: flex;
   justify-content: space-around;
+  margin-top: 50px;
 }
 
 /* .categoriaFiltros {
@@ -99,28 +100,21 @@
   margin-left: 2rem;
 }
 
-@media (max-width: 1080px) {
-  .productos {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (max-width: 769px) {
+@media (max-width: 1115px) {
   .productos {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 880px) {
   .productos {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
 
 }
-@media (max-width: 500px) {
+@media (max-width: 640px) {
   .productos {
     display: grid;
     grid-template-columns: repeat(1, 1fr);

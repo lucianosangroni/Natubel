@@ -17,7 +17,7 @@ const Footer = () => {
           </div>
           <div className="tel">
             <img src={telephone} alt="telefono" />
-            <p>11 - 3467 4234</p>
+            <p>11 3110-9942</p>
           </div> 
         </div>
         <div className="footerNatubel">

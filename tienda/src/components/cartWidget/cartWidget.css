@@ -28,4 +28,10 @@
     }
 }
 
+@media (max-width: 769px) {
+    .carrito-container {
+        margin-right: .5rem;
+    }
+}
+
 

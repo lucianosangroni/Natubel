@@ -5,14 +5,14 @@ import { Link } from "react-router-dom";
 import CartWidget from "../cartWidget/CartWidget";
 import MenuDesplegable from "../menuDesplegable/MenuDesplegable";
 import whatsapp from "./whatsapp.svg";
-import styled from "styled-components";
-import BurguerButton from "./BurguerButton";
 import { useData } from '../../context/DataContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = () => {
-  const [clicked, setClicked] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 769);
-  const { montoMinimoMayorista, montoMinimoDistribuidor } = useData();
+  const [ isMobile, setIsMobile ] = useState(window.innerWidth <= 769);
+  const { montoMinimoMayorista, montoMinimoDistribuidor, categoriasData } = useData();
+  const [ menuAbierto, setMenuAbierto ] = useState(false);
 
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 769);
@@ -26,55 +26,50 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleClick = () => {
-    setClicked(!clicked);
-  };
-
   const formatearNumero = (numero) => {
     return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const toggleMenu = (e) => {
+    setMenuAbierto(!menuAbierto);
+    e.stopPropagation();
   };
 
   return (
     <>
       {isMobile ? (
-        <NavContainer>
-          <p className="encabezadoMobile">
-            MINIMO DE COMPRAS MAYORISTAS ${formatearNumero(montoMinimoMayorista)} || PARA COMPRAS MAYORES A
-            ${formatearNumero(montoMinimoDistribuidor)}. HACE TU PEDIDO Y ESCRIBINOS A NUESTRO WHATSAPP
-          </p>
-          <div className={`links ${clicked ? "active" : ""}`}>
-          <Link onClick={handleClick} to="/">
-              Inicio
-            </Link>
-            <Link onClick={handleClick} to="/catalogo">
-              Catalogo
-            </Link>
-            <Link onClick={handleClick} to="/carrito">
-              Carrito
-            </Link>
-          </div>
-          <div className="navbarMobileContainer">
-            <div className="burguer">
-              <BurguerButton clicked={clicked} handleClick={handleClick} />
-            </div>
-            <BgDiv className={`initial ${clicked ? " active" : ""}`}></BgDiv>
-            <div>
+        <>
+          <nav className="navbarMobileContainer">
+            <p className="encabezadoMobile">
+              MINIMO DE COMPRAS MAYORISTAS ${formatearNumero(montoMinimoMayorista)} || PARA COMPRAS MAYORES A
+              ${formatearNumero(montoMinimoDistribuidor)}. HACE TU PEDIDO Y ESCRIBINOS A NUESTRO WHATSAPP
+            </p>
+            <div className="navbarMobile">
+              <div className="menu-toggle" onClick={toggleMenu} style={{ cursor: 'pointer' }}>
+                <FontAwesomeIcon icon={faBars} style={{ color: 'white', fontSize: '24px' }} />
+              </div>
               <Link to="/" className="logo">
                 <h1>Natubel</h1>
               </Link>
+              <CartWidget />
             </div>
-            <CartWidget />
-          </div>
-          <div className="redesWhatsapp">
-            <a
-              href="https://web.whatsapp.com/send?phone=1131109942"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={whatsapp} alt="Contactar por WhatsApp" />
-            </a>
-          </div>
-        </NavContainer>
+            {menuAbierto && (
+              <div>
+                {categoriasData.map(cat => (
+                  <li className="textoCategorias" key={cat.id}>
+                    <Link
+                      className="menu-link"
+                      to={`/catalogo/${cat.id}`}
+                      onClick={toggleMenu}
+                    >
+                      {cat.nombre}
+                    </Link>
+                  </li>
+                ))}
+              </div>
+            )}
+          </nav>
+        </>
       ) : (
         <>
           <p className="encabezado">
@@ -125,94 +120,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-const NavContainer = styled.nav`
-  padding: 0.4rem;
-  background-color: #70848b;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: fixed; 
-  top: 0; 
-  width: 100%; 
-  z-index: 1000; 
-  
-
-  a {
-    color: white;
-    text-decoration: none;
-    margin-rigth: 1rem;
-    
-  }
-  .burguer {
-    @media (min-width: 769px) {
-      display: none;
-    }
-  }
-  .links {
-    position: absolute;
-    top: -700px;
-    left: -2000px;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    transition: all 0.5s ease;
-    a {
-      color: white;
-      font-size: 2rem;
-      display: block;
-    }
-    @media (min-width: 769px) {
-      position: initial;
-      margin: 0;
-      a {
-        font-size: 1rem;
-        color: white;
-        display: inline;
-      }
-      display: block;
-    }
-  }
-  .links.active {
-    z-index: 11;
-    width: 100%;
-    display: block;
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    top: 30%;
-    left: 0;
-    right: 0;
-    text-align: center;
-    a {
-      font-size: 2rem;
-      margin-top: 1rem;
-      color: white;
-    }
-  }
-  .burguer {
-    @media (min-width: 769px) {
-      display: none;
-    }
-  }
-`;
-
-const BgDiv = styled.div`
-  background-color: #70848b;
-  position: absolute;
-  top: -1000px;
-  left: -1000px;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-  transition: all 0.6s ease;
-
-  &.active {
-    border-radius: 0 0 80% 0;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-`;

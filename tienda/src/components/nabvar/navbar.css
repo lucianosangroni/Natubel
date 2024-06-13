@@ -76,16 +76,27 @@
 
     @media (max-width: 769px) {
         .navbarMobileContainer {
+            background-color: #70848b;
+            padding-top: .5rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-bottom: .5rem;
+        }
+
+        .navbarMobile {
             display: flex;
             justify-content: space-between;
-            align-items: end;
-            margin-top: 0.5rem;
+            align-items: center;
+            margin-top: .5rem;
             background-color: #70848b;
             
         }
         .logo {
             justify-content: center; 
             margin-left: 0; 
+        }
+        .logo h1 {
+            font-size: 3.5rem;
         }
         .encabezadoMobile {
             font-size: 0.6rem;

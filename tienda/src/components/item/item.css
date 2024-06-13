@@ -4,6 +4,7 @@
   align-items: center;
   overflow: hidden;
   width: 15rem;
+  margin-bottom: 10px;
 }
 
 .imgContainer {

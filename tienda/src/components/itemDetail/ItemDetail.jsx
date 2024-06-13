@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import "./itemDetail.css";
 import ItemCount from "../itemCount/ItemCount";
 import { CartContext } from "../../context/CartContext";
-import { Link } from "react-router-dom";
 import { useData } from "../../context/DataContext";
 import { Carousel } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Item from "../item/Item";
 
 const ItemDetail = ({ item }) => {
   const { agregarAlCarrito, setTipoPrecios } = useContext(CartContext);
@@ -257,28 +257,7 @@ const ItemDetail = ({ item }) => {
               })
               .slice(0, window.innerWidth < 480 ? 1 : 4)
               .map((artRelacionado) => (
-                <div key={artRelacionado.id}>
-                  <div className="imgContainer">
-                    {artRelacionado.imagens.length > 0 ? (
-                      <img
-                        src={artRelacionado.imagens[0].url}
-                        alt={"sin imagen"}
-                      />
-                    ) : (
-                      <img src={`/img/no-hay-foto.png`} alt={"sin imagen"} />
-                    )}
-                  </div>
-                  <h4>ART. {artRelacionado.numero_articulo}</h4>
-                  <p>${artRelacionado.precio_minorista}</p>
-                  <div className="detalleContainer">
-                    <Link
-                      className="detalle"
-                      to={`/articulo/${artRelacionado.id}`}
-                    >
-                      Detalle
-                    </Link>
-                  </div>
-                </div>
+                <Item producto={artRelacionado} key={artRelacionado.id} />
               ))}
           </div>
         </div>

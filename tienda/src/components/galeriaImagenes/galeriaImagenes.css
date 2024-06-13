@@ -4,8 +4,8 @@
     align-items: center;
     z-index: 0;    
     padding-inline: 1.5rem;
-    margin-top: 6rem;
-    
+    margin: 0 auto;
+    margin-top: 1rem;
 }
 
 .imgItem {
