@@ -46,7 +46,7 @@ const Navbar = () => {
             </p>
             <div className="navbarMobile">
               <div className="menu-toggle" onClick={toggleMenu} style={{ cursor: 'pointer' }}>
-                <FontAwesomeIcon icon={faBars} style={{ color: 'white', fontSize: '24px' }} />
+                <FontAwesomeIcon icon={faBars} style={{ color: 'white', fontSize: '24px', listStyle: "none", }} />
               </div>
               <Link to="/" className="logo">
                 <h1>Natubel</h1>
@@ -96,7 +96,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link className="menu-link" to="/mayorista">
-                  Mayorista
+                  Compra rapida
                 </Link>
               </li>
             </ul>

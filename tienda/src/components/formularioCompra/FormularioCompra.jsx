@@ -381,17 +381,18 @@ const FormularioCompra = () => {
             {carrito.length > 0 ? (
               <form onSubmit={handleSubmitForm(onSubmitForm)}>
                 <div className="formulario">
-                  <label>Email:</label>
+                  <label>Email: </label>
                   <input
-                    type="email"
+                    type="email" 
                     {...registerForm("email", {
                       required: "Este campo es obligatorio.",
                       pattern: {
                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                         message: "Correo electrónico inválido",
                       },
+                      
                     })}
-                  />
+                  /> <span class="required-asterisk">*</span>
                   {errors.email && (
                     <p className="obligatorio">{errors.email.message}</p>
                   )}
@@ -401,17 +402,18 @@ const FormularioCompra = () => {
                   <input
                     type="text"
                     {...registerForm("nombreCompleto", { required: true })}
-                  />
+                  /> <span class="required-asterisk">*</span>
                   {errors.nombreCompleto && (
                     <p className="obligatorio">Este campo es obligatorio.</p>
                   )}
+                  
                 </div>
                 <div className="formulario">
                   <label>Teléfono:</label>
                   <input
                     type="tel"
                     {...registerForm("telefono", { required: true })}
-                  />
+                  /><span class="required-asterisk">*</span>
                   {errors.telefono && (
                     <p className="obligatorio">Este campo es obligatorio.</p>
                   )}

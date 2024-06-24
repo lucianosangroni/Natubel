@@ -31,8 +31,13 @@
     
 }
 
+.textoCategorias {
+    list-style-type: none;
+}
+
 .textoCategorias a {
     font-size: 0.8rem; 
+
 }
 
 .menu-link:hover {

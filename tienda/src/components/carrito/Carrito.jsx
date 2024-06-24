@@ -26,7 +26,7 @@ const Carrito = () => {
   const { montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading } = useData();
 
   const [ carrito, setCarrito ] = useState([])
-  const [ selectedPrecios, setSelectedPrecios ] = useState("MINORISTA")
+  const [ selectedPrecios, setSelectedPrecios ] = useState("MAYORISTA")
   const [ shouldRedirect, setShouldRedirect ] = useState(false)
   const [ showVaciarAlert, setShowVaciarAlert ] = useState(false)
 
