@@ -78,10 +78,15 @@
 }
 
 @media (max-width: 550px) {
-    .footerNovedades p{
-        width: 14rem;
-        font-size: 0.7rem;
-
+    .footerNovedades {
+        color: white;
+        width: 25rem;
+        padding-top: 2rem;
+        padding-bottom: 0.5rem;
+        font-size: 1rem;
+        text-align: center;
+        font-style: italic;
+        margin: auto;
     }
     .contactanos p{
         font-size: 0.8rem;   
@@ -120,9 +125,14 @@
 }
 
 @media (max-width: 405px) {
-    .footerNovedades p{
-        width: 10rem;
-        font-size: 0.7rem;
-
+    .footerNovedades {
+        color: white;
+        width: 25rem;
+        padding-top: 2rem;
+        padding-bottom: 0.5rem;
+        font-size: 0.8rem;
+        text-align: center;
+        font-style: italic;
+        margin: auto;
     }
 }
