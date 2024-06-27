@@ -22,6 +22,8 @@ const FormularioCompra = () => {
 
   const { refreshData, montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading } = useData()
 
+  const [ isLoading, setIsLoading ] = useState(false)
+
   const {
     verificarStock,
     tipoPrecios,
@@ -177,6 +179,7 @@ const FormularioCompra = () => {
 
   const onSubmitCodigo = (CodigoData) => {
     if(parseInt(CodigoData.codigo) === codigo) {
+      setIsLoading(true)
       enviarPedido()
     } else {
       toast.error("Codigo incorrecto.", {
@@ -319,6 +322,7 @@ const FormularioCompra = () => {
     })
     .then((result) => {
       if(result.message === "Pedido creado con éxito") {
+        setIsLoading(false)
         setShowCompraFinalizada(true);
         vaciarCarrito();
         refreshData();
@@ -346,6 +350,7 @@ const FormularioCompra = () => {
   return (
     <>
       {isInitialLoading && <Loading/>}
+      {isLoading && <Loading/>}
       <ToastContainer position="top-right" hideProgressBar={false}/>
       {shouldRedirect && <Navigate to="/carrito" />}
       <div className="container">
