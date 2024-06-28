@@ -3,6 +3,8 @@ const { matchedData } = require("express-validator");
 const { sequelize } = require("../config/dbConnect")
 const URL_PUBLIC = process.env.URL_PUBLIC || null;
 const fs = require('fs');
+const axios = require('axios');
+const crypto = require('crypto');
 
 const getItems = async (req, res) => {
     try {
@@ -20,7 +22,25 @@ const getItems = async (req, res) => {
                         model: categoriaModel,
                     },
                 ], 
-                order: sequelize.literal("CAST(SUBSTRING_INDEX(numero_articulo, ' ', 1) AS UNSIGNED), SUBSTRING_INDEX(numero_articulo, ' ', -1) ASC")
+                order: [
+                    sequelize.literal("CAST(SUBSTRING_INDEX(numero_articulo, ' ', 1) AS UNSIGNED)"),
+                    sequelize.literal("CASE " +
+                    "WHEN numero_articulo REGEXP '^[0-9]+$' THEN 1 " +
+                    "ELSE " +
+                        "CASE " +
+                            "WHEN numero_articulo LIKE '%E' THEN 2 " +
+                            "WHEN numero_articulo LIKE '%S' THEN 3 " +
+                            "WHEN numero_articulo LIKE '%M' THEN 4 " +
+                            "WHEN numero_articulo LIKE '%L' THEN 5 " +
+                            "WHEN numero_articulo LIKE '%XL' THEN 6 " +
+                            "WHEN numero_articulo LIKE '%XXL' THEN 7 " +
+                            "WHEN numero_articulo LIKE '%XXXL' THEN 8 " +
+                            "WHEN numero_articulo LIKE '%XXXXL' THEN 9 " +
+                            "WHEN numero_articulo LIKE '%XXXXXL' THEN 10 " +
+                            "ELSE 11 " +
+                        "END " +
+                    "END"),
+                ]
             }
         )
 
@@ -34,10 +54,23 @@ const getItems = async (req, res) => {
 const createItem = async (req, res) => {
     try {
         const { numero_articulo, categorias: categoriasString, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, talles: tallesString, colores: coloresString } = req.body
-        const imagenes = req.files.map((file) => file.filename);
+        const imagenes = []//req.files.map((file) => file.filename);
         const categorias = JSON.parse(categoriasString);
         const talles = JSON.parse(tallesString);
         const colores = JSON.parse(coloresString);
+
+        for (const file of req.files) {
+            const randomName = crypto.randomBytes(16).toString('hex');
+            const ext = file.originalname.split('.').pop(); // Obtiene la extensión del archivo
+            const filename = `${randomName}-${Date.now()}.${ext}`;
+
+            await axios.post('https://natubel.store/storage', {
+              image: file.buffer, // Envía el buffer de la imagen al servidor remoto
+              filename: filename // Envía el nombre del archivo al servidor remoto
+            });
+
+            imagenes.push(filename)
+        }
 
         const nuevoArticulo = await articuloModel.create
         (

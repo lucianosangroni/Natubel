@@ -5,111 +5,29 @@ import GrillaProductoPedido from "./GrillaProductoPedido";
 import GrillasProductosConfirmados from "./GrillaProductoConfirmado";
 import { apiUrl, bearerToken } from "../../config/config";
 import ListaArticulos from "../Common/ListaArticulos";
+import Loading from "../Common/Loading";
+import { useData } from "../../context/DataContext";
 
 const CargarPedido = () => {
-  const [data, setData] = useState([]);
-  const [clientes, setClientes] = useState([]);
-  const [proveedores, setProveedores] = useState([]);
+  const { articulosData, clientesData, proveedoresData, refreshArticulos, isInitialLoading } = useData()
+  const [data, setData] = useState(articulosData);
+  const [clientes, setClientes] = useState(clientesData);
+  const [proveedores, setProveedores] = useState(proveedoresData);
   const [tipoPedidor, setTipoPedidor] = useState("cliente");
   const [selectedPedidor, setSelectedPedidor] = useState("");
   const [filtroBusqueda, setFiltroBusqueda] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productosConfirmados, setProductosConfirmados] = useState([]);
   const [cantidadesArticuloActual, setCantidadesArticuloActual] = useState({});
+  const [isLoading, setIsLoading] = useState(false)
 
   ////OBTENER ARTICULOS, CLIENTES Y PROVEEDORES DB
   useEffect(() => {
-    let flag_error = false;
-
-    const fetchArticulos = fetch(`${apiUrl}/articulos`, {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          flag_error = true;
-        }
-        return response.json();
-      })
-      .then((result) => {
-        const articulos = [];
-        for (const dataResult of result) {
-          const productos = dataResult.productos.map(
-            ({ id, color, talle, stock }) => ({ id, color, talle, stock })
-          );
-          const articulo = {
-            id: dataResult.id,
-            numero_articulo: dataResult.numero_articulo,
-            precio_minorista: dataResult.precio_minorista,
-            precio_mayorista: dataResult.precio_mayorista,
-            precio_distribuidor: dataResult.precio_distribuidor,
-            productos,
-          };
-
-          if (productos.length > 0) articulos.push(articulo);
-        }
-
-        setData(articulos);
-        setSelectedProduct(articulos[0]);
-      })
-      .catch(() => {
-        flag_error = true;
-      });
-
-    const fetchClientes = fetch(`${apiUrl}/clientes`, {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          flag_error = true;
-        }
-        return response.json();
-      })
-      .then((result) => {
-        const dataClientes = result.map(({ tipo_cliente, persona }) => ({
-          id: persona.id,
-          nombre: persona.nombre,
-          tipo_cliente 
-        }));
-
-        setClientes(dataClientes);
-      })
-      .catch(() => {
-        flag_error = true;
-      });
-
-    const fetchProveedores = fetch(`${apiUrl}/proveedores`, {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          flag_error = true;
-        }
-        return response.json();
-      })
-      .then((result) => {
-        const dataProveedores = result.map(({ id, nombre }) => ({
-          id,
-          nombre,
-        }));
-
-        setProveedores(dataProveedores);
-      })
-      .catch(() => {
-        flag_error = true;
-      });
-
-    Promise.all([fetchArticulos, fetchClientes, fetchProveedores]).then(() => {
-      if (flag_error) {
-        alert("Error al buscar los datos, intente nuevamente");
-      }
-    });
-  }, []);
+    setData(articulosData);
+    setSelectedProduct(articulosData[0]);
+    setClientes(clientesData);
+    setProveedores(proveedoresData);
+  }, [articulosData, clientesData, proveedoresData]);
 
   const handleCambiarTipoPedidor = (pedidor) => {
     setTipoPedidor(pedidor);
@@ -265,6 +183,8 @@ const CargarPedido = () => {
       return;
     }
 
+    setIsLoading(true)
+
     const precio_total = calcularPrecioTotal();
     const productos = getProductos();
     const creador = localStorage.getItem("username");
@@ -299,8 +219,11 @@ const CargarPedido = () => {
         setTipoPedidor("cliente");
         setFiltroBusqueda("");
         setSelectedProduct(data[0]);
+
+        setIsLoading(false)
       })
       .catch((error) => {
+        setIsLoading(false)
         console.error("Error en la solicitud POST:", error);
       });
   };
@@ -335,12 +258,14 @@ const CargarPedido = () => {
       }
     }
 
+    refreshArticulos(newData)
     setData(newData);
     setProductosConfirmados([]);
   };
 
   return (
     <>
+      {(isLoading || isInitialLoading) && <Loading/>}
       <NavbarAdm selected={'Cargar Pedido'}/>
       <div className="contenedor-botones">
         <button
@@ -368,7 +293,7 @@ const CargarPedido = () => {
       <div className="input-selector">
         <Select
           options={pedidoresFiltrados.map((pedidor) => ({
-            value: pedidor.id,
+            value: tipoPedidor === "cliente" ? pedidor.persona_id : pedidor.id,
             label: pedidor.nombre,
           }))}
           value={{

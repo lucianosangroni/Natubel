@@ -1,0 +1,82 @@
+.categoriaLateral {
+    max-width: 1000px;
+    margin: 0 auto;
+    
+}
+
+.menuLateral {
+    display: flex;
+    flex-direction: column;
+    width: 9rem;
+    border-radius: 0.5rem;
+    background-color: #70848b;
+    list-style-type: none;
+    padding: 0.3rem;
+    
+}
+
+.menuLateralColor {
+    display: flex;
+    flex-direction: column;
+    width: 9rem;
+    border-radius: 0.5rem;
+    background-color: #70848b;
+    list-style-type: none;
+    padding: 0.3rem;
+}
+
+
+.menu-link {
+    text-decoration: none;
+    
+}
+
+.textoCategorias {
+    list-style-type: none;
+}
+
+.textoCategorias a {
+    font-size: 0.8rem; 
+
+}
+
+.menu-link:hover {
+    text-decoration: underline;
+}
+
+.seleccionada {
+    background-color:#70848b;
+    font-weight: bold;
+    border-radius: 0.5rem;
+    margin-left: 1rem;
+    text-decoration: none;
+    font-size: 0.8rem;
+    padding: 0.3rem;
+}
+
+.menuLateralTitulo{
+    color: white;
+    font-style: italic;
+    font-weight: bold;
+}
+
+@media (max-width: 566px) {
+    .enviamosPagaSeguridad {
+        align-items: center;
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+    }
+    .menuLateral {
+        width: 6rem;       
+    }
+    .menuLateralTitulo{
+        font-size: 14px;
+    }
+    .textoCategorias a {
+        font-size: 0.7rem; 
+    }
+    .menuLateralColor {
+        width: 6rem;
+    }
+
+}

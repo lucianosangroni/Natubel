@@ -3,6 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useEffect, useState } from "react";
 import { apiUrl, bearerToken } from "../../config/config";
+import Loading from "../Common/Loading";
 
 function ModalRemito({ pedido_id, onClose }) {
     const [remito, setRemito] = useState({
@@ -12,8 +13,12 @@ function ModalRemito({ pedido_id, onClose }) {
         cantidad_cajas: ""
       });
       const [remitoExistente, setRemitoExistente] = useState(null);
+      const [isLoading, setIsLoading] = useState(false)
+
 
     useEffect(() => {
+        setIsLoading(true)
+
         fetch(`${apiUrl}/remitos/${pedido_id}`, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
@@ -42,8 +47,11 @@ function ModalRemito({ pedido_id, onClose }) {
                 cantidad_cajas: result.remito.cantidad_cajas
             })
         }
+
+        setIsLoading(false)
       })
       .catch((error) => {
+        setIsLoading(false)
         console.error('Error en la solicitud GET:', error);
       });
     }, [pedido_id]);
@@ -68,6 +76,8 @@ function ModalRemito({ pedido_id, onClose }) {
   };
 
   const crearRemito = () => {
+    setIsLoading(true)
+
     const requestData = {
         descuento: parseFloat(remito.descuento),
         dias_vencimiento: parseInt(remito.dias_vencimiento),
@@ -94,11 +104,14 @@ function ModalRemito({ pedido_id, onClose }) {
         generarPdfRemito()
       })
       .catch((error) => {
+          setIsLoading(false)
           console.error("Error en la solicitud POST:", error);
       });
   }
 
   const editarRemito = () => {
+    setIsLoading(true)
+
     const requestData = {
         descuento: parseFloat(remito.descuento),
         dias_vencimiento: parseInt(remito.dias_vencimiento),
@@ -127,6 +140,7 @@ function ModalRemito({ pedido_id, onClose }) {
             generarPdfRemito()
           })
           .catch(error => {
+              setIsLoading(false)
               console.error("Error en la solicitud PUT:", error);
           });
     }
@@ -155,14 +169,18 @@ function ModalRemito({ pedido_id, onClose }) {
         }
   
         URL.revokeObjectURL(url);
+
+        setIsLoading(false)
       })
       .catch((error) => {
+        setIsLoading(false)
         console.error('Error en la solicitud GET:', error);
       });
   }
 
   return (
     <>
+      {isLoading && <Loading/>}
       <Modal
         show={true}
         onHide={onClose}

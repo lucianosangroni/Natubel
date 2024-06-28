@@ -6,20 +6,20 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
   const [editProduct, setEditProduct] = useState(
     {
     numero_articulo: articulo.numero_articulo,
-    categorias: articulo.categorias.map((categoria) => categoria.id),
+    categoria: articulo.categoria.map((cat) => cat.id),
     descripcion: articulo.descripcion,
     precio_minorista: articulo.precio_minorista,
     precio_mayorista: articulo.precio_mayorista,
     precio_distribuidor: articulo.precio_distribuidor,
     talles: [],
     colores: [],
-    imagenes: articulo.imagenes
+    imagens: articulo.imagens
     }
   );
 
   const fileInputRef = useRef(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [oldFiles, setOldFiles] = useState(articulo.imagenes)
+  const [oldFiles, setOldFiles] = useState(articulo.imagens)
   const [previewImages, setPreviewImages] = useState([]);
 
   const tallesDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
@@ -41,7 +41,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
       {
         id: articulo.id,
         numero_articulo: articulo.numero_articulo,
-        categorias: articulo.categorias.map((categoria) => categoria.id),
+        categoria: articulo.categoria.map((cat) => cat.id),
         descripcion: articulo.descripcion,
         precio_minorista: articulo.precio_minorista,
         precio_mayorista: articulo.precio_mayorista,
@@ -49,9 +49,13 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
         productos: articulo.productos,
         talles,
         colores,
-        imagenes: articulo.imagenes
+        imagens: articulo.imagens
       }
     );
+
+    setSelectedFiles([])
+    setOldFiles(articulo.imagens)
+    setPreviewImages([])
   }, [articulo]);
 
   const handleClose = () => {
@@ -61,7 +65,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
   }
   const handleShow = () => {
     setShow(true);
-    setOldFiles(articulo.imagenes)
+    setOldFiles(articulo.imagens)
   }
 
   const handleSelectFiles = () => {
@@ -99,10 +103,10 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
     if(selectedFiles.length + oldFiles.length > 8) {
       alert("Solo se permite un máximo de 8 imagenes");
     } else {
-      editProduct.categorias = editProduct.categorias.filter((categoria) => categoria.toString().trim() !== "");
+      editProduct.categoria = editProduct.categoria.filter((cat) => cat.toString().trim() !== "");
 
-      if (editProduct.numero_articulo && editProduct.categorias.length > 0 && editProduct.precio_minorista && editProduct.precio_mayorista && editProduct.precio_distribuidor && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
-        const imagenesRemove = articulo.imagenes.filter(imagen => !oldFiles.map(file => file.id).includes(imagen.id)).map(imagen => imagen.id)
+      if (editProduct.numero_articulo && editProduct.categoria.length > 0 && editProduct.precio_minorista && editProduct.precio_mayorista && editProduct.precio_distribuidor && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
+        const imagenesRemove = articulo.imagens.filter(imagen => !oldFiles.map(file => file.id).includes(imagen.id)).map(imagen => imagen.id)
         const editProductData = {...editProduct, imagenesAdd: selectedFiles, imagenesRemove}
         onEditProducto(editProductData);
         handleClose();
@@ -113,7 +117,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
   };
 
   const handleCategoriaChange = (e, index) => {
-    const newCategorias = [...editProduct.categorias];
+    const newCategorias = [...editProduct.categoria];
     let newValue
     if(e.target.value !== "") {
       newValue = parseInt(e.target.value)
@@ -124,26 +128,26 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
     newCategorias[index] = newValue;
     setEditProduct({
       ...editProduct,
-      categorias: newCategorias,
+      categoria: newCategorias,
     });
   };
 
   const addCategoriaField = () => {
-    const lastCategoria = editProduct.categorias[editProduct.categorias.length - 1]
+    const lastCategoria = editProduct.categoria[editProduct.categoria.length - 1]
     if (lastCategoria !== "") {
       setEditProduct({
         ...editProduct,
-        categorias: [...editProduct.categorias, ""],
+        categoria: [...editProduct.categoria, ""],
       });
     }
   };
 
   const removeCategoriaField = (index) => {
-    const newCategorias = [...editProduct.categorias];
+    const newCategorias = [...editProduct.categoria];
     newCategorias.splice(index, 1);
     setEditProduct({
       ...editProduct,
-      categorias: newCategorias,
+      categoria: newCategorias,
     });
   };
 
@@ -235,15 +239,15 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
             </Form.Group>
             <Form.Group>
               <Form.Label className="boton-categoria">Categorias</Form.Label>
-              {editProduct.categorias.map((categoria, index) => (
+              {editProduct.categoria.map((categ, index) => (
                   <div key={index} className="input-tallecolor-container">
                     <Form.Select
-                      value={categoria}
+                      value={categ}
                       onChange={(e) => handleCategoriaChange(e, index)}
                     >
                       <option value="">Selecciona una categoría</option>
                       {categorias.map((cat, catIndex) => {
-                        const esVisible = !editProduct.categorias.includes(cat.id);
+                        const esVisible = !editProduct.categoria.includes(cat.id);
                         return (
                             <option key={cat.id} value={cat.id} hidden={!esVisible}>
                                 {cat.nombre}
@@ -251,7 +255,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
                         );
                       })}
                     </Form.Select>
-                    {editProduct.categorias.length > 1 && (
+                    {editProduct.categoria.length > 1 && (
                       <Button id="boton-menos" onClick={() => removeCategoriaField(index)}>
                         -
                       </Button>
@@ -350,13 +354,13 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
                     </Button>
                   )}
                 </div>
-              ))}
-              <Button id="boton-mas" onClick={addColorField}>
-                +
-              </Button>
+                  ))}
+               <Button id="boton-mas" onClick={addColorField}>
+                 +
+               </Button>
             </Form.Group>
-          </div>
-          <Form.Group>
+         </div>
+         <Form.Group>
               <input
                 type="file"
                 ref={fileInputRef}

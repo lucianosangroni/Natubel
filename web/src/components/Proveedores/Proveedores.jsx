@@ -8,53 +8,26 @@ import ModalProveedoresEditar from "./ModalProveedoresEditar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { apiUrl, bearerToken } from "../../config/config";
+import Loading from "../Common/Loading";
+import { useData } from "../../context/DataContext";
 
 const ListadoProveedores = () => {
+  const { proveedoresData, isInitialLoading, refreshProveedores } = useData()
   const columns = useMemo(() => COLUMNSPROVE, []);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(proveedoresData);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false)
 
   //OBTENER PROVEEDORES DB
   useEffect(() => {
-    fetch(`${apiUrl}/proveedores`, 
-    {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`
-      }
-    })
-    .then((response) => {
-      if (!response.ok) {
-        alert("Error al buscar los datos, intente nuevamente")
-        throw new Error("Error en la solicitud GET");
-      }
-      return response.json();
-    })
-    .then((result) => {
-      const proveedores = []
-      for (const dataResult of result) {
-        const proveedor =
-        {
-          id: dataResult.id,
-          nombre: dataResult.nombre,
-          direccion: dataResult.direccion,
-          telefono: dataResult.telefono,
-          email: dataResult.email,
-          cuit_cuil: dataResult.cuit_cuil
-        }
-
-        proveedores.push(proveedor)
-      }
-
-      setData(proveedores)
-    })
-    .catch((error) => {
-      console.error("Error en la solicitud GET:", error);
-    });
-  }, []);
+    setData(proveedoresData)
+  }, [proveedoresData]);
 
   //AGREGAR PROVEEDOR DB
   const handleAddProveedor = (newProveedor) => {
+    setIsLoading(true)
+
     const requestData = 
     {
       nombre: newProveedor.nombre,
@@ -81,9 +54,16 @@ const ListadoProveedores = () => {
     })
     .then((result) => {
       newProveedor.id = result.id
-      setData((prevData) => [...prevData, newProveedor]);
+    
+      const dataActualizada = [...data, newProveedor];
+
+      setData(dataActualizada);
+      refreshProveedores(dataActualizada)
+      
+      setIsLoading(false)
     })
     .catch((error) => {
+        setIsLoading(false)
         console.error("Error en la solicitud POST:", error);
     });
   };
@@ -98,6 +78,8 @@ const ListadoProveedores = () => {
 
   //EDITAR PROVEEDOR DB
   const updateTableRow = (newData) => {
+    setIsLoading(true)
+
     const requestData = 
     {
       nombre: newData.nombre,
@@ -123,13 +105,17 @@ const ListadoProveedores = () => {
       return response.json();
     })
     .then(() => {
-      setData((prevData) => {
-        const updatedData = [...prevData];
-        updatedData[newData.index] = newData;
-        return updatedData;
-      });
+
+      const dataActualizada = [...data];
+      dataActualizada[newData.index] = newData;
+
+      setData(dataActualizada);
+      refreshProveedores(dataActualizada)
+
+      setIsLoading(false)
     })
     .catch(error => {
+        setIsLoading(false)
         console.error("Error en la solicitud PUT:", error);
     });
   };
@@ -195,6 +181,7 @@ const ListadoProveedores = () => {
 
   return (
     <>
+      {(isLoading || isInitialLoading) && <Loading/>}
       <NavbarAdm selected={'Proveedores'}/>
       <GlobalFilter  filter={globalFilter} setFilter={setGlobalFilter} />
       <div className="tableDivContainer">

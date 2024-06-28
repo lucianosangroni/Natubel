@@ -5,7 +5,7 @@ function ModalProducto({ onAddProducto, categorias }) {
   const [show, setShow] = useState(false);
   const [newProduct, setNewProduct] = useState({
     numero_articulo: "",
-    categorias: [""],
+    categoria: [""],
     descripcion: "",
     precio_minorista: "",
     precio_mayorista: "",
@@ -52,16 +52,16 @@ function ModalProducto({ onAddProducto, categorias }) {
     if(selectedFiles.length > 8) {
       alert("Solo se permite un máximo de 8 imagenes");
     } else {
-      newProduct.categorias = newProduct.categorias.filter((categoria) => categoria.trim() !== "");
+      newProduct.categoria = newProduct.categoria.filter((cat) => cat.trim() !== "");
       newProduct.talles = newProduct.talles.filter((talle) => talle.trim() !== "");
       newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
 
-      if (newProduct.numero_articulo && newProduct.categorias.length > 0 && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
-        const addProduct = {...newProduct, imagenes: selectedFiles}
+      if (newProduct.numero_articulo && newProduct.categoria.length > 0 && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
+        const addProduct = {...newProduct, imagens: selectedFiles}
         onAddProducto(addProduct);
         setNewProduct({
           numero_articulo: "",
-          categorias: [""],
+          categoria: [""],
           descripcion: "",
           precio_minorista: "",
           precio_mayorista: "",
@@ -79,32 +79,32 @@ function ModalProducto({ onAddProducto, categorias }) {
   };
 
   const handleCategoriaChange = (e, index) => {
-    const newCategorias = [...newProduct.categorias];
+    const newCategorias = [...newProduct.categoria];
     newCategorias[index] = e.target.value;
 
     setNewProduct({
       ...newProduct,
-      categorias: newCategorias,
+      categoria: newCategorias,
     });
   };
 
   const addCategoriaField = () => {
-    const lastCategoria = newProduct.categorias[newProduct.categorias.length - 1].trim();
+    const lastCategoria = newProduct.categoria[newProduct.categoria.length - 1].trim();
     if (lastCategoria !== "") {
       setNewProduct({
         ...newProduct,
-        categorias: [...newProduct.categorias, ""],
+        categoria: [...newProduct.categoria, ""],
       });
     }
   };
 
   const removeCategoriaField = (index) => {
-    const newCategorias = [...newProduct.categorias];
+    const newCategorias = [...newProduct.categoria];
     newCategorias.splice(index, 1);
 
     setNewProduct({
       ...newProduct,
-      categorias: newCategorias,
+      categoria: newCategorias,
     });
   };
 
@@ -167,7 +167,7 @@ function ModalProducto({ onAddProducto, categorias }) {
 
   return (
     <>
-      <button onClick={handleShow} className="agregarArticulo abajoDerecha">
+      <button style={{width: "145px"}}onClick={handleShow} className="agregarArticulo abajoDerecha">
         Agregar Articulo
       </button>
 
@@ -197,15 +197,15 @@ function ModalProducto({ onAddProducto, categorias }) {
             </Form.Group>
             <Form.Group>
               <Form.Label className="boton-categoria">Categorias</Form.Label>
-              {newProduct.categorias.map((categoria, index) => (
+              {newProduct.categoria.map((categ, index) => (
                   <div key={index} className="input-tallecolor-container">
                     <Form.Select
-                      value={categoria}
+                      value={categ}
                       onChange={(e) => handleCategoriaChange(e, index)}
                     >
                       <option value="">Selecciona una categoría</option>
                        {categorias.map((cat, catIndex) => {
-                        const esVisible = !newProduct.categorias.includes(cat.id.toString());
+                        const esVisible = !newProduct.categoria.includes(cat.id.toString());
                         return (
                             <option key={catIndex} value={cat.id} hidden={!esVisible}>
                                 {cat.nombre}
@@ -213,7 +213,7 @@ function ModalProducto({ onAddProducto, categorias }) {
                         );
                        })}
                     </Form.Select>
-                    {newProduct.categorias.length > 1 && (
+                    {newProduct.categoria.length > 1 && (
                       <Button id="boton-menos" onClick={() => removeCategoriaField(index)}>
                         -
                       </Button>

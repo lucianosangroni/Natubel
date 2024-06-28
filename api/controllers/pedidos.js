@@ -36,6 +36,16 @@ const createItem = async (req, res) => {
 
         const { persona_id, precio_total, es_proveedor, productos, creador } = req
 
+        if(!es_proveedor) {
+            for (const producto of productos) {
+                const productoExistente = await productoModel.findOne({ where: { id: producto.producto_id }} )
+    
+                if(!productoExistente || productoExistente.stock < producto.cantidad) {
+                    return res.status(200).json({ message: 'No hay suficiente stock para realizar el pedido' });
+                }
+            }
+        }
+
         const nuevoPedido = await pedidoModel.create
         (
             {

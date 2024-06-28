@@ -398,7 +398,6 @@
   border-collapse: collapse;
   margin: 2rem;
   padding: 2rem;
-
 }
 
 .table-header-productos {
@@ -500,10 +499,6 @@
   overflow-x: hidden;
 }
 
-.scrollable-list-container::-webkit-scrollbar {
-  width: 0;
-}
-
 .abajoDerecha {
   position: fixed;
   right: 20px;
@@ -577,6 +572,7 @@
   width: auto;
   height: 10px;
   margin-top: 2rem;
+  margin-left: 1rem;
   border-collapse: collapse;
 }
 
@@ -775,4 +771,58 @@
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
+}
+
+
+/* Loading.css */
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Asegura que esté por encima de otros elementos */
+}
+
+.loading-blocker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  pointer-events: none; /* Evita la interacción con elementos debajo */
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3); /* Borde del spinner */
+  border-top: 4px solid #ffffff; /* Borde superior del spinner */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite; /* Animación de rotación */
+}
+
+.loading-text {
+  margin-top: 10px;
+  color: #ffffff;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

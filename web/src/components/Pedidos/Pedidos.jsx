@@ -6,41 +6,22 @@ import GlobalFilter from "../../helpers/GlobalFilter";
 import ListaProductosDePedido from "./ListaProductosDePedido";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { apiUrl, bearerToken } from "../../config/config";
+import Loading from "../Common/Loading";
+import { useData } from "../../context/DataContext";
 
 const HistorialPedidos = () => {
+  const { isInitialLoading, pedidosData, refreshPedidos, refreshPedidoCancelado } = useData()
   const columns = useMemo(() => COLUMNSPEDIDOS, []);
-  const [data, setData] = useState([]);
-  const [articulos, setArticulos] = useState([]);
+  const [data, setData] = useState(pedidosData);
   const [selectedRow, setSelectedRow] = useState(null);
-
 
    ////OBTENER PEDIDOS Y ARTICULOS DB
   useEffect(() => {
-      fetch(`${apiUrl}/articulos`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      })
-      .then((response) => {
-        if (!response.ok) {
-          alert("Error al buscar los datos, intente nuevamente")
-          throw new Error("Error en la solicitud GET");
-        }
-        return response.json();
-      })
-      .then((result) => {
-        const articulos = [];
-        for (const dataResult of result) {
-          const productos = dataResult.productos.map(
-            ({ id, color, talle }) => ({ id, color, talle })
-          );
-          const articulo = {
-            id: dataResult.id,
-            numero_articulo: dataResult.numero_articulo,
-            productos,
-          };
+      setData(pedidosData)
+      setSelectedRow(pedidosData[0])
+  }, [pedidosData]);
 
+<<<<<<< HEAD
           if (productos.length > 0) articulos.push(articulo);
         }
 
@@ -159,6 +140,9 @@ const HistorialPedidos = () => {
    }, [articulos])
 
    const tableInstance = useTable(
+=======
+  const tableInstance = useTable(
+>>>>>>> tiendav2
     {
       columns,
       data,
@@ -167,11 +151,11 @@ const HistorialPedidos = () => {
     usePagination
   );
 
-   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, setGlobalFilter,state, page, nextPage, previousPage, canNextPage, canPreviousPage, pageOptions } = tableInstance
-   const { globalFilter } = state;
-   const { pageIndex } = state;
+  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, setGlobalFilter,state, page, nextPage, previousPage, canNextPage, canPreviousPage, pageOptions } = tableInstance
+  const { globalFilter } = state;
+  const { pageIndex } = state;
 
-   const handleRowClick = (row) => {
+  const handleRowClick = (row) => {
     setSelectedRow(row.original);
   };
 
@@ -184,11 +168,17 @@ const HistorialPedidos = () => {
     });
 
     setData(newData);
+    refreshPedidos(newData)
     setSelectedRow(newData[0])
+
+    if(nuevoEstado === "CANCELADO") {
+      refreshPedidoCancelado(pedido_id)
+    }
   }
 
   return (
     <>
+      {isInitialLoading && <Loading/>}
       <NavbarAdm selected={'Pedidos'}/>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
       <div className="tableDetailsContainer">

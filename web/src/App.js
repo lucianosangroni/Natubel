@@ -7,6 +7,7 @@ import Pedidos from './components/Pedidos/Pedidos';
 import Login from './components/Login/Login';
 import ProtectedRoute from './routes/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
+import Precios from './components/Precios/Precios';
 
 function App() {
     return (
@@ -32,6 +33,9 @@ function App() {
             </Route>
             <Route element={<ProtectedRoute/>}>
               <Route path="admin/pedidos" element={<Pedidos/>} />
+            </Route>
+            <Route element={<ProtectedRoute/>}>
+              <Route path="admin/precios" element={<Precios/>} />
             </Route>
           </Routes>
         </AuthProvider>

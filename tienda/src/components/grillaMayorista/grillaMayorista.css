@@ -1,0 +1,45 @@
+.table-grilla {
+    width: auto;
+    height: 10px;
+    margin-top: 2rem;
+    margin-left: 1rem;
+    border-collapse: collapse;
+}
+
+.table-grilla th,
+.table-grilla td {
+    border: 1px solid #000000;
+    padding: 0.1rem 0.3rem 0.1rem 0.3rem;
+    font-weight: normal;
+    text-align: center;
+}
+
+#articulo-grilla-elegido {
+    background-color: #70848b;
+    color: white;
+    font-weight: bold !important;
+}
+
+.table-grilla-input {
+    position: relative;
+}
+
+.table-grilla-input input {
+    width: 40px;
+    text-align: center;
+}
+
+.stock-label {
+    font-weight: bold;
+}
+
+.confirmarCargarPedido {
+    height: 100%;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: #70848b;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    margin-top: auto;
+    margin-left: 1rem;
+}

@@ -1,0 +1,37 @@
+.carrito-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    margin-right: 2rem;
+}
+
+.carrito {
+    color: white;
+    font-size: 1rem;
+    width: 2rem;
+    
+}
+
+.contador-carrito{
+    color: white;
+    font-size: 1.4rem;
+}
+
+@media only screen and (max-width: 769px) { 
+    .carrito-container{
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 769px) {
+    .carrito-container {
+        margin-right: .5rem;
+    }
+}
+
+

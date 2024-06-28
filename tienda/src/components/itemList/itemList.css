@@ -1,0 +1,142 @@
+.containerItemList {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 50px;
+}
+
+/* .categoriaFiltros {
+  margin-top: 3rem;
+} */
+
+.main-title {
+  background-color: #70848b;
+  color: white;
+  padding: 0.5rem;
+  width: 13rem;
+  height: 2rem;
+  margin-top: 2rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  margin-left: 1.5rem;
+}
+
+.productosContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.productos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: 100%;
+  width: 100%;
+  
+}
+
+.buttonVerMas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.buttonVerMas button {
+  font-size: 0.8rem;
+}
+
+.ordenarMayorMenor {
+  display: flex;
+  justify-content: end;
+  margin-right: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.noHayArtContainer {
+  display: flex; 
+  justify-content: center; 
+  align-items: start;
+  padding-inline: 1rem;
+  margin-top: 3rem;
+}
+
+.noHayArticulos {
+  background-color: #70848b;
+  color: white;
+  padding: 0.5rem;
+  width: 16rem;
+  height: 2.5rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+}
+
+.globalFilter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6rem;
+  margin-bottom: 2rem;
+  gap: .5rem;
+}
+
+.globalFilter-input {
+  margin: 1rem;
+  border-radius: 5px;
+  padding: 0.2rem;
+  border: 1px solid black;
+}
+
+.search-icon {
+  align-items: center;
+  background-color: #99adb4;
+  border-radius: 5px;
+  padding: 0.2rem;
+  border: 1px solid black;
+}
+
+.btnFiltrosCelu {
+  margin-left: 2rem;
+}
+
+@media (max-width: 1115px) {
+  .productos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 880px) {
+  .productos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+@media (max-width: 640px) {
+  .productos {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    
+  }
+  .producto {
+    display: flex;
+    flex-direction: row;
+    
+  }
+}
+@media (max-width: 566px) {
+  .productos {
+    display: flex;
+    flex-direction: column;
+  }
+  .producto {
+    display: flex;
+    flex-direction: row;    
+  }
+
+}
+
+
+
