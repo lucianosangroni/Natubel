@@ -9,6 +9,7 @@ import { apiUrl, bearerToken } from "../../config/config";
 import { Button } from "react-bootstrap";
 import Loading from "../Common/Loading";
 import { useData } from "../../context/DataContext";
+import { useNavigate } from 'react-router-dom';
 
 const ListadoProductos = () => {
   const { articulosData, categoriasData, refreshCategorias, refreshArticulos, isInitialLoading } = useData()
@@ -18,6 +19,7 @@ const ListadoProductos = () => {
   const [isCategoriasModalOpen, setIsCategoriasModalOpen] = useState(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate();
 
   //OBTENER ARTICULOS DB
   useEffect(() => {
@@ -230,6 +232,10 @@ const ListadoProductos = () => {
     });
   }
 
+  const handlePrecios = () => {
+    navigate('/admin/precios');
+  }
+
   const handleCategorias = () => {
     setIsCategoriasModalOpen(true);
   }
@@ -351,10 +357,11 @@ const ListadoProductos = () => {
             categorias={categorias}
           />
         )}
-        <Button onClick={handleConfig} id="btnDescargarStock" style={{right: "555px"}}>Configuración</Button>
-        <Button onClick={handleGenerarPDFCliente} id="btnDescargarStock" style={{right: "425px"}}>Stock Cliente</Button>
-        <Button onClick={handleGenerarPDFAdmin} id="btnDescargarStock" style={{right: "295px"}}>Stock Admin</Button>
-        <Button onClick={handleCategorias} id="btnDescargarStock" style={{right: "180px"}}>Categorias</Button>
+        <Button onClick={handleConfig} id="btnDescargarStock" style={{right: "820px", width: "145px"}}>Configuración</Button>
+        <Button onClick={handleGenerarPDFCliente} id="btnDescargarStock" style={{right: "660px", width: "145px"}}>Stock Cliente</Button>
+        <Button onClick={handleGenerarPDFAdmin} id="btnDescargarStock" style={{right: "500px", width: "145px"}}>Stock Admin</Button>
+        <Button onClick={handlePrecios} id="btnDescargarStock" style={{right: "340px" , width: "145px"}}>Precios</Button>
+        <Button onClick={handleCategorias} id="btnDescargarStock" style={{right: "180px", width: "145px"}}>Categorias</Button>
         {isCategoriasModalOpen && (
         <ModalCategorias
           data={categorias}

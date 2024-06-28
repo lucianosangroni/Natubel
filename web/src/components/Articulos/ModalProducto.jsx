@@ -167,7 +167,7 @@ function ModalProducto({ onAddProducto, categorias }) {
 
   return (
     <>
-      <button onClick={handleShow} className="agregarArticulo abajoDerecha">
+      <button style={{width: "145px"}}onClick={handleShow} className="agregarArticulo abajoDerecha">
         Agregar Articulo
       </button>
 
