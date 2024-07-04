@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ItemList from "../itemList/ItemList";
-import "./itemListContainer.css";
 import { useParams } from "react-router-dom";
 import { useData } from '../../context/DataContext';
 import Loading from "../loading/Loading";

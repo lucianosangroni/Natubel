@@ -289,7 +289,7 @@ const getStockCliente = async (req, res) => {
         res.status(500).json({ message: 'Error al buscar los articulos' });
     }
 };
-  
+
 const getNotaPedido = async (req, res) => {
     try {
         const pedido_id = req.params.id

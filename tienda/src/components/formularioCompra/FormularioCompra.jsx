@@ -59,7 +59,7 @@ const FormularioCompra = () => {
       codigo: newCodigo
     }
 
-    fetch(`${apiUrl}/email`, {
+    fetch(`${apiUrl}/email/codigo`, {
       method: "POST",
       headers: {
           'Content-Type': 'application/json',
@@ -79,7 +79,9 @@ const FormularioCompra = () => {
   }
 
   const reenviarCodigo = () => {
+    setIsLoading(true)
     enviarCodigo(formulario.email)
+    setIsLoading(false)
     toast.success("Codigo enviado", {
       position: "top-center",
       hideProgressBar: true,
@@ -89,6 +91,8 @@ const FormularioCompra = () => {
   }
 
   const onSubmitForm = (formData) => {
+    setIsLoading(true)
+
     const requestData = {
       email: formData.email,
       cuit_cuil: formData.cuitCuil,
@@ -171,6 +175,8 @@ const FormularioCompra = () => {
           closeButton: false,
         });
       }
+
+      setIsLoading(false)
     })
     .catch(error => {
       console.error(`Error en la solicitud GET para el cliente ${formData.email}:`, error);
@@ -326,13 +332,59 @@ const FormularioCompra = () => {
         setShowCompraFinalizada(true);
         vaciarCarrito();
         refreshData();
+        enviarMailPedido(result.numero_pedido)
       } else {
+        setIsLoading(false)
         refreshData();
         setShowFalloPedido(true)
       }
     })
     .catch((error) => {
       console.error("Error en la solicitud POST:", error);
+    });
+  }
+
+  const enviarMailPedido = (numero_pedido) => {
+    fetch(`${apiUrl}/pdf/nota-pedido/${numero_pedido}`, {
+      headers: {
+        Authorization: `Bearer ${tokenBearer}`,
+      }
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error en la solicitud GET");
+      }
+      return response.blob();
+    })
+    .then((blob) => {
+      const formData = new FormData();
+      formData.append("file", blob, `pedido_${numero_pedido}.pdf`)
+      formData.append('email', formulario.email);
+
+      fetch(`${apiUrl}/email/pedido`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${tokenBearer}`
+        },
+        body: formData
+      })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error en la solicitud POST");
+        }
+        return response.json();
+      })
+      .then((result) => {
+        setIsLoading(false)
+      })
+      .catch(error => {
+          setIsLoading(false)
+          console.error("Error en la solicitud POST:", error);
+      });
+    })
+    .catch((error) => {
+      setIsLoading(false)
+      console.error('Error en la solicitud GET:', error);
     });
   }
 
@@ -386,7 +438,10 @@ const FormularioCompra = () => {
             {carrito.length > 0 ? (
               <form onSubmit={handleSubmitForm(onSubmitForm)}>
                 <div className="formulario">
-                  <label>Email: </label>
+                  <div className="casilla-asterisk-container">
+                    <label>Email: </label>
+                    <span class="required-asterisk-cel">*</span>
+                  </div>
                   <input
                     type="email" 
                     {...registerForm("email", {
@@ -395,15 +450,18 @@ const FormularioCompra = () => {
                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                         message: "Correo electrónico inválido",
                       },
-                      
                     })}
-                  /> <span class="required-asterisk">*</span>
+                  />
+                  <span class="required-asterisk">*</span>
                   {errors.email && (
                     <p className="obligatorio">{errors.email.message}</p>
                   )}
                 </div>
                 <div className="formulario">
-                  <label>Nombre completo:</label>
+                  <div className="casilla-asterisk-container">
+                    <label>Nombre completo:</label>
+                    <span class="required-asterisk-cel">*</span>
+                  </div>
                   <input
                     type="text"
                     {...registerForm("nombreCompleto", { required: true })}
@@ -414,7 +472,10 @@ const FormularioCompra = () => {
                   
                 </div>
                 <div className="formulario">
-                  <label>Teléfono:</label>
+                  <div className="casilla-asterisk-container">
+                    <label>Teléfono:</label>
+                    <span class="required-asterisk-cel">*</span>
+                  </div>
                   <input
                     type="tel"
                     {...registerForm("telefono", { required: true })}

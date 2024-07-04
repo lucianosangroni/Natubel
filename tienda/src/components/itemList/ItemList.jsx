@@ -53,19 +53,19 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
 
   return (
     <>
+      <div className='globalFilter'>
+        <span role="img" aria-label="lupa" className="search-icon">
+        🔍
+        </span>
+        <input
+          type="text"
+          value={busqueda}
+          onChange={handleBusquedaChange}
+          placeholder="Buscar..."
+        />
+      </div>
       {flagCatalogo && (
         <>
-          <div className='globalFilter'>
-            <span role="img" aria-label="lupa" className="search-icon">
-            🔍
-            </span>
-            <input
-              type="text"
-              value={busqueda}
-              onChange={handleBusquedaChange}
-              placeholder="Buscar..."
-            />
-          </div>
           <div className="ordenarMayorMenor">
             <OrdenarMayorMenor
               productos={productos}

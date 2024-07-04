@@ -88,7 +88,7 @@ const createItem = async (req, res) => {
             }
         };
         
-        res.status(201).json({ message: 'Pedido creado con éxito' });
+        res.status(201).json({ message: 'Pedido creado con éxito', numero_pedido: nuevoPedido.numero_pedido });
     } catch(e) {
         console.log("Error al crear el pedido: ", e)
         res.status(500).json({ message: 'Error al crear el pedido' });

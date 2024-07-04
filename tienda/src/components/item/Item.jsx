@@ -14,8 +14,7 @@ const Item = ( { producto } ) => {
       </Link>
       <div className='productoInicio'>
         <h4>ART. {producto.numero_articulo}</h4>
-        <p>Mayorista: ${producto.precio_mayorista}</p>
-        <p>Minorista: ${producto.precio_minorista}</p>
+        <p>Precio: ${producto.precio_mayorista}</p>
       </div>
     </div>
   );

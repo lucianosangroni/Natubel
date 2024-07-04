@@ -14,11 +14,6 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
     });
 
     const colores = coloresDesordenados.sort((a, b) => a.localeCompare(b, 'es', {ignorePunctuation: true}));
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> tiendav2
     const [cantidades, setCantidades] = useState({});
     const inputRefs = {};
 

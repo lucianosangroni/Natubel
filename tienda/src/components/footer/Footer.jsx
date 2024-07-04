@@ -1,7 +1,5 @@
 import React from "react";
 import "./footer.css";
-import telephone from "./telephone.svg";
-import mail from "./mail.svg";
 import face from "./facebook.svg";
 import insta from "./instagram.svg";
 

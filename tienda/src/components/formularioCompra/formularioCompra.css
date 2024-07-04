@@ -95,6 +95,10 @@
   margin-top: 0.5rem;
 }
 
+.required-asterisk-cel {
+  display: none;
+}
+
 @media (max-width: 675px) {
   .formulario {
     display: flex;
@@ -107,10 +111,19 @@
   }
 
   .required-asterisk {
-    margin-bottom: 0;
+    display: none;
   }
+
+  .required-asterisk-cel {
+    display: block;
+    margin-left: .7rem;
+  }
+
   .obligatorio {
-    
     padding-top: 0;
+  }
+
+  .casilla-asterisk-container {
+    display: flex;
   }
 }
