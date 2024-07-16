@@ -1,4 +1,5 @@
-const { personaModel } = require("../modelos");
+const { where } = require("sequelize");
+const { personaModel, pedidoModel } = require("../modelos");
 const { matchedData } = require("express-validator");
 
 const getItems = async (req, res) => {
@@ -82,15 +83,15 @@ const deleteItem = async (req, res) => {
             return res.status(404).json({ message: 'Proveedor no encontrado' });
         }
 
-        await personaModel.update
-        (
-            { 
-                flag_activo: false 
-            },
-            { 
-                where: { id: proveedor_id } 
-            }
-        );
+        const pedidoConProveedorExiste = await pedidoModel.findOne({ where: { persona_id: proveedor_id } });
+        if (pedidoConProveedorExiste) {
+            return res.status(200).json({ message: "No se puede eliminar el proveedor porque hay un pedido a su nombre" })
+        }
+
+        await personaModel.destroy({
+            where: { id: proveedor_id },
+            force: true
+        });
 
         res.status(200).json({ message: 'Proveedor eliminado con éxito' });
     } catch(e) {

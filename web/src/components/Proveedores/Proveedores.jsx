@@ -122,35 +122,41 @@ const ListadoProveedores = () => {
 
   //ELIMINAR PROVEEDOR DB
   const handleDeleteRow = (row) => {
-    //const shouldDelete = window.confirm(
-    //  "¿Estas seguro que deseas eliminar el proveedor?"
-    //);
-    //if (shouldDelete) {
-    //  fetch(`${apiUrl}/proveedores/${row.original.id}`, {
-    //    method: "DELETE",
-    //    headers: {
-    //      Authorization: `Bearer ${bearerToken}`
-    //    }
-    //  })
-    //  .then((response) => {
-    //    if (!response.ok) {
-    //      alert("Error al eliminar proveedor, intente nuevamente")
-    //      throw new Error("Error en la solicitud DELETE");
-    //    }
-    //    return response.json();
-    //  })
-    //  .then(() => {
-    //    const rowIndex = data.indexOf(row.original);
-    //    if (rowIndex > -1) {
-    //      const newData = [...data];
-    //      newData.splice(rowIndex, 1);
-    //      setData(newData);
-    //    }
-    //  })
-    //  .catch(error => {
-    //      console.error("Error en la solicitud DELETE:", error);
-    //  });
-    //}
+    const deleteData = row.original
+    deleteData.index = row.index
+
+    const shouldDelete = window.confirm(
+      `¿Estas seguro que deseas eliminar al proveedor ${deleteData.nombre}?`
+    );
+
+    if (shouldDelete) {
+      fetch(`${apiUrl}/proveedores/${deleteData.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${bearerToken}`
+        }
+      })
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al eliminar proveedor, intente nuevamente")
+          throw new Error("Error en la solicitud DELETE");
+        }
+        return response.json();
+      })
+      .then((result) => {
+        if(result.message === "Proveedor eliminado con éxito") {
+          const dataActualizada = [...data];
+          dataActualizada.splice(deleteData.index, 1);
+          setData(dataActualizada);
+          refreshProveedores(dataActualizada)
+        }
+
+        alert(result.message)
+      })
+      .catch(error => {
+          console.error("Error en la solicitud DELETE:", error);
+      });
+    }
   };
 
   const {

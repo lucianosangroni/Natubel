@@ -1,4 +1,4 @@
-const { clienteModel, personaModel } = require("../modelos");
+const { clienteModel, personaModel, pedidoModel } = require("../modelos");
 const { matchedData } = require("express-validator");
 
 const getItem = async (req, res) => {
@@ -217,25 +217,22 @@ const deleteItem = async (req, res) => {
             return res.status(404).json({ message: 'Cliente no encontrado' });
         }
 
-        await clienteModel.update
-        (
-            { 
-                flag_activo: false 
-            },
-            { 
-                where: { id: cliente_id } 
-            }
-        );
+        const persona_id = cliente.persona_id
 
-        await personaModel.update
-        (
-            {
-                flag_activo: false
-            },
-            {
-                where: { id: cliente.persona_id }
-            }
-        )
+        const pedidoConClienteExiste = await pedidoModel.findOne({ where: { persona_id: persona_id } });
+        if (pedidoConClienteExiste) {
+            return res.status(200).json({ message: "No se puede eliminar el cliente porque hay un pedido a su nombre" })
+        }
+
+        await clienteModel.destroy({
+            where: { id: cliente_id },
+            force: true
+        });
+
+        await personaModel.destroy({
+            where: { id: persona_id },
+            force: true
+        });
 
         res.status(200).json({ message: 'Cliente eliminado con éxito' });
     } catch(e) {
