@@ -1,4 +1,4 @@
-const { categoriaModel } = require("../modelos");
+const { categoriaModel, categoriaXArticuloModel } = require("../modelos");
 const { matchedData } = require("express-validator");
 const { sequelize } = require("../config/dbConnect")
 
@@ -65,7 +65,33 @@ const updateItem = async (req, res) => {
 
 
 const deleteItem = async (req, res) => {
+    try {
+        req = matchedData(req);
 
+        const categoria_id = req.id
+
+        // Validar si el articulo existe antes de intentar actualizarla
+        const categoriaExiste = await categoriaModel.findByPk(categoria_id);
+        if (!categoriaExiste) {
+            return res.status(404).json({ message: 'Categoria no encontrada' });
+        }
+
+        const articuloConCategoriaExiste = await categoriaXArticuloModel.findOne({ where: {categoria_id: categoria_id} });
+
+        if(articuloConCategoriaExiste) {
+            return res.status(200).json({ message: "No se puede eliminar la categoría porque hay un artículo que la tiene" })
+        }
+
+        await categoriaModel.destroy({
+            where: { id: categoria_id },
+            force: true
+        });
+
+        res.status(200).json({ message: 'Categoría eliminada con éxito' });
+    } catch(e) {
+        console.log("Error al eliminar la categoria: ", e)
+        res.status(500).json({ message: 'Error al eliminar la categoria' });
+    }
 };
 
 module.exports = {getItems, createItem, updateItem, deleteItem};

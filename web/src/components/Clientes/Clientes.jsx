@@ -137,12 +137,12 @@ const ListadoClientes = () => {
     const deleteData = row.original
     deleteData.index = row.index
 
-    console.log(deleteData)
-
     const shouldDelete = window.confirm(
       `¿Estas seguro que deseas eliminar al cliente ${deleteData.nombre}?`
     );
     if (shouldDelete) {
+      setIsLoading(true)
+
       fetch(`${apiUrl}/clientes/${deleteData.id}`, {
         method: "DELETE",
         headers: {
@@ -165,6 +165,7 @@ const ListadoClientes = () => {
         }
 
         alert(result.message)
+        setIsLoading(false)
       })
       .catch(error => {
           console.error("Error en la solicitud DELETE:", error);

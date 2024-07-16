@@ -343,6 +343,12 @@ const ListadoProductos = () => {
       });
   }
 
+  const handleEliminarCategoria = (categoria)  => {
+    const categoriasActualizadas = categorias.filter((cat) => cat.id != categoria.id)
+    refreshCategorias(categoriasActualizadas)
+    setCategorias(categoriasActualizadas)
+  }
+
   return (
     <>
       {(isLoading || isInitialLoading) && <Loading/>}
@@ -368,6 +374,7 @@ const ListadoProductos = () => {
           onClose={() => setIsCategoriasModalOpen(false)}
           onNuevaCategoria={(nuevaCategoria) => handleNuevaCategoria(nuevaCategoria)}
           onEditCategoria={(nuevaCategoria) => handleEditCategoria(nuevaCategoria)}
+          onEliminarCategoria={(categoria) => handleEliminarCategoria(categoria)}
         />
         )}
         {isConfigModalOpen && (

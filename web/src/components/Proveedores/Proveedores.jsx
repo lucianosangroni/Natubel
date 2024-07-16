@@ -130,6 +130,8 @@ const ListadoProveedores = () => {
     );
 
     if (shouldDelete) {
+      setIsLoading(true)
+
       fetch(`${apiUrl}/proveedores/${deleteData.id}`, {
         method: "DELETE",
         headers: {
@@ -152,6 +154,7 @@ const ListadoProveedores = () => {
         }
 
         alert(result.message)
+        setIsLoading(false)
       })
       .catch(error => {
           console.error("Error en la solicitud DELETE:", error);
