@@ -167,31 +167,39 @@ const ListadoProductos = () => {
 
   //ELIMINAR ARTICULO DB
   const handleDeleteProducto = (articulo) => {
-    //const shouldDelete = window.confirm(
-    //  "¿Estas seguro que deseas eliminar el articulo?"
-    //);
-    //if (shouldDelete) {
-    //  fetch(`${apiUrl}/articulos/${articulo.id}`, {
-    //    method: "DELETE",
-    //    headers: {
-    //      Authorization: `Bearer ${bearerToken}`,
-    //    },
-    //  })
-    //    .then((response) => {
-    //      if (!response.ok) {
-    //        alert("Error al eliminar articulo, intente nuevamente");
-    //        throw new Error("Error en la solicitud DELETE");
-    //      }
-    //      return response.json();
-    //    })
-    //    .then(() => {
-    //      const updatedData = data.filter((art) => art.id !== articulo.id);
-    //      setData(updatedData);
-    //    })
-    //    .catch((error) => {
-    //      console.error("Error en la solicitud DELETE:", error);
-    //    });
-    //}
+    const shouldDelete = window.confirm(
+      `¿Estas seguro que deseas eliminar el articulo ${articulo.numero_articulo}?`
+    );
+    if (shouldDelete) {
+      setIsLoading(true)
+
+      fetch(`${apiUrl}/articulos/${articulo.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            alert("Error al eliminar articulo, intente nuevamente");
+            throw new Error("Error en la solicitud DELETE");
+          }
+          return response.json();
+        })
+        .then((result) => {
+          if(result.message === "Articulo eliminado con éxito") {
+            const updatedData = data.filter((art) => art.id !== articulo.id);
+            setData(updatedData);
+            refreshArticulos(updatedData)
+          }
+          
+          alert(result.message)
+          setIsLoading(false)
+        })
+        .catch((error) => {
+          console.error("Error en la solicitud DELETE:", error);
+        });
+    }
   };
 
   const handleArticuloClick = (product) => {

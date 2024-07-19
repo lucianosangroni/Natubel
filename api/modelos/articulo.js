@@ -28,6 +28,10 @@ const Articulo = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: true,
         },
+        flag_mostrar: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+        }
     },
     {
         tableName: "articulo",

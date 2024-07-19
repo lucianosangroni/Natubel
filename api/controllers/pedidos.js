@@ -1,4 +1,4 @@
-const { pedidoModel, productoXPedidoModel, productoModel, personaModel } = require("../modelos");
+const { pedidoModel, productoXPedidoModel, productoModel, personaModel, articuloModel } = require("../modelos");
 const { matchedData } = require("express-validator");
 
 const getItems = async (req, res) => {
@@ -122,7 +122,8 @@ const updateItem = async (req, res) => {
         if (estado === "CANCELADO") {
             for (const producto of productos) {
                 const productoAActualizar = await productoModel.findByPk(producto.producto_id);
-                if (productoAActualizar) {
+                const articuloDelProducto = await articuloModel.findByPk(productoAActualizar.dataValues.articulo_id)
+                if (productoAActualizar && articuloDelProducto.dataValues.flag_mostrar) {
                     const nuevoStock = productoAActualizar.stock + producto.cantidad;
                     await productoModel.update(
                         { stock: nuevoStock },

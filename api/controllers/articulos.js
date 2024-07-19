@@ -5,6 +5,7 @@ const URL_PUBLIC = process.env.URL_PUBLIC || null;
 const fs = require('fs');
 const axios = require('axios');
 const crypto = require('crypto');
+const { Op } = require('sequelize');
 
 const getItems = async (req, res) => {
     try {
@@ -277,25 +278,27 @@ const deleteItem = async (req, res) => {
             return res.status(404).json({ message: 'Articulo no encontrado' });
         }
 
+        const productoConStockExiste = await productoModel.findOne({
+            where: {
+                articulo_id: articulo_id,
+                stock: {
+                    [Op.gt]: 0, // Op.gt se usa para "mayor que"
+                }
+            }
+        });
+        if (productoConStockExiste) {
+            return res.status(200).json({ message: "No se puede elimiar el artículo porque hay stock del mismo"})
+        }
+
         await articuloModel.update
         (
             { 
-                flag_activo: false 
+                flag_mostrar: false 
             },
             { 
                 where: { id: articulo_id } 
             }
         );
-
-        await productoModel.update
-        (
-            {
-                flag_activo: false 
-            },
-            {
-                where: { articulo_id }
-            }
-        )
 
         res.status(200).json({ message: 'Articulo eliminado con éxito' });
     } catch(e) {

@@ -201,10 +201,12 @@ export const DataProviderAdmin = ({ children }) => {
                                 
                                 pedidos.sort((a, b) => b.numero_pedido - a.numero_pedido)
 
+                                const articulosActivos = articulosData.filter(art => art.flag_mostrar === true)
+
                                 setPedidosData(pedidos);
                                 setClientesData(clientes)
                                 setProveedoresData(proveedoresData)
-                                setArticulosData(articulosData);
+                                setArticulosData(articulosActivos);
                                 setCategoriasData(categoriasData);
                                 setMontoMinimoMayorista(configData.montoMinimoMayorista)
                                 setMontoMinimoDistribuidor(configData.montoMinimoDistribuidor)
@@ -269,9 +271,11 @@ export const DataProviderAdmin = ({ children }) => {
         for(const producto of pedido.productos) {
             const matchingArticulo = articulosData.find((art) => art.id === producto.articulo_id)
             
-            const matchingProduct = matchingArticulo.productos.find((prod) => prod.talle === producto.talle && prod.color === producto.color)
+            if (matchingArticulo) {
+                const matchingProduct = matchingArticulo.productos.find((prod) => prod.talle === producto.talle && prod.color === producto.color)
 
-            matchingProduct.stock += producto.productos_x_pedido.cantidad
+                matchingProduct.stock += producto.productos_x_pedido.cantidad
+            }
         }
     }
 
