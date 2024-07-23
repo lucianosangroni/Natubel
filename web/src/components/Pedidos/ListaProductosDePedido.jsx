@@ -4,11 +4,13 @@ import { apiUrl, bearerToken } from "../../config/config";
 import ListaArticulos from "../Common/ListaArticulos";
 import ModalRemito from "./ModalRemito";
 import Loading from "../Common/Loading";
+import { useNavigate } from 'react-router-dom';
 
 function ListaProductosDePedido({ pedido, onCambiarEstado }) {
     const [selectedArticulo, setSelectedArticulo] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false)
+    const navigate = useNavigate();
 
     useEffect(() => {
       setSelectedArticulo(pedido.articulos[0])
@@ -107,6 +109,10 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
       setIsModalOpen(true)
     }
 
+    const editarPedido = () => {
+      navigate(`/admin/pedidos/${pedido.numero_pedido}`);
+    }
+
     return (
       <>
         {isLoading && <Loading/>}
@@ -132,7 +138,10 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
         <div className="contenerdor-btns-pdfs-pedido">
           <button className="boton-estados" onClick={() => generarPdfPedido()} style={{ width: 150 }}>Nota De Pedido</button>
           {pedido.tipo !== "PROVEEDOR" && (
+            <>
+            <button className="boton-estados" onClick={() => editarPedido()} style={{ width: 150 }}>Editar Pedido</button>
             <button className="boton-estados" onClick={() => openModalRemito()} style={{ width: 150 }}>Remito</button>
+            </>
           )}
         </div>
         </>

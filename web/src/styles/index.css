@@ -826,3 +826,43 @@
     transform: rotate(360deg);
   }
 }
+
+.editarPedidoContainerOriginalEdit {
+  display: flex;
+}
+
+.contenedor-tabla-grilla-editar-pedido {
+  overflow-y: auto;
+  margin: 1rem;
+  margin-left: 1%;
+  margin-right: 0;
+  border: 1px solid #000;
+  width: 32%;
+  padding-bottom: 1rem;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.pedido-edit-titulo {
+  text-align: center;
+  background-color: #dcd9d9;
+  width: 40%;
+  padding: 0.7rem;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0;
+  margin-left: 30%;
+}
+
+.contenedor-tabla-grilla-editar-pedido-carga {
+  display: flex;
+  max-height: 400px;
+  width: 98%;
+  overflow-y: auto;
+  margin: 1rem;
+  margin-left: 1%;
+  border: 1px solid #000;
+}

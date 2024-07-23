@@ -6,7 +6,7 @@ import Loading from "../Common/Loading";
 import { apiUrl, bearerToken } from "../../config/config";
 
 const Precios = () => {
-    const { articulosData, refreshArticulos } = useData()
+    const { isInitialLoading, articulosData, refreshArticulos } = useData()
     const [ data, setData ] = useState(articulosData)
     const [ cantidades, setCantidades] = useState({});
     const inputRefs = {};
@@ -162,7 +162,7 @@ const Precios = () => {
 
     return (
         <>
-            {(isLoading) && <Loading/>}
+            {(isLoading || isInitialLoading) && <Loading/>}
             <NavbarAdm/>
             {data.length > 0 && (
             <table style={{marginBottom: "30px"}} className="table-grilla">

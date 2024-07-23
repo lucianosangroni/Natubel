@@ -121,7 +121,7 @@ export const DataProviderAdmin = ({ children }) => {
                                 for (const dataResult of pedidosData) {
                                     const newArticulosPedido = []
                                     const articulosDelPedido = dataResult.productos.map(({ articulo_id, productos_x_pedido }) => ({ id: articulo_id, precio_unitario: productos_x_pedido.precio_unitario }));
-                                    
+
                                     const uniqueArticuloData = new Map();
                                     
                                     const uniqueArticulosDelPedido = articulosDelPedido.filter((articulo) => {
@@ -131,7 +131,7 @@ export const DataProviderAdmin = ({ children }) => {
                                         }
                                         return false;
                                     });
-                                    
+
                                     for (const articulo of uniqueArticulosDelPedido) {
                                         const articuloIndex = articulosData.findIndex(
                                             (item) => item.id === articulo.id
@@ -152,14 +152,12 @@ export const DataProviderAdmin = ({ children }) => {
 
                                             const colores = coloresDesordenados.sort((a, b) => a.localeCompare(b, 'es', {ignorePunctuation: true}));
 
-                                            const precio_unitario = uniqueArticuloData[articulo.id]
-
                                             const newArticuloPedido = {
                                                 id: articulo.id,
                                                 numero_articulo: articulosData[articuloIndex].numero_articulo,
                                                 talles,
                                                 colores,
-                                                precio_unitario
+                                                precio_unitario: articulo.precio_unitario
                                             }
 
                                             newArticulosPedido.push(newArticuloPedido)
@@ -195,7 +193,7 @@ export const DataProviderAdmin = ({ children }) => {
                                         productos: dataResult.productos,
                                         creador: dataResult.creador
                                     };
-                                    
+
                                     pedidos.push(pedido);
                                 }
                                 

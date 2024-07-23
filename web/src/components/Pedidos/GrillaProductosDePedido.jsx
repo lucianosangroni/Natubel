@@ -1,5 +1,4 @@
 function GrillaProductosDePedido({ articulo, productos }) {
-
   const totalPedido = articulo.talles.reduce((total, talle) => {
     const sumaTalle = productos.reduce((acc, producto) => {
         if (producto.talle === talle && producto.articulo_id === articulo.id) {

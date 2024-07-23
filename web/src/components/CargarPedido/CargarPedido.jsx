@@ -331,7 +331,7 @@ const CargarPedido = () => {
       </section>
       {productosConfirmados.length > 0 && (
       <>
-        <GrillasProductosConfirmados articulos={productosConfirmados} />
+        <GrillasProductosConfirmados articulos={productosConfirmados} flag_resumen={true} />
         <div className="centrar-boton-cargar">
           <button className="cargar-pedido-boton" onClick={handleCargarPedido}>
             Cargar Pedido

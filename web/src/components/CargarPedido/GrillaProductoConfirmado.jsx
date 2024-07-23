@@ -1,8 +1,10 @@
-function GrillasProductosConfirmados({ articulos }) {
+function GrillasProductosConfirmados({ articulos, flag_resumen }) {
     return (
         <>
             <div className="contenedor-resumen-pedido">
-                <h5 className="titulo-resumenPedido">Resumen de Pedido</h5>
+                {flag_resumen && (
+                    <h5 className="titulo-resumenPedido">Resumen de Pedido</h5>
+                )}
                 <div className="grillas-container-resumen">
                 {articulos.map((articulo, articuloIndex) => {
                         const tallesDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
