@@ -404,6 +404,8 @@ const getNotaPedido = async (req, res) => {
         if(cliente)doc.fontSize(17).fillColor('black').text(cliente.tipo_cliente, 400, 355)
         doc.fontSize(9).fillColor('black').text("Total:", 50, 400)
         doc.fontSize(17).fillColor('black').text(cantArticulos + " Artículos  -  " + cantUnidades + " Unidades.", 80, 417)
+        doc.fontSize(9).fillColor('black').text("Precio:", 360, 400)
+        doc.fontSize(17).fillColor('black').text("$" + pedido.precio_total, 400, 417)
 
         doc.moveTo(45, 45).lineTo(567, 45).stroke('black');
         doc.moveTo(45, 45).lineTo(45, 85).stroke('black');
@@ -437,6 +439,7 @@ const getNotaPedido = async (req, res) => {
         doc.moveTo(45, 393).lineTo(567, 393).stroke('black');
         doc.moveTo(567, 393).lineTo(567, 455).stroke('black');
         doc.moveTo(45, 455).lineTo(567, 455).stroke('black');
+        doc.moveTo(350, 393).lineTo(350, 455).stroke('black');
 
         doc.fontSize(10).fillColor('black').text('PREPARÓ', 52, 558);
         doc.fontSize(10).fillColor('black').text('CONTROLÓ', 50, 633);
