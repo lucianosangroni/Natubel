@@ -1,4 +1,4 @@
-const { articuloModel, productoModel, pedidoModel, personaModel, productoXPedidoModel, remitoModel } = require("../modelos");
+const { articuloModel, productoModel, pedidoModel, personaModel, productoXPedidoModel, remitoModel, clienteModel } = require("../modelos");
 const PDFDocument = require('pdfkit');
 const { sequelize } = require("../config/dbConnect");
 
@@ -297,13 +297,13 @@ const getNotaPedido = async (req, res) => {
         const pedido = await pedidoModel.findByPk(pedido_id, {
             include: [
                 {
-                  model: productoModel,
-                  through: {
-                    model: productoXPedidoModel,
-                    attributes: ['cantidad', 'precio_unitario'],
-                  },
+                    model: productoModel,
+                    through: {
+                        model: productoXPedidoModel,
+                        attributes: ['cantidad', 'precio_unitario'],
+                    },
                 },
-              ],
+            ],
         });
         if (!pedido) {
             return res.status(404).json({ message: 'Pedido no encontrado' });
@@ -313,6 +313,8 @@ const getNotaPedido = async (req, res) => {
         if (!persona) {
             return res.status(404).json({ message: 'Persona no encontrada' });
         }
+
+        const cliente = await clienteModel.findOne({where: {persona_id: pedido.persona_id}})
 
         const articulosDelPedido = Array.from(new Set(pedido.productos.map((producto) => producto.articulo_id)))
 
@@ -381,11 +383,27 @@ const getNotaPedido = async (req, res) => {
         doc.fontSize(15).text(fechaFormateada, 440, 60);
 
         doc.fontSize(9).fillColor('black').text("Cliente:", 50, 90)
-        doc.fontSize(17).fillColor('black').text(persona.nombre, 100, 107)
+        doc.fontSize(17).fillColor('black').text(persona.nombre, 80, 107)
         doc.fontSize(9).fillColor('black').text("Dir Entrega:", 360, 90)
         doc.fontSize(17).fillColor('black').text(persona.direccion, 400, 107)
-        doc.rect(45, 145, 522, 20).fillAndStroke('lightgray', 'black');
-        doc.fontSize(10).fillColor('black').text(cantArticulos + " Artículos, " + cantUnidades + " Unidades.", 245, 152)
+        doc.fontSize(9).fillColor('black').text("Email:", 50, 152)
+        doc.fontSize(17).fillColor('black').text(persona.email, 80, 169)
+        doc.fontSize(9).fillColor('black').text("Teléfono:", 360, 152)
+        doc.fontSize(17).fillColor('black').text(persona.telefono, 400, 169)
+        doc.fontSize(9).fillColor('black').text("Envío:", 50, 214)
+        if(cliente)doc.fontSize(17).fillColor('black').text(cliente.forma_de_envio, 80, 231)
+        doc.fontSize(9).fillColor('black').text("Cuit/Cuil:", 360, 214)
+        doc.fontSize(17).fillColor('black').text(persona.cuit_cuil, 400, 231)
+        doc.fontSize(9).fillColor('black').text("Ciudad:", 50, 276)
+        if(cliente)doc.fontSize(17).fillColor('black').text(cliente.ciudad, 80, 293)
+        doc.fontSize(9).fillColor('black').text("Código Postal:", 360, 276)
+        if(cliente)doc.fontSize(17).fillColor('black').text(cliente.codigo_postal, 400, 293)
+        doc.fontSize(9).fillColor('black').text("Provincia:", 50, 338)
+        if(cliente)doc.fontSize(17).fillColor('black').text(cliente.provincia, 80, 355)
+        doc.fontSize(9).fillColor('black').text("Tipo:", 360, 338)
+        if(cliente)doc.fontSize(17).fillColor('black').text(cliente.tipo_cliente, 400, 355)
+        doc.fontSize(9).fillColor('black').text("Total:", 50, 400)
+        doc.fontSize(17).fillColor('black').text(cantArticulos + " Artículos  -  " + cantUnidades + " Unidades.", 80, 417)
 
         doc.moveTo(45, 45).lineTo(567, 45).stroke('black');
         doc.moveTo(45, 45).lineTo(45, 85).stroke('black');
@@ -395,11 +413,53 @@ const getNotaPedido = async (req, res) => {
         doc.moveTo(45, 145).lineTo(567, 145).stroke('black');
         doc.moveTo(567, 85).lineTo(567, 145).stroke('black');
         doc.moveTo(350,45).lineTo(350,145).stroke('black');
+        doc.moveTo(45, 145).lineTo(45, 207).stroke('black');
+        doc.moveTo(45, 145).lineTo(567, 145).stroke('black');
+        doc.moveTo(567, 145).lineTo(567, 207).stroke('black');
+        doc.moveTo(45, 207).lineTo(567, 207).stroke('black');
+        doc.moveTo(350, 145).lineTo(350, 207).stroke('black');
+        doc.moveTo(45, 207).lineTo(45, 269).stroke('black');
+        doc.moveTo(45, 207).lineTo(567, 207).stroke('black');
+        doc.moveTo(567, 207).lineTo(567, 269).stroke('black');
+        doc.moveTo(45, 269).lineTo(567, 269).stroke('black');
+        doc.moveTo(350, 207).lineTo(350, 269).stroke('black');
+        doc.moveTo(45, 269).lineTo(45, 331).stroke('black');
+        doc.moveTo(45, 269).lineTo(567, 269).stroke('black');
+        doc.moveTo(567, 269).lineTo(567, 331).stroke('black');
+        doc.moveTo(45, 331).lineTo(567, 331).stroke('black');
+        doc.moveTo(350, 269).lineTo(350, 331).stroke('black');
+        doc.moveTo(45, 331).lineTo(45, 393).stroke('black');
+        doc.moveTo(45, 331).lineTo(567, 331).stroke('black');
+        doc.moveTo(567, 331).lineTo(567, 393).stroke('black');
+        doc.moveTo(45, 393).lineTo(567, 393).stroke('black');
+        doc.moveTo(350, 331).lineTo(350, 393).stroke('black');
+        doc.moveTo(45, 393).lineTo(45, 455).stroke('black');
+        doc.moveTo(45, 393).lineTo(567, 393).stroke('black');
+        doc.moveTo(567, 393).lineTo(567, 455).stroke('black');
+        doc.moveTo(45, 455).lineTo(567, 455).stroke('black');
 
-        doc.y = 205;
+        doc.fontSize(10).fillColor('black').text('PREPARÓ', 52, 558);
+        doc.fontSize(10).fillColor('black').text('CONTROLÓ', 50, 633);
+        doc.fontSize(10).fillColor('black').text('GUARDÓ', 52, 708);
+        doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 555);
+        doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 630);
+        doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 705);
+        doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 555);
+        doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 630);
+        doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 705);
+        doc.fontSize(7).fillColor('black').text('CANTIDAD DE CAJAS:', 466, 555);
 
+        doc.moveTo(115, 550).lineTo(115, 775).stroke('black');
+        doc.moveTo(280, 550).lineTo(280, 775).stroke('black');
+        doc.moveTo(445, 550).lineTo(445, 775).stroke('black');
+        doc.moveTo(45, 550).lineTo(567, 550).stroke('black');
+        doc.moveTo(45, 550).lineTo(45, 775).stroke('black');
+        doc.moveTo(45, 625).lineTo(445, 625).stroke('black');
+        doc.moveTo(45, 700).lineTo(445, 700).stroke('black');
+        doc.moveTo(567, 550).lineTo(567, 775).stroke('black');
+        doc.moveTo(45, 775).lineTo(567, 775).stroke('black');
+        
         let maxHeightPage = 540;
-        let footerHecho = false;
 
         articulosAMostrar.forEach((articulo) => {
             const tallesDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
@@ -443,32 +503,7 @@ const getNotaPedido = async (req, res) => {
             const firstCellWidth = 68;
             const cellHeight = 20;
 
-            if(doc.y + (table.rows.length + 1) * cellHeight > maxHeightPage) {
-                if(!footerHecho) {
-                    doc.fontSize(10).fillColor('black').text('PREPARÓ', 52, 558);
-                    doc.fontSize(10).fillColor('black').text('CONTROLÓ', 50, 633);
-                    doc.fontSize(10).fillColor('black').text('GUARDÓ', 52, 708);
-                    doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 555);
-                    doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 630);
-                    doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 705);
-                    doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 555);
-                    doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 630);
-                    doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 705);
-                    doc.fontSize(7).fillColor('black').text('CANTIDAD DE CAJAS:', 466, 555);
-
-                    doc.moveTo(115, 550).lineTo(115, 775).stroke('black');
-                    doc.moveTo(280, 550).lineTo(280, 775).stroke('black');
-                    doc.moveTo(445, 550).lineTo(445, 775).stroke('black');
-                    doc.moveTo(45, 550).lineTo(567, 550).stroke('black');
-                    doc.moveTo(45, 550).lineTo(45, 775).stroke('black');
-                    doc.moveTo(45, 625).lineTo(445, 625).stroke('black');
-                    doc.moveTo(45, 700).lineTo(445, 700).stroke('black');
-                    doc.moveTo(567, 550).lineTo(567, 775).stroke('black');
-                    doc.moveTo(45, 775).lineTo(567, 775).stroke('black');
-
-                    footerHecho = true;
-                }
-                
+            if(doc.y + (table.rows.length + 1) * cellHeight > maxHeightPage) {        
                 doc.addPage();
 
                 doc.fontSize(20).fillColor('black').text('NOTA DE PEDIDO', 50, 57);
@@ -478,29 +513,19 @@ const getNotaPedido = async (req, res) => {
                 const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
                 doc.fontSize(15).fillColor('black').text(fechaFormateada, 440, 60);
 
-                doc.fontSize(9).fillColor('black').text("Cliente:", 50, 90)
-                doc.fontSize(17).fillColor('black').text(persona.nombre, 100, 107)
-                doc.fontSize(9).fillColor('black').text("Dir Entrega:", 360, 90)
-                doc.fontSize(17).fillColor('black').text(persona.direccion, 400, 107)
-                doc.rect(45, 145, 522, 20).fillAndStroke('lightgray', 'black');
-                doc.fontSize(10).fillColor('black').text(cantArticulos + " Artículos, " + cantUnidades + " Unidades.", 245, 152)
-
                 doc.moveTo(45, 45).lineTo(567, 45).stroke('black');
                 doc.moveTo(45, 45).lineTo(45, 85).stroke('black');
                 doc.moveTo(567, 45).lineTo(567, 85).stroke('black');
                 doc.moveTo(45, 85).lineTo(567, 85).stroke('black');
-                doc.moveTo(45, 85).lineTo(45, 145).stroke('black');
-                doc.moveTo(45, 145).lineTo(567, 145).stroke('black');
-                doc.moveTo(567, 85).lineTo(567, 145).stroke('black');
-                doc.moveTo(350,45).lineTo(350,145).stroke('black');
+                doc.moveTo(350,45).lineTo(350,85).stroke('black');
 
-                doc.y = 205;
+                doc.y = 110;
 
                 maxHeightPage = 720;
 
                 tableStartY = doc.y;
             } 
-
+            
             table.headers.forEach((header, i) => {
                 if (i === 0){
                     doc.rect(tableStartX, tableStartY, firstCellWidth, cellHeight).fillAndStroke('black', 'black');
@@ -534,29 +559,6 @@ const getNotaPedido = async (req, res) => {
 
             doc.moveDown();
         });
-
-        if(!footerHecho) {
-            doc.fontSize(10).fillColor('black').text('PREPARÓ', 52, 558);
-            doc.fontSize(10).fillColor('black').text('CONTROLÓ', 50, 633);
-            doc.fontSize(10).fillColor('black').text('GUARDÓ', 52, 708);
-            doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 555);
-            doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 630);
-            doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 705);
-            doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 555);
-            doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 630);
-            doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 705);
-            doc.fontSize(7).fillColor('black').text('CANTIDAD DE CAJAS:', 466, 555);
-
-            doc.moveTo(115, 550).lineTo(115, 775).stroke('black');
-            doc.moveTo(280, 550).lineTo(280, 775).stroke('black');
-            doc.moveTo(445, 550).lineTo(445, 775).stroke('black');
-            doc.moveTo(45, 550).lineTo(567, 550).stroke('black');
-            doc.moveTo(45, 550).lineTo(45, 775).stroke('black');
-            doc.moveTo(45, 625).lineTo(445, 625).stroke('black');
-            doc.moveTo(45, 700).lineTo(445, 700).stroke('black');
-            doc.moveTo(567, 550).lineTo(567, 775).stroke('black');
-            doc.moveTo(45, 775).lineTo(567, 775).stroke('black');
-        }
 
         doc.end();
     } catch (e) {

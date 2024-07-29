@@ -23,6 +23,7 @@ const EditarPedido = () => {
     const [ articulosConfirmados, setArticulosConfirmados ] = useState([])
     const [ productosConfirmadosGrilla, setProductosConfirmadosGrilla ] = useState([])
     const navigate = useNavigate();
+    const [ isLoading, setIsLoading ] = useState(false)
 
     useEffect(() => {
         if(pedidosData.length > 0) {
@@ -289,6 +290,8 @@ const EditarPedido = () => {
                 productosIniciales
             };
 
+            setIsLoading(true)
+
             fetch(`${apiUrl}/editar-pedido/${pedido.numero_pedido}`, {
                 method: "PUT",
                 headers: {
@@ -305,6 +308,7 @@ const EditarPedido = () => {
                 return response.json();
             })
             .then((result) => {
+                setIsLoading(false)
                 alert(result.message)
 
                 if(result.message === "Pedido editado con éxito") {
@@ -312,6 +316,7 @@ const EditarPedido = () => {
                 }
             })
             .catch((error) => {
+                setIsLoading(false)
                 console.error("Error en la solicitud PUT:", error);
             });
         }
@@ -319,7 +324,7 @@ const EditarPedido = () => {
 
     return (
         <>
-            {isInitialLoading && <Loading/>}
+            {(isLoading || isInitialLoading) && <Loading/>}
             <NavbarAdm/>
             {pedido && (
                 <>
