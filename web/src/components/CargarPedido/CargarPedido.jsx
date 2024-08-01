@@ -100,7 +100,7 @@ const CargarPedido = () => {
     let precioTotal = 0;
 
     if (tipoPedidor === "cliente") {
-      const clienteSeleccionado = clientes.find(cliente => cliente.id === selectedPedidor);
+      const clienteSeleccionado = clientes.find(cliente => cliente.persona_id === selectedPedidor);
       const tipo_cliente = clienteSeleccionado ? clienteSeleccionado.tipo_cliente : 'MAYORISTA';
 
       for (const articulo of productosConfirmados) {

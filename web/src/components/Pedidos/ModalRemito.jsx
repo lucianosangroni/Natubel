@@ -7,10 +7,10 @@ import Loading from "../Common/Loading";
 
 function ModalRemito({ pedido_id, onClose }) {
     const [remito, setRemito] = useState({
-        numero_remito: "",
-        descuento: "",
-        dias_vencimiento: "",
-        cantidad_cajas: ""
+        numero_remito: null,
+        descuento: null,
+        dias_vencimiento: null,
+        cantidad_cajas: null
       });
       const [remitoExistente, setRemitoExistente] = useState(null);
       const [isLoading, setIsLoading] = useState(false)
@@ -57,20 +57,24 @@ function ModalRemito({ pedido_id, onClose }) {
     }, [pedido_id]);
 
   const handleSave = () => {
-    if (remito.descuento && remito.dias_vencimiento && remito.cantidad_cajas) {
-        if (remito.numero_remito === "") {
+    if (remito.descuento !== null && remito.descuento !== "" &&
+        remito.dias_vencimiento !== null && remito.dias_vencimiento !== "" &&
+        remito.cantidad_cajas !== null && remito.cantidad_cajas !== ""
+    ) {
+        if (remito.numero_remito === null) {
             crearRemito()
         } else {
             editarRemito()
         }
         setRemito({
-            numero_remito: "",
-            descuento: "",
-            dias_vencimiento: "",
-            cantidad_cajas: ""
+            numero_remito: null,
+            descuento: null,
+            dias_vencimiento: null,
+            cantidad_cajas: null
         });
         onClose();
       } else {
+        
         alert("Por favor, complete todos los campos.");
       }
   };
