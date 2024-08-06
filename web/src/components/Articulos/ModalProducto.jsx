@@ -57,7 +57,7 @@ function ModalProducto({ onAddProducto, categorias }) {
       newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
 
       if (newProduct.numero_articulo && newProduct.categoria.length > 0 && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
-        const addProduct = {...newProduct, imagens: selectedFiles}
+        const addProduct = {...newProduct, imagens: []}
         onAddProducto(addProduct);
         setNewProduct({
           numero_articulo: "",
@@ -319,7 +319,7 @@ function ModalProducto({ onAddProducto, categorias }) {
               </Button>
             </Form.Group>
             </div>
-            <Form.Group>
+            {/*<Form.Group>
               <input
                 type="file"
                 ref={fileInputRef}
@@ -338,6 +338,7 @@ function ModalProducto({ onAddProducto, categorias }) {
               ))}
               </div>
             </Form.Group>
+            */}
           </Form>
         </Modal.Body>
         <Modal.Footer>

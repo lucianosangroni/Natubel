@@ -76,7 +76,7 @@ const createItem = async (req, res) => {
     try {
         req = matchedData(req);
 
-        const { nombre, email, telefono, direccion, dni, cuit_cuil, tipo_cliente, forma_de_envio, codigo_postal, ciudad, provincia } = req
+        const { nombre, email, telefono, direccion, dni, cuit_cuil, tipo_cliente, tipo_envio, forma_de_envio, codigo_postal, ciudad, provincia } = req
 
         if (cuit_cuil !== "" && cuit_cuil !== null) {
             const existingPersonaCuit = await personaModel.findOne({ where: { cuit_cuil: cuit_cuil } });
@@ -109,12 +109,15 @@ const createItem = async (req, res) => {
             }
         )
         
+        console.log(nuevaPersona)
+
         const nuevoCliente = await clienteModel.create
         (
             {
                 persona_id: nuevaPersona.id,
                 dni,
                 tipo_cliente,
+                tipo_envio,
                 forma_de_envio,
                 codigo_postal,
                 ciudad,
@@ -134,7 +137,7 @@ const updateItem = async (req, res) => {
         req = matchedData(req);
 
         const cliente_id = req.id
-        const { nombre, email, telefono, direccion, persona_id, dni, cuit_cuil, tipo_cliente, forma_de_envio, codigo_postal, ciudad, provincia } = req
+        const { nombre, email, telefono, direccion, persona_id, dni, cuit_cuil, tipo_cliente, tipo_envio, forma_de_envio, codigo_postal, ciudad, provincia } = req
         
         // Validar si la persona existe antes de intentar actualizarla
         const personaExiste = await personaModel.findByPk(persona_id);
@@ -186,6 +189,7 @@ const updateItem = async (req, res) => {
             {
                 dni,
                 tipo_cliente,
+                tipo_envio,
                 forma_de_envio,
                 codigo_postal,
                 ciudad,

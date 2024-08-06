@@ -48,6 +48,11 @@ export const COLUMNSCLIENTES = [
 },
 {
     Header: "Envio",
+    accessor: "tipo_envio",
+    width: 'auto'
+},
+{
+    Header: "Transporte",
     accessor:"forma_de_envio",
     width: 'auto',
 },

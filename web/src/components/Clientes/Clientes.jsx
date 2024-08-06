@@ -38,10 +38,13 @@ const ListadoClientes = () => {
       dni: parseInt(newCliente.dni),
       ciudad: newCliente.ciudad,
       provincia: newCliente.provincia,
+      tipo_envio: newCliente.tipo_envio,
       forma_de_envio: newCliente.forma_de_envio,
       email: newCliente.email,
       tipo_cliente: newCliente.tipo_cliente
     }
+
+    console.log(requestData)
 
     fetch(`${apiUrl}/clientes`, {
       method: "POST",
@@ -59,6 +62,8 @@ const ListadoClientes = () => {
       return response.json();
     })
     .then((result) => {
+      console.log(result)
+
       newCliente.id = result.id
       newCliente.persona_id = result.persona_id
 
@@ -96,12 +101,13 @@ const ListadoClientes = () => {
       dni: parseInt(newData.dni),
       ciudad: newData.ciudad,
       provincia: newData.provincia,
+      tipo_envio: newData.tipo_envio,
       forma_de_envio: newData.forma_de_envio,
       email: newData.email,
       tipo_cliente: newData.tipo_cliente,
       persona_id: parseInt(newData.persona_id)
     }
-    
+
     fetch(`${apiUrl}/clientes/${newData.id}`, {
       method: "PUT",
       headers: {

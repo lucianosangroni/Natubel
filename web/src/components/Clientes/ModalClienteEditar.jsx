@@ -141,7 +141,20 @@ function ModalClienteEditar({ data, onClose, onSave }) {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Formas de envio</Form.Label>
+              <Form.Label>Envio</Form.Label>
+              <Form.Control
+                as="select"
+                value={editedData.tipo_envio}
+                onChange={(e) => {
+                  setEditedData({ ...editedData, tipo_envio: e.target.value });
+                }}>
+                <option value="ENVIO">ENVIO A DOMICILIO</option>
+                <option value="SUCURSAL">RETIRA EN SUCURSAL</option>
+                <option value="DEPOSITO">RETIRA EN DEPOSITO</option>
+              </Form.Control>
+            </Form.Group>
+          <Form.Group>
+            <Form.Label>Transporte</Form.Label>
             <Form.Control
               type="text"
               value={editedData.forma_de_envio}

@@ -43,6 +43,7 @@ const FormularioCompra = () => {
   const [ formulario, setFormulario] = useState(null)
   const [ shouldRedirect, setShouldRedirect ] = useState(false)
   const [ cliente, setCliente ] = useState(null)
+  const [isOtroSelected, setIsOtroSelected] = useState(false);
 
   useEffect(() => {
     const nuevoCarrito = verificarStock();
@@ -207,7 +208,8 @@ const FormularioCompra = () => {
         email: formulario.email,
         telefono: formulario.telefono.trim() !== '' ? formulario.telefono : cliente.persona.telefono,
         tipo_cliente: tipoPrecios().toUpperCase(),
-        forma_de_envio: formulario.forma_de_envio.trim() !== '' ? formulario.forma_de_envio : cliente.forma_de_envio,
+        tipo_envio: formulario.tipo_envio,
+        forma_de_envio: formulario.forma_de_envio !== "OTRO" ? formulario.forma_de_envio : formulario.otro_transporte ? formulario.otro_transporte : "",
         direccion: formulario.direccion.trim() !== '' ? formulario.direccion : cliente.persona.direccion,
         codigo_postal: formulario.cp.trim() !== '' ? formulario.cp : cliente.codigo_postal,
         ciudad: formulario.ciudad.trim() !== '' ? formulario.ciudad : cliente.ciudad,
@@ -251,8 +253,9 @@ const FormularioCompra = () => {
         cuit_cuil: formulario.cuitCuil === "" ? null : parseInt(formulario.cuitCuil),
         email: formulario.email,
         telefono: formulario.telefono,
+        tipo_envio: formulario.tipo_envio,
         tipo_cliente: tipoPrecios().toUpperCase(),
-        forma_de_envio: formulario.forma_de_envio,
+        forma_de_envio: formulario.forma_de_envio !== "OTRO" ? formulario.forma_de_envio : formulario.otro_transporte ? formulario.otro_transporte : "",
         direccion: formulario.direccion,
         codigo_postal: formulario.cp,
         ciudad: formulario.ciudad,
@@ -502,7 +505,118 @@ const FormularioCompra = () => {
                 </div>
                 <div className="formulario">
                   <label>Forma de Envío:</label>
-                  <input type="text" {...registerForm("forma_de_envio")} />
+                  <div
+                    onClick={() => {
+                      document.getElementById("envio-radio1").click();
+                    }}
+                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                  >
+                    <input
+                      id="envio-radio1"
+                      style={{ width: "fit-content", cursor: "pointer" }}
+                      type="radio"
+                      value="ENVIO"
+                      {...registerForm("tipo_envio")}
+                      defaultChecked
+                    />
+                    <span>Envío a domicilio</span>
+                  </div>
+                  <div></div>
+                  <div
+                    onClick={() => {
+                      document.getElementById("envio-radio2").click();
+                    }}
+                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                  >
+                    <input
+                      id="envio-radio2"
+                      style={{ width: "fit-content", cursor: "pointer" }}
+                      type="radio"
+                      value="SUCURSAL"
+                      {...registerForm("tipo_envio")}
+                    />
+                    <span>Retiro en sucursal del transporte</span>
+                  </div>
+                  <div></div>
+                  <div
+                    onClick={() => {
+                      document.getElementById("envio-radio3").click();
+                    }}
+                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                  >
+                    <input
+                      id="envio-radio3"
+                      style={{ width: "fit-content", cursor: "pointer" }}
+                      type="radio"
+                      value="DEPOSITO"
+                      {...registerForm("tipo_envio")}
+                    />
+                    <span>Retiro en depósito del vendedor</span>
+                  </div>
+                </div>
+                <div className="formulario">
+                  <label>Transporte:</label>
+
+                  <div
+                    onClick={() => {
+                      document.getElementById("transporte-radio1").click();
+                      setIsOtroSelected(false)
+                    }}
+                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                  >
+                    <input
+                      id="transporte-radio1"
+                      style={{ width: "fit-content", cursor: "pointer" }}
+                      type="radio"
+                      value="Correo Argentino"
+                      {...registerForm("forma_de_envio")}
+                      defaultChecked
+                    />
+                    <span>Correo Argentino</span>
+                  </div>
+                  <div></div>
+
+                  <div
+                    onClick={() => {
+                      document.getElementById("transporte-radio2").click();
+                      setIsOtroSelected(false)
+                    }}
+                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                  >
+                    <input
+                      id="transporte-radio2"
+                      style={{ width: "fit-content", cursor: "pointer" }}
+                      type="radio"
+                      value="Vía Cargo"
+                      {...registerForm("forma_de_envio")}
+                    />
+                    <span>Vía Cargo</span>
+                  </div>
+                  <div></div>
+
+                  <div
+                    onClick={() => {
+                      document.getElementById("transporte-radio3").click();
+                      setIsOtroSelected(true)
+                    }}
+                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                  >
+                    <input
+                      id="transporte-radio3"
+                      style={{ width: "fit-content", cursor: "pointer" }}
+                      type="radio"
+                      value="OTRO"
+                      {...registerForm("forma_de_envio")}
+                    />
+                    <span>Otro: </span>
+                  </div>
+                  <div></div>
+
+                  <input
+                    type="text"
+                    disabled={!isOtroSelected}
+                    {...registerForm("otro_transporte")}
+                  />
                 </div>
                 <div className="formulario">
                   <label>Dirección:</label>

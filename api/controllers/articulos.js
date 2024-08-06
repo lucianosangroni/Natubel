@@ -55,23 +55,23 @@ const getItems = async (req, res) => {
 const createItem = async (req, res) => {
     try {
         const { numero_articulo, categorias: categoriasString, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, talles: tallesString, colores: coloresString } = req.body
-        const imagenes = []//req.files.map((file) => file.filename);
+        //const imagenes = []
         const categorias = JSON.parse(categoriasString);
         const talles = JSON.parse(tallesString);
         const colores = JSON.parse(coloresString);
 
-        for (const file of req.files) {
-            const randomName = crypto.randomBytes(16).toString('hex');
-            const ext = file.originalname.split('.').pop(); // Obtiene la extensión del archivo
-            const filename = `${randomName}-${Date.now()}.${ext}`;
-
-            await axios.post('https://natubel.store/storage', {
-              image: file.buffer, // Envía el buffer de la imagen al servidor remoto
-              filename: filename // Envía el nombre del archivo al servidor remoto
-            });
-
-            imagenes.push(filename)
-        }
+        //for (const file of req.files) {
+        //    const randomName = crypto.randomBytes(16).toString('hex');
+        //    const ext = file.originalname.split('.').pop(); // Obtiene la extensión del archivo
+        //    const filename = `${randomName}-${Date.now()}.${ext}`;
+//
+        //    await axios.post('https://natubel.store/storage', {
+        //      image: file.buffer, // Envía el buffer de la imagen al servidor remoto
+        //      filename: filename // Envía el nombre del archivo al servidor remoto
+        //    });
+//
+        //    imagenes.push(filename)
+        //}
 
         const nuevoArticulo = await articuloModel.create
         (
@@ -109,17 +109,17 @@ const createItem = async (req, res) => {
 
         const imagenesNuevas = []
 
-        for(const imagen of imagenes) {
-            const nuevaImagen = await imagenModel.create
-            (
-                {
-                    url: `${URL_PUBLIC}/${imagen}`,
-                    articulo_id: nuevoArticulo.id,
-                }
-            )
-
-            imagenesNuevas.push(nuevaImagen)
-        }
+        //for(const imagen of imagenes) {
+        //    const nuevaImagen = await imagenModel.create
+        //    (
+        //        {
+        //            url: `${URL_PUBLIC}/${imagen}`,
+        //            articulo_id: nuevoArticulo.id,
+        //        }
+        //    )
+//
+        //    imagenesNuevas.push(nuevaImagen)
+        //}
 
         res.status(201).json({ message: 'Articulo creado con éxito', id: nuevoArticulo.id, productos: productos.flat(), imagenes: imagenesNuevas });
     } catch(e) {
@@ -133,8 +133,8 @@ const updateItem = async (req, res) => {
     try {
         const articulo_id = req.params.id
         const { numero_articulo, categorias: categoriasString, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, productos: productosString, talles: tallesString, colores: coloresString, imagenesRemove: imagenesRemoveString } = req.body
-        const imagenesAdd = req.files.map((file) => file.filename);
-        const imagenesRemove = JSON.parse(imagenesRemoveString)
+        //const imagenesAdd = req.files.map((file) => file.filename);
+        //const imagenesRemove = JSON.parse(imagenesRemoveString)
         const categorias = JSON.parse(categoriasString);
         const productos = JSON.parse(productosString);
         const talles = JSON.parse(tallesString);
@@ -188,28 +188,28 @@ const updateItem = async (req, res) => {
 
         const imagenesNuevas = []
 
-        for(const imagen of imagenesAdd) {
-            const nuevaImagen = await imagenModel.create
-            (
-                {
-                    url: `${URL_PUBLIC}/${imagen}`,
-                    articulo_id: articulo_id,
-                }
-            )
+        //for(const imagen of imagenesAdd) {
+        //    const nuevaImagen = await imagenModel.create
+        //    (
+        //        {
+        //            url: `${URL_PUBLIC}/${imagen}`,
+        //            articulo_id: articulo_id,
+        //        }
+        //    )
+//
+        //    imagenesNuevas.push(nuevaImagen)
+        //}
 
-            imagenesNuevas.push(nuevaImagen)
-        }
-
-        await Promise.all(imagenesRemove.map(async imagenId => {
-            const imagen = await imagenModel.findByPk(imagenId);
-            if (imagen) {
-                const filename = imagen.url.split('/').pop();
-                const filePath = `${__dirname}/../storage/${filename}`;
-                fs.unlinkSync(filePath);
-
-                await imagen.destroy();
-            }
-        }));
+        //await Promise.all(imagenesRemove.map(async imagenId => {
+        //    const imagen = await imagenModel.findByPk(imagenId);
+        //    if (imagen) {
+        //        const filename = imagen.url.split('/').pop();
+        //        const filePath = `${__dirname}/../storage/${filename}`;
+        //        fs.unlinkSync(filePath);
+//
+        //        await imagen.destroy();
+        //    }
+        //}));
 
         const productosViejos = productos.map(producto => ({ ...producto, eliminar: true }));
 

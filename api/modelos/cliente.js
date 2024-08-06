@@ -16,6 +16,10 @@ const Cliente = sequelize.define(
         forma_de_envio: {
             type: DataTypes.STRING,
         },
+        tipo_envio: {
+          type: DataTypes.ENUM('ENVIO', 'SUCURSAL', 'DEPOSITO'),
+          allowNull: false,
+        },
         codigo_postal: {
           type: DataTypes.STRING,
         },

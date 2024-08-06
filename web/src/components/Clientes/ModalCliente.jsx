@@ -15,6 +15,7 @@ function ModalCliente({ onAddClient }) {
     ciudad: "",
     provincia: "",
     forma_de_envio: "",
+    tipo_envio: "ENVIO",
     email: "",
     tipo_cliente: "MINORISTA",
   });
@@ -35,6 +36,7 @@ function ModalCliente({ onAddClient }) {
         ciudad: "",
         provincia: "",
         forma_de_envio: "",
+        tipo_envio: "ENVIO",
         email: "",
         tipo_cliente: "MINORISTA",
       });
@@ -161,7 +163,20 @@ function ModalCliente({ onAddClient }) {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Forma de envio</Form.Label>
+              <Form.Label>Envio</Form.Label>
+              <Form.Control
+                as="select"
+                value={newClient.tipo_envio}
+                onChange={(e) => {
+                  setNewClient({ ...newClient, tipo_envio: e.target.value });
+                }}>
+                <option value="ENVIO">ENVIO A DOMICILIO</option>
+                <option value="SUCURSAL">RETIRA EN SUCURSAL</option>
+                <option value="DEPOSITO">RETIRA EN DEPOSITO</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Transporte</Form.Label>
               <Form.Control
                 type="text"
                 value={newClient.forma_de_envio}

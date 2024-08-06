@@ -13,13 +13,13 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
     precio_distribuidor: articulo.precio_distribuidor,
     talles: [],
     colores: [],
-    imagens: articulo.imagens
+    imagens: []
     }
   );
 
   const fileInputRef = useRef(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [oldFiles, setOldFiles] = useState(articulo.imagens)
+  const [oldFiles, setOldFiles] = useState([])
   const [previewImages, setPreviewImages] = useState([]);
 
   const tallesDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
@@ -49,12 +49,12 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
         productos: articulo.productos,
         talles,
         colores,
-        imagens: articulo.imagens
+        imagens: []
       }
     );
 
     setSelectedFiles([])
-    setOldFiles(articulo.imagens)
+    setOldFiles([])
     setPreviewImages([])
   }, [articulo]);
 
@@ -65,7 +65,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
   }
   const handleShow = () => {
     setShow(true);
-    setOldFiles(articulo.imagens)
+    setOldFiles([])
   }
 
   const handleSelectFiles = () => {
@@ -106,7 +106,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
       editProduct.categoria = editProduct.categoria.filter((cat) => cat.toString().trim() !== "");
 
       if (editProduct.numero_articulo && editProduct.categoria.length > 0 && editProduct.precio_minorista && editProduct.precio_mayorista && editProduct.precio_distribuidor && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
-        const imagenesRemove = articulo.imagens.filter(imagen => !oldFiles.map(file => file.id).includes(imagen.id)).map(imagen => imagen.id)
+        const imagenesRemove = []//articulo.imagens.filter(imagen => !oldFiles.map(file => file.id).includes(imagen.id)).map(imagen => imagen.id)
         const editProductData = {...editProduct, imagenesAdd: selectedFiles, imagenesRemove}
         onEditProducto(editProductData);
         handleClose();
@@ -360,6 +360,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
                </Button>
             </Form.Group>
          </div>
+         {/** 
          <Form.Group>
               <input
                 type="file"
@@ -385,6 +386,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
               ))}
               </div>
             </Form.Group>
+            */}
           </Form>
         </Modal.Body>
         <Modal.Footer>
