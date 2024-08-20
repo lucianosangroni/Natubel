@@ -78,6 +78,11 @@ const createItem = async (req, res) => {
 
         const { nombre, email, telefono, direccion, dni, cuit_cuil, tipo_cliente, tipo_envio, forma_de_envio, codigo_postal, ciudad, provincia } = req
 
+        const existingPersonaEmail = await personaModel.findOne({ where: { email: email } })
+        if(existingPersonaEmail) {
+            return res.status(200).json({ message: 'Ya existe una persona con el mismo email' });
+        }
+
         if (cuit_cuil !== "" && cuit_cuil !== null) {
             const existingPersonaCuit = await personaModel.findOne({ where: { cuit_cuil: cuit_cuil } });
             if (existingPersonaCuit) {
@@ -108,8 +113,6 @@ const createItem = async (req, res) => {
                 es_proveedor: false,
             }
         )
-        
-        console.log(nuevaPersona)
 
         const nuevoCliente = await clienteModel.create
         (

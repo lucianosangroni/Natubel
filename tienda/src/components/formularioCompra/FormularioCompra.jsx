@@ -8,6 +8,7 @@ import { Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loading from "../loading/Loading";
+import whatsapp from "./whatsapp.svg";
 
 const FormularioCompra = () => {
   const {
@@ -413,9 +414,17 @@ const FormularioCompra = () => {
           <div className="compraFinalizadaContainer">
             <div className="compraFinalizada">
               <p>
-                Pedido exitoso! En breve nos comunicaremos para coordinar
-                el pago y el envío. ¡Muchas gracias!
+                Pedido exitoso! Comuniquese por WhatsApp para coordinar el pago y el envío.
+                ¡Muchas gracias!
               </p>
+              <a 
+                href="https://web.whatsapp.com/send?phone=1131109942"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img style={{marginTop: "1rem", marginBottom: "3px"}} src={whatsapp} alt="Contactar por WhatsApp" />
+              </a>
+              <p>+54 9 11 3110-9942</p>
             </div>
           </div>
         ) : showFalloPedido ? (

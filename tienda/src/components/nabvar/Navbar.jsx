@@ -69,6 +69,15 @@ const Navbar = () => {
               </div>
             )}
           </nav>
+          <div className="redesWhatsapp">
+            <a
+              href="https://web.whatsapp.com/send?phone=1131109942"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={whatsapp} alt="Contactar por WhatsApp" />
+            </a>
+          </div>
         </>
       ) : (
         <>

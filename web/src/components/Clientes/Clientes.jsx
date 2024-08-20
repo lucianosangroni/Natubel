@@ -44,8 +44,6 @@ const ListadoClientes = () => {
       tipo_cliente: newCliente.tipo_cliente
     }
 
-    console.log(requestData)
-
     fetch(`${apiUrl}/clientes`, {
       method: "POST",
       headers: {
@@ -62,15 +60,17 @@ const ListadoClientes = () => {
       return response.json();
     })
     .then((result) => {
-      console.log(result)
+      
+      if(result.message === "Cliente creado con éxito") {
+        newCliente.id = result.id
+        newCliente.persona_id = result.persona_id
 
-      newCliente.id = result.id
-      newCliente.persona_id = result.persona_id
+        const dataActualizada = [...data, newCliente]
+        setData(dataActualizada);
+        refreshClientes(dataActualizada)
+      }
 
-      const dataActualizada = [...data, newCliente]
-      setData(dataActualizada);
-      refreshClientes(dataActualizada)
-
+      alert(result.message)
       setIsLoading(false)
     })
     .catch(error => {

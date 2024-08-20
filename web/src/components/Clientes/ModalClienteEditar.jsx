@@ -12,7 +12,7 @@ function ModalClienteEditar({ data, onClose, onSave }) {
       onSave(editedData); // Llama a la función onSave pasando los datos editados
       onClose(); // Cierra el modal de edición
     } else {
-      console.log("Por favor, complete todos los campos.");
+      alert("Por favor, complete todos los campos obligatorios.");
     }
   };
 
@@ -148,7 +148,7 @@ function ModalClienteEditar({ data, onClose, onSave }) {
                 onChange={(e) => {
                   setEditedData({ ...editedData, tipo_envio: e.target.value });
                 }}>
-                <option value="ENVIO">ENVIO A DOMICILIO</option>
+                <option value="DOMICILIO">ENVIO A DOMICILIO</option>
                 <option value="SUCURSAL">RETIRA EN SUCURSAL</option>
                 <option value="DEPOSITO">RETIRA EN DEPOSITO</option>
               </Form.Control>

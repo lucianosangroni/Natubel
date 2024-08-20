@@ -15,7 +15,7 @@ function ModalCliente({ onAddClient }) {
     ciudad: "",
     provincia: "",
     forma_de_envio: "",
-    tipo_envio: "ENVIO",
+    tipo_envio: "DOMICILIO",
     email: "",
     tipo_cliente: "MINORISTA",
   });
@@ -36,13 +36,13 @@ function ModalCliente({ onAddClient }) {
         ciudad: "",
         provincia: "",
         forma_de_envio: "",
-        tipo_envio: "ENVIO",
+        tipo_envio: "DOMICILIO",
         email: "",
         tipo_cliente: "MINORISTA",
       });
       handleClose();
     } else {
-      console.log("Por favor, complete nombre, email y telefono.");
+      alert("Por favor, complete todos los campos obligatorios.");
     }
   };
 
@@ -170,7 +170,7 @@ function ModalCliente({ onAddClient }) {
                 onChange={(e) => {
                   setNewClient({ ...newClient, tipo_envio: e.target.value });
                 }}>
-                <option value="ENVIO">ENVIO A DOMICILIO</option>
+                <option value="DOMICILIO">ENVIO A DOMICILIO</option>
                 <option value="SUCURSAL">RETIRA EN SUCURSAL</option>
                 <option value="DEPOSITO">RETIRA EN DEPOSITO</option>
               </Form.Control>
