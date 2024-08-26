@@ -7,7 +7,7 @@ const sendEmailCodigo = async (req, res) => {
         service: 'gmail',
         auth: {
             user: 'natubel.com.ar@gmail.com',
-            pass: 'Corolla2@',
+            pass: 'oygv ccjo bygt kgwb',
         },
     });
     
@@ -39,7 +39,7 @@ const sendEmailPedido = async (req, res) => {
         service: 'gmail',
         auth: {
             user: 'natubel.com.ar@gmail.com',
-            pass: 'Corolla2@',
+            pass: 'oygv ccjo bygt kgwb',
         },
     });
     
