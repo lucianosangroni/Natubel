@@ -141,7 +141,7 @@ const updateItem = async (req, res) => {
 
         const cliente_id = req.id
         const { nombre, email, telefono, direccion, persona_id, dni, cuit_cuil, tipo_cliente, tipo_envio, forma_de_envio, codigo_postal, ciudad, provincia } = req
-        
+
         // Validar si la persona existe antes de intentar actualizarla
         const personaExiste = await personaModel.findByPk(persona_id);
         if (!personaExiste) {

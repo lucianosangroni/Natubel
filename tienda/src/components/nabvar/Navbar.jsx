@@ -71,7 +71,7 @@ const Navbar = () => {
           </nav>
           <div className="redesWhatsapp">
             <a
-              href="https://web.whatsapp.com/send?phone=1131109942"
+              href="https://api.whatsapp.com/send?phone=5491131109942"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -115,7 +115,7 @@ const Navbar = () => {
           </nav>
           <div className="redesWhatsapp">
             <a
-              href="https://web.whatsapp.com/send?phone=1131109942"
+              href="https://api.whatsapp.com/send?phone=5491131109942"
               target="_blank"
               rel="noopener noreferrer"
             >

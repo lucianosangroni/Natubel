@@ -418,7 +418,7 @@ const FormularioCompra = () => {
                 ¡Muchas gracias!
               </p>
               <a 
-                href="https://web.whatsapp.com/send?phone=1131109942"
+                href="https://api.whatsapp.com/send?phone=5491131109942"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -524,7 +524,7 @@ const FormularioCompra = () => {
                       id="envio-radio1"
                       style={{ width: "fit-content", cursor: "pointer" }}
                       type="radio"
-                      value="ENVIO"
+                      value="DOMICILIO"
                       {...registerForm("tipo_envio")}
                       defaultChecked
                     />
