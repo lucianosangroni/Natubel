@@ -1,11 +1,25 @@
-const { articuloModel, productoModel, pedidoModel, personaModel, productoXPedidoModel, remitoModel, clienteModel } = require("../modelos");
+const { articuloModel, productoModel, pedidoModel, personaModel, productoXPedidoModel, remitoModel, clienteModel, marcaModel } = require("../modelos");
 const PDFDocument = require('pdfkit');
 const { sequelize } = require("../config/dbConnect");
 
 const getStockAdmin = async (req, res) => {
     try {
+        const marca = req.query.marca;
+        const flagSinStock = req.query.flagSinStock;
+
+        const filtros = {};
+        let marcaNombre = "";
+
+        if (marca && marca !== "todas") {
+            filtros.marca_id = marca;
+
+            const marcaDB = await marcaModel.findByPk(marca)
+            marcaNombre = marcaDB.nombre
+        }
+
         const articulos = await articuloModel.findAll(
             {
+                where: filtros,
                 include: 
                 [
                     {
@@ -16,7 +30,7 @@ const getStockAdmin = async (req, res) => {
             }
         )
 
-        const articulosData = articulos.map((articulo) => {
+        const articulosDataSinFiltrar = articulos.map((articulo) => {
             const articuloData = articulo.dataValues;
         
             if (articuloData.productos) {
@@ -26,7 +40,35 @@ const getStockAdmin = async (req, res) => {
             return articuloData;
         });
 
-        const doc = new PDFDocument();
+        let articulosData;
+
+        if (flagSinStock !== "false") {
+            articulosData = articulosDataSinFiltrar;
+        } else {
+            const articulosConStock = articulosDataSinFiltrar.filter(art => 
+                art.productos.some(prod => prod.stock > 0)
+            )
+
+            articulosData = articulosConStock.map(articulo => {
+                const coloresValidos = new Set();
+                const tallesValidos = new Set();
+        
+                articulo.productos.forEach(producto => {
+                    if (producto.stock > 0) {
+                        coloresValidos.add(producto.color);
+                        tallesValidos.add(producto.talle);
+                    }
+                });
+        
+                const productosFiltrados = articulo.productos.filter((producto) => 
+                    coloresValidos.has(producto.color) && tallesValidos.has(producto.talle)
+                );
+        
+                return {...articulo, productos: productosFiltrados};
+            });
+        }
+
+        const doc = new PDFDocument({ margin: 0 });
 
         const stream = res.writeHead(200, {
         'Content-Type': 'application/pdf',
@@ -36,20 +78,19 @@ const getStockAdmin = async (req, res) => {
         doc.on('data', (data) => {stream.write(data)})
         doc.on('end', () => {stream.end()})
 
-        doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
-
-        doc.fontSize(20).text('Natubel Stock', 50, 57);
+        doc.fontSize(15).fillColor('black').font('Helvetica-Bold').text(`STOCK ${marcaNombre.toUpperCase()}`, 30, 20);
 
         const fechaDeHoy = new Date();
         const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
-        doc.fontSize(15).text(fechaFormateada, 480, 60);
+        doc.fontSize(12).text(fechaFormateada, 540, 22);
 
-        doc.moveTo(45, 45).lineTo(567, 45).stroke('black');
-        doc.moveTo(45, 45).lineTo(45, 85).stroke('black');
-        doc.moveTo(567, 45).lineTo(567, 85).stroke('black');
-        doc.moveTo(45, 85).lineTo(567, 85).stroke('black');
+        doc.moveTo(20, 10).lineTo(592, 10).stroke('black');
+        doc.moveTo(20, 10).lineTo(20, 40).stroke('black');
+        doc.moveTo(592, 10).lineTo(592, 40).stroke('black');
+        doc.moveTo(20, 40).lineTo(592, 40).stroke('black');
 
-        doc.y = 125;
+        doc.y = 45;
+        let segunda_columna = false;
 
         articulosData.forEach((articulo) => {
             const tallesDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
@@ -87,28 +128,37 @@ const getStockAdmin = async (req, res) => {
                 table.rows.push(row);
             });
 
-            const tableStartX = 50;
+            let tableStartX = segunda_columna ? 309 : 20;
             let tableStartY = doc.y;
-            const cellWidth = 40;
             const firstCellWidth = 68;
+            const cellWidth = 215/table.headers.length;
             const cellHeight = 20;
 
-            if(doc.y + (table.rows.length + 1) * cellHeight > 720) {
-                doc.addPage();
+            if(doc.y + (table.rows.length + 1) * cellHeight > 740) {
+                if (segunda_columna) {
+                    doc.addPage();
 
-                doc.fontSize(20).text('Natubel Stock', 50, 57);
+                    doc.fontSize(15).fillColor('black').font('Helvetica-Bold').text('NATUBEL STOCK', 30, 20);
 
-                const fechaDeHoy = new Date();
-                const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
-                doc.fontSize(15).text(fechaFormateada, 480, 60);
+                    const fechaDeHoy = new Date();
+                    const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
+                    doc.fontSize(12).text(fechaFormateada, 540, 22);
 
-                doc.moveTo(45, 45).lineTo(567, 45).stroke('black');
-                doc.moveTo(45, 45).lineTo(45, 85).stroke('black');
-                doc.moveTo(567, 45).lineTo(567, 85).stroke('black');
-                doc.moveTo(45, 85).lineTo(567, 85).stroke('black');
+                    doc.moveTo(20, 10).lineTo(592, 10).stroke('black');
+                    doc.moveTo(20, 10).lineTo(20, 40).stroke('black');
+                    doc.moveTo(592, 10).lineTo(592, 40).stroke('black');
+                    doc.moveTo(20, 40).lineTo(592, 40).stroke('black');
 
-                doc.y = 125;
+                    tableStartX = 20;
 
+                    segunda_columna = false;
+                } else {
+                    tableStartX = 309;
+
+                    segunda_columna = true;
+                }
+
+                doc.y = 45;
                 tableStartY = doc.y;
             } 
 
@@ -143,7 +193,7 @@ const getStockAdmin = async (req, res) => {
                 }
             });
 
-            doc.moveDown();
+            doc.y = doc.y + 5;
         });
 
         doc.end();
@@ -154,8 +204,22 @@ const getStockAdmin = async (req, res) => {
 
 const getStockCliente = async (req, res) => {
     try {
+        const marca = req.query.marca;
+        const flagSinStock = req.query.flagSinStock;
+
+        const filtros = {};
+        let marcaNombre = "";
+
+        if (marca && marca !== "todas") {
+            filtros.marca_id = marca;
+
+            const marcaDB = await marcaModel.findByPk(marca)
+            marcaNombre = marcaDB.nombre
+        }
+
         const articulos = await articuloModel.findAll(
             {
+                where: filtros,
                 include: 
                 [
                     {
@@ -166,7 +230,7 @@ const getStockCliente = async (req, res) => {
             }
         )
 
-        const articulosData = articulos.map((articulo) => {
+        const articulosDataSinFiltrar = articulos.map((articulo) => {
             const articuloData = articulo.dataValues;
         
             if (articuloData.productos) {
@@ -176,7 +240,35 @@ const getStockCliente = async (req, res) => {
             return articuloData;
         });
 
-        const doc = new PDFDocument();
+        let articulosData;
+
+        if (flagSinStock !== "false") {
+            articulosData = articulosDataSinFiltrar;
+        } else {
+            const articulosConStock = articulosDataSinFiltrar.filter(art => 
+                art.productos.some(prod => prod.stock > 0)
+            )
+
+            articulosData = articulosConStock.map(articulo => {
+                const coloresValidos = new Set();
+                const tallesValidos = new Set();
+        
+                articulo.productos.forEach(producto => {
+                    if (producto.stock > 0) {
+                        coloresValidos.add(producto.color);
+                        tallesValidos.add(producto.talle);
+                    }
+                });
+        
+                const productosFiltrados = articulo.productos.filter((producto) => 
+                    coloresValidos.has(producto.color) && tallesValidos.has(producto.talle)
+                );
+        
+                return {...articulo, productos: productosFiltrados};
+            });
+        }
+
+        const doc = new PDFDocument({ margin: 0 });
 
         const stream = res.writeHead(200, {
         'Content-Type': 'application/pdf',
@@ -186,18 +278,19 @@ const getStockCliente = async (req, res) => {
         doc.on('data', (data) => {stream.write(data)})
         doc.on('end', () => {stream.end()})
 
-        doc.fontSize(20).text('Natubel Stock', 50, 57);
+        doc.fontSize(15).fillColor('black').font('Helvetica-Bold').text(`STOCK ${marcaNombre.toUpperCase()}`, 30, 20);
 
         const fechaDeHoy = new Date();
         const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
-        doc.fontSize(15).text(fechaFormateada, 480, 60);
+        doc.fontSize(12).text(fechaFormateada, 540, 22);
 
-        doc.moveTo(45, 45).lineTo(567, 45).stroke('black');
-        doc.moveTo(45, 45).lineTo(45, 85).stroke('black');
-        doc.moveTo(567, 45).lineTo(567, 85).stroke('black');
-        doc.moveTo(45, 85).lineTo(567, 85).stroke('black');
+        doc.moveTo(20, 10).lineTo(592, 10).stroke('black');
+        doc.moveTo(20, 10).lineTo(20, 40).stroke('black');
+        doc.moveTo(592, 10).lineTo(592, 40).stroke('black');
+        doc.moveTo(20, 40).lineTo(592, 40).stroke('black');
 
-        doc.y = 125;
+        doc.y = 45;
+        let segunda_columna = false;
 
         articulosData.forEach((articulo) => {
             const tallesDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
@@ -233,29 +326,38 @@ const getStockCliente = async (req, res) => {
                 
                 table.rows.push(row);
             });
-
-            const tableStartX = 50;
+            
+            let tableStartX = segunda_columna ? 309 : 20;
             let tableStartY = doc.y;
-            const cellWidth = 40;
             const firstCellWidth = 68;
+            const cellWidth = 215/ (table.headers.length - 1);
             const cellHeight = 20;
 
-            if(doc.y + (table.rows.length + 1) * cellHeight > 720) {
-                doc.addPage();
+            if(doc.y + (table.rows.length + 1) * cellHeight > 740) {
+                if (segunda_columna) {
+                    doc.addPage();
 
-                doc.fontSize(20).text('Natubel Stock', 50, 57);
+                    doc.fontSize(15).fillColor('black').font('Helvetica-Bold').text('NATUBEL STOCK', 30, 20);
 
-                const fechaDeHoy = new Date();
-                const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
-                doc.fontSize(15).text(fechaFormateada, 480, 60);
+                    const fechaDeHoy = new Date();
+                    const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
+                    doc.fontSize(12).text(fechaFormateada, 540, 22);
 
-                doc.moveTo(45, 45).lineTo(567, 45).stroke('black');
-                doc.moveTo(45, 45).lineTo(45, 85).stroke('black');
-                doc.moveTo(567, 45).lineTo(567, 85).stroke('black');
-                doc.moveTo(45, 85).lineTo(567, 85).stroke('black');
+                    doc.moveTo(20, 10).lineTo(592, 10).stroke('black');
+                    doc.moveTo(20, 10).lineTo(20, 40).stroke('black');
+                    doc.moveTo(592, 10).lineTo(592, 40).stroke('black');
+                    doc.moveTo(20, 40).lineTo(592, 40).stroke('black');
 
-                doc.y = 125;
+                    tableStartX = 20;
 
+                    segunda_columna = false;
+                } else {
+                    tableStartX = 309;
+
+                    segunda_columna = true;
+                }
+
+                doc.y = 45;
                 tableStartY = doc.y;
             } 
 
@@ -265,7 +367,7 @@ const getStockCliente = async (req, res) => {
                     doc.fontSize(10).fillColor("white").text(header, tableStartX + 5, tableStartY + 6);
                 } else {
                     doc.rect(tableStartX + firstCellWidth + (i-1) * cellWidth, tableStartY, cellWidth, cellHeight).fillAndStroke('lightgray', 'black');
-                    doc.fontSize(10).fillColor("black").text(header.toString().toUpperCase(), tableStartX + firstCellWidth + (i-1) * cellWidth + 5, tableStartY + 6);
+                    doc.fontSize(10).fillColor("black").text(header.toString().toUpperCase(), tableStartX + firstCellWidth + (i-1) * cellWidth + (cellWidth/2) - (doc.widthOfString(header.toString().toUpperCase())/2), tableStartY + 6);
                 }
             });
 
@@ -276,12 +378,12 @@ const getStockCliente = async (req, res) => {
                         doc.fontSize(10).fillColor("black").text(cell, tableStartX + 5, tableStartY + (i + 1) * cellHeight + 6);
                     } else {
                         doc.rect(tableStartX  + firstCellWidth + (j-1) * cellWidth, tableStartY + (i + 1) * cellHeight, cellWidth, cellHeight).fillAndStroke('white', 'black');
-                        doc.fontSize(10).fillColor("black").text(cell, tableStartX + firstCellWidth + (j-1) * cellWidth + 16, tableStartY + (i + 1) * cellHeight + 6);
+                        doc.fontSize(10).fillColor("black").text(cell, tableStartX + firstCellWidth + (j-1) * cellWidth + (cellWidth/2) - (doc.widthOfString(cell)/2), tableStartY + (i + 1) * cellHeight + 6);
                     } 
                 });
             });
 
-            doc.moveDown();
+            doc.y = doc.y + 5;
         });
 
         doc.end();
@@ -349,9 +451,23 @@ const getNotaPedido = async (req, res) => {
                     return newProduct
                 })
 
+                const coloresValidos = new Set();
+                const tallesValidos = new Set();
+
+                productos.forEach((producto) => {
+                    if (producto.cantidad > 0) {
+                        coloresValidos.add(producto.color);
+                        tallesValidos.add(producto.talle);
+                    }
+                });
+
+                const productosFiltrados = productos.filter(
+                    (producto) => coloresValidos.has(producto.color) && tallesValidos.has(producto.talle)
+                );
+
                 const newArticulo = {
                     numero_articulo: articulo.numero_articulo,
-                    productos
+                    productos: productosFiltrados
                 }
 
                 return newArticulo;
@@ -365,7 +481,7 @@ const getNotaPedido = async (req, res) => {
             }, 0);
         }, 0);
 
-        const doc = new PDFDocument();
+        const doc = new PDFDocument({ margin: 0 });
 
         const stream = res.writeHead(200, {
         'Content-Type': 'application/pdf',
@@ -375,94 +491,92 @@ const getNotaPedido = async (req, res) => {
         doc.on('data', (data) => {stream.write(data)})
         doc.on('end', () => {stream.end()})
 
-        doc.fontSize(20).fillColor('black').text('NOTA DE PEDIDO', 50, 57);
-        doc.fontSize(20).fillColor('black').text("N° " + pedido_id, 250, 57)
+        doc.fontSize(15).fillColor('black').font('Helvetica-Bold').text('NOTA DE PEDIDO', 30, 20);
+        doc.fontSize(15).fillColor('black').text("N° " + pedido_id, 162, 20)
 
         const fechaDeHoy = new Date(pedido.createdAt);
         const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
-        doc.fontSize(15).text(fechaFormateada, 440, 60);
+        doc.fontSize(12).text(fechaFormateada, 452, 22);
 
-        doc.fontSize(9).fillColor('black').text("Cliente:", 50, 90)
-        doc.fontSize(17).fillColor('black').text(persona.nombre, 80, 107)
-        doc.fontSize(9).fillColor('black').text("Dir Entrega:", 360, 90)
-        doc.fontSize(17).fillColor('black').text(persona.direccion, 400, 107)
-        doc.fontSize(9).fillColor('black').text("Email:", 50, 152)
-        doc.fontSize(17).fillColor('black').text(persona.email, 80, 169)
-        doc.fontSize(9).fillColor('black').text("Teléfono:", 360, 152)
-        doc.fontSize(17).fillColor('black').text(persona.telefono, 400, 169)
-        doc.fontSize(9).fillColor('black').text("Envío:", 50, 214)
-        if(cliente)doc.fontSize(17).fillColor('black').text(cliente.forma_de_envio, 80, 231)
-        doc.fontSize(9).fillColor('black').text("Cuit/Cuil:", 360, 214)
-        doc.fontSize(17).fillColor('black').text(persona.cuit_cuil, 400, 231)
-        doc.fontSize(9).fillColor('black').text("Ciudad:", 50, 276)
-        if(cliente)doc.fontSize(17).fillColor('black').text(cliente.ciudad, 80, 293)
-        doc.fontSize(9).fillColor('black').text("Código Postal:", 360, 276)
-        if(cliente)doc.fontSize(17).fillColor('black').text(cliente.codigo_postal, 400, 293)
-        doc.fontSize(9).fillColor('black').text("Provincia:", 50, 338)
-        if(cliente)doc.fontSize(17).fillColor('black').text(cliente.provincia, 80, 355)
-        doc.fontSize(9).fillColor('black').text("Tipo:", 360, 338)
-        if(cliente)doc.fontSize(17).fillColor('black').text(cliente.tipo_cliente, 400, 355)
-        doc.fontSize(9).fillColor('black').text("Total:", 50, 400)
-        doc.fontSize(17).fillColor('black').text(cantArticulos + " Artículos  -  " + cantUnidades + " Unidades.", 80, 417)
-        doc.fontSize(9).fillColor('black').text("Precio:", 360, 400)
-        doc.fontSize(17).fillColor('black').text("$" + pedido.precio_total, 400, 417)
+        doc.fontSize(7).fillColor('black').text("Cliente:", 25, 43)
+        doc.fontSize(10).fillColor('black').text(persona.nombre, 30, 55)
+        doc.fontSize(7).fillColor('black').text("Email:", 360, 43)
+        doc.fontSize(10).fillColor('black').text(persona.email, 365, 55)
+        doc.fontSize(7).fillColor('black').text("Dir Entrega:", 25, 73)
+        doc.fontSize(10).fillColor('black').text(persona.direccion, 30, 85)
+        doc.fontSize(7).fillColor('black').text("Teléfono:", 360, 73)
+        doc.fontSize(10).fillColor('black').text(persona.telefono, 365, 85)
+        doc.fontSize(7).fillColor('black').text("Envío:", 25, 103)
+        if(cliente)doc.fontSize(10).fillColor('black').text(cliente.forma_de_envio, 30, 115)
+        doc.fontSize(7).fillColor('black').text("Cuit/Cuil:", 360, 103)
+        doc.fontSize(10).fillColor('black').text(persona.cuit_cuil, 365, 115)
+        doc.fontSize(7).fillColor('black').text("Ciudad:", 25, 133)
+        if(cliente)doc.fontSize(10).fillColor('black').text(cliente.ciudad, 30, 145)
+        doc.fontSize(7).fillColor('black').text("Código Postal:", 360, 133)
+        if(cliente)doc.fontSize(10).fillColor('black').text(cliente.codigo_postal, 365, 145)
+        doc.fontSize(7).fillColor('black').text("Provincia:", 25, 163)
+        if(cliente)doc.fontSize(10).fillColor('black').text(cliente.provincia, 30, 175)
+        doc.fontSize(7).fillColor('black').text("Tipo:", 360, 163)
+        if(cliente)doc.fontSize(10).fillColor('black').text(cliente.tipo_cliente, 365, 175)
+        doc.fontSize(7).fillColor('black').text("Total:", 25, 193)
+        doc.fontSize(10).fillColor('black').text(cantArticulos + " Artículos  -  " + cantUnidades + " Unidades.", 30, 205)
+        doc.fontSize(7).fillColor('black').text("Precio:", 360, 193)
+        doc.fontSize(10).fillColor('black').text("$" + pedido.precio_total, 365, 205)
 
-        doc.moveTo(45, 45).lineTo(567, 45).stroke('black');
-        doc.moveTo(45, 45).lineTo(45, 85).stroke('black');
-        doc.moveTo(567, 45).lineTo(567, 85).stroke('black');
-        doc.moveTo(45, 85).lineTo(567, 85).stroke('black');
-        doc.moveTo(45, 85).lineTo(45, 145).stroke('black');
-        doc.moveTo(45, 145).lineTo(567, 145).stroke('black');
-        doc.moveTo(567, 85).lineTo(567, 145).stroke('black');
-        doc.moveTo(350,45).lineTo(350,145).stroke('black');
-        doc.moveTo(45, 145).lineTo(45, 207).stroke('black');
-        doc.moveTo(45, 145).lineTo(567, 145).stroke('black');
-        doc.moveTo(567, 145).lineTo(567, 207).stroke('black');
-        doc.moveTo(45, 207).lineTo(567, 207).stroke('black');
-        doc.moveTo(350, 145).lineTo(350, 207).stroke('black');
-        doc.moveTo(45, 207).lineTo(45, 269).stroke('black');
-        doc.moveTo(45, 207).lineTo(567, 207).stroke('black');
-        doc.moveTo(567, 207).lineTo(567, 269).stroke('black');
-        doc.moveTo(45, 269).lineTo(567, 269).stroke('black');
-        doc.moveTo(350, 207).lineTo(350, 269).stroke('black');
-        doc.moveTo(45, 269).lineTo(45, 331).stroke('black');
-        doc.moveTo(45, 269).lineTo(567, 269).stroke('black');
-        doc.moveTo(567, 269).lineTo(567, 331).stroke('black');
-        doc.moveTo(45, 331).lineTo(567, 331).stroke('black');
-        doc.moveTo(350, 269).lineTo(350, 331).stroke('black');
-        doc.moveTo(45, 331).lineTo(45, 393).stroke('black');
-        doc.moveTo(45, 331).lineTo(567, 331).stroke('black');
-        doc.moveTo(567, 331).lineTo(567, 393).stroke('black');
-        doc.moveTo(45, 393).lineTo(567, 393).stroke('black');
-        doc.moveTo(350, 331).lineTo(350, 393).stroke('black');
-        doc.moveTo(45, 393).lineTo(45, 455).stroke('black');
-        doc.moveTo(45, 393).lineTo(567, 393).stroke('black');
-        doc.moveTo(567, 393).lineTo(567, 455).stroke('black');
-        doc.moveTo(45, 455).lineTo(567, 455).stroke('black');
-        doc.moveTo(350, 393).lineTo(350, 455).stroke('black');
+        doc.moveTo(20, 10).lineTo(592, 10).stroke('black');
+        doc.moveTo(20, 10).lineTo(20, 40).stroke('black');
+        doc.moveTo(592, 10).lineTo(592, 40).stroke('black');
+        doc.moveTo(20, 40).lineTo(592, 40).stroke('black');
+        doc.moveTo(20, 40).lineTo(20, 70).stroke('black');
+        doc.moveTo(20, 70).lineTo(592, 70).stroke('black');
+        doc.moveTo(592, 40).lineTo(592, 70).stroke('black');
+        doc.moveTo(20, 70).lineTo(20, 100).stroke('black');
+        doc.moveTo(20, 70).lineTo(592, 70).stroke('black');
+        doc.moveTo(592, 70).lineTo(592, 100).stroke('black');
+        doc.moveTo(20, 100).lineTo(592, 100).stroke('black');
+        doc.moveTo(20, 100).lineTo(20, 130).stroke('black');
+        doc.moveTo(20, 100).lineTo(592, 100).stroke('black');
+        doc.moveTo(592, 100).lineTo(592, 130).stroke('black');
+        doc.moveTo(20, 130).lineTo(592, 130).stroke('black');
+        doc.moveTo(20, 130).lineTo(20, 160).stroke('black');
+        doc.moveTo(20, 130).lineTo(592, 130).stroke('black');
+        doc.moveTo(592, 130).lineTo(592, 160).stroke('black');
+        doc.moveTo(20, 160).lineTo(592, 160).stroke('black');
+        doc.moveTo(20, 160).lineTo(20, 190).stroke('black');
+        doc.moveTo(20, 160).lineTo(592, 160).stroke('black');
+        doc.moveTo(592, 160).lineTo(592, 190).stroke('black');
+        doc.moveTo(20, 190).lineTo(592, 190).stroke('black');
+        doc.moveTo(20, 190).lineTo(20, 220).stroke('black');
+        doc.moveTo(20, 190).lineTo(592, 190).stroke('black');
+        doc.moveTo(592, 190).lineTo(592, 220).stroke('black');
+        doc.moveTo(20, 220).lineTo(592, 220).stroke('black');
+        doc.moveTo(350, 10).lineTo(350, 220).stroke('black');
 
-        doc.fontSize(10).fillColor('black').text('PREPARÓ', 52, 558);
-        doc.fontSize(10).fillColor('black').text('CONTROLÓ', 50, 633);
-        doc.fontSize(10).fillColor('black').text('GUARDÓ', 52, 708);
-        doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 555);
-        doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 630);
-        doc.fontSize(9).fillColor('black').text('FIRMA:', 120, 705);
-        doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 555);
-        doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 630);
-        doc.fontSize(9).fillColor('black').text('ACLARACIÓN:', 285, 705);
-        doc.fontSize(7).fillColor('black').text('CANTIDAD DE CAJAS:', 466, 555);
+        doc.fontSize(10).fillColor('black').text('PREPARÓ', 30, 643);
+        doc.fontSize(10).fillColor('black').text('CONTROLÓ', 30, 693);
+        doc.fontSize(10).fillColor('black').text('GUARDÓ', 30, 743);
+        doc.fontSize(7).fillColor('black').text('FIRMA:', 105, 624);
+        doc.fontSize(7).fillColor('black').text('FIRMA:', 105, 674);
+        doc.fontSize(7).fillColor('black').text('FIRMA:', 105, 724);
+        doc.fontSize(7).fillColor('black').text('ACLARACIÓN:', 270, 624);
+        doc.fontSize(7).fillColor('black').text('ACLARACIÓN:', 270, 674);
+        doc.fontSize(7).fillColor('black').text('ACLARACIÓN:', 270, 724);
+        doc.fontSize(7).fillColor('black').text('CANTIDAD DE CAJAS:', 488, 624);
 
-        doc.moveTo(115, 550).lineTo(115, 775).stroke('black');
-        doc.moveTo(280, 550).lineTo(280, 775).stroke('black');
-        doc.moveTo(445, 550).lineTo(445, 775).stroke('black');
-        doc.moveTo(45, 550).lineTo(567, 550).stroke('black');
-        doc.moveTo(45, 550).lineTo(45, 775).stroke('black');
-        doc.moveTo(45, 625).lineTo(445, 625).stroke('black');
-        doc.moveTo(45, 700).lineTo(445, 700).stroke('black');
-        doc.moveTo(567, 550).lineTo(567, 775).stroke('black');
-        doc.moveTo(45, 775).lineTo(567, 775).stroke('black');
+        doc.moveTo(20, 621).lineTo(20, 771).stroke('black');
+        doc.moveTo(100, 621).lineTo(100, 771).stroke('black');
+        doc.moveTo(265, 621).lineTo(265, 771).stroke('black');
+        doc.moveTo(450, 621).lineTo(450, 771).stroke('black');
+        doc.moveTo(592, 621).lineTo(592, 771).stroke('black');
+        doc.moveTo(20, 621).lineTo(592, 621).stroke('black');
+        doc.moveTo(20, 671).lineTo(450, 671).stroke('black');
+        doc.moveTo(20, 721).lineTo(450, 721).stroke('black');
+        doc.moveTo(20, 771).lineTo(592, 771).stroke('black');
         
-        let maxHeightPage = 540;
+        doc.y = 225
+        let maxHeightPage = 616;
+        let segunda_columna = false;
+        let primer_pagina = true;
 
         articulosAMostrar.forEach((articulo) => {
             const tallesDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
@@ -500,35 +614,48 @@ const getNotaPedido = async (req, res) => {
                 table.rows.push(row);
             });
 
-            const tableStartX = 50;
+            let tableStartX = segunda_columna ? 309 : 20;
             let tableStartY = doc.y;
-            const cellWidth = 40;
             const firstCellWidth = 68;
+            const cellWidth = 215/table.headers.length;
             const cellHeight = 20;
 
-            if(doc.y + (table.rows.length + 1) * cellHeight > maxHeightPage) {        
-                doc.addPage();
+            if(doc.y + (table.rows.length + 1) * cellHeight > maxHeightPage) {   
+                if(segunda_columna) {
+                    doc.addPage();
 
-                doc.fontSize(20).fillColor('black').text('NOTA DE PEDIDO', 50, 57);
-                doc.fontSize(20).fillColor('black').text("N° " + pedido_id, 250, 57)
+                    doc.fontSize(15).fillColor('black').text('NOTA DE PEDIDO', 30, 20);
+                    doc.fontSize(15).fillColor('black').text("N° " + pedido_id, 162, 20)
 
-                const fechaDeHoy = new Date(pedido.createdAt);
-                const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
-                doc.fontSize(15).fillColor('black').text(fechaFormateada, 440, 60);
+                    const fechaDeHoy = new Date(pedido.createdAt);
+                    const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
+                    doc.fontSize(12).fillColor('black').text(fechaFormateada, 452, 22);
 
-                doc.moveTo(45, 45).lineTo(567, 45).stroke('black');
-                doc.moveTo(45, 45).lineTo(45, 85).stroke('black');
-                doc.moveTo(567, 45).lineTo(567, 85).stroke('black');
-                doc.moveTo(45, 85).lineTo(567, 85).stroke('black');
-                doc.moveTo(350,45).lineTo(350,85).stroke('black');
+                    doc.moveTo(20, 10).lineTo(592, 10).stroke('black');
+                    doc.moveTo(20, 10).lineTo(20, 40).stroke('black');
+                    doc.moveTo(592, 10).lineTo(592, 40).stroke('black');
+                    doc.moveTo(20, 40).lineTo(592, 40).stroke('black');
+                    doc.moveTo(350, 10).lineTo(350, 40).stroke('black');
 
-                doc.y = 110;
+                    doc.y = 45;
 
-                maxHeightPage = 720;
+                    maxHeightPage = 771;
 
-                tableStartY = doc.y;
-            } 
-            
+                    tableStartX = 20;
+                    tableStartY = doc.y;
+
+                    segunda_columna = false;
+                    primer_pagina = false;
+                } else {
+                    doc.y = primer_pagina ? 225 : 45;
+
+                    tableStartX = 309;
+                    tableStartY = doc.y;
+
+                    segunda_columna = true;
+                }  
+            }
+
             table.headers.forEach((header, i) => {
                 if (i === 0){
                     doc.rect(tableStartX, tableStartY, firstCellWidth, cellHeight).fillAndStroke('black', 'black');
@@ -560,7 +687,7 @@ const getNotaPedido = async (req, res) => {
                 }
             });
 
-            doc.moveDown();
+            doc.y = doc.y + 5;
         });
 
         doc.end();

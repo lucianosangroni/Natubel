@@ -1,0 +1,12 @@
+.ordenarContainer {
+    width: 10rem;
+    font-size: 15px;
+}
+
+@media (max-width: 566px) {
+    .ordenarContainer {
+        width: 7rem;
+        font-size: 12px;
+    }
+
+}

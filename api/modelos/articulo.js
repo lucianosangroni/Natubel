@@ -1,5 +1,6 @@
 const { sequelize } = require("../config/dbConnect")
 const { DataTypes } = require("sequelize")
+const Marca = require("./marca")
 
 const Articulo = sequelize.define(
     "articulo",
@@ -39,5 +40,7 @@ const Articulo = sequelize.define(
         deletedAt: "flag_activo",
     }
 )
+
+Marca.hasMany(Articulo, { foreignKey: "marca_id" });
 
 module.exports = Articulo;

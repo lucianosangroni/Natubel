@@ -1,0 +1,128 @@
+.container {
+  max-width: 1140px;
+  padding-inline: 1.5rem;
+  margin: 5rem auto;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: start;
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+}
+
+.formulario label {
+  background-color: #70848b;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  width: 150px;
+  color: white;
+}
+
+.formulario input {
+  padding: 0.5rem;
+  width: 18rem;
+  border-radius: 0.5rem;
+  border: 2px solid rgb(209, 208, 208);
+}
+
+.formulario input:focus {
+  outline: 0;
+  border: 2px solid #70848b;
+}
+
+.required-asterisk {
+  margin-bottom: 1rem;
+}
+
+.container-enviar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.enviar {
+  background-color: #70848b;
+  width: auto;
+  height: auto;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.compraFinalizadaContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30rem;
+}
+
+.compraFinalizada {
+  background-color: #70848b;
+  padding: 0.5rem;
+  margin: 2rem;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: bold;
+  width: 15rem;
+  text-align: center;
+}
+
+.obligatorio {
+  font-size: 0.7rem;
+  padding-top: 1rem;
+}
+
+.ingreseCodigo {
+  font-size: 0.8rem;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+}
+
+.confirmarCodigo {
+  margin-left: 0.5rem;
+  padding: 0.3rem;
+}
+
+.reenviarCodigo {
+  padding: 0.3rem;
+  margin-top: 0.5rem;
+}
+
+.required-asterisk-cel {
+  display: none;
+}
+
+@media (max-width: 675px) {
+  .formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: start;
+    justify-content: start;
+    margin-bottom: 0;
+    margin-top: 1rem;
+  }
+
+  .required-asterisk {
+    display: none;
+  }
+
+  .required-asterisk-cel {
+    display: block;
+    margin-left: .7rem;
+  }
+
+  .obligatorio {
+    padding-top: 0;
+  }
+
+  .casilla-asterisk-container {
+    display: flex;
+  }
+}

@@ -10,7 +10,8 @@ const modelos = {
     productoXPedidoModel: require("./producto_x_pedido"),
     remitoModel: require("./remito"),
     adminModel: require("./admin"),
-    configModel: require("./config")
+    configModel: require("./config"),
+    marcaModel: require("./marca")
 }
 
 module.exports = modelos

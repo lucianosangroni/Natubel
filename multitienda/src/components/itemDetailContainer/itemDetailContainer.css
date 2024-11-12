@@ -1,0 +1,15 @@
+.volverContainer {
+    display: flex;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.volver {
+    background-color: #FBCCD2;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    color: white;
+    font-weight: bold;
+    width: 10rem;
+    text-align: center;
+}

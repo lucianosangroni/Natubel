@@ -1,6 +1,6 @@
 import ModalProductoEditar from "./ModalProductoEditar";
 
-function GrillaProducto({ onEditProducto, onDeleteProducto, articulo, categorias }) {
+function GrillaProducto({ onEditProducto, onDeleteProducto, articulo, categorias, marcas }) {
     const tallesDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
     const coloresDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
   
@@ -64,7 +64,7 @@ function GrillaProducto({ onEditProducto, onDeleteProducto, articulo, categorias
                 </tbody>
           </table>
         </div>
-        <ModalProductoEditar onEditProducto={handleEditArticulo} articulo={articulo} categorias={categorias}/>
+        <ModalProductoEditar onEditProducto={handleEditArticulo} articulo={articulo} categorias={categorias} marcas={marcas}/>
         <button onClick={() => handleDeleteArticulo()}  className="agregar-producto-grilla" style={{ marginTop: '2rem' }}> 
             Eliminar Articulo
         </button>

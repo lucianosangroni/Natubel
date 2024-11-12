@@ -1,0 +1,138 @@
+.footerContainer {
+    background-color: #70848b;
+    padding: 0.5rem;
+    margin-top: 150px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    
+}
+
+/* .contactanos {
+    color: white;
+    margin: 0.3rem;    
+    
+}
+
+.tel {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.3rem;
+}
+
+.mail {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.3rem;
+    margin-top: 0.5rem;
+}
+
+.dir {
+    display: flex;
+    gap: 1rem;
+} */
+
+/* .footerNatubelTitulo {
+    color: white;
+    font-size: 3rem;
+    margin-bottom: 0;
+} */
+
+.footerNovedades {
+    color: white;
+    width: 25rem;
+    padding-top: 2rem;
+    padding-bottom: 0.5rem;
+    font-size: 1.7rem;
+    text-align: center;
+    font-style: italic;
+    margin: auto;
+}
+
+.redes-container {
+    display: flex; 
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.redes-container a {
+    display: inline-block;
+    
+}
+
+.redes-container img {
+    width: 2.6rem;
+    
+}
+
+.copyrigth {
+    font-size: 0.6rem;
+    text-align: center;
+    padding: 0.2rem;
+    
+}
+
+@media (max-width: 769px) {
+    .footerNatubel {
+        display: none;
+    }
+}
+
+@media (max-width: 550px) {
+    .footerNovedades {
+        color: white;
+        width: 25rem;
+        padding-top: 2rem;
+        padding-bottom: 0.5rem;
+        font-size: 1rem;
+        text-align: center;
+        font-style: italic;
+        margin: auto;
+    }
+    .contactanos p{
+        font-size: 0.8rem;   
+    }
+    .redes-container {
+        margin-top: 0.5rem;
+    }
+    .redes-container img {
+        width: 1.5rem;
+    }
+    .tel p{
+       font-size: 0.7rem;
+    }
+    .mail {
+        margin-top: 0.5rem;
+      }
+    
+    .mail p{
+        font-size: 0.7rem;
+     }
+    
+    .dir p{
+        font-size: 0.7rem;
+     }
+     .tel img{
+        width: 0.7rem;
+     }
+     
+     .mail img{
+        width: 0.7rem;
+      }
+     
+     .dir img{
+        width: 0.7rem;
+      }
+}
+
+@media (max-width: 405px) {
+    .footerNovedades {
+        color: white;
+        width: 25rem;
+        padding-top: 2rem;
+        padding-bottom: 0.5rem;
+        font-size: 0.8rem;
+        text-align: center;
+        font-style: italic;
+        margin: auto;
+    }
+}

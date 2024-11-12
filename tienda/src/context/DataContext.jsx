@@ -43,38 +43,57 @@ export const DataProvider = ({ children }) => {
                 return response.json();
             })
             .then(categoriasData => {
-                fetch(`${apiUrl}/articulos`, {
+                fetch(`${apiUrl}/marcas`, {
                     headers: {
                         Authorization: `Bearer ${tokenBearer}`
                     }
                 })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error("Error en la solicitud GET para artículos");
+                        throw new Error("Error en la solicitud GET para marcas");
                     }
                     return response.json();
                 })
-                .then(articulosData => {
-                    const coloresConStock = Array.from(new Set(articulosData.flatMap(articulo => articulo.productos.filter(producto => producto.stock > 0).map(producto => producto.color))));
-                    const tallesConStock = Array.from(new Set(articulosData.flatMap(articulo => articulo.productos.filter(producto => producto.stock > 0).map(producto => producto.talle))));
-                    const articulosConStock = articulosData.filter(articulo => articulo.productos.some(producto => producto.stock > 0));
-                    const categoriasConStock = categoriasData.filter(categoria => articulosConStock.some(articulo => articulo.categoria.some(c => c.id === categoria.id)));
-                    for (const categoria of categoriasConStock) {
-                        categoria.nombre = categoria.nombre.toUpperCase();
-                    }
+                .then(marcasData => {
+                    fetch(`${apiUrl}/articulos`, {
+                        headers: {
+                            Authorization: `Bearer ${tokenBearer}`
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Error en la solicitud GET para artículos");
+                        }
+                        return response.json();
+                    })
+                    .then(articulosData => {
+                        const coloresConStock = Array.from(new Set(articulosData.flatMap(articulo => articulo.productos.filter(producto => producto.stock > 0).map(producto => producto.color))));
+                        const tallesConStock = Array.from(new Set(articulosData.flatMap(articulo => articulo.productos.filter(producto => producto.stock > 0).map(producto => producto.talle))));
+                        const articulosConStock = articulosData.filter(articulo => articulo.productos.some(producto => producto.stock > 0));
+                        const categoriasConStock = categoriasData.filter(categoria => articulosConStock.some(articulo => articulo.categoria.some(c => c.id === categoria.id)));
+                        for (const categoria of categoriasConStock) {
+                            categoria.nombre = categoria.nombre.toUpperCase();
+                        }
+    
+                        const marcaNatubel = marcasData.find(marca => marca.nombre == "Natubel").id
+                        const articulosNatubel = articulosConStock.filter(art => art.marca_id == marcaNatubel)
 
-                    setColoresData(coloresConStock)
-                    setTallesData(tallesConStock)
-                    setArticulosData(articulosConStock);
-                    setCategoriasData(categoriasConStock);
-                    setMontoMinimoMayorista(configData.montoMinimoMayorista)
-                    setMontoMinimoDistribuidor(configData.montoMinimoDistribuidor)
-                    
-                    setIsInitialLoading(false)
+                        setColoresData(coloresConStock)
+                        setTallesData(tallesConStock)
+                        setArticulosData(articulosNatubel);
+                        setCategoriasData(categoriasConStock);
+                        setMontoMinimoMayorista(configData.montoMinimoMayorista)
+                        setMontoMinimoDistribuidor(configData.montoMinimoDistribuidor)
+                        
+                        setIsInitialLoading(false)
+                    })
+                    .catch(error => {
+                        console.error("Error en la solicitud GET para artículos:", error);
+                    });     
                 })
                 .catch(error => {
-                    console.error("Error en la solicitud GET para artículos:", error);
-                });       
+                    console.error("Error en la solicitud GET para marcas:", error);
+                });  
             })
             .catch(error => {
                 console.error("Error en la solicitud GET para categorías:", error);

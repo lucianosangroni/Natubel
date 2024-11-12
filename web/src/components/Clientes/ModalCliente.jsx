@@ -1,45 +1,50 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 
-function ModalCliente({ onAddClient }) {
+function ModalCliente({ onAddClient, refreshCliente, onClienteRefresheado }) {
   const [show, setShow] = useState(false);
   const [newClient, setNewClient] = useState({
-    nombre: "",
-    cuit_cuil: "",
-    direccion: "",
-    codigo_postal: "",
-    telefono: "",
-    dni: "",
-    ciudad: "",
-    provincia: "",
-    forma_de_envio: "",
-    tipo_envio: "DOMICILIO",
-    email: "",
-    tipo_cliente: "MINORISTA",
+      nombre: "",
+      cuit_cuil: "",
+      direccion: "",
+      codigo_postal: "",
+      telefono: "",
+      dni: "",
+      ciudad: "",
+      provincia: "",
+      forma_de_envio: "",
+      tipo_envio: "DOMICILIO",
+      email: "",
+      tipo_cliente: "MINORISTA",
   });
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  useEffect(() => {
+    const clienteVacio = {
+      nombre: "",
+      cuit_cuil: "",
+      direccion: "",
+      codigo_postal: "",
+      telefono: "",
+      dni: "",
+      ciudad: "",
+      provincia: "",
+      forma_de_envio: "",
+      tipo_envio: "DOMICILIO",
+      email: "",
+      tipo_cliente: "MINORISTA",
+    }
+
+    setNewClient(clienteVacio)
+    onClienteRefresheado()
+  }, [refreshCliente]);
 
   const handleSave = () => {
     if (newClient.nombre && newClient.email && newClient.telefono) {
       onAddClient(newClient);
-      setNewClient({
-        nombre: "",
-        cuit_cuil: "",
-        direccion: "",
-        codigo_postal: "",
-        telefono: "",
-        dni: "",
-        ciudad: "",
-        provincia: "",
-        forma_de_envio: "",
-        tipo_envio: "DOMICILIO",
-        email: "",
-        tipo_cliente: "MINORISTA",
-      });
       handleClose();
     } else {
       alert("Por favor, complete todos los campos obligatorios.");

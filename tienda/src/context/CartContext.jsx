@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { useData } from "./DataContext";
 
-
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
@@ -9,7 +8,6 @@ export const CartProvider = ({ children }) => {
   const [ selectedPrecios, setSelectedPrecios ] = useState("MINORISTA")
   const { articulosData } = useData();
   const [ flagActualizarWidget, setFlagActualizarWidget ] = useState(0)
-  const [ mostrarToastPrecios, setMostrarToastPrecios ] = useState(false)
   const [ mostrarToastStock, setMostrarToastStock ] = useState(false)
 
   useEffect(() => {
@@ -141,8 +139,6 @@ export const CartProvider = ({ children }) => {
         tipoPrecios,
         setTipoPrecios,
         flagActualizarWidget,
-        mostrarToastPrecios,
-        setMostrarToastPrecios,
         mostrarToastStock,
         setMostrarToastStock,
         carrito,

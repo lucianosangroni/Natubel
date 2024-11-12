@@ -1,8 +1,19 @@
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './item.css';
 import { Link } from 'react-router-dom';
+import { CartContext } from '../../context/CartContext';
 
 const Item = ( { producto } ) => {
+  const [precio, setPrecio] = useState(producto.precio_minorista)
+  const {
+    tipoPrecios
+} = useContext(CartContext);
+
+  useEffect(() => {
+    const precioNuevo = tipoPrecios() === "MINORISTA" ? producto.precio_minorista : tipoPrecios() === "MAYORISTA" ? producto.precio_mayorista : producto.precio_distribuidor
+    setPrecio(precioNuevo)
+  }, [tipoPrecios]);
+
   return (
     <div className="producto">
       <Link to={`/articulo/${producto.id}`} className='imgContainer'>
@@ -14,7 +25,7 @@ const Item = ( { producto } ) => {
       </Link>
       <div className='productoInicio'>
         <h4>ART. {producto.numero_articulo}</h4>
-        <p>Precio: ${producto.precio_mayorista}</p>
+        <p>Precio: ${precio}</p>
       </div>
     </div>
   );

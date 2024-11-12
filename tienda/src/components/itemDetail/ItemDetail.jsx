@@ -16,6 +16,16 @@ const ItemDetail = ({ item }) => {
   const [selectedColor, setSelectedColor] = useState();
   const [selectedStock, setSelectedStock] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [precio, setPrecio] = useState(item.precio_minorista)
+
+  const {
+    tipoPrecios
+  } = useContext(CartContext);
+
+  useEffect(() => {
+    const precioNuevo = tipoPrecios() === "MINORISTA" ? item.precio_minorista : tipoPrecios() === "MAYORISTA" ? item.precio_mayorista : item.precio_distribuidor
+    setPrecio(precioNuevo)
+  }, [tipoPrecios]);
 
   const tallesDesordenados = Array.from(
     new Set(
@@ -148,7 +158,7 @@ const ItemDetail = ({ item }) => {
           </div>
           <div className="infoContainer">
             <h3 className="titulo">ART. {item.numero_articulo}</h3>
-            <p className="precio">${item.precio_mayorista}</p>
+            <p className="precio">${precio}</p>
             <div className="tallesItemDetail">
               <p>Talle: </p>
               <form className="checkTalle">

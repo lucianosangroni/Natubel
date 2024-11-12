@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Modal, Button, Form, FormControl } from "react-bootstrap";
 
-function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
+function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
   const [show, setShow] = useState(false);
   const [editProduct, setEditProduct] = useState(
     {
     numero_articulo: articulo.numero_articulo,
     categoria: articulo.categoria.map((cat) => cat.id),
+    marca: articulo.marca_id,
     descripcion: articulo.descripcion,
     precio_minorista: articulo.precio_minorista,
     precio_mayorista: articulo.precio_mayorista,
@@ -42,6 +43,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
         id: articulo.id,
         numero_articulo: articulo.numero_articulo,
         categoria: articulo.categoria.map((cat) => cat.id),
+        marca: articulo.marca_id,
         descripcion: articulo.descripcion,
         precio_minorista: articulo.precio_minorista,
         precio_mayorista: articulo.precio_mayorista,
@@ -265,6 +267,23 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias }) {
               <Button id="boton-mas-cat" onClick={addCategoriaField}>
                 +
               </Button>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Marca</Form.Label>
+              <Form.Control
+                as="select"
+                value={editProduct.marca}
+                onChange={(e) => {
+                  setEditProduct({ ...editProduct, marca: e.target.value });
+                }}>
+                {marcas.map((mar, marIndex) => {
+                  return (
+                      <option key={marIndex} value={mar.id}>
+                          {mar.nombre}
+                      </option>
+                  );
+                })}
+              </Form.Control>
             </Form.Group>
             <Form.Group>
               <Form.Label>Descripcion</Form.Label>

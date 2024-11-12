@@ -1,6 +1,5 @@
 const { categoriaModel, categoriaXArticuloModel } = require("../modelos");
 const { matchedData } = require("express-validator");
-const { sequelize } = require("../config/dbConnect")
 
 const getItems = async (req, res) => {
     try {

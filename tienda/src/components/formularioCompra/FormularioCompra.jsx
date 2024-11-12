@@ -4,7 +4,6 @@ import { useState, useContext, useEffect } from "react";
 import { CartContext } from "../../context/CartContext.jsx"
 import { useData } from "../../context/DataContext.jsx";
 import { apiUrl, tokenBearer } from "../../config/config";
-import { Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loading from "../loading/Loading";
@@ -32,8 +31,6 @@ const FormularioCompra = () => {
     vaciarCarrito,
     precioTotalMayorista,
     precioTotalDistribuidor,
-    setTipoPrecios,
-    setMostrarToastPrecios,
   } = useContext(CartContext);
 
   const [ carrito, setCarrito ] = useState([])
@@ -42,7 +39,6 @@ const FormularioCompra = () => {
   const [ showIngresarCodigo, setShowIngresarCodigo ] = useState(false);
   const [ codigo, setCodigo ] = useState(null)
   const [ formulario, setFormulario] = useState(null)
-  const [ shouldRedirect, setShouldRedirect ] = useState(false)
   const [ cliente, setCliente ] = useState(null)
   const [isOtroSelected, setIsOtroSelected] = useState(false);
 
@@ -128,9 +124,13 @@ const FormularioCompra = () => {
             setShowIngresarCodigo(true)
             setFormulario(formData)
           } else {
-            setTipoPrecios(tipoPreciosQueCorresponde)
-            setMostrarToastPrecios(true)
-            setShouldRedirect(true)
+            toast.error(`El monto de tu pedido no corresponde a la lista ${tipoPrecios()}, sino a la lista ${tipoPreciosQueCorresponde}. 
+              Cambia la lista de precios en el carrito y vuelve a intentar.`, {
+                position: "top-center",
+                hideProgressBar: true,
+                autoClose: 6000, 
+                closeButton: false,
+            });
           }
       } else if (result.message === "Cliente encontrado con éxito") {
         const cliente = result.cliente
@@ -158,24 +158,14 @@ const FormularioCompra = () => {
           setFormulario(formData)
           setCliente(cliente)
         } else {
-          setTipoPrecios(tipoPreciosQueCorresponde)
-          setMostrarToastPrecios(true)
-          setShouldRedirect(true)
-          toast.success("El monto de su pedido no corresponde con la lista de precios. Por favor verifique su pedido con los precios correspondientes.", {
-            position: "top-center",
-            hideProgressBar: true,
-            autoClose: 2000, 
-            closeButton: false,
-            
+          toast.error(`El monto de tu pedido no corresponde a la lista ${tipoPrecios()}, sino a la lista ${tipoPreciosQueCorresponde}. 
+              Cambia la lista de precios en el carrito y vuelve a intentar.`, {
+                position: "top-center",
+                hideProgressBar: true,
+                autoClose: 6000, 
+                closeButton: false,
           });
         }
-      } else {
-        toast.warning(result.message, {
-          position: "top-center",
-          hideProgressBar: true,
-          autoClose: 2000, 
-          closeButton: false,
-        });
       }
 
       setIsLoading(false)
@@ -402,13 +392,11 @@ const FormularioCompra = () => {
     return /^[0-9]{11}$/.test(value);
   }
 
-
   return (
     <>
       {isInitialLoading && <Loading/>}
       {isLoading && <Loading/>}
       <ToastContainer position="top-right" hideProgressBar={false}/>
-      {shouldRedirect && <Navigate to="/carrito" />}
       <div className="container">
         {showCompraFinalizada ? (
           <div className="compraFinalizadaContainer">

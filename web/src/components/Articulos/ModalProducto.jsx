@@ -1,11 +1,12 @@
 import { useState, useRef } from "react";
 import { Modal, Button, Form, FormControl } from "react-bootstrap";
 
-function ModalProducto({ onAddProducto, categorias }) {
+function ModalProducto({ onAddProducto, categorias, marcas }) {
   const [show, setShow] = useState(false);
   const [newProduct, setNewProduct] = useState({
     numero_articulo: "",
     categoria: [""],
+    marca: null,
     descripcion: "",
     precio_minorista: "",
     precio_mayorista: "",
@@ -56,12 +57,15 @@ function ModalProducto({ onAddProducto, categorias }) {
       newProduct.talles = newProduct.talles.filter((talle) => talle.trim() !== "");
       newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
 
-      if (newProduct.numero_articulo && newProduct.categoria.length > 0 && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
+      console.log(newProduct)
+
+      if (newProduct.marca !== null && newProduct.numero_articulo && newProduct.categoria.length > 0 && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
         const addProduct = {...newProduct, imagens: []}
         onAddProducto(addProduct);
         setNewProduct({
           numero_articulo: "",
           categoria: [""],
+          marca: null,
           descripcion: "",
           precio_minorista: "",
           precio_mayorista: "",
@@ -223,6 +227,24 @@ function ModalProducto({ onAddProducto, categorias }) {
               <Button id="boton-mas-cat" onClick={addCategoriaField}>
                 +
               </Button>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Marca</Form.Label>
+              <Form.Control
+                as="select"
+                value={newProduct.marca}
+                onChange={(e) => {
+                  setNewProduct({ ...newProduct, marca: e.target.value });
+                }}>
+                <option value={null}>Seleccionar Marca</option>
+                {marcas.map((mar, marIndex) => {
+                  return (
+                      <option key={marIndex} value={mar.id}>
+                          {mar.nombre}
+                      </option>
+                  );
+                })}
+              </Form.Control>
             </Form.Group>
             <Form.Group>
               <Form.Label>Descripcion</Form.Label>

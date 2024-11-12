@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import NavbarAdm from "../Common/NavbarAdm";
 import ModalProducto from "./ModalProducto";
 import ModalCategorias from "./ModalCategorias";
+import ModalMarcas from "./ModalMarcas";
 import ModalConfig from "./ModalConfig";
+import ModalStock from "./ModalStock";
 import ListaArticulos from "../Common/ListaArticulos";
 import GrillaProducto from "./GrillaProducto";
 import { apiUrl, bearerToken } from "../../config/config";
@@ -12,12 +14,16 @@ import { useData } from "../../context/DataContext";
 import { useNavigate } from 'react-router-dom';
 
 const ListadoProductos = () => {
-  const { articulosData, categoriasData, refreshCategorias, refreshArticulos, isInitialLoading } = useData()
+  const { articulosData, categoriasData, marcasData, refreshCategorias, refreshMarcas, refreshArticulos, isInitialLoading } = useData()
   const [data, setData] = useState(articulosData);
   const [categorias, setCategorias] = useState(categoriasData);
+  const [marcas, setMarcas] = useState(marcasData);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [tipoStock, setTipoStock] = useState(null);
   const [isCategoriasModalOpen, setIsCategoriasModalOpen] = useState(false);
-  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false)
+  const [isMarcasModalOpen, setIsMarcasModalOpen] = useState(false);
+  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
+  const [isStockModalOpen, setIsStockModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate();
 
@@ -26,7 +32,8 @@ const ListadoProductos = () => {
     setData(articulosData);
     setSelectedProduct(articulosData[0]);
     setCategorias(categoriasData)
-  }, [categoriasData, articulosData]);
+    setMarcas(marcasData);
+  }, [categoriasData, marcasData, articulosData]);
 
   //AGREGAR ARTICULO DB
   const handleAddArticulo = (newArticulo) => {
@@ -37,6 +44,7 @@ const ListadoProductos = () => {
     formData.append('numero_articulo', newArticulo.numero_articulo);
     const categoriasInt = newArticulo.categoria.map((categoria) => parseInt(categoria, 10));
     formData.append('categorias', JSON.stringify(categoriasInt));
+    formData.append('marca_id', parseInt(newArticulo.marca));
     formData.append('descripcion', newArticulo.descripcion);
     formData.append('precio_minorista', parseFloat(newArticulo.precio_minorista));
     formData.append('precio_mayorista', parseFloat(newArticulo.precio_mayorista));
@@ -105,6 +113,7 @@ const ListadoProductos = () => {
     formData.append('numero_articulo', editProduct.numero_articulo);
     const categoriasInt = editProduct.categoria.map((categoria) => parseInt(categoria, 10));
     formData.append('categorias', JSON.stringify(categoriasInt));
+    formData.append('marca_id', parseInt(editProduct.marca));
     formData.append('descripcion', editProduct.descripcion);
     formData.append('precio_minorista', parseFloat(editProduct.precio_minorista));
     formData.append('precio_mayorista', parseFloat(editProduct.precio_mayorista));
@@ -140,6 +149,7 @@ const ListadoProductos = () => {
         const editArticuloData = {
           id: editProduct.id,
           numero_articulo: editProduct.numero_articulo,
+          marca_id: parseInt(editProduct.marca),
           categoria: categoriasEditArticulo,
           descripcion: editProduct.descripcion,
           precio_minorista: editProduct.precio_minorista,
@@ -206,10 +216,23 @@ const ListadoProductos = () => {
     setSelectedProduct(product);
   };
 
-  const handleGenerarPDFAdmin = () => {
+  const handleAbrirModalStock = (tipo) => {
+    setIsStockModalOpen(true)
+    setTipoStock(tipo)
+  }
+
+  const handleGenerarPdf = (marcaElegida, flagSinStock) => {
+    if(tipoStock === "Admin") {
+      generarPDFAdmin(marcaElegida, flagSinStock)
+    } else {
+      generarPDFCliente(marcaElegida, flagSinStock)
+    }
+  }
+
+  const generarPDFAdmin = (marcaElegida, flagSinStock) => {
     setIsLoading(true)
 
-    fetch(`${apiUrl}/pdf/stock/admin`, {
+    fetch(`${apiUrl}/pdf/stock/admin?marca=${encodeURIComponent(marcaElegida)}&flagSinStock=${flagSinStock}`, {
       headers: {
         Authorization: `Bearer ${bearerToken}`,
       }
@@ -248,14 +271,18 @@ const ListadoProductos = () => {
     setIsCategoriasModalOpen(true);
   }
 
+  const handleMarcas = () => {
+    setIsMarcasModalOpen(true);
+  }
+
   const handleConfig = () => {
     setIsConfigModalOpen(true)
   }
 
-  const handleGenerarPDFCliente = () => {
+  const generarPDFCliente = (marcaElegida, flagSinStock) => {
     setIsLoading(true)
 
-    fetch(`${apiUrl}/pdf/stock/cliente`, {
+    fetch(`${apiUrl}/pdf/stock/cliente?marca=${encodeURIComponent(marcaElegida)}&flagSinStock=${flagSinStock}`, {
       headers: {
         Authorization: `Bearer ${bearerToken}`,
       }
@@ -357,6 +384,77 @@ const ListadoProductos = () => {
     setCategorias(categoriasActualizadas)
   }
 
+  const handleNuevaMarca = (nuevaMarca) => {
+    const requestData = {
+      nombre: nuevaMarca
+    }
+
+    fetch(`${apiUrl}/marcas`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${bearerToken}`,
+      },
+      body: JSON.stringify(requestData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al agregar marca, verifique los datos ingresados");
+          throw new Error("Error en la solicitud POST");
+        }
+        return response.json();
+      })
+      .then((result) => {
+        const newMarcas = [...marcas, {nombre: nuevaMarca, id: result.id}]
+        refreshMarcas(newMarcas)
+        setMarcas(newMarcas)
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud POST:", error);
+      });
+  }
+
+  const handleEditMarca = (nuevaMarca) => {
+    const requestData = {
+      nombre: nuevaMarca.nombre
+    }
+
+    fetch(`${apiUrl}/marcas/${nuevaMarca.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${bearerToken}`,
+      },
+      body: JSON.stringify(requestData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al editar marca, verifique los datos ingresados");
+          throw new Error("Error en la solicitud PUT");
+        }
+        return response.json();
+      })
+      .then(() => {
+        const marcasActualizadas = marcas.map((marca) =>
+          marca.id === nuevaMarca.id
+            ? { ...marca, nombre: nuevaMarca.nombre }
+            : marca
+        );
+
+        refreshMarcas(marcasActualizadas)
+        setMarcas(marcasActualizadas);
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud POST:", error);
+      });
+  }
+
+  const handleEliminarMarca = (marca)  => {
+    const marcasActualizadas = marcas.filter((mar) => mar.id != marca.id)
+    refreshMarcas(marcasActualizadas)
+    setMarcas(marcasActualizadas)
+  }
+
   return (
     <>
       {(isLoading || isInitialLoading) && <Loading/>}
@@ -369,13 +467,16 @@ const ListadoProductos = () => {
             onEditProducto={handleEditProducto}
             onDeleteProducto={handleDeleteProducto}
             categorias={categorias}
+            marcas={marcas}
           />
         )}
-        <Button onClick={handleConfig} id="btnDescargarStock" style={{right: "820px", width: "145px"}}>Configuración</Button>
-        <Button onClick={handleGenerarPDFCliente} id="btnDescargarStock" style={{right: "660px", width: "145px"}}>Stock Cliente</Button>
-        <Button onClick={handleGenerarPDFAdmin} id="btnDescargarStock" style={{right: "500px", width: "145px"}}>Stock Admin</Button>
-        <Button onClick={handlePrecios} id="btnDescargarStock" style={{right: "340px" , width: "145px"}}>Precios</Button>
+        
         <Button onClick={handleCategorias} id="btnDescargarStock" style={{right: "180px", width: "145px"}}>Categorias</Button>
+        <Button onClick={handleMarcas} id="btnDescargarStock" style={{right: "340px", width: "145px"}}>Marcas</Button>
+        <Button onClick={handlePrecios} id="btnDescargarStock" style={{right: "500px" , width: "145px"}}>Precios</Button>
+        <Button onClick={() => handleAbrirModalStock("Admin")} id="btnDescargarStock" style={{right: "660px", width: "145px"}}>Stock Admin</Button>
+        <Button onClick={() => handleAbrirModalStock("Cliente")} id="btnDescargarStock" style={{right: "820px", width: "145px"}}>Stock Cliente</Button>   
+        <Button onClick={handleConfig} id="btnDescargarStock" style={{right: "980px", width: "145px"}}>Configuración</Button>
         {isCategoriasModalOpen && (
         <ModalCategorias
           data={categorias}
@@ -385,13 +486,30 @@ const ListadoProductos = () => {
           onEliminarCategoria={(categoria) => handleEliminarCategoria(categoria)}
         />
         )}
+        {isMarcasModalOpen && (
+        <ModalMarcas
+          data={marcas}
+          onClose={() => setIsMarcasModalOpen(false)}
+          onNuevaMarca={(nuevaMarca) => handleNuevaMarca(nuevaMarca)}
+          onEditMarca={(nuevaMarca) => handleEditMarca(nuevaMarca)}
+          onEliminarMarca={(marca) => handleEliminarMarca(marca)}
+        />
+        )}
         {isConfigModalOpen && (
         <ModalConfig
           onClose={() => setIsConfigModalOpen(false)}
         />
         )}
+        {isStockModalOpen && (
+          <ModalStock
+            onClose={() => setIsStockModalOpen(false)}
+            tipo={tipoStock}
+            onGenerarPdf={handleGenerarPdf}
+            marcas={marcas}
+          />
+        )}
 
-        <ModalProducto categorias={categorias} onAddProducto={handleAddArticulo} />
+        <ModalProducto categorias={categorias} marcas={marcas} onAddProducto={handleAddArticulo} />
       </div>
     </>
   );

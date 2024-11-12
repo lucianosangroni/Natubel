@@ -5,6 +5,7 @@ import CategoriasLateral from "../categoriasLateral/CategoriasLateral";
 import FiltroColor from "../filtroColor/FiltroColor";
 import FiltroTalle from "../filtroTalle/FiltroTalle";
 import OrdenarMayorMenor from "../ordenarMayorMenor/OrdenarMayorMenor";
+import ListasDePrecios from "../listasDePrecios/ListasDePrecios";
 
 const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, setProductosContainer, flagCatalogo, onChangeTalleContainer, onChangeColorContainer, flagOrdenar }) => {
   const [visibleProducts, setVisibleProducts] = useState(40);
@@ -53,6 +54,7 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
 
   return (
     <>
+      <ListasDePrecios/>
       <div className='globalFilter'>
         <span role="img" aria-label="lupa" className="search-icon">
         🔍

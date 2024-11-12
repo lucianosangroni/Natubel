@@ -17,7 +17,8 @@ const ListadoClientes = () => {
   const [data, setData] = useState(clientesData);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [refreshNuevoCliente, setRefreshNuevoCliente] = useState(false);
 
   //OBTENER CLIENTES DB
   useEffect(() => {
@@ -60,7 +61,6 @@ const ListadoClientes = () => {
       return response.json();
     })
     .then((result) => {
-      
       if(result.message === "Cliente creado con éxito") {
         newCliente.id = result.id
         newCliente.persona_id = result.persona_id
@@ -68,6 +68,7 @@ const ListadoClientes = () => {
         const dataActualizada = [...data, newCliente]
         setData(dataActualizada);
         refreshClientes(dataActualizada)
+        setRefreshNuevoCliente(true)
       }
 
       alert(result.message)
@@ -78,6 +79,10 @@ const ListadoClientes = () => {
         console.error("Error en la solicitud POST:", error);
     });
   };
+
+  const handleClienteRefresheado = () => {
+    setRefreshNuevoCliente(false)
+  }
 
   //ABRIR MODAL EDITAR
   const handleEditRow = (row) => {
@@ -265,7 +270,7 @@ const ListadoClientes = () => {
           <FontAwesomeIcon icon={faArrowRight} />
         </button>
       </div>
-      <ModalCliente onAddClient={handleAddCliente} />
+      <ModalCliente onAddClient={handleAddCliente} refreshCliente={refreshNuevoCliente} onClienteRefresheado={handleClienteRefresheado} />
       {isEditModalOpen && (
         <ModalClienteEditar
           data={editingData}

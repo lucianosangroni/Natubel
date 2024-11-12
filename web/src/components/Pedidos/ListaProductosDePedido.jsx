@@ -39,6 +39,8 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
         return;
       }
 
+      setIsLoading(true)
+
       const productos = pedido.productos.map(({id, productos_x_pedido}) => ({producto_id: id, cantidad: productos_x_pedido.cantidad}))
 
       const requestData = 
@@ -65,6 +67,7 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
       })
       .then((result) => {
         onCambiarEstado(pedido.numero_pedido, nuevoEstado)
+        setIsLoading(false)
       })
       .catch((error) => {
           console.error("Error en la solicitud PUT:", error);
