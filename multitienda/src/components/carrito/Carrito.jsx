@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useData } from '../../context/DataContext';
 import Loading from "../loading/Loading";
+import ListasDePrecios from "../listasDePrecios/ListasDePrecios";
 
 const Carrito = () => {
   const {
@@ -16,9 +17,8 @@ const Carrito = () => {
     eliminarProducto,
     verificarStock,
     tipoPrecios,
-    setTipoPrecios,
-    mostrarToastPrecios,
-    setMostrarToastPrecios,
+    precioTotalMayorista,
+    precioTotalDistribuidor,
     mostrarToastStock,
     setMostrarToastStock,
   } = useContext(CartContext);
@@ -50,20 +50,11 @@ const Carrito = () => {
     const carritoOrdenado = nuevoCarrito.sort((a, b) => ordenarProductos(a, b))
 
     setCarrito(carritoOrdenado);
-
-    const precios = tipoPrecios();
-    setSelectedPrecios(precios);
-
-    if(mostrarToastPrecios) {
-      toast.error(`El monto de su pedido no corresponde con la lista de precios. Por favor verifique su pedido con los precios de ${tipoPrecios().toLowerCase()}.`, {
-        position: "top-center",
-        hideProgressBar: true,
-        autoClose: 4000, 
-        closeButton: false,
-      });
-      setMostrarToastPrecios(false)
-    }
   }, []);
+
+  useEffect(() => {
+    setSelectedPrecios(tipoPrecios())
+  }, [tipoPrecios]);
 
   const ordenarProductos = (a, b) => {
     const obtenerNumero = numArticulo => parseInt(numArticulo.match(/\d+/)[0]);
@@ -126,17 +117,68 @@ const Carrito = () => {
     }
   }, [mostrarToastStock]);
 
-  const handlePreciosChange = (tipoPrecios) => {
-    setTipoPrecios(tipoPrecios);
-    setSelectedPrecios(tipoPrecios);
-  };
-
   const formatearNumero = (numero) => {
     return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
 
   const handleConfirmarCompra = () => {
-    setShouldRedirect(true);
+    const tipoPreciosQueCorresponde = 
+          precioTotalMayorista() >= montoMinimoMayorista && precioTotalDistribuidor() < montoMinimoDistribuidor ? "MAYORISTA"
+          : precioTotalDistribuidor() >= montoMinimoDistribuidor ? "DISTRIBUIDOR"
+          : "MINORISTA";
+
+    if(selectedPrecios === tipoPreciosQueCorresponde) {  
+      setShouldRedirect(true);
+    } else {
+      toast(
+        ({ closeToast }) => (
+            <div style={{ textAlign: "center" }}>
+                <p>El monto de tu pedido no corresponde a la lista {selectedPrecios}, sino a la lista {tipoPreciosQueCorresponde}. 
+                  Si ya has hecho una compra previa con la lista {selectedPrecios} continua e ingresa el email que usaste en tu compra previa,
+                  de lo contrario cambia la lista de precios y revisa nuevamente tu pedido</p>
+                <div style={{ display: "flex", justifyContent: "center", gap: "50px", marginTop: "1rem" }}>
+                    <button 
+                        style={{
+                            padding: "5px 10px",
+                            backgroundColor: "#4CAF50",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer"
+                        }}
+                        onClick={() => {
+                            setShouldRedirect(true);
+                            closeToast();
+                        }}
+                    >
+                        Continuar
+                    </button>
+                    <button 
+                        style={{
+                            padding: "5px 10px",
+                            backgroundColor: "#f44336",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer"
+                        }}
+                        onClick={closeToast}
+                    >
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        ),
+        {
+            position: "top-center",
+            autoClose: false,
+            closeOnClick: false,
+            draggable: false,
+            hideProgressBar: true,
+            closeButton: false
+        }
+      );
+    }
   };
 
   return (
@@ -146,51 +188,7 @@ const Carrito = () => {
       {shouldRedirect && <Navigate to="/formulario" />}
       {carrito.length > 0 ? (
         <>
-          <div className="preciosContainer">
-            <div className="descripcionPreciosContainer">
-              {selectedPrecios === "MAYORISTA" && (
-                <p className="compraMinima">
-                  Para esta lista de precios se requiere una compra minima de ${formatearNumero(montoMinimoMayorista)} o haber hecho previamente una compra mayorista.
-                </p>
-              )}
-              {selectedPrecios === "DISTRIBUIDOR" && (
-                <p className="compraMinima">Para esta lista de precios se requiere una compra minima de ${formatearNumero(montoMinimoDistribuidor)} o haber hecho previamente una compra de distribuidor.</p>
-              )}
-            </div>
-            <div className="listaPreciosContainer">
-              <h1 className="listaPreciosTitulo">Lista de precios: </h1>
-              <button
-                className={
-                  selectedPrecios === "MINORISTA"
-                    ? "btnPrecios btnPreciosSelected"
-                    : "btnPrecios"
-                }
-                onClick={() => handlePreciosChange("MINORISTA")}
-              >
-                MINORISTA
-              </button>
-              <button
-                className={
-                  selectedPrecios === "MAYORISTA"
-                    ? "btnPrecios btnPreciosSelected"
-                    : "btnPrecios"
-                }
-                onClick={() => handlePreciosChange("MAYORISTA")}
-              >
-                MAYORISTA
-              </button>
-              <button
-                className={
-                  selectedPrecios === "DISTRIBUIDOR"
-                    ? "btnPrecios btnPreciosSelected"
-                    : "btnPrecios"
-                }
-                onClick={() => handlePreciosChange("DISTRIBUIDOR")}
-              >
-                DISTRIBUIDOR
-              </button>
-            </div>
-          </div>
+          <ListasDePrecios/>
           <table className="carritoContainer">
             <thead>
               <tr className="encabezadoCarrito">

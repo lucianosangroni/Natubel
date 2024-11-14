@@ -1,0 +1,41 @@
+.explicacion-precios-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.explicacion-precios {
+    background-color: #70848b;
+    margin-top: 1rem !important;
+    color: white;
+    font-size: 14px;
+    width: 70%;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+}
+
+.buttons-precios-container {
+    margin-top: 1rem;
+    display: flex;
+    gap: 2rem;
+}
+
+.button-precio {
+    height: 38px;
+    background-color: #fff;
+    color: black;
+    border-radius: 0.5;
+    border: 1px solid #70848b;
+}
+
+.button-precio:hover {
+    background-color: #70848b;
+    color: white;
+}
+
+.button-precio-selected {
+    background-color: #70848b;
+    color: white;
+}

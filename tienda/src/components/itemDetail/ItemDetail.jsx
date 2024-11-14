@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Item from "../item/Item";
 
 const ItemDetail = ({ item }) => {
-  const { agregarAlCarrito, setTipoPrecios } = useContext(CartContext);
+  const { agregarAlCarrito, tipoPrecios } = useContext(CartContext);
   const [cantidad, setCantidad] = useState(1);
   const { articulosData } = useData();
   const [selectedTalle, setSelectedTalle] = useState();
@@ -17,10 +17,6 @@ const ItemDetail = ({ item }) => {
   const [selectedStock, setSelectedStock] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [precio, setPrecio] = useState(item.precio_minorista)
-
-  const {
-    tipoPrecios
-  } = useContext(CartContext);
 
   useEffect(() => {
     const precioNuevo = tipoPrecios() === "MINORISTA" ? item.precio_minorista : tipoPrecios() === "MAYORISTA" ? item.precio_mayorista : item.precio_distribuidor
@@ -106,7 +102,6 @@ const ItemDetail = ({ item }) => {
 
   const handleAgregarAlCarrito = (numero_articulo, color, talle, cantidad) => {
     agregarAlCarrito(numero_articulo, color, talle, cantidad);
-    setTipoPrecios("MINORISTA");
     setCantidad(1);
     toast.success("¡Agregado al carrito!", {
       position: "top-center",

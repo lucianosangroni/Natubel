@@ -127,58 +127,58 @@ const Carrito = () => {
           : precioTotalDistribuidor() >= montoMinimoDistribuidor ? "DISTRIBUIDOR"
           : "MINORISTA";
 
-          if(selectedPrecios === tipoPreciosQueCorresponde) {  
-            setShouldRedirect(true);
-          } else {
-            toast(
-              ({ closeToast }) => (
-                  <div style={{ textAlign: "center" }}>
-                      <p>El monto de tu pedido no corresponde a la lista {selectedPrecios}, sino a la lista {tipoPreciosQueCorresponde}. 
-                        Si ya has hecho una compra previa con la lista {selectedPrecios} continua e ingresa el email que usaste en tu compra previa,
-                        de lo contrario cambia la lista de precios y revisa nuevamente tu pedido</p>
-                      <div style={{ display: "flex", justifyContent: "center", gap: "50px", marginTop: "1rem" }}>
-                          <button 
-                              style={{
-                                  padding: "5px 10px",
-                                  backgroundColor: "#4CAF50",
-                                  color: "#fff",
-                                  border: "none",
-                                  borderRadius: "5px",
-                                  cursor: "pointer"
-                              }}
-                              onClick={() => {
-                                  setShouldRedirect(true);
-                                  closeToast();
-                              }}
-                          >
-                              Continuar
-                          </button>
-                          <button 
-                              style={{
-                                  padding: "5px 10px",
-                                  backgroundColor: "#f44336",
-                                  color: "#fff",
-                                  border: "none",
-                                  borderRadius: "5px",
-                                  cursor: "pointer"
-                              }}
-                              onClick={closeToast}
-                          >
-                              Cancelar
-                          </button>
-                      </div>
-                  </div>
-              ),
-              {
-                  position: "top-center",
-                  autoClose: false,
-                  closeOnClick: false,
-                  draggable: false,
-                  hideProgressBar: true,
-                  closeButton: false
-              }
-            );
-          }
+    if(selectedPrecios === tipoPreciosQueCorresponde) {  
+      setShouldRedirect(true);
+    } else {
+      toast(
+        ({ closeToast }) => (
+            <div style={{ textAlign: "center" }}>
+                <p>El monto de tu pedido no corresponde a la lista {selectedPrecios}, sino a la lista {tipoPreciosQueCorresponde}. 
+                  Si ya has hecho una compra previa con la lista {selectedPrecios} continua e ingresa el email que usaste en tu compra previa,
+                  de lo contrario cambia la lista de precios y revisa nuevamente tu pedido</p>
+                <div style={{ display: "flex", justifyContent: "center", gap: "50px", marginTop: "1rem" }}>
+                    <button 
+                        style={{
+                            padding: "5px 10px",
+                            backgroundColor: "#4CAF50",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer"
+                        }}
+                        onClick={() => {
+                            setShouldRedirect(true);
+                            closeToast();
+                        }}
+                    >
+                        Continuar
+                    </button>
+                    <button 
+                        style={{
+                            padding: "5px 10px",
+                            backgroundColor: "#f44336",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer"
+                        }}
+                        onClick={closeToast}
+                    >
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        ),
+        {
+            position: "top-center",
+            autoClose: false,
+            closeOnClick: false,
+            draggable: false,
+            hideProgressBar: true,
+            closeButton: false
+        }
+      );
+    }
   };
 
   return (
