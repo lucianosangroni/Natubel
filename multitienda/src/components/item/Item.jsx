@@ -25,8 +25,8 @@ const Item = ( { producto } ) => {
       </Link>
       <div className='productoInicio'>
         <h4>ART. {producto.numero_articulo}</h4>
-        <p>Precio: ${precio}</p>
-        <p>Marca: {producto.marca}</p>
+        <p><strong>Precio:</strong> ${precio}</p>
+        <p className='margenCelu'><strong>Marca:</strong> {producto.marca}</p>
       </div>
     </div>
   );

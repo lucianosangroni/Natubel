@@ -90,6 +90,9 @@ const ItemDetail = ({ item }) => {
         producto.talle === talles[0] && producto.color === primerColorConStock
     ).stock;
     setSelectedStock(stock);
+
+    const precioNuevo = tipoPrecios() === "MINORISTA" ? item.precio_minorista : tipoPrecios() === "MAYORISTA" ? item.precio_mayorista : item.precio_distribuidor
+    setPrecio(precioNuevo)
   }, [item]);
 
   const handleRestar = () => {
