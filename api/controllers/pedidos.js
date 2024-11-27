@@ -107,6 +107,9 @@ const updateItem = async (req, res) => {
         if (!pedido) {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }
+        if (pedido.estado === 'CANCELADO') {
+            return res.status(400).json({ message: 'El pedido ya está cancelado' });
+        }
 
         await pedidoModel.update
         (
