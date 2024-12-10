@@ -27,6 +27,11 @@ export const COLUMNSPROVE = [
     },
     {
         Header: "",
+        accessor:"cuenta-corriente",
+        width: 'auto',
+    },
+    {
+        Header: "",
         accessor:"editar",
         width: 'auto',
     },

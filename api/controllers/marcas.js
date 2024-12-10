@@ -64,8 +64,6 @@ const updateItem = async (req, res) => {
 
 const deleteItem = async (req, res) => {
     try {
-        console.log("a")
-
         req = matchedData(req);
 
         const marca_id = req.id

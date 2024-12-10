@@ -6,10 +6,11 @@ import GlobalFilter from "../../helpers/GlobalFilter";
 import ModalCliente from "./ModalCliente";
 import ModalClienteEditar from "./ModalClienteEditar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faEdit, faArrowLeft, faArrowRight, faSackDollar } from '@fortawesome/free-solid-svg-icons';
 import { apiUrl, bearerToken } from "../../config/config";
 import Loading from "../Common/Loading";
 import { useData } from "../../context/DataContext";
+import { Navigate } from "react-router-dom";
 
 const ListadoClientes = () => {
   const { isInitialLoading, clientesData, refreshClientes } = useData()
@@ -19,6 +20,8 @@ const ListadoClientes = () => {
   const [editingData, setEditingData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshNuevoCliente, setRefreshNuevoCliente] = useState(false);
+  const [ shouldRedirect, setShouldRedirect ] = useState(false)
+  const [emailCuentaCorriente, setEmailCuentaCorriente] = useState("")
 
   //OBTENER CLIENTES DB
   useEffect(() => {
@@ -90,6 +93,11 @@ const ListadoClientes = () => {
     editData.index = row.index
     setEditingData(editData);
     setIsEditModalOpen(true);
+  };
+
+  const handleCuentaCorriente = (row) => {
+    setEmailCuentaCorriente(row.original.email)
+    setShouldRedirect(true)
   };
 
   //EDITAR CLIENTE DB
@@ -213,6 +221,7 @@ const ListadoClientes = () => {
   return (
     <>
       {(isLoading || isInitialLoading) && <Loading/>}
+      {shouldRedirect && <Navigate to={`/admin/cuenta-corriente/${emailCuentaCorriente}`} />}
       <NavbarAdm selected={'Clientes'}/>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
       <div className="tableDivContainer">
@@ -243,6 +252,10 @@ const ListadoClientes = () => {
                         ) : cell.column.id === "editar" ? (
                           <button onClick={() => handleEditRow(row)} className="botonEditar">
                             <FontAwesomeIcon icon={faEdit} />
+                          </button>
+                        ) : cell.column.id === "cuenta-corriente" ? (
+                          <button onClick={() => handleCuentaCorriente(row)} className="botonEditar">
+                            <FontAwesomeIcon icon={faSackDollar} />
                           </button>
                         ) : (
                           cell.render("Cell")

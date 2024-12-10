@@ -70,7 +70,6 @@ const ItemListContainer = ({ flagCatalogo }) => {
   }
 
   const handleChangeColor = (color) => {
-    console.log(color)
     setColor(color)
   }
 

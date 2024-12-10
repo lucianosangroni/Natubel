@@ -11,7 +11,9 @@ const modelos = {
     remitoModel: require("./remito"),
     adminModel: require("./admin"),
     configModel: require("./config"),
-    marcaModel: require("./marca")
+    marcaModel: require("./marca"),
+    facturaModel: require("./factura"),
+    pagoModel: require("./pago")
 }
 
 module.exports = modelos

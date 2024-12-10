@@ -1,4 +1,4 @@
-const { pedidoModel, productoModel, productoXPedidoModel, clienteModel, articuloModel } = require("../modelos");
+const { pedidoModel, productoModel, productoXPedidoModel, clienteModel, articuloModel, facturaModel, remitoModel } = require("../modelos");
 
 const updateItem = async (req, res) => {
     try {
@@ -9,6 +9,13 @@ const updateItem = async (req, res) => {
         const pedido = await pedidoModel.findByPk(pedido_id);
         if (!pedido) {
             return res.status(404).json({ message: 'Pedido no encontrado' });
+        }
+
+        const factura = await facturaModel.findOne({
+            where: { pedido_id }
+        });
+        if (!factura) {
+            res.status(404).json({ message: `Factura no encontrada para pedido: ${pedido_id}` });
         }
 
         const cliente = await clienteModel.findOne({
@@ -193,6 +200,26 @@ const updateItem = async (req, res) => {
         }, { 
             where: { numero_pedido: pedido_id}
         })
+
+        let nuevoMontoFactura = precioTotal;
+
+        const remitoExiste = await remitoModel.findOne({
+            where: { pedido_id },
+        });
+
+        if (remitoExiste) {
+            nuevoMontoFactura = precioTotal * (1 - remitoExiste.descuento / 100);
+        }
+
+        await facturaModel.update
+        (
+            {
+                monto: nuevoMontoFactura
+            },
+            {
+                where: { pedido_id }
+            }
+        )
 
         res.status(200).json({ message: 'Pedido editado con éxito' });
     } catch(e) {

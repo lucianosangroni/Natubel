@@ -9,6 +9,7 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import Precios from './components/Precios/Precios';
 import EditarPedido from './components/EditarPedido/EditarPedido';
+import CuentaCorriente from './components/CuentaCorriente/CuentaCorriente';
 
 function App() {
     return (
@@ -40,6 +41,9 @@ function App() {
             </Route>
             <Route element={<ProtectedRoute/>}>
               <Route path="admin/precios" element={<Precios/>} />
+            </Route>
+            <Route element={<ProtectedRoute/>}>
+              <Route path="admin/cuenta-corriente/:email" element={<CuentaCorriente/>} />
             </Route>
           </Routes>
         </AuthProvider>

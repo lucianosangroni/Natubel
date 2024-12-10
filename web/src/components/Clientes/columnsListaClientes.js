@@ -63,6 +63,11 @@ export const COLUMNSCLIENTES = [
 },
 {
     Header: "",
+    accessor:"cuenta-corriente",
+    width: 'auto',
+},
+{
+    Header: "",
     accessor:"editar",
     width: 'auto',
 },

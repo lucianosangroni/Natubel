@@ -1,4 +1,4 @@
-const { pedidoModel, productoXPedidoModel, productoModel, personaModel, articuloModel } = require("../modelos");
+const { pedidoModel, productoXPedidoModel, productoModel, personaModel, articuloModel, facturaModel } = require("../modelos");
 const { matchedData } = require("express-validator");
 
 const getItems = async (req, res) => {
@@ -88,6 +88,14 @@ const createItem = async (req, res) => {
             }
         };
         
+        facturaModel.create
+        (
+            {
+                monto: precio_total,
+                pedido_id: nuevoPedido.numero_pedido
+            }
+        )
+
         res.status(201).json({ message: 'Pedido creado con éxito', numero_pedido: nuevoPedido.numero_pedido });
     } catch(e) {
         console.log("Error al crear el pedido: ", e)

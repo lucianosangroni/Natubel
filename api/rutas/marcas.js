@@ -7,7 +7,7 @@ const {
     deleteItem
     } = require("../controllers/marcas");
 const { validateId } = require("../validators/id")
-const { validatorCreateItem, validatorUpdateItem } = require("../validators/categorias")
+const { validatorCreateItem, validatorUpdateItem } = require("../validators/marcas")
 const { checkAuth } = require("../middlewares/auth")
 
 router.get("/", checkAuth, getItems);

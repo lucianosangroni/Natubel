@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import GrillaProductosDePedido from "./GrillaProductosDePedido";
 import { apiUrl, bearerToken } from "../../config/config";
 import ListaArticulos from "../Common/ListaArticulos";
-import ModalRemito from "./ModalRemito";
 import Loading from "../Common/Loading";
 import { useNavigate } from 'react-router-dom';
+import { useData } from "../../context/DataContext";
 
 function ListaProductosDePedido({ pedido, onCambiarEstado }) {
+    const { clientesData, proveedoresData } = useData()
     const [selectedArticulo, setSelectedArticulo] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
 
     const handleArticuloClick = (articulo) => {
         setSelectedArticulo(articulo);
-      };
+    };
 
     const cambiarEstado = (nuevoEstado) => {
       if(pedido.tipo === "PROVEEDOR" && nuevoEstado === "CANCELADO") {
@@ -108,8 +108,19 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
       });
     }
 
-    const openModalRemito = () => {
-      setIsModalOpen(true)
+    const redirectCuentaCorriente = () => {
+      const nombrePersona = pedido.persona_nombre;
+    
+      const cliente = clientesData.find(cliente => cliente.nombre === nombrePersona);
+      const proveedor = proveedoresData.find(proveedor => proveedor.nombre === nombrePersona);
+
+      if (cliente) {
+          navigate(`/admin/cuenta-corriente/${cliente.email}`);
+      } else if (proveedor) {
+          navigate(`/admin/cuenta-corriente/${proveedor.email}`);
+      } else {
+          alert("No se encontró la persona");
+      }
     }
 
     const editarPedido = () => {
@@ -140,22 +151,16 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
         </div>
         <div className="contenerdor-btns-pdfs-pedido">
           <button className="boton-estados" onClick={() => generarPdfPedido()} style={{ width: 150 }}>Nota De Pedido</button>
+          <button className="boton-estados" onClick={() => redirectCuentaCorriente()} style={{ width: 150 }}>Cuenta Corriente</button>
           {pedido.tipo !== "PROVEEDOR" && (
             <>
             <button className="boton-estados" onClick={() => editarPedido()} style={{ width: 150 }}>Editar Pedido</button>
-            <button className="boton-estados" onClick={() => openModalRemito()} style={{ width: 150 }}>Remito</button>
             </>
           )}
         </div>
         </>
         )}
       </div>
-      {isModalOpen && (
-        <ModalRemito
-          pedido_id={pedido.numero_pedido}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
       </>
     );
   }

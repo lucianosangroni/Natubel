@@ -57,8 +57,6 @@ function ModalProducto({ onAddProducto, categorias, marcas }) {
       newProduct.talles = newProduct.talles.filter((talle) => talle.trim() !== "");
       newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
 
-      console.log(newProduct)
-
       if (newProduct.marca !== null && newProduct.numero_articulo && newProduct.categoria.length > 0 && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
         const addProduct = {...newProduct, imagens: []}
         onAddProducto(addProduct);

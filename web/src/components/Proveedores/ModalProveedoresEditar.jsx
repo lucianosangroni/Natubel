@@ -12,7 +12,7 @@ function ModalProveedoresEditar({ data, onClose, onSave }) {
       onSave(editedData); // Llama a la función onSave pasando los datos editados
       onClose(); // Cierra el modal de edición
     } else {
-      console.log("Por favor, complete todos los campos.");
+      alert("Por favor, complete todos los campos.");
     }
   };
 
