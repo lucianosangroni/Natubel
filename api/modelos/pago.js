@@ -12,7 +12,19 @@ const Pago = sequelize.define(
         destino : {
             type: DataTypes.STRING,
             defaultValue: "",
-        }
+        },
+        flag_imputado: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        pago_padre_id: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: "pago",
+                key: "id",
+            },
+        },
     },
     {
         tableName: "pago",
@@ -20,5 +32,6 @@ const Pago = sequelize.define(
 )
 
 Persona.hasMany(Pago, { foreignKey: "persona_id" });
+Pago.belongsTo(Pago, { foreignKey: "pago_padre_id" });
 
 module.exports = Pago;

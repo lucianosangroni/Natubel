@@ -13,7 +13,7 @@ export const COLUMNSPAGOS = [
     },
     {
         Header: "Monto",
-        accessor:"montoAMostrar",
+        accessor:"monto",
         width: 'auto',
         Cell: ({ value }) => {
             const montoFormateado = formatearNumero(value);

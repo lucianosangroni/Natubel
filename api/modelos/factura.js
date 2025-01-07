@@ -8,7 +8,11 @@ const Factura = sequelize.define(
         monto : {
             type: DataTypes.FLOAT,
             allowNull: false
-        }
+        },
+        flag_imputada: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     },
     {
         tableName: "factura",

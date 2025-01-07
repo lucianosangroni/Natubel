@@ -10,6 +10,7 @@ import { AuthProvider } from './context/AuthContext';
 import Precios from './components/Precios/Precios';
 import EditarPedido from './components/EditarPedido/EditarPedido';
 import CuentaCorriente from './components/CuentaCorriente/CuentaCorriente';
+import HistorialCuentaCorriente from './components/HistorialCuentaCorriente/HistorialCuentaCorriente';
 
 function App() {
     return (
@@ -44,6 +45,9 @@ function App() {
             </Route>
             <Route element={<ProtectedRoute/>}>
               <Route path="admin/cuenta-corriente/:email" element={<CuentaCorriente/>} />
+            </Route>
+            <Route element={<ProtectedRoute/>}>
+              <Route path="admin/cuenta-corriente/:email/historial" element={<HistorialCuentaCorriente/>} />
             </Route>
           </Routes>
         </AuthProvider>

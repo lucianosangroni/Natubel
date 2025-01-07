@@ -58,7 +58,7 @@ function ModalPagoEditar({ data, onClose, onSave }) {
                     Cerrar
                 </Button>
                 <Button id="botonNuevoCliente" variant="primary" onClick={handleSave}>
-                    Agregar
+                    Editar
                 </Button>
             </Modal.Footer>
         </Modal>

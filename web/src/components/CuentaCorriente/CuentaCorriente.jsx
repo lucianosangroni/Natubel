@@ -15,6 +15,8 @@ import ModalRemito from "./ModalRemito";
 import ModalRemitoEditar from "./ModalRemitoEditar";
 import ModalFacturaEditar from "./ModalFacturaEditar";
 import ModalPagoEditar from "./ModalPagoEditar";
+import ModalImputacion from "./ModalImputacion";
+import { useNavigate } from 'react-router-dom';
 
 const CuentaCorriente = () => {
     const { email } = useParams();
@@ -28,17 +30,17 @@ const CuentaCorriente = () => {
     const [isPagoEditModalOpen, setIsPagoEditModalOpen] = useState(false);
     const [isRemitoModalOpen, setIsRemitoModalOpen] = useState(false);
     const [isRemitoEditModalOpen, setIsRemitoEditModalOpen] = useState(false);
+    const [isImputacionModalOpen, setIsImputacionModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
     const [selectedRowPago, setSelectedRowPago] = useState(null);
     const [remitoExiste, setRemitoExiste] = useState(null);
     const [flagCliente, setFlagCliente] = useState(false)
     const [pagos, setPagos] = useState([])
-    const [opcionPagosSeleccionada, setOpcionPagosSeleccionada] = useState("TODOS");
-    const [pagosFiltrados, setPagosFiltrados] = useState([])
     const [totalPagadoFactura, setTotalPagadoFactura] = useState(null)
     const [montoRestanteFactura, setMontoRestanteFactura] = useState(null)
-
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const cliente = clientesData.find(cliente => cliente.email === email);
         const proveedor = proveedoresData.find(proveedor => proveedor.email === email);
@@ -56,16 +58,16 @@ const CuentaCorriente = () => {
         if (persona) {
             const pedidosCorrespondientes = pedidosData.filter(pedido => pedido.persona_nombre === persona.nombre && pedido.estado !== "CANCELADO")
             
-            const facturasCorrespondientes = facturasData.filter(factura => pedidosCorrespondientes.find(pedido => pedido.numero_pedido === factura.pedido_id))
+            const facturasCorrespondientes = facturasData.filter(factura => factura.flag_imputada === false).filter(factura => pedidosCorrespondientes.find(pedido => pedido.numero_pedido === factura.pedido_id))
                 .map(factura => {
                     const pedidoCorrespondiente = pedidosCorrespondientes.find(pedido => pedido.numero_pedido === factura.pedido_id);
+                    const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === pedidoCorrespondiente.numero_pedido);
                     return {
                         id: factura.id,
                         numero_pedido: pedidoCorrespondiente.numero_pedido,
+                        numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
                         monto: factura.monto,
-                        montoRestante: factura.monto,
-                        fecha: formatearFecha(factura.createdAt),
-                        estado: "NO PAGADA"
+                        fecha: formatearFecha(factura.createdAt)
                     };
                 })
                 .sort((a, b) => a.numero_pedido - b.numero_pedido)
@@ -78,35 +80,18 @@ const CuentaCorriente = () => {
                 personaId = persona.id
             }
 
-            const pagosCorrespondientes = pagosData.filter(pago => pago.persona_id === personaId)
+            const pagosCorrespondientes = pagosData.filter(pago => pago.persona_id === personaId).filter(pago => pago.flag_imputado === false)
                 .sort((a, b) => a.id - b.id)
                 .map((pago, index) => ({
                     id: pago.id,
                     numero_pago: index + 1,
                     fecha: formatearFecha(pago.createdAt),
                     monto: pago.monto,
-                    montoAMostrar: pago.monto,
                     destino: pago.destino,
                 }))
 
-            pagosCorrespondientes.forEach((pago) => {
-                let montoRestante = pago.monto
-                
-                facturasCorrespondientes.forEach((fac) => {
-                    if (montoRestante > 0 && fac.montoRestante > 0) {
-                        const montoCubierto = Math.min(fac.montoRestante, montoRestante);
-                        fac.montoRestante -= montoCubierto;
-                        montoRestante -= montoCubierto;
-                        fac.estado = fac.montoRestante === 0 ? "PAGADA" : "PAGO PARCIAL"
-                    }
-                })
-            })
-
             const facturasOrdenadas = facturasCorrespondientes.reverse()
             const pagosOrdenados = pagosCorrespondientes.reverse()
-
-            const totalPagado = pagosCorrespondientes.reduce((sum, pago) => sum + pago.monto, 0)
-            const montoRestante = facturasCorrespondientes.reduce((sum, fac) => sum + fac.monto, 0) - pagosCorrespondientes.reduce((sum, pago) => sum + pago.monto, 0)
 
             const facturaPedidoId = facturasOrdenadas[0]?.numero_pedido;
             if (facturaPedidoId) {
@@ -122,64 +107,15 @@ const CuentaCorriente = () => {
             }
 
             setPagos(pagosOrdenados)
-            setPagosFiltrados(pagosOrdenados)
             setFacturas(facturasOrdenadas)
             setSelectedRow(facturasOrdenadas[0])
+
+            const totalPagado = pagosOrdenados.reduce((sum, pago) => sum + pago.monto, 0)
+            const montoRestante = facturasOrdenadas.reduce((sum, fac) => sum + fac.monto, 0)
             setTotalPagadoFactura(totalPagado)
             setMontoRestanteFactura(montoRestante)
         }
     }, [persona, pedidosData, facturasData, remitosData, pagosData]);   
-
-    useEffect(() => {
-        const facturasReiniciadas = facturas.map(fac => ({
-            ...fac,
-            montoRestante: fac.monto
-        })).reverse()
-
-        const pagosOrdenados = pagos.slice().reverse()
-
-        const pagosDeFactura = pagosOrdenados.filter((pago) => {
-            let montoRestante = pago.monto;
-    
-            for (let i = 0; i < facturasReiniciadas.length; i++) {
-                let factura = facturasReiniciadas[i]
-
-                if (montoRestante > 0) {
-                    if(factura.montoRestante > 0) {
-                        const montoParaCubrir = Math.min(factura.montoRestante, montoRestante);
-                        factura.montoRestante -= montoParaCubrir;
-                        montoRestante -= montoParaCubrir;
-
-                        if(factura.id === selectedRow.id && (montoRestante <= 0 || factura.montoRestante <= 0)) {
-                            pago.montoAMostrar = montoParaCubrir
-
-                            return true
-                        }
-                    }
-                } else {
-                    break;
-                }
-            }
-
-            return false
-        });
-
-        const updatedPagosFiltrados = opcionPagosSeleccionada === "TODOS" 
-            ?   pagos.map((pago) => {
-                    return {
-                        ...pago,
-                        montoAMostrar: pago.monto
-                    };
-                }) 
-            :   pagosDeFactura.reverse()
-
-        const totalPagado = opcionPagosSeleccionada === "TODOS" ? pagos.reduce((sum, pago) => sum + pago.monto, 0) : pagosDeFactura.reduce((sum, pago) => sum + pago.montoAMostrar, 0)
-        const montoRestante = opcionPagosSeleccionada === "TODOS" ? facturas.reduce((sum, fac) => sum + fac.monto, 0) - pagos.reduce((sum, pago) => sum + pago.monto, 0) : selectedRow.monto - totalPagado;
-
-        setPagosFiltrados(updatedPagosFiltrados)
-        setTotalPagadoFactura(totalPagado)
-        setMontoRestanteFactura(montoRestante)
-    }, [opcionPagosSeleccionada, selectedRow]);
 
     const {
         getTableProps: getFacturasTableProps,
@@ -219,7 +155,7 @@ const CuentaCorriente = () => {
     } = useTable(
         {
             columns: columnsPagos,
-            data: pagosFiltrados,
+            data: pagos,
         },
         usePagination
     );
@@ -458,10 +394,6 @@ const CuentaCorriente = () => {
         });
     }
 
-    const handleOpcionPagoChange = (valor) => {
-        setOpcionPagosSeleccionada(valor)
-    }
-
     const handleAddPago = (monto, destino) => {
         setIsLoading(true)
 
@@ -499,6 +431,8 @@ const CuentaCorriente = () => {
                 const nuevoPago = {
                     id: result.id,
                     createdAt: new Date().toISOString(),
+                    flag_imputado: false,
+                    pago_padre_id: null,
                     destino: destino,
                     monto: monto,
                     persona_id: personaId
@@ -608,6 +542,78 @@ const CuentaCorriente = () => {
         }
     }
 
+    const handleAddImputacion = (imputacion, montoSobrante) => {
+        const facturasInt = imputacion.facturas.map((fac) => parseInt(fac, 10));
+        const pagosInt = imputacion.pagos.map((pag) => parseInt(pag, 10));
+
+        let personaId;
+
+        if(persona.persona_id) {
+            personaId = persona.persona_id
+        } else {
+            personaId = persona.id
+        }
+
+        const requestData = 
+        {
+            facturas: facturasInt,
+            pagos: pagosInt,
+            monto_sobrante: montoSobrante,
+            persona_id: personaId
+        }
+    
+        fetch(`${apiUrl}/imputaciones`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${bearerToken}`
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then((response) => {
+            if (!response.ok) {
+                alert("Error al agregar imputacion, verifique los datos ingresados")
+                throw new Error("Error en la solicitud POST");
+            }
+            return response.json();
+        })
+        .then((result) => {
+            if(result.message === "Imputacion creada con éxito") {
+                const facturasActualizadas = facturasData.map(fac => {
+                    if(facturasInt.includes(fac.id)){
+                        return {...fac, flag_imputada: true}
+                    } else return fac
+                })
+            
+                const pagosActualizados = pagosData.map(pag => {
+                    if(pagosInt.includes(pag.id)) {
+                        return {...pag, flag_imputado: true}
+                    } else return pag
+                })
+
+                if(result.nuevoPago){
+                    pagosActualizados.push(result.nuevoPago)
+                }
+
+                setFacturas(facturasActualizadas)
+                setPagos(pagosActualizados)
+                refreshFacturas(facturasActualizadas)
+                refreshPagos(pagosActualizados)
+            }
+
+            alert(result.message)
+            setIsLoading(false)
+        })
+        .catch(error => {
+            setIsLoading(false)
+            console.error("Error en la solicitud POST:", error);
+        });
+    }
+
+    const handleHistorial = () => {
+        navigate(`/admin/cuenta-corriente/${email}/historial`);
+    }
+
     return (
         <>
             {isLoading && <Loading/>}
@@ -623,7 +629,7 @@ const CuentaCorriente = () => {
                 <>
                     <div style={{display: "flex", justifyContent: "space-evenly"}}>
                         <div style={{width: "40%"}}>
-                            <div style={{height: "7rem", display: "flex", flexDirection: "column", alignItems: "center"}}>
+                            <div style={{height: "6rem", display: "flex", flexDirection: "column", alignItems: "center"}}>
                                 {selectedRow && (
                                     flagCliente && (
                                         remitoExiste && (
@@ -712,123 +718,83 @@ const CuentaCorriente = () => {
                             )}
                         </div>
 
-                        <div style={{width: "50%", marginTop: "1rem"}}>
-                            {pagos.length > 0 ? (
-                                <>
-                                    <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                                        <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
-                                            {totalPagadoFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL PAGADO: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagadoFactura)}</span></span>}
-                                            {montoRestanteFactura != null && <span style={{ fontWeight: "bold" }}>MONTO RESTANTE: <span style={{fontWeight: "normal"}}>${formatearNumero(montoRestanteFactura)}</span></span>}
-                                        </div>
+                        <div style={{width: "50%", marginTop: "2rem"}}>
+                            <>
+                                <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: ".6rem"}}>
+                                    <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
+                                        {totalPagadoFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL PAGADO: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagadoFactura)}</span></span>}
+                                        {montoRestanteFactura != null && <span style={{ fontWeight: "bold" }}>MONTO RESTANTE: <span style={{fontWeight: "normal"}}>${formatearNumero(montoRestanteFactura)}</span></span>}
                                     </div>
-
-                                    <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginTop: "1rem"}}>
-                                        <div
-                                            onClick={() => handleOpcionPagoChange("TODOS")}
-                                            style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", justifyContent: "center"}}
-                                        >
-                                            <input
-                                                id="envio-radio1"
-                                                style={{ width: "fit-content", cursor: "pointer" }}
-                                                type="radio"
-                                                value="TODOS"
-                                                checked={opcionPagosSeleccionada === "TODOS"}
-                                                onChange={() => handleOpcionPagoChange("TODOS")}
-                                            />
-                                            <span>Todos los Pagos</span>
-                                        </div>
-                                        <div
-                                            onClick={() => handleOpcionPagoChange("FACTURA")}
-                                            style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", justifyContent: "center"}}
-                                        >
-                                            <input
-                                                id="envio-radio2"
-                                                style={{ width: "fit-content", cursor: "pointer" }}
-                                                type="radio"
-                                                value="FACTURA"
-                                                checked={opcionPagosSeleccionada === "FACTURA"}
-                                                onChange={() => handleOpcionPagoChange("FACTURA")}
-                                            />
-                                            <span>Pagos de la Factura Seleccionada</span>
-                                        </div>
-                                    </div>
-
-                                    {pagosFiltrados.length > 0 ? (
-                                        <>
-                                            <div className="tableDivContainer">
-                                                <table {...getPagosTableProps()} className="tableContainer">
-                                                    <thead>
-                                                        {pagosHeaderGroups.map(headerGroup => (
-                                                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                                                {headerGroup.headers.map(column => (
-                                                                    <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                                                                ))}
+                                </div>
+                                {pagos.length > 0 ? (
+                                    <>
+                                        <div className="tableDivContainer">
+                                            <table {...getPagosTableProps()} className="tableContainer">
+                                                <thead>
+                                                    {pagosHeaderGroups.map(headerGroup => (
+                                                        <tr {...headerGroup.getHeaderGroupProps()}>
+                                                            {headerGroup.headers.map(column => (
+                                                                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                                                            ))}
+                                                        </tr>
+                                                    ))}
+                                                </thead>
+                                                <tbody {...getPagosTableBodyProps()}>
+                                                    {pagosPage.map(row => {
+                                                        preparePagosRow(row);
+                                                        return  (
+                                                            <tr {...row.getRowProps()}>
+                                                                {row.cells.map((cell) => {
+                                                                    return (
+                                                                        <td {...cell.getCellProps()}>
+                                                                            {cell.column.id === "eliminar" ? (
+                                                                                <button onClick={() => handleDeletePago(row)} className="botonEliminar">
+                                                                                    <FontAwesomeIcon icon={faTrashAlt} />
+                                                                                </button>
+                                                                            ) : cell.column.id === "editar" ? (
+                                                                                <button onClick={() => handleEditPago(row)} className="botonEditar">
+                                                                                    <FontAwesomeIcon icon={faEdit} />
+                                                                                </button>
+                                                                            ) : (
+                                                                                cell.render("Cell")
+                                                                            )}
+                                                                        </td>
+                                                                    );
+                                                                })}
                                                             </tr>
-                                                        ))}
-                                                    </thead>
-                                                    <tbody {...getPagosTableBodyProps()}>
-                                                        {pagosPage.map(row => {
-                                                            preparePagosRow(row);
-                                                            return  (
-                                                                <tr {...row.getRowProps()}>
-                                                                    {row.cells.map((cell) => {
-                                                                        return (
-                                                                            <td {...cell.getCellProps()}>
-                                                                                {cell.column.id === "eliminar" ? (
-                                                                                    <button onClick={() => handleDeletePago(row)} className="botonEliminar">
-                                                                                        <FontAwesomeIcon icon={faTrashAlt} />
-                                                                                    </button>
-                                                                                ) : cell.column.id === "editar" ? (
-                                                                                    <button onClick={() => handleEditPago(row)} className="botonEditar">
-                                                                                        <FontAwesomeIcon icon={faEdit} />
-                                                                                    </button>
-                                                                                ) : (
-                                                                                    cell.render("Cell")
-                                                                                )}
-                                                                            </td>
-                                                                        );
-                                                                    })}
-                                                                </tr>
-                                                            );
-                                                        })}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div className="paginacion">
-                                                <button onClick={() => pagosPreviousPage()} disabled={!pagosCanPreviousPage}>
-                                                    <FontAwesomeIcon icon={faArrowLeft} />
-                                                </button>
-                                                <span>
-                                                    Pagina{" "}
-                                                    <strong>
-                                                        {pagosPageIndex + 1} de {pagosPageOptions.length}
-                                                    </strong>{" "}
-                                                </span>
-                                                <button onClick={() => pagosNextPage()} disabled={!pagosCanNextPage}>
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </button>
-                                            </div>
-
-                                        </>  
-                                    ) : (
-                                        <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                                            sans-serif`}}>
-                                            No hay pagos para mostrar.
-                                        </p>
-                                    )}
-                                </>
-                            ) : (
-                                <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                                    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                                    sans-serif`}}>
-                                    No hay pagos para mostrar.
-                                </p>
-                            )}
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div className="paginacion">
+                                            <button onClick={() => pagosPreviousPage()} disabled={!pagosCanPreviousPage}>
+                                                <FontAwesomeIcon icon={faArrowLeft} />
+                                            </button>
+                                            <span>
+                                                Pagina{" "}
+                                                <strong>
+                                                    {pagosPageIndex + 1} de {pagosPageOptions.length}
+                                                </strong>{" "}
+                                            </span>
+                                            <button onClick={() => pagosNextPage()} disabled={!pagosCanNextPage}>
+                                                <FontAwesomeIcon icon={faArrowRight} />
+                                            </button>
+                                        </div>
+                                    </>  
+                                ) : (
+                                    <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                                        sans-serif`}}>
+                                        No hay pagos para mostrar.
+                                    </p>
+                                )}
+                            </>
                         </div>
                     </div>
 
-                    <Button onClick={() => setIsPagoModalOpen(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px"}}>Agregar Pago</Button>
+                    <Button onClick={() => setIsPagoModalOpen(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "180px"}}>Agregar Pago</Button>
+                    <Button onClick={() => setIsImputacionModalOpen(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "340px"}}>Imputar</Button>
 
                     {isFacturaModalOpen && (
                         <ModalFacturaEditar
@@ -863,6 +829,14 @@ const CuentaCorriente = () => {
                             remitoEdit={remitoExiste}
                         />
                     )}
+                    {isImputacionModalOpen && (
+                        <ModalImputacion
+                            pagos={pagos}
+                            facturas={facturas}
+                            onClose={() => setIsImputacionModalOpen(false)}
+                            onSave={handleAddImputacion}
+                        />
+                    )}
                 </>
             ) : (
                 <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -871,6 +845,8 @@ const CuentaCorriente = () => {
                     No hay facturas para mostrar.
                 </p>
             )}
+            
+            <Button onClick={handleHistorial}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px"}}>Historial</Button>
         </>
     );
 }

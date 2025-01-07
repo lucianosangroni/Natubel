@@ -350,7 +350,8 @@ export const DataProviderAdmin = ({ children }) => {
                 if (facturaActualizada) {
                     return {
                         ...fac,
-                        monto: facturaActualizada.monto
+                        monto: facturaActualizada.monto,
+                        flag_imputada: facturaActualizada.flag_imputada
                     };
                 }
                 return fac;

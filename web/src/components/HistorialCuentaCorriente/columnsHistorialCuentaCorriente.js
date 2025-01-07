@@ -1,6 +1,6 @@
 // ESTA ES LA ESTRUCTURA DE COLUMNAS DE LA CUENTA CORRIENTE
 
-export const COLUMNSCUENTACORRIENTE = [
+export const COLUMNSHISTORIALCUENTACORRIENTE = [
     {
         Header: "N° Pedido",
         accessor: "numero_pedido",
@@ -25,6 +25,14 @@ export const COLUMNSCUENTACORRIENTE = [
             return `$${montoFormateado}`;
         },
     },
+    {
+        Header: "Estado",
+        accessor: "flag_imputada",
+        width: 'auto',
+        Cell: ({value}) => {
+            return value ? "IMPUTADA" : "PENDIENTE"
+        }
+    }
 ]
 
 const formatearNumero = (numero) => {

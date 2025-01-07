@@ -1,14 +1,9 @@
-// ESTA ES LA ESTRUCTURA DE COLUMNAS DE LA CUENTA CORRIENTE
+// ESTA ES LA ESTRUCTURA DE COLUMNAS DE LOS PAGOS
 
-export const COLUMNSCUENTACORRIENTE = [
+export const COLUMNSHISTORIALPAGOS = [
     {
-        Header: "N° Pedido",
-        accessor: "numero_pedido",
-        width: 'auto',
-    },
-    {
-        Header: "N° Remito",
-        accessor: "numero_remito",
+        Header: "N° Pago",
+        accessor: "numero_pago",
         width: 'auto',
     },
     {
@@ -25,6 +20,19 @@ export const COLUMNSCUENTACORRIENTE = [
             return `$${montoFormateado}`;
         },
     },
+    {
+        Header: "Destino",
+        accessor:"destino",
+        width: 'auto',
+    },
+    {
+        Header: "Estado",
+        accessor: "flag_imputado",
+        width: 'auto',
+        Cell: ({value}) => {
+            return value ? "IMPUTADO" : "PENDIENTE"
+        }
+    }
 ]
 
 const formatearNumero = (numero) => {
