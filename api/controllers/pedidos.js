@@ -1,8 +1,13 @@
+const { where } = require("sequelize");
 const { pedidoModel, productoXPedidoModel, productoModel, personaModel, articuloModel, facturaModel } = require("../modelos");
 const { matchedData } = require("express-validator");
 
 const getItems = async (req, res) => {
     try {
+        let { limit, offset } = req.query;
+        limit = limit ? parseInt(limit) : 10;
+        offset = offset ? parseInt(offset) : 0;
+
         const pedidos = await pedidoModel.findAll({
             include: [
                 {
@@ -13,6 +18,9 @@ const getItems = async (req, res) => {
                     },
                 },
             ],
+            limit,
+            offset,
+            order: [["numero_pedido", "DESC"]]
         })
         
         for (const pedido of pedidos) {
@@ -91,6 +99,7 @@ const createItem = async (req, res) => {
         facturaModel.create
         (
             {
+                persona_id,
                 monto: precio_total,
                 pedido_id: nuevoPedido.numero_pedido
             }
@@ -142,6 +151,16 @@ const updateItem = async (req, res) => {
                     );
                 }
             }
+
+            await facturaModel.update
+            (
+                {
+                    flag_cancelada: true
+                },
+                {
+                    where: {pedido_id: pedido_id}
+                }
+            )
         }
 
         res.status(200).json({ message: 'Pedido editado con éxito' });

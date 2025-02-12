@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useData } from "../../context/DataContext";
 
 function ListaProductosDePedido({ pedido, onCambiarEstado }) {
-    const { clientesData, proveedoresData } = useData()
+    const { clientesData, proveedoresData, facturasData } = useData()
     const [selectedArticulo, setSelectedArticulo] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate();
@@ -124,7 +124,12 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
     }
 
     const editarPedido = () => {
-      navigate(`/admin/pedidos/${pedido.numero_pedido}`);
+      const factura = facturasData.find(fac => fac.pedido_id === pedido.numero_pedido)
+      if(factura.flag_imputada) {
+        alert("No se puede editar el pedido ya que su factura está imputada")
+      } else {
+        navigate(`/admin/pedidos/${pedido.numero_pedido}`);
+      }
     }
 
     return (

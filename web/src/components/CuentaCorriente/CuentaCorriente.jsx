@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 
 const CuentaCorriente = () => {
     const { email } = useParams();
-    const { clientesData, proveedoresData, pedidosData, facturasData, refreshFacturas, remitosData, refreshRemitos, pagosData, refreshPagos } = useData()
+    const { clientesData, proveedoresData, facturasData, refreshFacturas, remitosData, refreshRemitos, pagosData, refreshPagos, addImputaciones } = useData()
     const [ persona, setPersona ] = useState(null);
     const [ facturas, setFacturas ] = useState([]);
     const columnsFacturas = useMemo(() => COLUMNSCUENTACORRIENTE, []);
@@ -56,15 +56,12 @@ const CuentaCorriente = () => {
 
     useEffect(() => {
         if (persona) {
-            const pedidosCorrespondientes = pedidosData.filter(pedido => pedido.persona_nombre === persona.nombre && pedido.estado !== "CANCELADO")
-            
-            const facturasCorrespondientes = facturasData.filter(factura => factura.flag_imputada === false).filter(factura => pedidosCorrespondientes.find(pedido => pedido.numero_pedido === factura.pedido_id))
+            const facturasCorrespondientes = facturasData.filter(factura => factura.flag_imputada === false && factura.persona_nombre === persona.nombre && factura.flag_cancelada === false)
                 .map(factura => {
-                    const pedidoCorrespondiente = pedidosCorrespondientes.find(pedido => pedido.numero_pedido === factura.pedido_id);
-                    const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === pedidoCorrespondiente.numero_pedido);
+                    const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === factura.pedido_id);
                     return {
                         id: factura.id,
-                        numero_pedido: pedidoCorrespondiente.numero_pedido,
+                        numero_pedido: factura.pedido_id,
                         numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
                         monto: factura.monto,
                         fecha: formatearFecha(factura.createdAt)
@@ -115,7 +112,7 @@ const CuentaCorriente = () => {
             setTotalPagadoFactura(totalPagado)
             setMontoRestanteFactura(montoRestante)
         }
-    }, [persona, pedidosData, facturasData, remitosData, pagosData]);   
+    }, [persona, facturasData, remitosData, pagosData]);   
 
     const {
         getTableProps: getFacturasTableProps,
@@ -319,6 +316,8 @@ const CuentaCorriente = () => {
     }
 
     const generarPdfRemito = () => {
+        setIsLoading(true)
+
         fetch(`${apiUrl}/pdf/remito/${remitoExiste.pedido_id}`, {
             headers: {
                 Authorization: `Bearer ${bearerToken}`,
@@ -538,11 +537,14 @@ const CuentaCorriente = () => {
             })
             .catch((error) => {
                 console.error("Error en la solicitud DELETE:", error);
+                setIsLoading(false)
             });
         }
     }
 
     const handleAddImputacion = (imputacion, montoSobrante) => {
+        setIsLoading(true)
+
         const facturasInt = imputacion.facturas.map((fac) => parseInt(fac, 10));
         const pagosInt = imputacion.pagos.map((pag) => parseInt(pag, 10));
 
@@ -595,6 +597,14 @@ const CuentaCorriente = () => {
                     pagosActualizados.push(result.nuevoPago)
                 }
 
+                const filasImputacion = [];
+                for (const pago_id of pagosInt) {
+                    for (const factura_id of facturasInt) {
+                        filasImputacion.push({ pago_id, factura_id, createdAt: Date.now() });
+                    }
+                }
+
+                addImputaciones(filasImputacion)
                 setFacturas(facturasActualizadas)
                 setPagos(pagosActualizados)
                 refreshFacturas(facturasActualizadas)

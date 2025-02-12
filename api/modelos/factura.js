@@ -1,6 +1,7 @@
 const { sequelize } = require("../config/dbConnect")
 const { DataTypes } = require("sequelize")
 const Pedido = require("./pedido")
+const Persona = require("./persona")
 
 const Factura = sequelize.define(
     "factura",
@@ -13,6 +14,10 @@ const Factura = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        flag_cancelada: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     },
     {
         tableName: "factura",
@@ -20,5 +25,6 @@ const Factura = sequelize.define(
 )
 
 Factura.belongsTo(Pedido, {foreignKey: "pedido_id"})
+Persona.hasMany(Factura, { foreignKey: "persona_id" });
 
 module.exports = Factura;
