@@ -23,14 +23,6 @@ const getItems = async (req, res) => {
             order: [["numero_pedido", "DESC"]]
         })
         
-        for (const pedido of pedidos) {
-            const persona = await personaModel.findOne({
-                where: { id: pedido.persona_id },
-            });
-
-            pedido.dataValues.persona = persona;
-        }
-        
         res.status(200).send(pedidos)
     } catch (e) {
         console.log("Error al buscar los pedidos: ", e)

@@ -1,18 +1,9 @@
-const { facturaModel, personaModel } = require("../modelos");
+const { facturaModel } = require("../modelos");
 const { matchedData } = require("express-validator");
 
 const getItems = async (req, res) => {
     try {
         const facturas = await facturaModel.findAll()
-
-        for (const factura of facturas) {
-            const persona = await personaModel.findOne({
-                where: { id: factura.persona_id },
-            });
-
-            factura.dataValues.persona_nombre = persona.nombre;
-        }
-
         res.status(200).send(facturas)
     } catch (e) {
         console.log("Error al buscar las facturas: ", e)

@@ -15,7 +15,6 @@ import ModalRemito from "./ModalRemito";
 import ModalRemitoEditar from "./ModalRemitoEditar";
 import ModalFacturaEditar from "./ModalFacturaEditar";
 import ModalPagoEditar from "./ModalPagoEditar";
-import ModalImputacion from "./ModalImputacion";
 import { useNavigate } from 'react-router-dom';
 
 const CuentaCorriente = () => {
@@ -25,12 +24,18 @@ const CuentaCorriente = () => {
     const [ facturas, setFacturas ] = useState([]);
     const columnsFacturas = useMemo(() => COLUMNSCUENTACORRIENTE, []);
     const columnsPagos = useMemo(() => COLUMNSPAGOS, []);
+    const [flagImputando, setFlagImputando] = useState(false)
+    const [totalFacturasImputando, setTotalFacturasImputando] = useState(0)
+    const [totalPagosImputando, setTotalPagosImputando] = useState(0)
+    const [imputacion, setImputacion] = useState({
+        facturas: [],
+        pagos: []
+    })
     const [isPagoModalOpen, setIsPagoModalOpen] = useState(false);
     const [isFacturaModalOpen, setIsFacturaModalOpen] = useState(false);
     const [isPagoEditModalOpen, setIsPagoEditModalOpen] = useState(false);
     const [isRemitoModalOpen, setIsRemitoModalOpen] = useState(false);
     const [isRemitoEditModalOpen, setIsRemitoEditModalOpen] = useState(false);
-    const [isImputacionModalOpen, setIsImputacionModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
     const [selectedRowPago, setSelectedRowPago] = useState(null);
@@ -128,7 +133,23 @@ const CuentaCorriente = () => {
         state: facturasState,
     } = useTable(
         {
-            columns: columnsFacturas,
+            columns: useMemo(() => {
+                const baseColumns = [...columnsFacturas];
+                if (flagImputando) {
+                    baseColumns.unshift({
+                        id: "selection",
+                        Header: () => <></>, 
+                        Cell: ({ row }) => (
+                            <input
+                                type="checkbox"
+                                onChange={(e) => handleCheckboxChangeFacturas(e, row.original)}
+                            />
+                        ),
+                        width: 'auto',
+                    });
+                }
+                return baseColumns;
+            }, [flagImputando, columnsFacturas]),
             data: facturas,
         },
         usePagination,
@@ -151,10 +172,27 @@ const CuentaCorriente = () => {
         state: pagosState
     } = useTable(
         {
-            columns: columnsPagos,
+            columns: useMemo(() => {
+                const baseColumns = [...columnsPagos];
+                if (flagImputando) {
+                    baseColumns.unshift({
+                        id: "selection",
+                        Header: () => <></>, 
+                        Cell: ({ row }) => (
+                            <input
+                                type="checkbox"
+                                onChange={(e) => handleCheckboxChangePagos(e, row.original)}
+                            />
+                        ),
+                        width: 'auto',
+                    });
+                }
+                return baseColumns;
+            }, [flagImputando, columnsPagos]),
             data: pagos,
         },
-        usePagination
+        usePagination,
+        useRowSelect
     );
 
     const { pageIndex: pagosPageIndex } = pagosState
@@ -542,82 +580,153 @@ const CuentaCorriente = () => {
         }
     }
 
-    const handleAddImputacion = (imputacion, montoSobrante) => {
+    const handleAddImputacion = () => {
         setIsLoading(true)
 
-        const facturasInt = imputacion.facturas.map((fac) => parseInt(fac, 10));
-        const pagosInt = imputacion.pagos.map((pag) => parseInt(pag, 10));
+        if(imputacion.facturas.length > 0 && totalFacturasImputando <= totalPagosImputando){
+            const montoSobrante = totalPagosImputando - totalFacturasImputando
 
-        let personaId;
+            let personaId;
 
-        if(persona.persona_id) {
-            personaId = persona.persona_id
-        } else {
-            personaId = persona.id
-        }
-
-        const requestData = 
-        {
-            facturas: facturasInt,
-            pagos: pagosInt,
-            monto_sobrante: montoSobrante,
-            persona_id: personaId
-        }
-    
-        fetch(`${apiUrl}/imputaciones`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${bearerToken}`
-            },
-            body: JSON.stringify(requestData)
-        })
-        .then((response) => {
-            if (!response.ok) {
-                alert("Error al agregar imputacion, verifique los datos ingresados")
-                throw new Error("Error en la solicitud POST");
+            if(persona.persona_id) {
+                personaId = persona.persona_id
+            } else {
+                personaId = persona.id
             }
-            return response.json();
-        })
-        .then((result) => {
-            if(result.message === "Imputacion creada con éxito") {
-                const facturasActualizadas = facturasData.map(fac => {
-                    if(facturasInt.includes(fac.id)){
-                        return {...fac, flag_imputada: true}
-                    } else return fac
-                })
-            
-                const pagosActualizados = pagosData.map(pag => {
-                    if(pagosInt.includes(pag.id)) {
-                        return {...pag, flag_imputado: true}
-                    } else return pag
-                })
 
-                if(result.nuevoPago){
-                    pagosActualizados.push(result.nuevoPago)
+            const requestData = 
+            {
+                facturas: imputacion.facturas,
+                pagos: imputacion.pagos,
+                monto_sobrante: montoSobrante,
+                persona_id: personaId
+            }
+        
+            fetch(`${apiUrl}/imputaciones`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${bearerToken}`
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    alert("Error al agregar imputacion, verifique los datos ingresados")
+                    throw new Error("Error en la solicitud POST");
                 }
+                return response.json();
+            })
+            .then((result) => {
+                if(result.message === "Imputacion creada con éxito") {
+                    const facturasActualizadas = facturasData.map(fac => {
+                        if(imputacion.facturas.includes(fac.id)){
+                            return {...fac, flag_imputada: true}
+                        } else return fac
+                    })
+                
+                    const pagosActualizados = pagosData.map(pag => {
+                        if(imputacion.pagos.includes(pag.id)) {
+                            return {...pag, flag_imputado: true}
+                        } else return pag
+                    })
 
-                const filasImputacion = [];
-                for (const pago_id of pagosInt) {
-                    for (const factura_id of facturasInt) {
-                        filasImputacion.push({ pago_id, factura_id, createdAt: Date.now() });
+                    if(result.nuevoPago){
+                        pagosActualizados.push(result.nuevoPago)
                     }
+
+                    const filasImputacion = [];
+                    for (const pago_id of imputacion.pagos) {
+                        for (const factura_id of imputacion.facturas) {
+                            filasImputacion.push({ pago_id, factura_id, createdAt: Date.now() });
+                        }
+                    }
+
+                    addImputaciones(filasImputacion)
+                    setFacturas(facturasActualizadas)
+                    setPagos(pagosActualizados)
+                    refreshFacturas(facturasActualizadas)
+                    refreshPagos(pagosActualizados)
+                    setImputacion({
+                        facturas: [],
+                        pagos: []
+                    })
+                    setTotalFacturasImputando(0)
+                    setTotalPagosImputando(0)
+                    setFlagImputando(false)
                 }
 
-                addImputaciones(filasImputacion)
-                setFacturas(facturasActualizadas)
-                setPagos(pagosActualizados)
-                refreshFacturas(facturasActualizadas)
-                refreshPagos(pagosActualizados)
-            }
+                alert(result.message)
+                setIsLoading(false)
+            })
+            .catch(error => {
+                setIsLoading(false)
+                console.error("Error en la solicitud POST:", error);
+            });
+        } else {
+            alert("El monto de los pagos debe superar al de las facturas")
+            setIsLoading(false)
+        } 
+    }
 
-            alert(result.message)
-            setIsLoading(false)
-        })
-        .catch(error => {
-            setIsLoading(false)
-            console.error("Error en la solicitud POST:", error);
+    const handleCheckboxChangeFacturas = (event, factura) => {
+        setImputacion((prevImputacion) => {
+            const prevFacturas = Array.isArray(prevImputacion.facturas) ? prevImputacion.facturas : [];
+            
+            let newFacturas;
+            if (event.target.checked) {
+                newFacturas = [...prevFacturas, factura.id];
+            } else {
+                newFacturas = prevFacturas.filter(facturaId => facturaId !== factura.id);
+            }
+    
+            const nuevoTotalFacturas = newFacturas.reduce((total, facturaId) => {
+                const facturaEncontrada = facturas.find(f => f.id === Number(facturaId));
+                return facturaEncontrada ? total + facturaEncontrada.monto : total;
+            }, 0);
+    
+            setTotalFacturasImputando(nuevoTotalFacturas);
+    
+            return {
+                ...prevImputacion,
+                facturas: newFacturas
+            };
         });
+    };
+
+    const handleCheckboxChangePagos = (event, pago) => {
+        setImputacion((prevImputacion) => {
+            const prevPagos = Array.isArray(prevImputacion.pagos) ? prevImputacion.pagos : [];
+            
+            let newPagos;
+            if (event.target.checked) {
+                newPagos = [...prevPagos, pago.id];
+            } else {
+                newPagos = prevPagos.filter(pagoId => pagoId !== pago.id);
+            }
+    
+            const nuevoTotalPagos = newPagos.reduce((total, pagoId) => {
+                const pagoEncontrado = pagos.find(p => p.id === Number(pagoId));
+                return pagoEncontrado ? total + pagoEncontrado.monto : total;
+            }, 0);
+    
+            setTotalPagosImputando(nuevoTotalPagos);
+    
+            return {
+                ...prevImputacion,
+                pagos: newPagos
+            };
+        });
+    };
+
+    const handleCancelarImputacion = () => {
+        setImputacion({
+            facturas: [],
+            pagos: []
+        })
+        setTotalFacturasImputando(0)
+        setTotalPagosImputando(0)
+        setFlagImputando(false)
     }
 
     const handleHistorial = () => {
@@ -708,7 +817,7 @@ const CuentaCorriente = () => {
                             </div>
                                     
 
-                            {selectedRow && (
+                            {selectedRow && !flagImputando && (
                                 flagCliente ? (
                                     remitoExiste ? (
                                         <div style={{display: "flex", justifyContent: "center"}}>
@@ -731,10 +840,17 @@ const CuentaCorriente = () => {
                         <div style={{width: "50%", marginTop: "2rem"}}>
                             <>
                                 <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: ".6rem"}}>
-                                    <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
-                                        {totalPagadoFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL PAGADO: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagadoFactura)}</span></span>}
-                                        {montoRestanteFactura != null && <span style={{ fontWeight: "bold" }}>MONTO RESTANTE: <span style={{fontWeight: "normal"}}>${formatearNumero(montoRestanteFactura)}</span></span>}
-                                    </div>
+                                    {flagImputando? (
+                                        <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
+                                            <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(totalFacturasImputando)}</span></span>
+                                            <span style={{ fontWeight: "bold" }}>TOTAL PAGOS: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagosImputando)}</span></span>
+                                        </div>  
+                                    ) : (
+                                        <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
+                                            {totalPagadoFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL PAGADO: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagadoFactura)}</span></span>}
+                                            {montoRestanteFactura != null && <span style={{ fontWeight: "bold" }}>MONTO RESTANTE: <span style={{fontWeight: "normal"}}>${formatearNumero(montoRestanteFactura)}</span></span>}
+                                        </div>  
+                                    )}
                                 </div>
                                 {pagos.length > 0 ? (
                                     <>
@@ -803,9 +919,18 @@ const CuentaCorriente = () => {
                         </div>
                     </div>
 
-                    <Button onClick={() => setIsPagoModalOpen(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "180px"}}>Agregar Pago</Button>
-                    <Button onClick={() => setIsImputacionModalOpen(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "340px"}}>Imputar</Button>
-
+                    {flagImputando? (
+                        <>
+                            <Button onClick={handleCancelarImputacion}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "180px"}}>Cancelar</Button>
+                            <Button onClick={handleAddImputacion}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px"}}>Confirmar</Button>
+                        </>
+                    ) : 
+                        <>
+                            <Button onClick={() => setIsPagoModalOpen(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "180px"}}>Agregar Pago</Button>
+                            <Button onClick={() => setFlagImputando(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px"}}>Imputar</Button>    
+                        </>
+                    }
+                    
                     {isFacturaModalOpen && (
                         <ModalFacturaEditar
                             data={selectedRow}
@@ -839,14 +964,6 @@ const CuentaCorriente = () => {
                             remitoEdit={remitoExiste}
                         />
                     )}
-                    {isImputacionModalOpen && (
-                        <ModalImputacion
-                            pagos={pagos}
-                            facturas={facturas}
-                            onClose={() => setIsImputacionModalOpen(false)}
-                            onSave={handleAddImputacion}
-                        />
-                    )}
                 </>
             ) : (
                 <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -856,7 +973,9 @@ const CuentaCorriente = () => {
                 </p>
             )}
             
-            <Button onClick={handleHistorial}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px"}}>Historial</Button>
+            {!flagImputando && (
+                <Button onClick={handleHistorial}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "340px"}}>Historial</Button>
+            )}
         </>
     );
 }

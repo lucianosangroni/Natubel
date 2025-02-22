@@ -32,6 +32,11 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
         return
       }
 
+      if(nuevoEstado === "CANCELADO" && facturasData.find(fac => fac.pedido_id === pedido.numero_pedido).flag_imputada) {
+        alert("No se puede cancelar un pedido que tiene su factura imputada")
+        return
+      }
+
       const shouldCambiarEstado = window.confirm(
         `¿Estas seguro que quieres cambiar el estado del pedido a ${nuevoEstado}?`
       );

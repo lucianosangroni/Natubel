@@ -17,8 +17,10 @@ const HistorialPedidos = () => {
 
    ////OBTENER PEDIDOS Y ARTICULOS DB
   useEffect(() => {
+    if(data.length === 0) {
       setData(pedidosData)
       setSelectedRow(pedidosData[0])
+    }
   }, [pedidosData]);
 
   const tableInstance = useTable(
@@ -53,6 +55,11 @@ const HistorialPedidos = () => {
     if(nuevoEstado === "CANCELADO") {
       refreshPedidoCancelado(pedido_id)
     }
+  }
+
+  const cargarMasPedidos = () => {
+    setData(pedidosData)
+    setSelectedRow(pedidosData[0])
   }
 
   return (
@@ -104,6 +111,12 @@ const HistorialPedidos = () => {
           </span>
           <button onClick={() => nextPage()} disabled={!canNextPage}>
             <FontAwesomeIcon icon={faArrowRight} />
+          </button>
+          <button
+            className={"boton-pedidor pedidor-seleccionado"}
+            onClick={() => cargarMasPedidos()}
+          >
+          Cargar Mas
           </button>
         </div>
 

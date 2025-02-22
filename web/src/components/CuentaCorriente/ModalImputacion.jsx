@@ -26,7 +26,7 @@ function ModalImputacion({ facturas, pagos, onClose, onSave }) {
     const handleFacturasChange = (e, index) => {
         const newFacturas = [...imputacion.facturas]
         newFacturas[index] = e.target.value
-
+        console.log(e.target)
         const nuevoTotalFacturas = newFacturas.reduce((total, facturaId) => {
             const factura = facturas.find(f => f.id === Number(facturaId));
             return factura ? total + factura.monto : total;
