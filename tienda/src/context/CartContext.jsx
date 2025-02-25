@@ -5,6 +5,7 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [ carrito, setCarrito ] = useState([]);
+  const [ cliente, setCliente ] = useState(null)
   const [ selectedPrecios, setSelectedPrecios ] = useState("MINORISTA")
   const { articulosData } = useData();
   const [ flagActualizarWidget, setFlagActualizarWidget ] = useState(0)
@@ -125,6 +126,10 @@ export const CartProvider = ({ children }) => {
     setSelectedPrecios(precios)
   }
 
+  const setClienteCart = (cliente) => {
+    setCliente(cliente)
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -138,6 +143,8 @@ export const CartProvider = ({ children }) => {
         verificarStock,
         tipoPrecios,
         setTipoPrecios,
+        cliente,
+        setClienteCart,
         flagActualizarWidget,
         mostrarToastStock,
         setMostrarToastStock,

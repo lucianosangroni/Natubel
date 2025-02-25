@@ -46,7 +46,7 @@ function ResumenDePedido() {
         <>
             {articulos.length > 0 && (
                 <div className="contenedor-resumen-pedido">
-                    <h5 className="titulo-resumenPedido">Resumen de Pedido</h5>
+                    <h5 className="titulo-resumenPedido">Resumen de tu Pedido</h5>
                     {articulos.map((articulo, articuloIndex) => {
                             const tallesDesordenados = Array.from(new Set(articulo.productos.filter((producto) => producto.stock > 0).map((producto) => producto.talle.toUpperCase())));
                             const coloresDesordenados = Array.from(new Set(articulo.productos.filter((producto) => producto.stock > 0).map((producto) => producto.color.toUpperCase())));

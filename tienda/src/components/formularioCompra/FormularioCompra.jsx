@@ -120,9 +120,25 @@ const FormularioCompra = () => {
           : "MINORISTA";
 
           if(tipoPrecios() === tipoPreciosQueCorresponde) {  
-            enviarCodigo(formData.email)
-            setShowIngresarCodigo(true)
-            setFormulario(formData)
+            if(tipoPreciosQueCorresponde === "DISTRIBUIDOR") {
+              toast(
+                <div style={{ textAlign: "center" }}>
+                    El monto de tu pedido corresponde a la lista DISTRIBUIDOR pero es necesario contar con un email de un cliente distribuidor. 
+                    Si ya has hecho una compra previa con la lista DISTRIBUIDOR continua e ingresa el email que usaste en tu compra previa,
+                    de lo contrario comunicate por WhatsApp y envía una foto del resumen de tu pedido el cual puedes encontrar en formato "grilla" en la pantalla "Compra rapida".
+                </div>,
+                {
+                    position: "top-center",
+                    hideProgressBar: true,
+                    autoClose: false,
+                    closeButton: true
+                }
+              );
+            } else {
+              enviarCodigo(formData.email)
+              setShowIngresarCodigo(true)
+              setFormulario(formData)
+            }
           } else {
             toast.error(`El monto de tu pedido no corresponde a la lista ${tipoPrecios()}, sino a la lista ${tipoPreciosQueCorresponde}. 
               Cambia la lista de precios en el carrito y vuelve a intentar.`, {
@@ -171,6 +187,7 @@ const FormularioCompra = () => {
       setIsLoading(false)
     })
     .catch(error => {
+      setIsLoading(false)
       console.error(`Error en la solicitud GET para el cliente ${formData.email}:`, error);
     });
   }
