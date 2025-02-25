@@ -9,7 +9,7 @@ const ListasDePrecios = ({  }) => {
         setTipoPrecios
     } = useContext(CartContext);
 
-    const { montoMinimoMayorista, montoMinimoDistribuidor } = useData();
+    const { montoMinimoMayorista } = useData();
     
     const [ selectedPrecios, setSelectedPrecios ] = useState(tipoPrecios())
 
@@ -30,11 +30,8 @@ const ListasDePrecios = ({  }) => {
         <>
             <div className="explicacion-precios-container">
                 <p className="explicacion-precios">El catalogo muestra la lista de precios: {selectedPrecios} 
-                    <br></br>
-                    El monto mínimo de una compra mayorista es de ${formatearNumero(montoMinimoMayorista)} y el monto minimo de una compra de 
-                    distribuidor es de ${formatearNumero(montoMinimoDistribuidor)} 
-                    <br></br>
-                    Si ya has hecho una compra previa con una lista de precios mayor no será necesario volver a llegar al monto,
+                <br></br>
+                    El monto mínimo de una compra mayorista es de ${formatearNumero(montoMinimoMayorista)}, si ya has hecho una compra previa con una lista de precios mayor no será necesario volver a llegar al monto,
                     debes realizar una compra ingresando el mismo email que ingresaste en tu compra previa y podrás acceder a la lista de precios de tu compra más alta
                 </p>
                 <div className="buttons-precios-container">
