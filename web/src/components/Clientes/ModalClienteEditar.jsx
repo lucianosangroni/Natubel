@@ -141,6 +141,19 @@ function ModalClienteEditar({ data, onClose, onSave }) {
             />
           </Form.Group>
           <Form.Group>
+            <Form.Label>Descuento Predeterminado</Form.Label>
+            <Form.Control
+              type="text"
+              value={editedData.descuento}
+              onChange={(e) =>
+                setEditedData({
+                  ...editedData,
+                  descuento: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group>
               <Form.Label>Envio</Form.Label>
               <Form.Control
                 as="select"

@@ -26,7 +26,7 @@
 
 .header {
   grid-area: header;
-  background-color: #333;
+  background-color: #8ab9c4;
   color: white;
   padding: 1rem;
 }
@@ -43,7 +43,7 @@
 
 .footer {
   grid-area: footer;
-  background-color: #333;
+  background-color: #8ab9c4;
   color: white;
   padding: 1rem;
   text-align: center;

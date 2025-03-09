@@ -47,6 +47,11 @@ export const COLUMNSCLIENTES = [
     width: 'auto',
 },
 {
+    Header: "Descuento %",
+    accessor: "descuento",
+    width: 'auto'
+},
+{
     Header: "Envio",
     accessor: "tipo_envio",
     width: 'auto'

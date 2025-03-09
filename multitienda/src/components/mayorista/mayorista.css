@@ -5,7 +5,7 @@
 }
 
 .explicacion-inicial {
-  background-color: #70848b;
+  background-color: #8ab9c4;
   margin-top: 1rem;
   color: white;
   font-size: 10px;
@@ -52,7 +52,7 @@
 
   .table-header-productos {
     border: 1px solid #010101;
-    background-color: #70848b;
+    background-color: #8ab9c4;
     font-weight: bold;
   }
 

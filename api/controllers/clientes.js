@@ -76,7 +76,7 @@ const createItem = async (req, res) => {
     try {
         req = matchedData(req);
 
-        const { nombre, email, telefono, direccion, dni, cuit_cuil, tipo_cliente, tipo_envio, forma_de_envio, codigo_postal, ciudad, provincia } = req
+        const { nombre, email, telefono, direccion, dni, cuit_cuil, tipo_cliente, tipo_envio, forma_de_envio, codigo_postal, ciudad, provincia, descuento } = req
 
         const existingPersonaEmail = await personaModel.findOne({ where: { email: email } })
         if(existingPersonaEmail) {
@@ -124,7 +124,8 @@ const createItem = async (req, res) => {
                 forma_de_envio,
                 codigo_postal,
                 ciudad,
-                provincia
+                provincia,
+                descuento
             }
         )
         
@@ -139,8 +140,26 @@ const updateItem = async (req, res) => {
     try {
         req = matchedData(req);
 
+        
+
         const cliente_id = req.id
-        const { nombre, email, telefono, direccion, persona_id, dni, cuit_cuil, tipo_cliente, tipo_envio, forma_de_envio, codigo_postal, ciudad, provincia } = req
+        const { nombre, email, telefono, direccion, persona_id, dni, cuit_cuil, tipo_cliente, tipo_envio, forma_de_envio, codigo_postal, ciudad, provincia, descuento } = req
+
+        console.log(cliente_id)
+        console.log(nombre)
+        console.log(email)
+        console.log(telefono)
+        console.log(direccion)
+        console.log(persona_id)
+        console.log(dni)
+        console.log(cuit_cuil)
+        console.log(tipo_cliente)
+        console.log(forma_de_envio)
+        console.log(codigo_postal)
+        console.log(ciudad)
+        console.log(provincia)
+        console.log(descuento)
+        console.log(tipo_envio)
 
         // Validar si la persona existe antes de intentar actualizarla
         const personaExiste = await personaModel.findByPk(persona_id);
@@ -196,7 +215,8 @@ const updateItem = async (req, res) => {
                 forma_de_envio,
                 codigo_postal,
                 ciudad,
-                provincia
+                provincia,
+                descuento
             },
             {
                 where: { id: cliente_id }

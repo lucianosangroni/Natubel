@@ -15,7 +15,7 @@
 }
 
 #articulo-grilla-elegido {
-    background-color: #70848b;
+    background-color: #8ab9c4;
     color: white;
     font-weight: bold !important;
 }
@@ -37,7 +37,7 @@
     height: 100%;
     padding: 0.5rem;
     border-radius: 0.5rem;
-    background-color: #70848b;
+    background-color: #8ab9c4;
     margin-bottom: 1rem;
     margin-right: 1rem;
     margin-top: auto;
@@ -45,7 +45,7 @@
 }
 
 .item-count-button {
-    background-color: #70848b;
+    background-color: #8ab9c4;
     border: 0;
     width: 2rem;
     height: 2rem;
@@ -58,12 +58,12 @@
     justify-content: center;
     text-align: center;
     line-height: 1;
-    border: 2px solid #70848b;
+    border: 2px solid #8ab9c4;
     transition: .2s;
 }
 
 .item-count-cantidad {
-    border-bottom: 1px solid #969696;
+    border-bottom: 1px solid #8ab9c4;
     padding-left: .1rem;
     padding-right: .1rem;
     font-size: 1rem;

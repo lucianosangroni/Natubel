@@ -3,9 +3,9 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useState } from "react";
 
-function ModalRemito({ onClose, onSave }) {
+function ModalRemito({ cliente, onClose, onSave }) {
     const [remito, setRemito] = useState({
-        descuento: "",
+        descuento: cliente.descuento,
         dias_vencimiento: "",
         cantidad_cajas: ""
       });
@@ -21,7 +21,7 @@ function ModalRemito({ onClose, onSave }) {
     ) {
         onSave(remito)
         setRemito({
-            descuento: "",
+            descuento: cliente.descuento,
             dias_vencimiento: "",
             cantidad_cajas: ""
         });
@@ -30,38 +30,6 @@ function ModalRemito({ onClose, onSave }) {
         alert("Por favor, complete todos los campos con datos válidos.");
       }
   };
-
-  const generarPdfRemito = () => {
-    /*fetch(`${apiUrl}/pdf/remito/${pedido_id}`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        }
-      })
-      .then((response) => {
-        if (!response.ok) {
-          alert("Error al generar el pdf, intente nuevamente");
-          throw new Error("Error en la solicitud GET");
-        }
-        return response.blob();
-      })
-      .then((result) => {
-        const url = URL.createObjectURL(result);
-  
-        const newWindow = window.open(url, '_blank');
-  
-        if (!newWindow) {
-            alert('Habilite las ventanas emergentes para descargar el PDF');
-        }
-  
-        URL.revokeObjectURL(url);
-
-        setIsLoading(false)
-      })
-      .catch((error) => {
-        setIsLoading(false)
-        console.error('Error en la solicitud GET:', error);
-      });*/
-  }
 
   return (
     <>

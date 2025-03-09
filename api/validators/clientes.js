@@ -13,6 +13,7 @@ const validatorCreateItem = [
     check("codigo_postal").exists().isString(),
     check("ciudad").exists().isString(),
     check("provincia").exists().isString(),
+    check("descuento").exists().isFloat().custom((descuento) => descuento >= 0  && descuento <= 100),
     (req, res, next) => {
         try {
             validationResult(req).throw()
@@ -37,6 +38,7 @@ const validatorUpdateItem = [
     check("codigo_postal").exists().isString(),
     check("ciudad").exists().isString(),
     check("provincia").exists().isString(),
+    check("descuento").exists().isFloat().custom((descuento) => descuento >= 0  && descuento <= 100),
     check("persona_id").exists().isInt().custom((persona_id) => persona_id > 0),
     (req, res, next) => {
         try {

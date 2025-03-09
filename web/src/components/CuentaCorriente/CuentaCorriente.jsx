@@ -955,6 +955,7 @@ const CuentaCorriente = () => {
                         <ModalRemito
                             onClose={() => setIsRemitoModalOpen(false)}
                             onSave={handleAddRemito}
+                            cliente={persona}
                         />
                     )}
                     {isRemitoEditModalOpen && (

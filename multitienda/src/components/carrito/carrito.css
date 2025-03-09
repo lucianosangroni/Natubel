@@ -19,7 +19,7 @@
   border-radius: 25px;
   width: fit-content;
   height: 30px;
-  border: 2px solid #70848b;
+  border: 2px solid #8ab9c4;
   overflow: hidden;
 }
 
@@ -41,12 +41,12 @@
 }
 
 .btnPreciosSelected {
-  background-color: #70848b;
+  background-color: #8ab9c4;
   color: white;
 }
 
 .btnPreciosSelected:hover {
-  background-color: #70848b;
+  background-color: #8ab9c4;
 }
 
 .carritoContainer {
@@ -64,7 +64,7 @@
 }
 
 .encabezadoCarrito {
-  background-color: #70848b;
+  background-color: #8ab9c4;
   color: white;
   padding: 5px;
   text-align: center;
@@ -97,7 +97,7 @@
   border: 1px solid black;
   width: 14rem;
   padding: 0.3rem;
-  background-color: #70848b;
+  background-color: #8ab9c4;
 }
 
 .cantidadTotal {
@@ -117,18 +117,18 @@
 .linkForm {
   text-decoration: none;
   font-size: 13px;
-  background-color: #70848b;
+  background-color: #8ab9c4;
   color: white;
   border-radius: 0.5rem;
   padding: 10px 15px;
 }
 
 .linkForm:hover {
-  background-color: #70848b;
+  background-color: #8ab9c4;
 }
 
 button {
-  background-color: #70848b;
+  background-color: #8ab9c4;
   color: white;
   padding: 5px 7px;
   border: none;
@@ -138,7 +138,7 @@ button {
 }
 
 button:hover {
-  background-color: #70848b;
+  background-color: #8ab9c4;
 }
 
 .carritoVacioContainer {
@@ -149,7 +149,7 @@ button:hover {
 }
 
 .carritoVacio {
-  background-color: #70848b;
+  background-color: #8ab9c4;
   color: white;
   width: 17rem;
   font-size: 1rem;
@@ -182,7 +182,7 @@ button:hover {
 
 .alertVaciar {
   background-color: white;
-  border: 1px solid #70848b;
+  border: 1px solid #8ab9c4;
 }
 
 .alertVaciar div {
@@ -210,7 +210,7 @@ button:hover {
     border-radius: 25px;
     width: 140px;
     height: 11rem;
-    border: 2px solid #70848b;
+    border: 2px solid #8ab9c4;
     overflow: hidden;
   }
 

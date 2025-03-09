@@ -98,12 +98,12 @@
 }
 
 input {
-  accent-color: #70848b;
+  accent-color: #8ab9c4;
 }
 
 .descripcion {
   width: 15rem;
-  background-color: #70848b;
+  background-color: #8ab9c4;
   padding: 0.5rem;
   color: white;
   overflow-wrap: break-word;
@@ -119,7 +119,7 @@ input {
 
 .productosRelacionados h3 {
   text-align: center;
-  background-color: #70848b;
+  background-color: #8ab9c4;
   padding: 0.5rem;
   margin-bottom: 2rem;
   color: white;
@@ -156,7 +156,7 @@ input {
 
 .detalle {
   text-decoration: none;
-  background-color: #70848b;
+  background-color: #8ab9c4;
   color: white;
   padding: 0.5rem;
   width: max-content;
@@ -167,7 +167,7 @@ input {
 
 .modalTitle {
   font-size: 0.8rem;
-  background-color: #70848b;
+  background-color: #8ab9c4;
   color: black;
   padding: 0.3rem;
   border-radius: 0.5rem;
@@ -185,11 +185,11 @@ input {
 
 .btn-custom {
   font-size: 0.7rem !important;
-  background-color: #70848b;
+  background-color: #8ab9c4;
   color: black;
   border-radius: 0.5rem;
   cursor: pointer;
-  border: 2px solid #70848b;
+  border: 2px solid #8ab9c4;
   padding: 0.2rem;
 }
 

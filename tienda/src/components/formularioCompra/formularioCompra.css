@@ -15,7 +15,7 @@
 }
 
 .formulario label {
-  background-color: #70848b;
+  background-color: #8ab9c4;
   padding: 0.5rem;
   border-radius: 0.5rem;
   width: 150px;
@@ -31,7 +31,7 @@
 
 .formulario input:focus {
   outline: 0;
-  border: 2px solid #70848b;
+  border: 2px solid #8ab9c4;
 }
 
 .required-asterisk {
@@ -47,7 +47,7 @@
 }
 
 .enviar {
-  background-color: #70848b;
+  background-color: #8ab9c4;
   width: auto;
   height: auto;
   color: white;
@@ -63,7 +63,7 @@
 }
 
 .compraFinalizada {
-  background-color: #70848b;
+  background-color: #8ab9c4;
   padding: 0.5rem;
   margin: 2rem;
   border-radius: 0.5rem;

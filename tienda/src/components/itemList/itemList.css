@@ -9,7 +9,7 @@
 } */
 
 .main-title {
-  background-color: #70848b;
+  background-color: #8ab9c4;
   color: white;
   padding: 0.5rem;
   width: 13rem;
@@ -63,7 +63,7 @@
 }
 
 .noHayArticulos {
-  background-color: #70848b;
+  background-color: #8ab9c4;
   color: white;
   padding: 0.5rem;
   width: 16rem;
@@ -90,7 +90,7 @@
 
 .search-icon {
   align-items: center;
-  background-color: #99adb4;
+  background-color: #8ab9c4;
   border-radius: 5px;
   padding: 0.2rem;
   border: 1px solid black;

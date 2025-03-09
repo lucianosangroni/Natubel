@@ -6,7 +6,7 @@
 }
 
 .explicacion-precios {
-    background-color: #70848b;
+    background-color: #8ab9c4;
     margin-top: 1rem !important;
     color: white;
     font-size: 14px;
@@ -27,15 +27,15 @@
     background-color: #fff;
     color: black;
     border-radius: 0.5;
-    border: 1px solid #70848b;
+    border: 1px solid #8ab9c4;
 }
 
 .button-precio:hover {
-    background-color: #70848b;
+    background-color: #8ab9c4;
     color: white;
 }
 
 .button-precio-selected {
-    background-color: #70848b;
+    background-color: #8ab9c4;
     color: white;
 }

@@ -163,6 +163,7 @@ export const DataProviderAdmin = ({ children }) => {
                                                         dni: dataResult.dni,
                                                         ciudad: dataResult.ciudad,
                                                         provincia: dataResult.provincia,
+                                                        descuento: dataResult.descuento,
                                                         tipo_envio: dataResult.tipo_envio,
                                                         forma_de_envio: dataResult.forma_de_envio,
                                                         email: dataResult.persona.email,

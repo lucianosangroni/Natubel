@@ -14,6 +14,7 @@ function ModalCliente({ onAddClient, refreshCliente, onClienteRefresheado }) {
       dni: "",
       ciudad: "",
       provincia: "",
+      descuento: "",
       forma_de_envio: "",
       tipo_envio: "DOMICILIO",
       email: "",
@@ -32,6 +33,7 @@ function ModalCliente({ onAddClient, refreshCliente, onClienteRefresheado }) {
       dni: "",
       ciudad: "",
       provincia: "",
+      descuento: "",
       forma_de_envio: "",
       tipo_envio: "DOMICILIO",
       email: "",
@@ -163,6 +165,19 @@ function ModalCliente({ onAddClient, refreshCliente, onClienteRefresheado }) {
                   setNewClient({
                     ...newClient,
                     provincia: e.target.value,
+                  });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Descuento Predeterminado</Form.Label>
+              <Form.Control
+                type="text"
+                value={newClient.descuento}
+                onChange={(e) => {
+                  setNewClient({
+                    ...newClient,
+                    descuento: e.target.value,
                   });
                 }}
               />

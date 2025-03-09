@@ -223,6 +223,7 @@ const FormularioCompra = () => {
         ciudad: formulario.ciudad.trim() !== '' ? formulario.ciudad : cliente.ciudad,
         provincia: formulario.provincia.trim() !== '' ? formulario.provincia : cliente.provincia,
         persona_id: cliente.persona_id,
+        descuento: cliente.descuento
       }
 
       fetch(`${apiUrl}/clientes/${cliente.id}`, {
@@ -252,7 +253,7 @@ const FormularioCompra = () => {
         }
       })
       .catch(error => {
-        console.error(`Error en la solicitud GET para el cliente ${formulario.email}:`, error);
+        console.error(`Error en la solicitud PUT para el cliente ${formulario.email}:`, error);
       });
     } else {
       const requestDataNewCliente = {
@@ -267,7 +268,8 @@ const FormularioCompra = () => {
         direccion: formulario.direccion,
         codigo_postal: formulario.cp,
         ciudad: formulario.ciudad,
-        provincia: formulario.provincia
+        provincia: formulario.provincia,
+        descuento: 0
       }
     
       fetch(`${apiUrl}/clientes`, {

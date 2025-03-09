@@ -29,6 +29,10 @@ const Cliente = sequelize.define(
         provincia: {
           type: DataTypes.STRING,
         },
+        descuento: {
+          type: DataTypes.FLOAT,
+          allowNull: false,
+        },
         flag_activo: {
           type: DataTypes.BOOLEAN,
           defaultValue: true,
