@@ -12,7 +12,7 @@ export const COLUMNSIMPUTACIONES = [
         width: 'auto',
     },
     {
-        Header: "monto",
+        Header: "Monto",
         accessor: "montoImputacion",
         width: 'auto',
         Cell: ({ value }) => {

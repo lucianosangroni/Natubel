@@ -8,18 +8,7 @@ function UncontrolledExample() {
       <Carousel.Item>
         <img
           className="imgGaleria"
-          src="/img/5carrousel.jpeg"
-          alt="modelo"
-        />
-        <Carousel.Caption>
-          {/* <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> */}
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-        <img
-          className="imgGaleria"
-          src="/img/1carrousel.jpg"
+          src="/img/1carrousel.jpeg"
           alt="modelo"
         />
         <Carousel.Caption>
@@ -32,7 +21,7 @@ function UncontrolledExample() {
       <Carousel.Item>
         <img
           className="imgGaleria"
-          src="/img/2carrousel.jpg"
+          src="/img/2carrousel.jpeg"
           alt="modelo"
         />
         <Carousel.Caption>
@@ -66,6 +55,17 @@ function UncontrolledExample() {
           <p>
             Praesent commodo cursus magna, vel scelerisque nisl consectetur.
           </p> */}
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <img
+          className="imgGaleria"
+          src="/img/6carrousel.jpeg"
+          alt="modelo"
+        />
+        <Carousel.Caption>
+          {/* <h3>Second slide label</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> */}
         </Carousel.Caption>
       </Carousel.Item>
     </Carousel>
