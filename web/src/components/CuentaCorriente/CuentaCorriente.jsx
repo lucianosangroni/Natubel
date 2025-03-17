@@ -45,7 +45,7 @@ const CuentaCorriente = () => {
     const [totalPagadoFactura, setTotalPagadoFactura] = useState(null)
     const [montoRestanteFactura, setMontoRestanteFactura] = useState(null)
     const navigate = useNavigate();
-    
+
     useEffect(() => {
         const cliente = clientesData.find(cliente => cliente.email === email);
         const proveedor = proveedoresData.find(proveedor => proveedor.email === email);
@@ -68,11 +68,13 @@ const CuentaCorriente = () => {
                         id: factura.id,
                         numero_pedido: factura.pedido_id,
                         numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
-                        monto: factura.monto,
+                        a_pagar: factura.monto,
+                        total: remitoCorrespondiente? factura.monto / (1 - remitoCorrespondiente.descuento / 100) : factura.monto,
+                        descuento: remitoCorrespondiente? remitoCorrespondiente.descuento: 0,
                         fecha: formatearFecha(factura.createdAt)
                     };
                 })
-                .sort((a, b) => a.numero_pedido - b.numero_pedido)
+                .sort((a, b) => b.numero_pedido - a.numero_pedido)
 
             let personaId;
 
@@ -83,14 +85,30 @@ const CuentaCorriente = () => {
             }
 
             const pagosCorrespondientes = pagosData.filter(pago => pago.persona_id === personaId).filter(pago => pago.flag_imputado === false)
-                .sort((a, b) => a.id - b.id)
-                .map((pago, index) => ({
-                    id: pago.id,
-                    numero_pago: index + 1,
-                    fecha: formatearFecha(pago.createdAt),
-                    monto: pago.monto,
-                    destino: pago.destino,
-                }))
+                .sort((a, b) => {
+                    const fechaA = new Date(a.fecha);
+                    const fechaB = new Date(b.fecha);
+                    
+                    return fechaB - fechaA;
+                })
+                .map((pago) => {
+                    const isSobrante = pago.pago_padre_id !== null
+                    
+                    return {
+                        id: pago.id,
+                        fecha: formatearFechaPago(pago.fecha),
+                        monto: pago.monto,
+                        destino: isSobrante ? (
+                            <span
+                                style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}
+                                onClick={() => handleVerImputacion(pago.destino.split(" ")[3])}
+                            >
+                                {pago.destino}
+                            </span>
+                        ) : pago.destino,
+                        flagSobrante: isSobrante,
+                    };
+                });
 
             const facturasOrdenadas = facturasCorrespondientes.reverse()
             const pagosOrdenados = pagosCorrespondientes.reverse()
@@ -113,7 +131,7 @@ const CuentaCorriente = () => {
             setSelectedRow(facturasOrdenadas[0])
 
             const totalPagado = pagosOrdenados.reduce((sum, pago) => sum + pago.monto, 0)
-            const montoRestante = facturasOrdenadas.reduce((sum, fac) => sum + fac.monto, 0)
+            const montoRestante = facturasOrdenadas.reduce((sum, fac) => sum + fac.a_pagar, 0)
             setTotalPagadoFactura(totalPagado)
             setMontoRestanteFactura(montoRestante)
         }
@@ -142,6 +160,7 @@ const CuentaCorriente = () => {
                         Cell: ({ row }) => (
                             <input
                                 type="checkbox"
+                                disabled={flagCliente && row.original.numero_remito === "-" || row.original.a_pagar === 0}
                                 onChange={(e) => handleCheckboxChangeFacturas(e, row.original)}
                             />
                         ),
@@ -202,6 +221,12 @@ const CuentaCorriente = () => {
         const dia = String(fecha.getDate()).padStart(2, '0');
         const mes = String(fecha.getMonth() + 1).padStart(2, '0');
         const anio = fecha.getFullYear();
+        
+        return `${dia}/${mes}/${anio}`;
+    };
+
+    const formatearFechaPago = (fechaDateOnly) => {
+        const [anio, mes, dia] = fechaDateOnly.split('-');
         
         return `${dia}/${mes}/${anio}`;
     };
@@ -431,7 +456,7 @@ const CuentaCorriente = () => {
         });
     }
 
-    const handleAddPago = (monto, destino) => {
+    const handleAddPago = (monto, destino, fecha) => {
         setIsLoading(true)
 
         let personaId;
@@ -445,7 +470,8 @@ const CuentaCorriente = () => {
         const requestData = {
             monto,
             destino,
-            persona_id: personaId
+            persona_id: personaId,
+            fecha
         }
 
         fetch(`${apiUrl}/pagos`, {
@@ -464,10 +490,10 @@ const CuentaCorriente = () => {
             return response.json();
         })
         .then((result) => {
-            if(result.message === "Pago creado con éxito") {
+            if(result.message === "Cobranza A/C creada con éxito") {
                 const nuevoPago = {
                     id: result.id,
-                    createdAt: new Date().toISOString(),
+                    fecha: fecha,
                     flag_imputado: false,
                     pago_padre_id: null,
                     destino: destino,
@@ -490,8 +516,12 @@ const CuentaCorriente = () => {
     }
 
     const handleEditPago = (row) => {
-        setSelectedRowPago(row.original)
-        setIsPagoEditModalOpen(true)
+        if(row.original.flagSobrante) {
+            alert("No se puede editar una cobranza A/C sobrante")
+        } else {
+            setSelectedRowPago(row.original)
+            setIsPagoEditModalOpen(true)
+        }
     }
 
     const handlePagoEdit = (pago) => {
@@ -499,7 +529,8 @@ const CuentaCorriente = () => {
 
         const requestData = {
             monto: pago.monto,
-            destino: pago.destino
+            destino: pago.flagSobrante ? pago.destino.props.children : pago.destino,
+            fecha: pago.fecha
         }
 
         fetch(`${apiUrl}/pagos/${pago.id}`, {
@@ -518,10 +549,10 @@ const CuentaCorriente = () => {
             return response.json();
         })
         .then((result) => {
-            if(result.message === "Pago editado con éxito") {
+            if(result.message === 'Cobranza A/C editada con éxito') {
                 const pagoCorrespondiente = pagosData.find(pag => pag.id === pago.id);
 
-                const pagoActualizado = {...pagoCorrespondiente, monto: pago.monto, destino: pago.destino}
+                const pagoActualizado = {...pagoCorrespondiente, monto: pago.monto, destino: pago.destino, fecha: pago.fecha}
 
                 const updatedPagos = pagosData.map(pag =>
                     pag.id === pago.id ? pagoActualizado : pag
@@ -542,41 +573,45 @@ const CuentaCorriente = () => {
     const handleDeletePago = (row) => {
         const pago = row.original
 
-        const shouldDelete = window.confirm(
-            `¿Estas seguro que deseas eliminar el pago N° ${pago.numero_pago}?`
-        );
-
-        if (shouldDelete) {
-            setIsLoading(true)
-
-            fetch(`${apiUrl}/pagos/${pago.id}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${bearerToken}`,
-                },
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    alert("Error al eliminar pago, intente nuevamente");
-                    throw new Error("Error en la solicitud DELETE");
-                }
-                return response.json();
-            })
-            .then((result) => {
-                if(result.message === "Pago eliminado con éxito") {
-                    const updatedData = pagosData.filter((pag) => pag.id !== pago.id);
-
-                    setPagos(updatedData);
-                    refreshPagos(updatedData)
-                }
-                
-                alert(result.message)
-                setIsLoading(false)
-            })
-            .catch((error) => {
-                console.error("Error en la solicitud DELETE:", error);
-                setIsLoading(false)
-            });
+        if(pago.flagSobrante) {
+            alert("No se puede eliminar una cobranza A/C sobrante")
+        } else {
+            const shouldDelete = window.confirm(
+                `¿Estas seguro que deseas eliminar la cobranza A/C N° ${pago.id}?`
+            );
+    
+            if (shouldDelete) {
+                setIsLoading(true)
+    
+                fetch(`${apiUrl}/pagos/${pago.id}`, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${bearerToken}`,
+                    },
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        alert("Error al eliminar pago, intente nuevamente");
+                        throw new Error("Error en la solicitud DELETE");
+                    }
+                    return response.json();
+                })
+                .then((result) => {
+                    if(result.message === "Cobranza A/C eliminada con éxito") {
+                        const updatedData = pagosData.filter((pag) => pag.id !== pago.id);
+    
+                        setPagos(updatedData);
+                        refreshPagos(updatedData)
+                    }
+                    
+                    alert(result.message)
+                    setIsLoading(false)
+                })
+                .catch((error) => {
+                    console.error("Error en la solicitud DELETE:", error);
+                    setIsLoading(false)
+                });
+            }
         }
     }
 
@@ -632,6 +667,7 @@ const CuentaCorriente = () => {
                     })
 
                     if(result.nuevoPago){
+                        result.nuevoPago.fecha = new Date().toISOString().split("T")[0];
                         pagosActualizados.push(result.nuevoPago)
                     }
 
@@ -682,7 +718,7 @@ const CuentaCorriente = () => {
     
             const nuevoTotalFacturas = newFacturas.reduce((total, facturaId) => {
                 const facturaEncontrada = facturas.find(f => f.id === Number(facturaId));
-                return facturaEncontrada ? total + facturaEncontrada.monto : total;
+                return facturaEncontrada ? total + facturaEncontrada.a_pagar : total;
             }, 0);
     
             setTotalFacturasImputando(nuevoTotalFacturas);
@@ -733,6 +769,10 @@ const CuentaCorriente = () => {
         navigate(`/admin/cuenta-corriente/${email}/historial`);
     }
 
+    const handleVerImputacion = (idImputacion) => {
+        navigate(`/admin/imputaciones/${idImputacion}`);
+    }
+
     return (
         <>
             {isLoading && <Loading/>}
@@ -751,13 +791,13 @@ const CuentaCorriente = () => {
             <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginTop: "1rem", minWidth: "20%"}}>
                 {flagImputando? (
                     <>
-                        <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "25px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
                             "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                             sans-serif`}}>Montos de la Imputación Actual</h2>
                         
                         <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
+                            <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagosImputando)}</span></span>
                             <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(totalFacturasImputando)}</span></span>
-                            <span style={{ fontWeight: "bold" }}>TOTAL PAGOS: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagosImputando)}</span></span>
                         </div>  
                     </>
                 ) : (
@@ -766,8 +806,8 @@ const CuentaCorriente = () => {
                             "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                             sans-serif`}}>Montos Totales sin Imputar</h2>
                         <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
+                            {totalPagadoFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagadoFactura)}</span></span>}
                             {montoRestanteFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(montoRestanteFactura)}</span></span>}
-                            {totalPagadoFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL PAGOS: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagadoFactura)}</span></span>}
                         </div> 
                     </> 
                 )}
@@ -775,6 +815,78 @@ const CuentaCorriente = () => {
 
             {facturas.length > 0 ? (
                 <>
+                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
+
+                    <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                    sans-serif`}}>Cobranzas A/C</h2>
+
+                    {pagos.length > 0 ? (
+                        <>
+                            <div style={{minHeight: "40rem", minWidth: "30%"}}>
+                                <div className="tableDivContainer">
+                                    <table {...getPagosTableProps()} className="tableContainer">
+                                        <thead>
+                                            {pagosHeaderGroups.map(headerGroup => (
+                                                <tr {...headerGroup.getHeaderGroupProps()}>
+                                                    {headerGroup.headers.map(column => (
+                                                        <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                                                    ))}
+                                                </tr>
+                                            ))}
+                                        </thead>
+                                        <tbody {...getPagosTableBodyProps()}>
+                                            {pagosPage.map(row => {
+                                                preparePagosRow(row);
+                                                return  (
+                                                    <tr {...row.getRowProps()}>
+                                                        {row.cells.map((cell) => {
+                                                            return (
+                                                                <td {...cell.getCellProps()}>
+                                                                    {cell.column.id === "eliminar" ? (
+                                                                        <button onClick={() => handleDeletePago(row)} className="botonEliminar">
+                                                                            <FontAwesomeIcon icon={faTrashAlt} />
+                                                                        </button>
+                                                                    ) : cell.column.id === "editar" ? (
+                                                                        <button onClick={() => handleEditPago(row)} className="botonEditar">
+                                                                            <FontAwesomeIcon icon={faEdit} />
+                                                                        </button>
+                                                                    ) : (
+                                                                        cell.render("Cell")
+                                                                    )}
+                                                                </td>
+                                                            );
+                                                        })}
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className="paginacion">
+                                    <button onClick={() => pagosPreviousPage()} disabled={!pagosCanPreviousPage}>
+                                        <FontAwesomeIcon icon={faArrowLeft} />
+                                    </button>
+                                    <span>
+                                        Pagina{" "}
+                                        <strong>
+                                            {pagosPageIndex + 1} de {pagosPageOptions.length}
+                                        </strong>{" "}
+                                    </span>
+                                    <button onClick={() => pagosNextPage()} disabled={!pagosCanNextPage}>
+                                        <FontAwesomeIcon icon={faArrowRight} />
+                                    </button>
+                                </div>
+                            </div>
+                        </>  
+                    ) : (
+                        <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                            sans-serif`}}>
+                            No hay Cobranzas A/C para mostrar.
+                        </p>
+                    )}
+
                     <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
 
                     <h2 style={{marginTop: "2.5rem", marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -836,7 +948,7 @@ const CuentaCorriente = () => {
                                 </button>
                             </div>
                         </div>            
-
+                                    
                         <div style={{ minWidth: "20%",}}>
                             {flagCliente && (
                                 <h2 style={{marginTop: "1rem", marginBottom: "1rem", textAlign: "center", fontSize: "25px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -883,78 +995,6 @@ const CuentaCorriente = () => {
                         </div>
                     </div>
 
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
-
-                    <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                    sans-serif`}}>Pagos</h2>
-
-                    {pagos.length > 0 ? (
-                        <>
-                            <div style={{minHeight: "36rem", minWidth: "30%"}}>
-                                <div className="tableDivContainer">
-                                    <table {...getPagosTableProps()} className="tableContainer">
-                                        <thead>
-                                            {pagosHeaderGroups.map(headerGroup => (
-                                                <tr {...headerGroup.getHeaderGroupProps()}>
-                                                    {headerGroup.headers.map(column => (
-                                                        <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                                                    ))}
-                                                </tr>
-                                            ))}
-                                        </thead>
-                                        <tbody {...getPagosTableBodyProps()}>
-                                            {pagosPage.map(row => {
-                                                preparePagosRow(row);
-                                                return  (
-                                                    <tr {...row.getRowProps()}>
-                                                        {row.cells.map((cell) => {
-                                                            return (
-                                                                <td {...cell.getCellProps()}>
-                                                                    {cell.column.id === "eliminar" ? (
-                                                                        <button onClick={() => handleDeletePago(row)} className="botonEliminar">
-                                                                            <FontAwesomeIcon icon={faTrashAlt} />
-                                                                        </button>
-                                                                    ) : cell.column.id === "editar" ? (
-                                                                        <button onClick={() => handleEditPago(row)} className="botonEditar">
-                                                                            <FontAwesomeIcon icon={faEdit} />
-                                                                        </button>
-                                                                    ) : (
-                                                                        cell.render("Cell")
-                                                                    )}
-                                                                </td>
-                                                            );
-                                                        })}
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div className="paginacion">
-                                    <button onClick={() => pagosPreviousPage()} disabled={!pagosCanPreviousPage}>
-                                        <FontAwesomeIcon icon={faArrowLeft} />
-                                    </button>
-                                    <span>
-                                        Pagina{" "}
-                                        <strong>
-                                            {pagosPageIndex + 1} de {pagosPageOptions.length}
-                                        </strong>{" "}
-                                    </span>
-                                    <button onClick={() => pagosNextPage()} disabled={!pagosCanNextPage}>
-                                        <FontAwesomeIcon icon={faArrowRight} />
-                                    </button>
-                                </div>
-                            </div>
-                        </>  
-                    ) : (
-                        <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                            sans-serif`}}>
-                            No hay pagos para mostrar.
-                        </p>
-                    )}
-
                     {flagImputando? (
                         <>
                             <Button onClick={handleCancelarImputacion}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "180px"}}>Cancelar</Button>
@@ -962,7 +1002,7 @@ const CuentaCorriente = () => {
                         </>
                     ) : 
                         <>
-                            <Button onClick={() => setIsPagoModalOpen(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "180px"}}>Agregar Pago</Button>
+                            <Button onClick={() => setIsPagoModalOpen(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "195px", right: "180px"}}>Agregar Cobranza A/C</Button>
                             <Button onClick={() => setFlagImputando(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px"}}>Imputar</Button>    
                         </>
                     }
@@ -1015,7 +1055,7 @@ const CuentaCorriente = () => {
                     onClick={handleHistorial}  
                     className="abajoDerecha" 
                     id="btnDescargarStock" 
-                    style={{ width: "145px", ...(facturas.length > 0 && { right: "340px" }) }}
+                    style={{ width: "145px", ...(facturas.length > 0 && { right: "390px" }) }}
                 >
                     Historial
                 </Button>

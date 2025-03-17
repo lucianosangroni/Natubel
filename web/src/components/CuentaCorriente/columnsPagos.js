@@ -3,7 +3,7 @@
 export const COLUMNSPAGOS = [
     {
         Header: "N° Pago",
-        accessor: "numero_pago",
+        accessor: "id",
         width: 'auto',
     },
     {
@@ -23,7 +23,9 @@ export const COLUMNSPAGOS = [
     {
         Header: "Destino",
         accessor:"destino",
-        width: 'auto',
+        Cell: ({ value }) => (
+            <div style={{whiteSpace: "normal"}}>{value}</div>
+        ),
     },
     {
         Header: "",

@@ -511,7 +511,16 @@ export const DataProviderAdmin = ({ children }) => {
     }
 
     const addImputaciones = (newImputaciones) => {
-        setImputacionesData((prevImputaciones) => [...prevImputaciones, ...newImputaciones]);
+        setImputacionesData((prevImputaciones) => {
+            const maxNumeroImputacion = Math.max(...prevImputaciones.map(imputacion => imputacion.numero_imputacion), 0);
+    
+            const updatedNewImputaciones = newImputaciones.map(imputacion => ({
+                ...imputacion,
+                numero_imputacion: maxNumeroImputacion + 1
+            }));
+
+            return [...prevImputaciones, ...updatedNewImputaciones];
+        });
     }
 
     const refreshFacturas = (facturas) => {

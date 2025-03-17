@@ -1,5 +1,5 @@
 const { sequelize } = require("../config/dbConnect")
-const { DataTypes } = require("sequelize")
+const { DataTypes, Sequelize } = require("sequelize")
 const Persona = require("./persona")
 
 const Pago = sequelize.define(
@@ -16,6 +16,10 @@ const Pago = sequelize.define(
         flag_imputado: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
+        },
+        fecha : {
+            type: DataTypes.DATEONLY,
+            defaultValue: Sequelize.NOW
         },
         pago_padre_id: {
             type: DataTypes.INTEGER,

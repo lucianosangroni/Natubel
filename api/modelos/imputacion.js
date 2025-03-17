@@ -11,6 +11,10 @@ const Imputacion = sequelize.define(
             autoIncrement: true,
             primaryKey: true,
         },
+        numero_imputacion: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        }
     },
     {
         tableName: "imputacion",

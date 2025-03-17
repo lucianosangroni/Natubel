@@ -15,20 +15,20 @@ function ModalRemito({ cliente, onClose, onSave }) {
     const dias_vencimientoValido = parseInt(remito.dias_vencimiento);
     const cantidad_cajasValido = parseInt(remito.cantidad_cajas);
 
-    if (remito.descuento && !isNaN(descuentoValido) && descuentoValido >= 0 && descuentoValido <= 100 &&
+    if (!isNaN(descuentoValido) && descuentoValido >= 0 && descuentoValido <= 100 &&
         remito.dias_vencimiento && !isNaN(dias_vencimientoValido) && dias_vencimientoValido >= 0 &&
-        remito.cantidad_cajas && !isNaN(cantidad_cajasValido) && cantidad_cajasValido >= 0
-    ) {
-        onSave(remito)
-        setRemito({
-            descuento: cliente.descuento,
-            dias_vencimiento: "",
-            cantidad_cajas: ""
-        });
-        onClose();
-      } else {
-        alert("Por favor, complete todos los campos con datos válidos.");
-      }
+        remito.cantidad_cajas && !isNaN(cantidad_cajasValido) && cantidad_cajasValido >= 0) 
+    {
+      onSave(remito)
+      setRemito({
+          descuento: cliente.descuento,
+          dias_vencimiento: "",
+          cantidad_cajas: ""
+      });
+      onClose();
+    } else {
+      alert("Por favor, complete todos los campos con datos válidos.");
+    }
   };
 
   return (

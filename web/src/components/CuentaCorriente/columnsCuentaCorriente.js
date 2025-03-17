@@ -17,8 +17,26 @@ export const COLUMNSCUENTACORRIENTE = [
         width: 'auto',
     },
     {
-        Header: "Monto",
-        accessor:"monto",
+        Header: "Total",
+        accessor:"total",
+        width: 'auto',
+        Cell: ({ value }) => {
+            const montoFormateado = formatearNumero(value);
+            return `$${montoFormateado}`;
+        },
+    },
+    {
+        Header: "Descuento",
+        accessor: "descuento",
+        width: 'auto',
+        Cell: ({ value }) => {
+            const montoFormateado = formatearNumero(value);
+            return `${montoFormateado}%`;
+        },
+    },
+    {
+        Header: "A Pagar",
+        accessor: "a_pagar",
         width: 'auto',
         Cell: ({ value }) => {
             const montoFormateado = formatearNumero(value);

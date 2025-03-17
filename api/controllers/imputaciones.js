@@ -17,10 +17,13 @@ const createItem = async (req, res) => {
 
         const { facturas, pagos, monto_sobrante, persona_id } = req
 
+        const ultimoNumeroImputacion = await imputacionModel.max('numero_imputacion');
+        const numeroImputacion = ultimoNumeroImputacion ? ultimoNumeroImputacion + 1 : 1;
+
         const filasImputacion = [];
         for (const pago_id of pagos) {
             for (const factura_id of facturas) {
-                filasImputacion.push({ pago_id, factura_id });
+                filasImputacion.push({ pago_id, factura_id, numero_imputacion: numeroImputacion });
             }
         }
 
@@ -43,7 +46,7 @@ const createItem = async (req, res) => {
             (
                 {
                     monto: monto_sobrante,
-                    destino: "Sobrante",
+                    destino: "Sobrante - Imputación " + numeroImputacion,
                     persona_id: persona_id,
                     pago_padre_id: pagos[0]
                 }
