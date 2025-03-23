@@ -23,6 +23,10 @@ export const COLUMNSPEDIDOS = [
         Header: "Precio",
         accessor: "precio_total",
         width: 'auto',
+        Cell: ({ value }) => {
+            const montoFormateado = formatearNumero(value);
+            return `$${montoFormateado}`;
+        },
     },
     {
         Header: "Cliente / Proveedor",
@@ -35,3 +39,11 @@ export const COLUMNSPEDIDOS = [
         width: 'auto',
     }
 ]
+
+const formatearNumero = (numero) => {
+    if (typeof numero === 'number') {
+        const [entero, decimal] = numero.toString().split('.');
+        return `${entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}${decimal ? `,${decimal}` : ''}`;
+    }
+    return numero;
+};

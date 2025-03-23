@@ -47,9 +47,13 @@ export const COLUMNSCLIENTES = [
     width: 'auto',
 },
 {
-    Header: "Descuento %",
+    Header: "Descuento",
     accessor: "descuento",
-    width: 'auto'
+    width: 'auto',
+    Cell: ({ value }) => {
+        const montoFormateado = formatearNumero(value);
+        return `${montoFormateado}%`;
+    },
 },
 {
     Header: "Envio",
@@ -83,3 +87,11 @@ export const COLUMNSCLIENTES = [
 },
 
 ]
+
+const formatearNumero = (numero) => {
+    if (typeof numero === 'number') {
+        const [entero, decimal] = numero.toString().split('.');
+        return `${entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}${decimal ? `,${decimal}` : ''}`;
+    }
+    return numero;
+};

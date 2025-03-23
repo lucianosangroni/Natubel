@@ -21,9 +21,6 @@ const Mayorista = () => {
   return (
     <>
       {isInitialLoading && <Loading/>}
-      <div className='contenedor-inicial'>
-        <h1 className='explicacion-inicial'>SI YA SABES LO QUE BUSCAS REALIZA TU PEDIDO MÁS RÁPIDAMENTE</h1>
-      </div>
       <section className="contenedor-tabla-grilla">
         <div className='scrollable-list-container'>
           <table className="table-cargarPedido-contenedor">

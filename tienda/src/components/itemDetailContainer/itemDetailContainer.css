@@ -1,7 +1,9 @@
 .volverContainer {
     display: flex;
     align-items: center;
-    margin-top: 2rem;
+    justify-content: center;
+    margin-bottom: -150px;
+    height: 70vh;
 }
 
 .volver {
