@@ -2,11 +2,9 @@ import { useParams } from "react-router-dom";
 import NavbarAdm from "../Common/NavbarAdm";
 import { useData } from "../../context/DataContext";
 import React, { useMemo, useState, useEffect } from "react";
-import { COLUMNSCUENTACORRIENTE } from "./columnsCuentaCorriente";
-import { COLUMNSPAGOS } from "./columnsPagos"
 import { useTable, usePagination, useRowSelect } from "react-table";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faArrowRight, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Loading from "../Common/Loading";
 import { apiUrl, bearerToken } from "../../config/config";
 import { Button } from "react-bootstrap";
@@ -22,8 +20,6 @@ const CuentaCorriente = () => {
     const { clientesData, proveedoresData, facturasData, refreshFacturas, remitosData, refreshRemitos, pagosData, refreshPagos, addImputaciones } = useData()
     const [ persona, setPersona ] = useState(null);
     const [ facturas, setFacturas ] = useState([]);
-    const columnsFacturas = useMemo(() => COLUMNSCUENTACORRIENTE, []);
-    const columnsPagos = useMemo(() => COLUMNSPAGOS, []);
     const [flagImputando, setFlagImputando] = useState(false)
     const [totalFacturasImputando, setTotalFacturasImputando] = useState(0)
     const [totalPagosImputando, setTotalPagosImputando] = useState(0)
@@ -137,85 +133,6 @@ const CuentaCorriente = () => {
         }
     }, [persona, facturasData, remitosData, pagosData]);   
 
-    const {
-        getTableProps: getFacturasTableProps,
-        getTableBodyProps: getFacturasTableBodyProps,
-        headerGroups: facturasHeaderGroups,
-        page: facturasPage,
-        nextPage: facturasNextPage,
-        previousPage: facturasPreviousPage,
-        canNextPage: facturasCanNextPage,
-        canPreviousPage: facturasCanPreviousPage,
-        pageOptions: facturasPageOptions,
-        prepareRow: prepareFacturasRow,
-        state: facturasState,
-    } = useTable(
-        {
-            columns: useMemo(() => {
-                const baseColumns = [...columnsFacturas];
-                if (flagImputando) {
-                    baseColumns.unshift({
-                        id: "selection",
-                        Header: () => <></>, 
-                        Cell: ({ row }) => (
-                            <input
-                                type="checkbox"
-                                disabled={flagCliente && row.original.numero_remito === "-" || row.original.a_pagar === 0}
-                                onChange={(e) => handleCheckboxChangeFacturas(e, row.original)}
-                            />
-                        ),
-                        width: 'auto',
-                    });
-                }
-                return baseColumns;
-            }, [flagImputando, columnsFacturas]),
-            data: facturas,
-        },
-        usePagination,
-        useRowSelect
-    );
-
-    const { pageIndex: facturasPageIndex } = facturasState;
-
-    const {
-        getTableProps: getPagosTableProps,
-        getTableBodyProps: getPagosTableBodyProps,
-        headerGroups: pagosHeaderGroups,
-        page: pagosPage,
-        nextPage: pagosNextPage,
-        previousPage: pagosPreviousPage,
-        canNextPage: pagosCanNextPage,
-        canPreviousPage: pagosCanPreviousPage,
-        pageOptions: pagosPageOptions,
-        prepareRow: preparePagosRow,
-        state: pagosState
-    } = useTable(
-        {
-            columns: useMemo(() => {
-                const baseColumns = [...columnsPagos];
-                if (flagImputando) {
-                    baseColumns.unshift({
-                        id: "selection",
-                        Header: () => <></>, 
-                        Cell: ({ row }) => (
-                            <input
-                                type="checkbox"
-                                onChange={(e) => handleCheckboxChangePagos(e, row.original)}
-                            />
-                        ),
-                        width: 'auto',
-                    });
-                }
-                return baseColumns;
-            }, [flagImputando, columnsPagos]),
-            data: pagos,
-        },
-        usePagination,
-        useRowSelect
-    );
-
-    const { pageIndex: pagosPageIndex } = pagosState
-
     const formatearFecha = (fechaDateTime) => {
         const fecha = new Date(fechaDateTime);
         const dia = String(fecha.getDate()).padStart(2, '0');
@@ -240,7 +157,7 @@ const CuentaCorriente = () => {
     };
 
     const handleRowClick = (row) => {
-        const facturaPedidoId = row.original.numero_pedido;
+        const facturaPedidoId = row.numero_pedido;
 
         if (facturaPedidoId) {
             const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === facturaPedidoId);
@@ -254,7 +171,7 @@ const CuentaCorriente = () => {
             setRemitoExiste(null)
         }
 
-        setSelectedRow(row.original);
+        setSelectedRow(row);
     };
 
     const handleAddRemito = (remito) => {
@@ -516,10 +433,10 @@ const CuentaCorriente = () => {
     }
 
     const handleEditPago = (row) => {
-        if(row.original.flagSobrante) {
+        if(row.flagSobrante) {
             alert("No se puede editar una cobranza A/C sobrante")
         } else {
-            setSelectedRowPago(row.original)
+            setSelectedRowPago(row)
             setIsPagoEditModalOpen(true)
         }
     }
@@ -571,7 +488,7 @@ const CuentaCorriente = () => {
     }
 
     const handleDeletePago = (row) => {
-        const pago = row.original
+        const pago = row
 
         if(pago.flagSobrante) {
             alert("No se puede eliminar una cobranza A/C sobrante")
@@ -823,60 +740,48 @@ const CuentaCorriente = () => {
 
                     {pagos.length > 0 ? (
                         <>
-                            <div style={{minHeight: "40rem", minWidth: "30%"}}>
-                                <div className="tableDivContainer">
-                                    <table {...getPagosTableProps()} className="tableContainer">
-                                        <thead>
-                                            {pagosHeaderGroups.map(headerGroup => (
-                                                <tr {...headerGroup.getHeaderGroupProps()}>
-                                                    {headerGroup.headers.map(column => (
-                                                        <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                                                    ))}
-                                                </tr>
-                                            ))}
-                                        </thead>
-                                        <tbody {...getPagosTableBodyProps()}>
-                                            {pagosPage.map(row => {
-                                                preparePagosRow(row);
-                                                return  (
-                                                    <tr {...row.getRowProps()}>
-                                                        {row.cells.map((cell) => {
-                                                            return (
-                                                                <td {...cell.getCellProps()}>
-                                                                    {cell.column.id === "eliminar" ? (
-                                                                        <button onClick={() => handleDeletePago(row)} className="botonEliminar">
-                                                                            <FontAwesomeIcon icon={faTrashAlt} />
-                                                                        </button>
-                                                                    ) : cell.column.id === "editar" ? (
-                                                                        <button onClick={() => handleEditPago(row)} className="botonEditar">
-                                                                            <FontAwesomeIcon icon={faEdit} />
-                                                                        </button>
-                                                                    ) : (
-                                                                        cell.render("Cell")
-                                                                    )}
-                                                                </td>
-                                                            );
-                                                        })}
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div className="paginacion">
-                                    <button onClick={() => pagosPreviousPage()} disabled={!pagosCanPreviousPage}>
-                                        <FontAwesomeIcon icon={faArrowLeft} />
-                                    </button>
-                                    <span>
-                                        Pagina{" "}
-                                        <strong>
-                                            {pagosPageIndex + 1} de {pagosPageOptions.length}
-                                        </strong>{" "}
-                                    </span>
-                                    <button onClick={() => pagosNextPage()} disabled={!pagosCanNextPage}>
-                                        <FontAwesomeIcon icon={faArrowRight} />
-                                    </button>
-                                </div>
+                            <div className="tableDivContainer">
+                                <table className="tableContainer">
+                                    <thead>
+                                        <tr>
+                                            {flagImputando && <th></th>}
+                                            <th>N° Pago</th>
+                                            <th>Fecha</th>
+                                            <th>Monto</th>
+                                            <th>Destino</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {pagos.map((pago, index) => (
+                                            <tr key={index}>
+                                                {flagImputando && (
+                                                    <td>
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={(e) => handleCheckboxChangePagos(e, pago)}
+                                                        />
+                                                    </td>
+                                                )}
+                                                <td>{pago.id}</td>
+                                                <td>{pago.fecha}</td>
+                                                <td>${formatearNumero(pago.monto)}</td>
+                                                <td style={{whiteSpace: "normal"}}>{pago.destino}</td>
+                                                <td>
+                                                    <button onClick={() => handleEditPago(pago)} className="botonEditar">
+                                                        <FontAwesomeIcon icon={faEdit} />
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button onClick={() => handleDeletePago(pago)} className="botonEliminar">
+                                                        <FontAwesomeIcon icon={faTrashAlt} />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
                         </>  
                     ) : (
@@ -894,60 +799,46 @@ const CuentaCorriente = () => {
                     sans-serif`}}>Facturas</h2>
 
                     <div style={{display: "flex", justifyContent: "space-evenly"}}>
-                        <div style={{minHeight: "36rem", minWidth: "30%"}}>
-                            <div className="tableDivContainer">
-                                <table {...getFacturasTableProps()} className="tableContainer">
-                                    <thead>
-                                        {facturasHeaderGroups.map((headerGroups) => (
-                                            <tr {...headerGroups.getHeaderGroupProps()}>
-                                            {headerGroups.headers.map((columns) => (
-                                                <th {...columns.getHeaderProps(columns)}>
-                                                    {columns.render("Header")}
-                                                </th>
-                                            ))}
-                                            </tr>
-                                        ))}
-                                    </thead>
-                                    <tbody {...getFacturasTableBodyProps()}>
-                                        {facturasPage.map((row, rowIndex) => {
-                                            prepareFacturasRow(row);
-                                            return (
-                                                <tr 
-                                                    key={rowIndex}
-                                                    {...row.getRowProps()}
-                                                    onClick={() => handleRowClick(row)}
-                                                    style={{
-                                                        backgroundColor: selectedRow.id === row.original.id ? "#dcd9d9" : ""
-                                                    }}
-                                                >
-                                                    {row.cells.map((cell) => {
-                                                        return (
-                                                            <td {...cell.getCellProps()}>
-                                                                {cell.render("Cell")}
-                                                            </td>
-                                                        );
-                                                    })}
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className="paginacion">
-                                <button onClick={() => facturasPreviousPage()} disabled={!facturasCanPreviousPage}>
-                                    <FontAwesomeIcon icon={faArrowLeft} />
-                                </button>
-                                <span>
-                                    Pagina{" "}
-                                    <strong>
-                                        {facturasPageIndex + 1} de {facturasPageOptions.length}
-                                    </strong>{" "}
-                                </span>
-                                <button onClick={() => facturasNextPage()} disabled={!facturasCanNextPage}>
-                                    <FontAwesomeIcon icon={faArrowRight} />
-                                </button>
-                            </div>
-                        </div>            
+                        <div className="tableDivContainer">
+                            <table className="tableContainer">
+                                <thead>
+                                    <tr>
+                                        {flagImputando && <th></th>}
+                                        <th>N° Pedido</th>
+                                        <th>N° Remito</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
+                                        <th>Descuento</th>
+                                        <th>A Pagar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {facturas.map((factura, index) => (
+                                        <tr 
+                                            key={index}
+                                            onClick={() => handleRowClick(factura)}
+                                            style={{backgroundColor: selectedRow?.id === factura.id ? "lightgray" : "white"}}
+                                        >
+                                            {flagImputando && (
+                                                <td>
+                                                    <input
+                                                        type="checkbox"
+                                                        disabled={flagCliente && factura.numero_remito === "-" || factura.a_pagar === 0}
+                                                        onChange={(e) => handleCheckboxChangeFacturas(e, factura)}
+                                                    />
+                                                </td>
+                                            )}
+                                            <td>{factura.numero_pedido}</td>
+                                            <td>{factura.numero_remito}</td>
+                                            <td>{factura.fecha}</td>
+                                            <td>${formatearNumero(factura.total)}</td>
+                                            <td>{formatearNumero(factura.descuento)}%</td>
+                                            <td>${formatearNumero(factura.a_pagar)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>        
                                     
                         <div style={{ minWidth: "20%",}}>
                             {flagCliente && (
