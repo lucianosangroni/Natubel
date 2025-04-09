@@ -100,6 +100,36 @@
   text-overflow: ellipsis;
 }
 
+.tableContainerSinPaginacion {
+  border: 1px solid #000000;
+  margin: 1rem;
+}
+
+.tableContainerSinPaginacion th {
+  background-color: #dcd9d9;
+  border: 1px solid #000000;
+  padding: 8px 8px;
+  text-align: left;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tableContainerSinPaginacion td {
+  border: 1px solid #000000;
+  padding: 0px 8px;
+  text-align: left;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tableContainerSinPaginacion tbody tr:nth-child(even) {
+  background-color: #dcd9d9;
+}
+
 /* LISTA DE PEDIDOS */
 
 .tableDivContainerPedidos {

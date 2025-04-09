@@ -798,7 +798,7 @@ const CuentaCorriente = () => {
                     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                     sans-serif`}}>Facturas</h2>
 
-                    <div style={{display: "flex", justifyContent: "space-evenly"}}>
+                    <div style={{display: "flex", justifyContent: "space-evenly", marginBottom: "100px"}}>
                         <div className="tableDivContainer">
                             <table className="tableContainer">
                                 <thead>

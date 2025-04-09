@@ -375,7 +375,7 @@ const HistorialCuentaCorriente = () => {
                     </h2>
 
                     {imputaciones.length > 0 ? (
-                        <div className="tableDivContainer">
+                        <div className="tableDivContainer" style={{marginBottom: "100px"}}>
                             <table className="tableContainer">
                                 <thead>
                                     <tr>

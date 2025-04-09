@@ -156,7 +156,7 @@ const Imputacion = () => {
                     sans-serif`}}>Facturas</h2>
 
                     <div className="tableDivContainer">
-                        <table className="tableContainer">
+                        <table className="tableContainerSinPaginacion">
                             <thead>
                                 <tr>
                                     <th>N° Pedido</th>
@@ -179,7 +179,7 @@ const Imputacion = () => {
                                     </tr>
                                 ))}
                                 <tr>
-                                    <td style={{fontWeight: "bold"}}>TOTAL</td>
+                                    <td style={{fontWeight: "bold", padding: "5px 8px"}}>TOTAL</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -196,8 +196,8 @@ const Imputacion = () => {
                     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                     sans-serif`}}>Cobranzas A/C</h2>
 
-                    <div className="tableDivContainer">
-                        <table className="tableContainer">
+                    <div className="tableDivContainer" style={{marginBottom: "100px"}}>
+                        <table className="tableContainerSinPaginacion">
                             <thead>
                                 <tr>
                                     <th>N° Pago</th>
@@ -215,7 +215,7 @@ const Imputacion = () => {
                                     </tr>
                                 ))}
                                 <tr>
-                                    <td style={{fontWeight: "bold"}}>TOTAL</td>
+                                    <td style={{fontWeight: "bold", padding: "5px 8px"}}>TOTAL</td>
                                     <td></td>
                                     <td style={{fontWeight: "bold"}}>${formatearNumero(imputacion.montoImputacion + imputacion.montoSobrante)}</td>
                                 </tr>
