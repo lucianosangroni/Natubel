@@ -983,7 +983,7 @@ const getCuentaCorriente = async (req, res) => {
         let y = 250
 
         pagos.forEach(pago => {
-            if(y + 40 > 792) {
+            if(y + 50 > 792) {
                 doc.moveTo(15, y - 7).lineTo(300, y - 7).stroke('black');
 
                 doc.addPage()
@@ -1008,7 +1008,7 @@ const getCuentaCorriente = async (req, res) => {
 
         y += 50
 
-        if(y + 120 > 792) {
+        if(y + 130 > 792) {
             doc.addPage()
             doc.y = 45;
             y = 45;
@@ -1029,7 +1029,7 @@ const getCuentaCorriente = async (req, res) => {
         y += 25
 
         facturasConRemitos.forEach(factura => {
-            if(y + 65 > 792) {
+            if(y + 75 > 792) {
                 doc.moveTo(15, y - 7).lineTo(510, y - 7).stroke('black');
 
                 doc.addPage()
@@ -1162,7 +1162,7 @@ const getHistorial = async (req, res) => {
         let y = 250
 
         pagos.forEach(pago => {
-            if(y + 40 > 792) {
+            if(y + 50 > 792) {
                 doc.moveTo(15, y - 7).lineTo(230, y - 7).stroke('black');
 
                 doc.addPage()
@@ -1187,7 +1187,7 @@ const getHistorial = async (req, res) => {
         y += 50
 
         Object.entries(facturasPorMes).map(([mesAnio, facturas]) => {
-            if(y + 150 > 792) {
+            if(y + 160 > 792) {
                 doc.addPage()
                 doc.y = 45;
                 y = 45;
@@ -1208,7 +1208,7 @@ const getHistorial = async (req, res) => {
             y += 25
 
             facturas.forEach(factura => {
-                if(y + 95 > 792) {
+                if(y + 105 > 792) {
                     doc.moveTo(15, y - 7).lineTo(510, y - 7).stroke('black');
     
                     doc.addPage()
@@ -1293,8 +1293,6 @@ const getImputacion = async (req, res) => {
                 numero_imputacion: req.params.numero_imputacion
             }
         });
-
-        console.log(filasImputacion[0])
 
         const pagosUnicosID = Array.from(new Set(filasImputacion.map(filaImputacion => filaImputacion.pago_id)));
         
@@ -1389,7 +1387,7 @@ const getImputacion = async (req, res) => {
         let y = 220
 
         facturasConRemitos.forEach(factura => {
-            if(y + 10 > 792) {
+            if(y + 20 > 792) {
                 doc.addPage()
                 doc.y = 45
                 y = 45
@@ -1407,7 +1405,7 @@ const getImputacion = async (req, res) => {
         })
 
         pagos.forEach(pago => {
-            if(y + 10 > 792) {
+            if(y + 20 > 792) {
                 doc.addPage()
                 doc.y = 45
                 y = 45
