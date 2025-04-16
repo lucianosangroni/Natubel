@@ -983,7 +983,7 @@ const getCuentaCorriente = async (req, res) => {
         let y = 250
 
         pagos.forEach(pago => {
-            if(y + 50 > 792) {
+            if(y + 60 > 792) {
                 doc.moveTo(15, y - 7).lineTo(300, y - 7).stroke('black');
 
                 doc.addPage()
@@ -1008,7 +1008,7 @@ const getCuentaCorriente = async (req, res) => {
 
         y += 50
 
-        if(y + 130 > 792) {
+        if(y + 140 > 792) {
             doc.addPage()
             doc.y = 45;
             y = 45;
@@ -1029,7 +1029,7 @@ const getCuentaCorriente = async (req, res) => {
         y += 25
 
         facturasConRemitos.forEach(factura => {
-            if(y + 75 > 792) {
+            if(y + 90 > 792) {
                 doc.moveTo(15, y - 7).lineTo(510, y - 7).stroke('black');
 
                 doc.addPage()
@@ -1162,7 +1162,7 @@ const getHistorial = async (req, res) => {
         let y = 250
 
         pagos.forEach(pago => {
-            if(y + 50 > 792) {
+            if(y + 60 > 792) {
                 doc.moveTo(15, y - 7).lineTo(230, y - 7).stroke('black');
 
                 doc.addPage()
@@ -1187,7 +1187,7 @@ const getHistorial = async (req, res) => {
         y += 50
 
         Object.entries(facturasPorMes).map(([mesAnio, facturas]) => {
-            if(y + 160 > 792) {
+            if(y + 170 > 792) {
                 doc.addPage()
                 doc.y = 45;
                 y = 45;
@@ -1208,7 +1208,7 @@ const getHistorial = async (req, res) => {
             y += 25
 
             facturas.forEach(factura => {
-                if(y + 105 > 792) {
+                if(y + 120 > 792) {
                     doc.moveTo(15, y - 7).lineTo(510, y - 7).stroke('black');
     
                     doc.addPage()
