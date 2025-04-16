@@ -1,8 +1,7 @@
 import { useParams } from "react-router-dom";
 import NavbarAdm from "../Common/NavbarAdm";
 import { useData } from "../../context/DataContext";
-import React, { useMemo, useState, useEffect } from "react";
-import { useTable, usePagination } from "react-table";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAlt, faEye } from '@fortawesome/free-solid-svg-icons';
 import Loading from "../Common/Loading";
@@ -20,6 +19,7 @@ const HistorialCuentaCorriente = () => {
     const [totalPagadoFactura, setTotalPagadoFactura] = useState(null)
     const [montoRestanteFactura, setMontoRestanteFactura] = useState(null)
     const [imputaciones, setImputaciones] = useState([])
+    const [flagCliente, setFlagCliente] = useState(false)
     const navigate = useNavigate();
     
     useEffect(() => {
@@ -28,8 +28,10 @@ const HistorialCuentaCorriente = () => {
 
         if (cliente && !proveedor) {
             setPersona(cliente);
+            setFlagCliente(true);
         } else if (!cliente && proveedor) {
             setPersona(proveedor)
+            setFlagCliente(false);
         }
     }, [email, clientesData, proveedoresData]);
 
@@ -221,6 +223,40 @@ const HistorialCuentaCorriente = () => {
         }
     }
 
+    const generarPdfHistorial = () => {
+        setIsLoading(true)
+
+        fetch(`${apiUrl}/pdf/historial/${persona.persona_id}`, {
+            headers: {
+                Authorization: `Bearer ${bearerToken}`,
+            }
+        })
+        .then((response) => {
+            if (!response.ok) {
+                alert("Error al generar el pdf, intente nuevamente");
+                throw new Error("Error en la solicitud GET");
+            }
+            return response.blob();
+        })
+        .then((result) => {
+            const url = URL.createObjectURL(result);
+
+            const newWindow = window.open(url, '_blank');
+
+            if (!newWindow) {
+                alert('Habilite las ventanas emergentes para descargar el PDF');
+            }
+
+            URL.revokeObjectURL(url);
+
+            setIsLoading(false)
+        })
+        .catch((error) => {
+            setIsLoading(false)
+            console.error('Error en la solicitud GET:', error);
+        });
+    }
+
     const handleCuentaCorriente = () => {
         navigate(`/admin/cuenta-corriente/${email}`);
     }
@@ -266,7 +302,7 @@ const HistorialCuentaCorriente = () => {
                     {pagos.length > 0 ? (
                         <>
                             <div className="tableDivContainer">
-                                <table className="tableContainer">
+                                <table className="tableContainerSinPaginacion">
                                     <thead>
                                         <tr>
                                             <th>N° Pago</th>
@@ -319,7 +355,7 @@ const HistorialCuentaCorriente = () => {
                                     sans-serif`}}>{obtenerNombreMes(mesAnio)}</h2>
 
                                 <div className="tableDivContainer">
-                                    <table className="tableContainer">
+                                    <table className="tableContainerSinPaginacion">
                                         <thead>
                                             <tr>
                                                 <th>N° Pedido</th>
@@ -343,7 +379,7 @@ const HistorialCuentaCorriente = () => {
                                                     <td>${formatearNumero(factura.a_pagar)}</td>
                                                     <td>{factura.flag_imputada ? "IMPUTADA" : "PENDIENTE"}</td>
                                                     <td>
-                                                        <button onClick={() => generarPdfRemito(factura)} className="botonEliminar">
+                                                        <button onClick={() => generarPdfRemito(factura)} className="botonEliminar" style={{padding: "3px", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "2px", marginBottom: "2px", background: "none"}}>
                                                             <FontAwesomeIcon icon={faFileAlt} />
                                                         </button>
                                                     </td>
@@ -376,7 +412,7 @@ const HistorialCuentaCorriente = () => {
 
                     {imputaciones.length > 0 ? (
                         <div className="tableDivContainer" style={{marginBottom: "100px"}}>
-                            <table className="tableContainer">
+                            <table className="tableContainerSinPaginacion">
                                 <thead>
                                     <tr>
                                         <th>N° Imputación</th>
@@ -396,7 +432,7 @@ const HistorialCuentaCorriente = () => {
                                             <td>${formatearNumero(imputacion.montoImputacion + imputacion.montoSobrante)}</td>
                                             <td>${formatearNumero(imputacion.montoSobrante)}</td>
                                             <td>
-                                                <button onClick={() => detallesImputacion(imputacion)} className="botonEliminar">
+                                                <button onClick={() => detallesImputacion(imputacion)} className="botonEliminar" style={{padding: "3px", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "2px", marginBottom: "2px", background: "none"}}>
                                                     <FontAwesomeIcon icon={faEye} />
                                                 </button>
                                             </td>
@@ -422,6 +458,9 @@ const HistorialCuentaCorriente = () => {
             )}
 
             <Button onClick={handleCuentaCorriente}  className="abajoDerecha" id="btnDescargarStock" style={{width: "200px"}}>Cuenta Corriente</Button>
+            {flagCliente && (
+                <Button onClick={generarPdfHistorial}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "240px"}}>PDF Historial</Button>
+            )}
         </>
     );
 }

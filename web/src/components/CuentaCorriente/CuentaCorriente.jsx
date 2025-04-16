@@ -1,8 +1,7 @@
 import { useParams } from "react-router-dom";
 import NavbarAdm from "../Common/NavbarAdm";
 import { useData } from "../../context/DataContext";
-import React, { useMemo, useState, useEffect } from "react";
-import { useTable, usePagination, useRowSelect } from "react-table";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Loading from "../Common/Loading";
@@ -299,6 +298,40 @@ const CuentaCorriente = () => {
         setIsLoading(true)
 
         fetch(`${apiUrl}/pdf/remito/${remitoExiste.pedido_id}`, {
+            headers: {
+                Authorization: `Bearer ${bearerToken}`,
+            }
+        })
+        .then((response) => {
+            if (!response.ok) {
+                alert("Error al generar el pdf, intente nuevamente");
+                throw new Error("Error en la solicitud GET");
+            }
+            return response.blob();
+        })
+        .then((result) => {
+            const url = URL.createObjectURL(result);
+            
+            const newWindow = window.open(url, '_blank');
+            
+            if (!newWindow) {
+                alert('Habilite las ventanas emergentes para descargar el PDF');
+            }
+
+            URL.revokeObjectURL(url);
+
+            setIsLoading(false)
+        })
+        .catch((error) => {
+            setIsLoading(false)
+            console.error('Error en la solicitud GET:', error);
+        });
+    }
+
+    const generarPdfCuenta = () => {
+        setIsLoading(true)
+
+        fetch(`${apiUrl}/pdf/cuenta-corriente/${persona.persona_id}`, {
             headers: {
                 Authorization: `Bearer ${bearerToken}`,
             }
@@ -741,7 +774,7 @@ const CuentaCorriente = () => {
                     {pagos.length > 0 ? (
                         <>
                             <div className="tableDivContainer">
-                                <table className="tableContainer">
+                                <table className="tableContainerSinPaginacion">
                                     <thead>
                                         <tr>
                                             {flagImputando && <th></th>}
@@ -769,12 +802,12 @@ const CuentaCorriente = () => {
                                                 <td>${formatearNumero(pago.monto)}</td>
                                                 <td style={{whiteSpace: "normal"}}>{pago.destino}</td>
                                                 <td>
-                                                    <button onClick={() => handleEditPago(pago)} className="botonEditar">
+                                                    <button onClick={() => handleEditPago(pago)} className="botonEditar" style={{padding: "3px", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "2px", marginBottom: "2px", background: "none"}}>
                                                         <FontAwesomeIcon icon={faEdit} />
                                                     </button>
                                                 </td>
                                                 <td>
-                                                    <button onClick={() => handleDeletePago(pago)} className="botonEliminar">
+                                                    <button onClick={() => handleDeletePago(pago)} className="botonEliminar" style={{padding: "3px", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "2px", marginBottom: "2px", background: "none"}}>
                                                         <FontAwesomeIcon icon={faTrashAlt} />
                                                     </button>
                                                 </td>
@@ -800,7 +833,7 @@ const CuentaCorriente = () => {
 
                     <div style={{display: "flex", justifyContent: "space-evenly", marginBottom: "100px"}}>
                         <div className="tableDivContainer">
-                            <table className="tableContainer">
+                            <table className="tableContainerSinPaginacion">
                                 <thead>
                                     <tr>
                                         {flagImputando && <th></th>}
@@ -894,7 +927,10 @@ const CuentaCorriente = () => {
                     ) : 
                         <>
                             <Button onClick={() => setIsPagoModalOpen(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "195px", right: "180px"}}>Agregar Cobranza A/C</Button>
-                            <Button onClick={() => setFlagImputando(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px"}}>Imputar</Button>    
+                            <Button onClick={() => setFlagImputando(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "390px"}}>Imputar</Button>
+                            {flagCliente && (
+                                <Button onClick={() => generarPdfCuenta()}  className="abajoDerecha" id="btnDescargarStock" style={{right: "550px"}}>PDF Cuenta Corriente</Button> 
+                            )}       
                         </>
                     }
                     
@@ -946,7 +982,7 @@ const CuentaCorriente = () => {
                     onClick={handleHistorial}  
                     className="abajoDerecha" 
                     id="btnDescargarStock" 
-                    style={{ width: "145px", ...(facturas.length > 0 && { right: "390px" }) }}
+                    style={{ width: "145px" }}
                 >
                     Historial
                 </Button>

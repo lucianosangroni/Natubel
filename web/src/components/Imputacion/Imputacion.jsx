@@ -2,16 +2,18 @@ import { useParams } from "react-router-dom";
 import NavbarAdm from "../Common/NavbarAdm";
 import { Button } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useData } from "../../context/DataContext";
+import Loading from "../Common/Loading";
+import { apiUrl, bearerToken } from "../../config/config";
 
 const Imputacion = () => {
     const { numeroImputacion } = useParams();
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { clientesData, proveedoresData, facturasData, remitosData, pagosData, imputacionesData } = useData()
     const [imputacion, setImputacion] = useState({
-        facturas: [],
-        pagos: []
+        facturas_pagos: []
     })
 
     useEffect(() => {
@@ -49,11 +51,12 @@ const Imputacion = () => {
             const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === factura.pedido_id);
 
             const newFactura = {
-                numero_pedido: factura.pedido_id,
+                tipo: "FAC",
+                numero: factura.pedido_id,
                 numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
                 fecha: formatearFecha(factura.createdAt),
-                total: remitoCorrespondiente? formatearNumero(factura.monto / (1 - remitoCorrespondiente.descuento / 100)) : formatearNumero(factura.monto),
-                descuento: remitoCorrespondiente? remitoCorrespondiente.descuento: "0",
+                total: remitoCorrespondiente? "$" + formatearNumero(factura.monto / (1 - remitoCorrespondiente.descuento / 100)) : "$" + formatearNumero(factura.monto),
+                descuento: remitoCorrespondiente? remitoCorrespondiente.descuento + "%" : "0%",
                 a_pagar: formatearNumero(factura.monto)
             }
 
@@ -64,9 +67,13 @@ const Imputacion = () => {
 
         for(const pago of pagos) {
             const newPago = {
-                id: pago.id,
+                tipo: "COB A/C",
+                numero: pago.id,
+                numero_remito: "-",
                 fecha: formatearFechaPago(pago.fecha),
-                monto: pago.monto
+                total: "-",
+                descuento: "-",
+                a_pagar: formatearNumero(pago.monto)
             }
 
             pagosParsed.push(newPago)
@@ -83,11 +90,13 @@ const Imputacion = () => {
             personaEmail: emailPersona,
             personaNombre: facturas[0]?.persona_nombre,
             fecha: formatearFecha(filasImputacionCorrespondientes[0]?.createdAt),
-            facturas: facturasParsed,
-            pagos: pagosParsed,
+            facturas_pagos: [...facturasParsed, ...pagosParsed],
             montoImputacion,
             montoSobrante
         }
+
+        console.log(emailPersona)
+        console.log(imputacionCorrespondiente)
 
         setImputacion(imputacionCorrespondiente)
     }, [imputacionesData, numeroImputacion, clientesData, proveedoresData, facturasData, pagosData, remitosData]);
@@ -115,6 +124,40 @@ const Imputacion = () => {
         return numero;
     };
 
+    const generarPdfImputacion = () => {
+        setIsLoading(true)
+
+        fetch(`${apiUrl}/pdf/imputacion/${numeroImputacion}`, {
+            headers: {
+                Authorization: `Bearer ${bearerToken}`,
+            }
+        })
+        .then((response) => {
+            if (!response.ok) {
+                alert("Error al generar el pdf, intente nuevamente");
+                throw new Error("Error en la solicitud GET");
+            }
+            return response.blob();
+        })
+        .then((result) => {
+            const url = URL.createObjectURL(result);
+
+            const newWindow = window.open(url, '_blank');
+
+            if (!newWindow) {
+                alert('Habilite las ventanas emergentes para descargar el PDF');
+            }
+
+            URL.revokeObjectURL(url);
+
+            setIsLoading(false)
+        })
+        .catch((error) => {
+            setIsLoading(false)
+            console.error('Error en la solicitud GET:', error);
+        });
+    }
+
     const handleHistorial = () => {
         navigate(`/admin/cuenta-corriente/${imputacion.personaEmail}/historial`);
     }
@@ -125,42 +168,33 @@ const Imputacion = () => {
 
     return (
         <>
+            {isLoading && <Loading/>}
             <NavbarAdm/>
-            {imputacion.facturas.length > 0 && (
+            {imputacion.facturas_pagos.length > 0 && (
                 <>
                     <h1 style={{marginTop: "2.5rem", marginBottom: "1rem", textAlign: "center", fontSize: "50px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
                         "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                         sans-serif`}}>
                         Imputación N°{numeroImputacion}
                     </h1>
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
-
-                    <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                        sans-serif`}}>Detalles</h2>
 
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: ".6rem"}}>
                         <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
                             <span style={{ fontWeight: "bold" }}>CLIENTE: <span style={{fontWeight: "normal"}}>{imputacion.personaNombre}</span></span>
                             <span style={{ fontWeight: "bold" }}>FECHA: <span style={{fontWeight: "normal"}}>{imputacion.fecha}</span></span>
-                            <span style={{ fontWeight: "bold" }}>MONTO: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoImputacion)}</span></span>
-                            <span style={{ fontWeight: "bold" }}>PAGADO: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoImputacion + imputacion.montoSobrante)}</span></span>
-                            <span style={{ fontWeight: "bold" }}>SOBRANTE: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoSobrante)}</span></span>
+                            <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoImputacion)}</span></span>
+                            <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoImputacion + imputacion.montoSobrante)}</span></span>
+                            <span style={{ fontWeight: "bold" }}>MONTO SOBRANTE: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoSobrante)}</span></span>
                         </div>
                     </div>
-
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
-                    
-                    <h2 style={{marginTop: "2.5rem", marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                    sans-serif`}}>Facturas</h2>
 
                     <div className="tableDivContainer">
                         <table className="tableContainerSinPaginacion">
                             <thead>
                                 <tr>
-                                    <th>N° Pedido</th>
-                                    <th>N° Remito</th>
+                                    <th>Tipo</th>
+                                    <th>Número</th>
+                                    <th>Remito</th>
                                     <th>Fecha</th>
                                     <th>Total</th>
                                     <th>Descuento</th>
@@ -168,57 +202,17 @@ const Imputacion = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {imputacion.facturas.map((factura, index) => (
-                                    <tr key={index}>
-                                        <td>{factura.numero_pedido}</td>
-                                        <td>{factura.numero_remito}</td>
-                                        <td>{factura.fecha}</td>
-                                        <td>${formatearNumero(factura.total)}</td>
-                                        <td>{factura.descuento}%</td>
-                                        <td>${formatearNumero(factura.a_pagar)}</td>
+                                {imputacion.facturas_pagos.map((factura_pago, index) => (
+                                    <tr key={index} style={{ color: factura_pago.tipo === "COB A/C" ? "red" : "black" }}>
+                                        <td>{factura_pago.tipo}</td>
+                                        <td>{factura_pago.numero}</td>
+                                        <td>{factura_pago.numero_remito}</td>
+                                        <td>{factura_pago.fecha}</td>
+                                        <td>{factura_pago.total}</td>
+                                        <td>{factura_pago.descuento}</td>
+                                        <td>${factura_pago.a_pagar}</td>
                                     </tr>
                                 ))}
-                                <tr>
-                                    <td style={{fontWeight: "bold", padding: "5px 8px"}}>TOTAL</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td style={{fontWeight: "bold"}}>${formatearNumero(imputacion.montoImputacion)}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
-                    
-                    <h2 style={{marginTop: "2.5rem", marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                    sans-serif`}}>Cobranzas A/C</h2>
-
-                    <div className="tableDivContainer" style={{marginBottom: "100px"}}>
-                        <table className="tableContainerSinPaginacion">
-                            <thead>
-                                <tr>
-                                    <th>N° Pago</th>
-                                    <th>Fecha</th>
-                                    <th>Monto</th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {imputacion.pagos.map((pago, index) => (
-                                    <tr key={index}>
-                                        <td>{pago.id}</td>
-                                        <td>{pago.fecha}</td>
-                                        <td>${formatearNumero(pago.monto)}</td>
-                                    </tr>
-                                ))}
-                                <tr>
-                                    <td style={{fontWeight: "bold", padding: "5px 8px"}}>TOTAL</td>
-                                    <td></td>
-                                    <td style={{fontWeight: "bold"}}>${formatearNumero(imputacion.montoImputacion + imputacion.montoSobrante)}</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -228,6 +222,7 @@ const Imputacion = () => {
 
             <Button onClick={handleHistorial}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px"}}>Historial</Button>
             <Button onClick={handleCuentaCorriente}  className="abajoDerecha" id="btnDescargarStock" style={{width: "200px", right: "180px"}}>Cuenta Corriente</Button>
+            <Button onClick={generarPdfImputacion}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "395px"}}>PDF Imputación</Button>
         </>
     );
 }
