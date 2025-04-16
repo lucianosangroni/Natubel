@@ -118,7 +118,7 @@ const Imputacion = () => {
 
     const formatearNumero = (numero) => {
         if (typeof numero === 'number') {
-            const [entero, decimal] = numero.toString().split('.');
+            const [entero, decimal] = numero.toFixed(2).toString().split('.');
             return `${entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}${decimal ? `,${decimal}` : ''}`;
         }
         return numero;
