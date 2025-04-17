@@ -51,7 +51,7 @@ function App() {
               <Route path="admin/cuenta-corriente/:email/historial" element={<HistorialCuentaCorriente/>} />
             </Route>
             <Route element={<ProtectedRoute/>}>
-              <Route path="admin/imputaciones/:numeroImputacion" element={<Imputacion/>} />
+              <Route path="admin/cobranzas/:numeroImputacion" element={<Imputacion/>} />
             </Route>
           </Routes>
         </AuthProvider>

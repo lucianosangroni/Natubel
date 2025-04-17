@@ -95,9 +95,6 @@ const Imputacion = () => {
             montoSobrante
         }
 
-        console.log(emailPersona)
-        console.log(imputacionCorrespondiente)
-
         setImputacion(imputacionCorrespondiente)
     }, [imputacionesData, numeroImputacion, clientesData, proveedoresData, facturasData, pagosData, remitosData]);
 
@@ -175,18 +172,28 @@ const Imputacion = () => {
                     <h1 style={{marginTop: "2.5rem", marginBottom: "1rem", textAlign: "center", fontSize: "50px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
                         "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                         sans-serif`}}>
-                        Imputación N°{numeroImputacion}
+                        Cobranza N°{numeroImputacion}
                     </h1>
+                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
 
-                    <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: ".6rem"}}>
-                        <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
-                            <span style={{ fontWeight: "bold" }}>CLIENTE: <span style={{fontWeight: "normal"}}>{imputacion.personaNombre}</span></span>
-                            <span style={{ fontWeight: "bold" }}>FECHA: <span style={{fontWeight: "normal"}}>{imputacion.fecha}</span></span>
-                            <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoImputacion)}</span></span>
-                            <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoImputacion + imputacion.montoSobrante)}</span></span>
-                            <span style={{ fontWeight: "bold" }}>MONTO SOBRANTE: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoSobrante)}</span></span>
+                    <div style={{display: "flex", alignItems: "center", marginTop: "1rem", marginBottom: "1rem"}}>
+                        <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content", justifyContent: "center"}}>
+                                <span style={{ fontWeight: "bold" }}>CLIENTE: <span style={{fontWeight: "normal"}}>{imputacion.personaNombre}</span></span>
+                                <span style={{ fontWeight: "bold" }}>FECHA: <span style={{fontWeight: "normal"}}>{imputacion.fecha}</span></span>
+                                <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoImputacion)}</span></span>
+                                <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoImputacion + imputacion.montoSobrante)}</span></span>
+                                <span style={{ fontWeight: "bold" }}>MONTO SOBRANTE: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoSobrante)}</span></span>
+                            </div>
+                        </div>
+                        <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            <Button onClick={handleHistorial} className="btnRemito">Historial</Button>
+                            <Button onClick={handleCuentaCorriente} className="btnRemito">Cuenta Corriente</Button>
+                            <Button onClick={generarPdfImputacion} className="btnRemito">PDF Cobranza</Button>
                         </div>
                     </div>
+
+                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
 
                     <div className="tableDivContainer">
                         <table className="tableContainerSinPaginacion">
@@ -218,11 +225,6 @@ const Imputacion = () => {
                     </div>
                 </>
             )}
-            
-
-            <Button onClick={handleHistorial}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px"}}>Historial</Button>
-            <Button onClick={handleCuentaCorriente}  className="abajoDerecha" id="btnDescargarStock" style={{width: "200px", right: "180px"}}>Cuenta Corriente</Button>
-            <Button onClick={generarPdfImputacion}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "395px"}}>PDF Imputación</Button>
         </>
     );
 }

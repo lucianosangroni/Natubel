@@ -9,7 +9,7 @@ import Loading from "../Common/Loading";
 import { useData } from "../../context/DataContext";
 
 const CargarPedido = () => {
-  const { articulosData, clientesData, proveedoresData, refreshArticulos, isInitialLoading } = useData()
+  const { articulosData, marcasData, clientesData, proveedoresData, refreshArticulos, isInitialLoading } = useData()
   const [data, setData] = useState(articulosData);
   const [clientes, setClientes] = useState(clientesData);
   const [proveedores, setProveedores] = useState(proveedoresData);
@@ -19,21 +19,38 @@ const CargarPedido = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productosConfirmados, setProductosConfirmados] = useState([]);
   const [cantidadesArticuloActual, setCantidadesArticuloActual] = useState({});
+  const [selectedMarca, setSelectedMarca] = useState("todas");
   const [isLoading, setIsLoading] = useState(false)
 
   ////OBTENER ARTICULOS, CLIENTES Y PROVEEDORES DB
   useEffect(() => {
-    setData(articulosData);
-    setSelectedProduct(articulosData[0]);
+    const filtered = selectedMarca === "todas"
+            ? articulosData
+            : articulosData.filter(art => String(art.marca_id) === String(selectedMarca));
+
+    setData(filtered);
+    setSelectedProduct(filtered[0]);
     setClientes(clientesData);
     setProveedores(proveedoresData);
-  }, [articulosData, clientesData, proveedoresData]);
+  }, [articulosData, clientesData, proveedoresData, selectedMarca]);
 
   const handleCambiarTipoPedidor = (pedidor) => {
     setTipoPedidor(pedidor);
     setFiltroBusqueda("");
     setSelectedPedidor("");
   };
+
+  const handleChangeMarca = (marcaId) => {
+    if (Object.keys(cantidadesArticuloActual).length > 0) {
+        const confirmCambio = window.confirm(`El articulo actual no está confirmado, ¿Estas seguro que quieres cambiar de marca? al hacerlo perderás los datos del mismo`);
+        if (!confirmCambio) {
+            return;
+        }
+    }
+
+    setCantidadesArticuloActual({});
+    setSelectedMarca(marcaId);
+  }
 
   const handleCantidadesChange = (cantidades) => {
     setCantidadesArticuloActual(cantidades)
@@ -213,13 +230,15 @@ const CargarPedido = () => {
         return response.json();
       })
       .then((result) => {
-        alert(result.message);
-        actualizarStock();
-        setSelectedPedidor("");
-        setTipoPedidor("cliente");
-        setFiltroBusqueda("");
-        setSelectedProduct(data[0]);
+        if(result.message === 'Pedido creado con éxito') {
+          actualizarStock();
+          setSelectedPedidor("");
+          setTipoPedidor("cliente");
+          setFiltroBusqueda("");
+          setSelectedProduct(data[0]);
+        }
 
+        alert(result.message);
         setIsLoading(false)
       })
       .catch((error) => {
@@ -317,17 +336,29 @@ const CargarPedido = () => {
       </div>
       
       <section className="contenedor-tabla-grilla">
-        <ListaArticulos articulos={data} onArticuloClick={handleProductClick} selectedArticulo={selectedProduct}/>
+        <div style={{width: "20%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+          <select value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)} style={{marginLeft: "1rem", marginTop: "1rem"}}>
+              <option value="todas">Todas las marcas</option>
+              {marcasData.map((marca) => (
+                  <option key={marca.id} value={marca.id}>
+                      {marca.nombre}
+                  </option>
+              ))}
+          </select>
 
-        {selectedProduct && (
-          <GrillaProductoPedido
-            articulo={selectedProduct}
-            onConfirmarProducto={handleConfirmarProducto}
-            onBorrarConfirmarProducto={handleBorrarConfirmarProducto}
-            onSetCantidades={handleCantidadesChange}
-            tipoPedidor={tipoPedidor}
-          />
-        )}
+          <ListaArticulos articulos={data} onArticuloClick={handleProductClick} selectedArticulo={selectedProduct}/>
+        </div>
+        <div style={{width: "80%", display: "flex"}}>
+          {selectedProduct && (
+            <GrillaProductoPedido
+              articulo={selectedProduct}
+              onConfirmarProducto={handleConfirmarProducto}
+              onBorrarConfirmarProducto={handleBorrarConfirmarProducto}
+              onSetCantidades={handleCantidadesChange}
+              tipoPedidor={tipoPedidor}
+            />
+          )}
+        </div>
       </section>
       {productosConfirmados.length > 0 && (
       <>

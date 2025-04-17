@@ -37,6 +37,7 @@ const CuentaCorriente = () => {
     const [remitoExiste, setRemitoExiste] = useState(null);
     const [flagCliente, setFlagCliente] = useState(false)
     const [pagos, setPagos] = useState([])
+    const [facturasImputables, setFacturasImputables] = useState([])
     const [totalPagadoFactura, setTotalPagadoFactura] = useState(null)
     const [montoRestanteFactura, setMontoRestanteFactura] = useState(null)
     const navigate = useNavigate();
@@ -123,6 +124,7 @@ const CuentaCorriente = () => {
 
             setPagos(pagosOrdenados)
             setFacturas(facturasOrdenadas)
+            setFacturasImputables(facturasOrdenadas.filter((factura) => !((flagCliente && factura.numero_remito === "-") || factura.a_pagar === 0)))
             setSelectedRow(facturasOrdenadas[0])
 
             const totalPagado = pagosOrdenados.reduce((sum, pago) => sum + pago.monto, 0)
@@ -597,13 +599,13 @@ const CuentaCorriente = () => {
             })
             .then((response) => {
                 if (!response.ok) {
-                    alert("Error al agregar imputacion, verifique los datos ingresados")
+                    alert("Error al agregar cobranza, verifique los datos ingresados")
                     throw new Error("Error en la solicitud POST");
                 }
                 return response.json();
             })
             .then((result) => {
-                if(result.message === "Imputacion creada con éxito") {
+                if(result.message === "Cobranza creada con éxito") {
                     const facturasActualizadas = facturasData.map(fac => {
                         if(imputacion.facturas.includes(fac.id)){
                             return {...fac, flag_imputada: true}
@@ -680,6 +682,27 @@ const CuentaCorriente = () => {
         });
     };
 
+    const handleCheckboxChangeAllFacturas = (event) => {
+        const isChecked = event.target.checked;
+
+        setImputacion((prevImputacion) => {
+            const allFacturaIds = isChecked
+                ? facturasImputables.map(f => f.id)
+                : [];
+        
+            const nuevoTotalFacturas = isChecked
+                ? facturasImputables.reduce((total, f) => total + f.a_pagar, 0)
+                : 0;
+        
+            setTotalFacturasImputando(nuevoTotalFacturas);
+        
+            return {
+                ...prevImputacion,
+                facturas: allFacturaIds,
+            };
+        });
+    }
+
     const handleCheckboxChangePagos = (event, pago) => {
         setImputacion((prevImputacion) => {
             const prevPagos = Array.isArray(prevImputacion.pagos) ? prevImputacion.pagos : [];
@@ -705,6 +728,25 @@ const CuentaCorriente = () => {
         });
     };
 
+    const handleCheckboxChangeAllPagos = (event) => {
+        const isChecked = event.target.checked;
+
+        setImputacion((prevImputacion) => {
+            const allPagoIds = isChecked ? pagos.map(p => p.id) : [];
+    
+            const nuevoTotalPagos = isChecked
+                ? pagos.reduce((total, p) => total + p.monto, 0)
+                : 0;
+    
+            setTotalPagosImputando(nuevoTotalPagos);
+    
+            return {
+                ...prevImputacion,
+                pagos: allPagoIds
+            };
+        });
+    }
+
     const handleCancelarImputacion = () => {
         setImputacion({
             facturas: [],
@@ -720,7 +762,7 @@ const CuentaCorriente = () => {
     }
 
     const handleVerImputacion = (idImputacion) => {
-        navigate(`/admin/imputaciones/${idImputacion}`);
+        navigate(`/admin/cobranzas/${idImputacion}`);
     }
 
     return (
@@ -738,28 +780,44 @@ const CuentaCorriente = () => {
                 </>
             )}
 
-            <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginTop: "1rem", minWidth: "20%"}}>
+            <div style={{display: "flex", alignItems: "center", marginTop: "1rem"}}>
                 {flagImputando? (
                     <>
-                        <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                            sans-serif`}}>Montos de la Imputación Actual</h2>
-                        
-                        <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
-                            <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagosImputando)}</span></span>
-                            <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(totalFacturasImputando)}</span></span>
-                        </div>  
+                        <div style={{width: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+                            <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                                "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                                sans-serif`}}>Montos de la Cobranza Actual</h2>
+
+                            <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
+                                <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagosImputando)}</span></span>
+                                <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(totalFacturasImputando)}</span></span>
+                            </div>  
+                        </div>
+                        <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            <Button onClick={handleCancelarImputacion} className="btnRemito">Cancelar</Button>
+                            <Button onClick={handleAddImputacion} className="btnRemito">Confirmar</Button>
+                        </div>
                     </>
                 ) : (
                     <>
-                        <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                            sans-serif`}}>Montos Totales sin Imputar</h2>
-                        <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
-                            {totalPagadoFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagadoFactura)}</span></span>}
-                            {montoRestanteFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(montoRestanteFactura)}</span></span>}
-                        </div> 
-                    </> 
+                        <div style={{width: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+                            <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                                "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                                sans-serif`}}>Montos Totales sin Imputar</h2>
+                            <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
+                                {totalPagadoFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagadoFactura)}</span></span>}
+                                {montoRestanteFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(montoRestanteFactura)}</span></span>}
+                            </div> 
+                        </div>
+                        <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            <Button onClick={handleHistorial} className="btnRemito">Historial</Button>
+                            <Button onClick={() => setIsPagoModalOpen(true)} className="btnRemito">Agregar Cobranza A/C</Button>
+                            <Button onClick={() => setFlagImputando(true)} className="btnRemito">Imputar</Button>
+                            {flagCliente && (
+                                <Button onClick={() => generarPdfCuenta()} className="btnRemito">PDF Cuenta Corriente</Button> 
+                            )}       
+                        </div>
+                    </>
                 )}
             </div>
 
@@ -777,7 +835,15 @@ const CuentaCorriente = () => {
                                 <table className="tableContainerSinPaginacion">
                                     <thead>
                                         <tr>
-                                            {flagImputando && <th></th>}
+                                            {flagImputando && 
+                                                <th>
+                                                    <input 
+                                                        type="checkbox"
+                                                        onChange={(e) => handleCheckboxChangeAllPagos(e)}
+                                                        checked={pagos.length > 0 && imputacion.pagos.length === pagos.length}
+                                                    />
+                                                </th>
+                                            }
                                             <th>N° Pago</th>
                                             <th>Fecha</th>
                                             <th>Monto</th>
@@ -794,6 +860,7 @@ const CuentaCorriente = () => {
                                                         <input
                                                             type="checkbox"
                                                             onChange={(e) => handleCheckboxChangePagos(e, pago)}
+                                                            checked={imputacion.pagos.includes(pago.id)}
                                                         />
                                                     </td>
                                                 )}
@@ -831,12 +898,23 @@ const CuentaCorriente = () => {
                     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                     sans-serif`}}>Facturas</h2>
 
-                    <div style={{display: "flex", justifyContent: "space-evenly", marginBottom: "100px"}}>
+                    <div style={{display: "flex", justifyContent: "space-evenly"}}>
                         <div className="tableDivContainer">
                             <table className="tableContainerSinPaginacion">
                                 <thead>
                                     <tr>
-                                        {flagImputando && <th></th>}
+                                        {flagImputando && 
+                                            <th>
+                                                <input 
+                                                    type="checkbox"
+                                                    onChange={(e) => handleCheckboxChangeAllFacturas(e)}
+                                                    checked={
+                                                        facturasImputables.length > 0 &&
+                                                        imputacion.facturas.length === facturasImputables.length
+                                                    }
+                                                />
+                                            </th>
+                                        }
                                         <th>N° Pedido</th>
                                         <th>N° Remito</th>
                                         <th>Fecha</th>
@@ -850,7 +928,7 @@ const CuentaCorriente = () => {
                                         <tr 
                                             key={index}
                                             onClick={() => handleRowClick(factura)}
-                                            style={{backgroundColor: selectedRow?.id === factura.id ? "lightgray" : "white"}}
+                                            style={{backgroundColor: selectedRow?.id === factura.id ? "darkgray": "revert-layer"}}
                                         >
                                             {flagImputando && (
                                                 <td>
@@ -858,6 +936,7 @@ const CuentaCorriente = () => {
                                                         type="checkbox"
                                                         disabled={flagCliente && factura.numero_remito === "-" || factura.a_pagar === 0}
                                                         onChange={(e) => handleCheckboxChangeFacturas(e, factura)}
+                                                        checked={imputacion.facturas.includes(factura.id)}
                                                     />
                                                 </td>
                                             )}
@@ -918,21 +997,6 @@ const CuentaCorriente = () => {
                             )}
                         </div>
                     </div>
-
-                    {flagImputando? (
-                        <>
-                            <Button onClick={handleCancelarImputacion}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "180px"}}>Cancelar</Button>
-                            <Button onClick={handleAddImputacion}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px"}}>Confirmar</Button>
-                        </>
-                    ) : 
-                        <>
-                            <Button onClick={() => setIsPagoModalOpen(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "195px", right: "180px"}}>Agregar Cobranza A/C</Button>
-                            <Button onClick={() => setFlagImputando(true)}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "390px"}}>Imputar</Button>
-                            {flagCliente && (
-                                <Button onClick={() => generarPdfCuenta()}  className="abajoDerecha" id="btnDescargarStock" style={{right: "550px"}}>PDF Cuenta Corriente</Button> 
-                            )}       
-                        </>
-                    }
                     
                     {isFacturaModalOpen && (
                         <ModalFacturaEditar
@@ -975,17 +1039,6 @@ const CuentaCorriente = () => {
                     sans-serif`}}>
                     No hay facturas para mostrar.
                 </p>
-            )}
-            
-            {!flagImputando && (
-                <Button 
-                    onClick={handleHistorial}  
-                    className="abajoDerecha" 
-                    id="btnDescargarStock" 
-                    style={{ width: "145px" }}
-                >
-                    Historial
-                </Button>
             )}
         </>
     );

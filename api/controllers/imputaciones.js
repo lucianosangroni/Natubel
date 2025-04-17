@@ -46,14 +46,14 @@ const createItem = async (req, res) => {
             (
                 {
                     monto: monto_sobrante,
-                    destino: "Sobrante - Imputación " + numeroImputacion,
+                    destino: "Sobrante - Cobranza " + numeroImputacion,
                     persona_id: persona_id,
                     pago_padre_id: pagos[0]
                 }
             )
         }
 
-        res.status(201).json({ message: 'Imputacion creada con éxito', nuevoPago});
+        res.status(201).json({ message: 'Cobranza creada con éxito', nuevoPago});
     } catch(e) {
         console.log("Error al crear la imputacion: ", e)
         res.status(500).json({ message: 'Error al crear la imputacion' });

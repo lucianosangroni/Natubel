@@ -6,19 +6,24 @@ import Loading from "../Common/Loading";
 import { apiUrl, bearerToken } from "../../config/config";
 
 const Precios = () => {
-    const { isInitialLoading, articulosData, refreshArticulos } = useData()
+    const { isInitialLoading, articulosData, refreshArticulos, marcasData } = useData()
     const [ data, setData ] = useState(articulosData)
     const [ cantidades, setCantidades] = useState({});
+    const [selectedMarca, setSelectedMarca] = useState("todas");
     const inputRefs = {};
     const [ isLoading, setIsLoading ] = useState(false)
 
     useEffect(() => {
-        setCantidades({})
-        setData(articulosData);
-        if(data.length > 0) {
-            inputRefs[data[0].id + "-minorista"].current.focus()
+        setCantidades({});
+        const filtered = selectedMarca === "todas"
+            ? articulosData
+            : articulosData.filter(art => String(art.marca_id) === String(selectedMarca));
+        setData(filtered);
+        
+        if (filtered.length > 0) {
+            inputRefs[filtered[0].id + "-minorista"]?.current?.focus();
         }
-    }, [articulosData]);
+    }, [articulosData, selectedMarca]);
 
     const handleKeyDown = (e, articulo) => {
         e.preventDefault()
@@ -83,6 +88,18 @@ const Precios = () => {
         }
 
         return resultado
+    }
+
+    const handleChangeMarca = (marcaId) => {
+        if (Object.keys(cantidades).length > 0) {
+            const confirmCambio = window.confirm("Tienes cambios sin guardar. ¿Seguro que quieres cambiar de marca y perderlos?");
+            if (!confirmCambio) {
+                return;
+            }
+        }
+    
+        setCantidades({});
+        setSelectedMarca(marcaId);
     }
 
     const handleGuardarCambios = () => {
@@ -164,68 +181,78 @@ const Precios = () => {
         <>
             {(isLoading || isInitialLoading) && <Loading/>}
             <NavbarAdm/>
+            <select value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)} style={{marginLeft: "1rem", marginTop: "1rem"}}>
+                <option value="todas">Todas las marcas</option>
+                {marcasData.map((marca) => (
+                    <option key={marca.id} value={marca.id}>
+                        {marca.nombre}
+                    </option>
+                ))}
+            </select>
+
             {data.length > 0 && (
-            <table style={{marginBottom: "30px"}} className="table-grilla">
-                <thead>
-                    <tr >
-                        <th id="articulo-grilla-elegido" style={{width: "115px"}}>N° Artículo</th>
-                        <th id="articulo-grilla-elegido" style={{width: "200px"}}>Precio Minorista</th>
-                        <th id="articulo-grilla-elegido" style={{width: "200px"}}>Precio Mayorista</th>
-                        <th id="articulo-grilla-elegido" style={{width: "200px"}}>Precio Distribuidor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((articulo, index) => {
-                        const cantidadMinorista = cantidades[articulo.id + "-minorista"] || "";
-                        const cantidadMayorista = cantidades[articulo.id + "-mayorista"] || "";
-                        const cantidadDistribuidor = cantidades[articulo.id + "-distribuidor"] || "";
+                <table style={{marginTop: "1rem"}} className="table-grilla">
+                    <thead>
+                        <tr >
+                            <th id="articulo-grilla-elegido" style={{width: "115px"}}>N° Artículo</th>
+                            <th id="articulo-grilla-elegido" style={{width: "200px"}}>Precio Minorista</th>
+                            <th id="articulo-grilla-elegido" style={{width: "200px"}}>Precio Mayorista</th>
+                            <th id="articulo-grilla-elegido" style={{width: "200px"}}>Precio Distribuidor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((articulo, index) => {
+                            const cantidadMinorista = cantidades[articulo.id + "-minorista"] || "";
+                            const cantidadMayorista = cantidades[articulo.id + "-mayorista"] || "";
+                            const cantidadDistribuidor = cantidades[articulo.id + "-distribuidor"] || "";
 
-                        inputRefs[articulo.id + "-minorista"] = React.createRef();
-                        inputRefs[articulo.id + "-mayorista"] = React.createRef();
-                        inputRefs[articulo.id + "-distribuidor"] = React.createRef();
+                            inputRefs[articulo.id + "-minorista"] = React.createRef();
+                            inputRefs[articulo.id + "-mayorista"] = React.createRef();
+                            inputRefs[articulo.id + "-distribuidor"] = React.createRef();
 
-                        return (
-                            <tr key={index}>
-                                <td>ART. {articulo.numero_articulo}</td>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <input style={{width: "80px"}}
-                                            type="text"
-                                            defaultValue={cantidadMinorista}
-                                            onKeyDown={(e) => handleKeyDown(e, articulo.id + "-minorista")}
-                                            ref={inputRefs[articulo.id + "-minorista"]}
-                                        />
-                                        <span className="stock-label">&nbsp;(${articulo.precio_minorista})</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <input style={{width: "80px"}}
-                                            type="text"
-                                            defaultValue={cantidadMayorista}
-                                            onKeyDown={(e) => handleKeyDown(e, articulo.id + "-mayorista")}
-                                            ref={inputRefs[articulo.id + "-mayorista"]}
-                                        />
-                                        <span className="stock-label">&nbsp;(${articulo.precio_mayorista})</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <input style={{width: "80px"}}
-                                            type="text"
-                                            defaultValue={cantidadDistribuidor}
-                                            onKeyDown={(e) => handleKeyDown(e, articulo.id + "-distribuidor")}
-                                            ref={inputRefs[articulo.id + "-distribuidor"]}
-                                        />
-                                        <span className="stock-label">&nbsp;(${articulo.precio_distribuidor})</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+                            return (
+                                <tr key={index}>
+                                    <td>ART. {articulo.numero_articulo}</td>
+                                    <td>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <input style={{width: "80px"}}
+                                                type="text"
+                                                defaultValue={cantidadMinorista}
+                                                onKeyDown={(e) => handleKeyDown(e, articulo.id + "-minorista")}
+                                                ref={inputRefs[articulo.id + "-minorista"]}
+                                            />
+                                            <span className="stock-label">&nbsp;(${articulo.precio_minorista})</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <input style={{width: "80px"}}
+                                                type="text"
+                                                defaultValue={cantidadMayorista}
+                                                onKeyDown={(e) => handleKeyDown(e, articulo.id + "-mayorista")}
+                                                ref={inputRefs[articulo.id + "-mayorista"]}
+                                            />
+                                            <span className="stock-label">&nbsp;(${articulo.precio_mayorista})</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <input style={{width: "80px"}}
+                                                type="text"
+                                                defaultValue={cantidadDistribuidor}
+                                                onKeyDown={(e) => handleKeyDown(e, articulo.id + "-distribuidor")}
+                                                ref={inputRefs[articulo.id + "-distribuidor"]}
+                                            />
+                                            <span className="stock-label">&nbsp;(${articulo.precio_distribuidor})</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
             )}
+
             <Button onClick={handleGuardarCambios} id="btnDescargarStock" className="abajoDerecha">Guardar Cambios</Button>
         </>
     );

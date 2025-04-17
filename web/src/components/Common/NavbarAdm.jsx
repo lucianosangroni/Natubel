@@ -1,6 +1,3 @@
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
 import { useAuth } from '../../context/AuthContext';
 
@@ -18,33 +15,48 @@ function NavbarAdm({ selected }) {
   }
 
   return (
-    <>
-      <Navbar data-bs-theme="light" className="nav">
-        <Container className="navBarElementsContainer" style={{ margin: 0 }}>
-          <h4 className="navUsername">{localStorage.getItem('username')}</h4>
-          <Nav className="navPantallasContainer">
-              <Nav.Link className={`botonNav ${selected === 'Cargar Pedido' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/cargar-pedido">
-                Cargar Pedido
-              </Nav.Link>
-              <Nav.Link className={`botonNav ${selected === 'Proveedores' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/proveedores">
-                Proveedores
-              </Nav.Link>
-              <Nav.Link className={`botonNav ${selected === 'Clientes' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/clientes">
-                Clientes
-              </Nav.Link>
-              <Nav.Link className={`botonNav ${selected === 'Articulos' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/articulos">
-                Artículos
-              </Nav.Link>
-              <Nav.Link className={`botonNav ${selected === 'Pedidos' ? 'selectedNavBar' : ''}`} as={Link} to="/admin/pedidos">
-                Pedidos
-              </Nav.Link>
-          </Nav>
-          <button className="botonCerrarSesion" onClick={handleLogout}>
-            Cerrar Sesion
-          </button>
-        </Container>
-      </Navbar>
-    </>
+    <nav className="navbar-adm">
+      <div className="navbar-container">
+        <h4 className="navbar-username">{localStorage.getItem('username')}</h4>
+
+        <div className="navbar-links">
+          <Link
+            className={`navbar-link ${selected === 'Cargar Pedido' ? 'active' : ''}`}
+            to="/admin/cargar-pedido"
+          >
+            Cargar Pedido
+          </Link>
+          <Link
+            className={`navbar-link ${selected === 'Proveedores' ? 'active' : ''}`}
+            to="/admin/proveedores"
+          >
+            Proveedores
+          </Link>
+          <Link
+            className={`navbar-link ${selected === 'Clientes' ? 'active' : ''}`}
+            to="/admin/clientes"
+          >
+            Clientes
+          </Link>
+          <Link
+            className={`navbar-link ${selected === 'Articulos' ? 'active' : ''}`}
+            to="/admin/articulos"
+          >
+            Artículos
+          </Link>
+          <Link
+            className={`navbar-link ${selected === 'Pedidos' ? 'active' : ''}`}
+            to="/admin/pedidos"
+          >
+            Pedidos
+          </Link>
+        </div>
+
+        <button className="navbar-logout" onClick={handleLogout}>
+          Cerrar Sesión
+        </button>
+      </div>
+    </nav>
   );
 }
 

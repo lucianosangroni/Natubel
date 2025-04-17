@@ -906,7 +906,7 @@ const getCuentaCorriente = async (req, res) => {
             order: [['fecha', 'ASC']]
         });
 
-        const facturas = await facturaModel.findAll({
+        const facturasInit = await facturaModel.findAll({
             where: {
                 flag_imputada: false,
                 flag_cancelada: false,
@@ -915,7 +915,7 @@ const getCuentaCorriente = async (req, res) => {
             order: [['pedido_id', 'ASC']]
         });
 
-        const pedidoIds = facturas.map(f => f.pedido_id);
+        const pedidoIds = facturasInit.map(f => f.pedido_id);
 
         const remitos = await remitoModel.findAll({
             where: {
@@ -928,7 +928,7 @@ const getCuentaCorriente = async (req, res) => {
             remitosMap.set(remito.pedido_id, remito);
         });
 
-        const facturasConRemitos = facturas.map(factura => {
+        const facturasConRemitos = facturasInit.map(factura => {
             const remito = remitosMap.get(factura.pedido_id);
             const descuento = remito?.descuento || 0;
 
@@ -940,6 +940,8 @@ const getCuentaCorriente = async (req, res) => {
                 fecha: factura.createdAt
             };  
         });
+
+        const facturasPorMes = agruparPorMes(facturasConRemitos)
 
         const doc = new PDFDocument();
 
@@ -1006,61 +1008,71 @@ const getCuentaCorriente = async (req, res) => {
         const totalMontoPagos = pagos.reduce((sum, pago) => sum + pago.monto, 0);
         doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("$" + formatearMonto(totalMontoPagos), 230, y)
 
-        y += 20
+        y += 25
 
-        if(y + 120 > 792) {
-            doc.addPage()
-            doc.y = 45;
-            y = 45;
-        }
-
-        doc.fontSize(12).fillColor("black").font('Helvetica-Bold').text("Facturas", 15, y)
-
-        y += 20
-
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Número Pedido", 15, y)
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Número Remito", 120, y)
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Fecha", 230, y)
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Total", 290, y)
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Descuento", 360, y)
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("A Pagar", 440, y)
-
-        let primeraFactura = true
-        y += 10
-
-        facturasConRemitos.forEach(factura => {
-            if(y + 80 > 792) {
-                doc.moveTo(15, y - 3).lineTo(510, y - 3).stroke('black');
-
+        Object.entries(facturasPorMes).map(([mesAnio, facturas]) => {
+            if(y + 160 > 792) {
                 doc.addPage()
-                primeraFactura = true
                 doc.y = 45;
                 y = 45;
             }
 
-            if(!primeraFactura) doc.moveTo(15, y - 3).lineTo(510, y - 3).stroke('black'); 
-            doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_pedido, 15, y)
-            doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_remito? factura.numero_remito : "-", 120, y)
-            doc.fontSize(10).fillColor("black").font('Helvetica').text(formatearFechaFactura(factura.fecha), 220, y)
-            doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_remito? "$" + formatearMonto(factura.monto / (1 - factura.descuento / 100)) : "$" + formatearMonto(factura.monto), 290, y)
-            doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.descuento + "%", 380, y)
-            doc.fontSize(10).fillColor("black").font('Helvetica').text("$" + formatearMonto(factura.monto), 440, y)
+            doc.fontSize(12).fillColor("black").font('Helvetica-Bold').text(obtenerNombreMes(mesAnio), 15, y)
 
-            primeraFactura = false;
-            y += 12
+            y += 20
+
+            doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Número Pedido", 15, y)
+            doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Número Remito", 120, y)
+            doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Fecha", 230, y)
+            doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Total", 290, y)
+            doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Descuento", 360, y)
+            doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("A Pagar", 440, y)
+
+            let primeraFactura = true
+            y += 10
+
+            facturas.forEach(factura => {
+                if(y + 110 > 792) {
+                    doc.moveTo(15, y - 3).lineTo(510, y - 3).stroke('black');
+
+                    doc.addPage()
+                    primeraFactura = true
+                    doc.y = 45;
+                    y = 45;
+                }
+
+                if(!primeraFactura) doc.moveTo(15, y - 3).lineTo(510, y - 3).stroke('black'); 
+                doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_pedido, 15, y)
+                doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_remito? factura.numero_remito : "-", 120, y)
+                doc.fontSize(10).fillColor("black").font('Helvetica').text(formatearFechaFactura(factura.fecha), 220, y)
+                doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_remito? "$" + formatearMonto(factura.monto / (1 - factura.descuento / 100)) : "$" + formatearMonto(factura.monto), 290, y)
+                doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.descuento + "%", 380, y)
+                doc.fontSize(10).fillColor("black").font('Helvetica').text("$" + formatearMonto(factura.monto), 440, y)
+
+                primeraFactura = false;
+                y += 12
+            })
+
+            const texto = "Saldo " + obtenerNombreMes(mesAnio) + ": Deudor,";
+            const textWidth = doc.widthOfString(texto);
+            doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text(texto, 425 - textWidth, y)
+            const totalMontoFacturasDelMes = facturas.reduce((sum, pago) => sum + pago.monto, 0);
+            doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("$" + formatearMonto(totalMontoFacturasDelMes), 440, y)
+
+            y += 25
         })
 
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Saldo Facturas: Deudor,", 295, y)
-        const totalMontoFacturas = facturas.reduce((sum, pago) => sum + pago.monto, 0);
+        const totalMontoFacturas = facturasInit.reduce((sum, pago) => sum + pago.monto, 0);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Saldo de Todos los Meses: Deudor,", 265, y)
         doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("$" + formatearMonto(totalMontoFacturas), 440, y)
 
         y += 20
 
         const totalMonto = totalMontoFacturas - totalMontoPagos
         if (totalMonto >= 0) {
-            doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Saldo Total: Deudor,", 320, y)
+            doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Saldo Total De la Cuenta: Deudor,", 275, y)
         } else {
-            doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Saldo Total: Acreedor,", 310, y)
+            doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Saldo Total De la Cuenta: Acreedor,", 265, y)
         }
         doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("$" + formatearMonto(Math.abs(totalMonto)), 440, y)
 
@@ -1355,45 +1367,50 @@ const getImputacion = async (req, res) => {
 
         doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
 
-        doc.fontSize(25).fillColor("black").font('Helvetica-Bold').text('Imputación N°' + req.params.numero_imputacion, 0, 20, {
+        doc.fontSize(20).fillColor("black").font('Helvetica-Bold').text('Cobranza N°' + req.params.numero_imputacion, 0, 15, {
             align: 'center',
             width: doc.page.width
         });
 
-        doc.fontSize(15).fillColor("black").font('Helvetica-Bold').text("Cliente:", 15, 60)
-        doc.fontSize(15).fillColor("black").font('Helvetica').text(persona.nombre, 80, 60)
+        doc.fontSize(12).fillColor("black").font('Helvetica-Bold').text("Cliente:", 15, 50)
+        doc.fontSize(12).fillColor("black").font('Helvetica').text(persona.nombre, 65, 50)
 
-        doc.fontSize(15).fillColor("black").font('Helvetica-Bold').text("Fecha:", 15, 85)
-        doc.fontSize(15).fillColor("black").font('Helvetica').text(formatearFechaFactura(filasImputacion[0]?.createdAt), 70, 85)
+        doc.fontSize(12).fillColor("black").font('Helvetica-Bold').text("Fecha:", 15, 70)
+        doc.fontSize(12).fillColor("black").font('Helvetica').text(formatearFechaFactura(filasImputacion[0]?.createdAt), 65, 70)
 
-        doc.fontSize(15).fillColor("black").font('Helvetica-Bold').text("Total Facturas:", 15, 110)
-        doc.fontSize(15).fillColor("black").font('Helvetica').text("$" + formatearMonto(totalMontoFacturas), 125, 110)
+        doc.fontSize(12).fillColor("black").font('Helvetica-Bold').text("Total Facturas:", 321, 50)
+        doc.fontSize(12).fillColor("black").font('Helvetica').text("$" + formatearMonto(totalMontoFacturas), 450, 50)
 
-        doc.fontSize(15).fillColor("black").font('Helvetica-Bold').text("Total Cobranzas A/C:", 15, 135)
-        doc.fontSize(15).fillColor("black").font('Helvetica').text("$" + formatearMonto(totalMontoPagos), 170, 135)
+        doc.fontSize(12).fillColor("black").font('Helvetica-Bold').text("Total Cobranzas A/C:", 321, 70)
+        doc.fontSize(12).fillColor("black").font('Helvetica').text("$" + formatearMonto(totalMontoPagos), 450, 70)
 
-        doc.fontSize(15).fillColor("black").font('Helvetica-Bold').text("Monto Sobrante:", 15, 160)
-        doc.fontSize(15).fillColor("black").font('Helvetica').text("$" + formatearMonto(totalMontoSobrante), 140, 160)
+        doc.fontSize(12).fillColor("black").font('Helvetica-Bold').text("Monto Sobrante:", 321, 90)
+        doc.fontSize(12).fillColor("black").font('Helvetica').text("$" + formatearMonto(totalMontoSobrante), 450, 90)
 
-        doc.fontSize(10).fillColor("black").font('Helvetica').text("Se cancelan los siguientes comprobantes:", 15, 185)
+        doc.fontSize(8).fillColor("black").font('Helvetica').text("Se cancelan los siguientes comprobantes:", 15, 100)
 
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Tipo", 15, 205)
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Número", 65, 205)
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Remito", 115, 205)
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Fecha", 170, 205)
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Total", 220, 205)
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Descuento", 300, 205)
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("A Pagar", 370, 205)
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Tipo", 15, 120)
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Número", 65, 120)
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Remito", 115, 120)
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Fecha", 170, 120)
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Total", 220, 120)
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("Descuento", 300, 120)
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text("A Pagar", 370, 120)
 
-        let y = 220
+        let primerRenglon = true
+        let y = 130
 
         facturasConRemitos.forEach(factura => {
             if(y + 20 > 792) {
+                doc.moveTo(15, y - 3).lineTo(440, y - 3).stroke('black');
+
                 doc.addPage()
+                primerRenglon = true
                 doc.y = 45
                 y = 45
             }
 
+            if(!primerRenglon) doc.moveTo(15, y - 3).lineTo(440, y - 3).stroke('black');
             doc.fontSize(10).fillColor("black").font('Helvetica').text("FAC", 15, y)
             doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_pedido, 65, y)
             doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_remito? factura.numero_remito : "-", 115, y)
@@ -1402,16 +1419,21 @@ const getImputacion = async (req, res) => {
             doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.descuento + "%", 300, y)
             doc.fontSize(10).fillColor("black").font('Helvetica').text("$" + formatearMonto(factura.monto), 370, y)
 
-            y += 15
+            primerRenglon = false
+            y += 12
         })
 
         pagos.forEach(pago => {
             if(y + 20 > 792) {
+                doc.moveTo(15, y - 3).lineTo(440, y - 3).stroke('black');
+
                 doc.addPage()
+                primerRenglon = true
                 doc.y = 45
                 y = 45
             }
 
+            if(!primerRenglon) doc.moveTo(15, y - 3).lineTo(440, y - 3).stroke('black');
             doc.fontSize(10).fillColor("red").font('Helvetica').text("COB A/C", 15, y)
             doc.fontSize(10).fillColor("red").font('Helvetica').text(pago.id, 65, y)
             doc.fontSize(10).fillColor("red").font('Helvetica').text("-", 115, y)
@@ -1420,7 +1442,7 @@ const getImputacion = async (req, res) => {
             doc.fontSize(10).fillColor("red").font('Helvetica').text("-", 300, y)
             doc.fontSize(10).fillColor("red").font('Helvetica').text("$" + formatearMonto(pago.monto), 370, y)
 
-            y += 15
+            y += 12
         })
 
         doc.end();

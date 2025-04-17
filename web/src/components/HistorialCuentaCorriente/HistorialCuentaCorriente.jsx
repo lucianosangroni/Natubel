@@ -262,7 +262,7 @@ const HistorialCuentaCorriente = () => {
     }
 
     const detallesImputacion = (imputacion) => {
-        navigate(`/admin/imputaciones/${imputacion.numero_imputacion}`)
+        navigate(`/admin/cobranzas/${imputacion.numero_imputacion}`)
     }
 
     return (
@@ -280,14 +280,24 @@ const HistorialCuentaCorriente = () => {
                 </>
             )}
 
-            <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                sans-serif`}}>Montos Totales Históricos</h2>
+            <div style={{display: "flex", alignItems: "center", marginTop: "1rem"}}>
+                <div style={{width: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+                    <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                        sans-serif`}}>Montos Totales Históricos</h2>
 
-            <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: ".6rem"}}>
-                <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
-                    {totalPagadoFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagadoFactura)}</span></span>}
-                    {montoRestanteFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(montoRestanteFactura)}</span></span>}
+                    <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: ".6rem"}}>
+                        <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
+                            {totalPagadoFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagadoFactura)}</span></span>}
+                            {montoRestanteFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(montoRestanteFactura)}</span></span>}
+                        </div>
+                    </div>
+                </div>
+                <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                    <Button onClick={handleCuentaCorriente} className="btnRemito">Cuenta Corriente</Button>
+                    {flagCliente && (
+                        <Button onClick={generarPdfHistorial} className="btnRemito">PDF Historial</Button>
+                    )}
                 </div>
             </div>
 
@@ -407,15 +417,15 @@ const HistorialCuentaCorriente = () => {
                     <h2 style={{marginTop: "2.5rem", marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
                     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                     sans-serif`}}>
-                        Imputaciones
+                        Cobranzas
                     </h2>
 
                     {imputaciones.length > 0 ? (
-                        <div className="tableDivContainer" style={{marginBottom: "100px"}}>
+                        <div className="tableDivContainer">
                             <table className="tableContainerSinPaginacion">
                                 <thead>
                                     <tr>
-                                        <th>N° Imputación</th>
+                                        <th>N° Cobranza</th>
                                         <th>Fecha</th>
                                         <th>Monto</th>
                                         <th>Pagado</th>
@@ -445,7 +455,7 @@ const HistorialCuentaCorriente = () => {
                         <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
                             "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                             sans-serif`}}>
-                            No hay imputaciones para mostrar.
+                            No hay cobranzas para mostrar.
                         </p>
                     )}
                 </>
@@ -455,11 +465,6 @@ const HistorialCuentaCorriente = () => {
                     sans-serif`}}>
                     No hay facturas para mostrar.
                 </p>
-            )}
-
-            <Button onClick={handleCuentaCorriente}  className="abajoDerecha" id="btnDescargarStock" style={{width: "200px"}}>Cuenta Corriente</Button>
-            {flagCliente && (
-                <Button onClick={generarPdfHistorial}  className="abajoDerecha" id="btnDescargarStock" style={{width: "145px", right: "240px"}}>PDF Historial</Button>
             )}
         </>
     );

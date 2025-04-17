@@ -6,6 +6,10 @@
     sans-serif;
 }
 
+#root {
+  margin-top: 5rem;
+}
+
 .react-table {
   width: 100%;
   overflow: auto;
@@ -21,49 +25,68 @@
 }
 
 /* NAVBAR DEL ADM */
-.nav {
-  border: 1px solid black;
-  margin: 1rem;
-  background-color: #dcd9d9;
-  border-radius: 5px;
-}
 
-.navBarElementsContainer {
+.navbar-adm {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4.5rem;
+  background-color: rgb(220, 217, 217);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  z-index: 1050;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.navUsername {
-  padding: 0.4rem 2rem;
-  border: 1px solid black;
-  border-radius: 5px;
-  font-size: 15px;
-  margin: 0;
-  margin-left: 6rem;
-}
-
-.navPantallasContainer {
-  margin: 0;
+.navbar-container {
+  width: 100%;
   display: flex;
+  justify-content: space-around;
   align-items: center;
+}
+
+.navbar-username {
+  margin: 0;
+  color: #000;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.navbar-links {
+  display: flex;
   gap: 2rem;
 }
 
-.botonCerrarSesion {
-  background: none;
-  border: none;
-  color: rgba(0, 0, 0, 0.65);
-  padding: 0.5rem;
-}
-.botonCerrarSesion:hover {
-  background-color: grey;
-  border-radius: 5px;
+.navbar-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
-.botonNav:hover {
-  background-color: #acabab;
-  border-radius: 5px;
+.navbar-link:hover {
+  color: #000;
+}
+
+.navbar-link.active {
+  font-weight: bold;
+  text-decoration: underline;
+  color: #000;
+}
+
+.navbar-logout {
+  color: #333;
+  background-color: rgb(220, 217, 217);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-logout:hover {
+  color: #000;
 }
 
 /* LISTA DE CLIENTES */
@@ -373,7 +396,6 @@
 }
 
 .confirmarCargarPedido {
-  height: 100%;
   padding: 0.5rem;
   border: 1px solid #000;
   border-radius: 0.5rem;
