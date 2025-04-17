@@ -191,7 +191,7 @@ const Precios = () => {
             </select>
 
             {data.length > 0 && (
-                <table style={{marginTop: "1rem"}} className="table-grilla">
+                <table style={{marginTop: "1rem", marginBottom: "1rem"}} className="table-grilla">
                     <thead>
                         <tr >
                             <th id="articulo-grilla-elegido" style={{width: "115px"}}>N° Artículo</th>

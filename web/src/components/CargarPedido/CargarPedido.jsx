@@ -337,7 +337,7 @@ const CargarPedido = () => {
       
       <section className="contenedor-tabla-grilla">
         <div style={{width: "20%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-          <select value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)} style={{marginLeft: "1rem", marginTop: "1rem"}}>
+          <select value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)} style={{marginLeft: "1rem", marginTop: "1rem", marginBottom: "1rem"}}>
               <option value="todas">Todas las marcas</option>
               {marcasData.map((marca) => (
                   <option key={marca.id} value={marca.id}>
