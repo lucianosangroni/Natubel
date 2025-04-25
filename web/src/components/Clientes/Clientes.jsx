@@ -105,6 +105,8 @@ const ListadoClientes = () => {
   const updateTableRow = (newData) => {
     setIsLoading(true)
 
+    const descuento = typeof newData.descuento === "string" ? newData.descuento.trim() === "" ? 0 : parseFloat(newData.descuento) : isNaN(newData.descuento) ? 0 : newData.descuento;
+
     const requestData = 
     {
       nombre: newData.nombre,
@@ -115,7 +117,7 @@ const ListadoClientes = () => {
       dni: parseInt(newData.dni),
       ciudad: newData.ciudad,
       provincia: newData.provincia,
-      descuento: newData.descuento.trim() === "" ? 0 : parseFloat(newData.descuento),
+      descuento: descuento,
       tipo_envio: newData.tipo_envio,
       forma_de_envio: newData.forma_de_envio,
       email: newData.email,
