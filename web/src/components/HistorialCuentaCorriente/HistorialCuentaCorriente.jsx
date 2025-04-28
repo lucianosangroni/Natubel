@@ -269,203 +269,202 @@ const HistorialCuentaCorriente = () => {
         <>
             {isLoading && <Loading/>}
             <NavbarAdm/>
-            {persona && (
-                <>
-                    <h1 style={{marginTop: "2.5rem", marginBottom: "1rem", textAlign: "center", fontSize: "50px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                        sans-serif`}}>
-                        Historial de {persona.nombre}
-                    </h1>
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
-                </>
-            )}
+            <div className="fixedCuentaCorriente">
+                {persona && (
+                    <div style={{width: "100%"}}>
+                        <h1 style={{marginTop: "0", marginBottom: "0", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                            sans-serif`}}>
+                            Historial de {persona.nombre}
+                        </h1>
+                        <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                    </div>
+                )}
 
-            <div style={{display: "flex", alignItems: "center", marginTop: "1rem"}}>
-                <div style={{width: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-                    <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                        sans-serif`}}>Montos Totales Históricos</h2>
-
-                    <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: ".6rem"}}>
-                        <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
-                            {totalPagadoFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagadoFactura)}</span></span>}
-                            {montoRestanteFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(montoRestanteFactura)}</span></span>}
+                <div style={{display: "flex", alignItems: "center", marginTop: "0", width: "100%"}}>
+                    <div style={{width: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+                        <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                            <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content"}}>
+                                {montoRestanteFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL FACTURAS: <span style={{fontWeight: "normal"}}>${formatearNumero(montoRestanteFactura)}</span></span>}
+                                {totalPagadoFactura != null && <span style={{ fontWeight: "bold" }}>TOTAL COBRANZAS A/C: <span style={{fontWeight: "normal"}}>${formatearNumero(totalPagadoFactura)}</span></span>}
+                                <span style={{ fontWeight: "bold" }}>{montoRestanteFactura - totalPagadoFactura >= 0 ? "SALDO DEUDOR: " : "SALDO ACREEDOR: "}<span style={{ fontWeight: "normal" }}>${formatearNumero(Math.abs(montoRestanteFactura - totalPagadoFactura))}</span></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                    <Button onClick={handleCuentaCorriente} className="btnRemito">Cuenta Corriente</Button>
-                    {flagCliente && (
-                        <Button onClick={generarPdfHistorial} className="btnRemito">PDF Historial</Button>
-                    )}
+                    <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                        <Button onClick={handleCuentaCorriente} className="btnRemito">Cuenta Corriente</Button>
+                        {flagCliente && (
+                            <Button onClick={generarPdfHistorial} className="btnRemito">PDF Historial</Button>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {Object.keys(facturasPorMes).length > 0 ? (
-                <>
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
+            <div style={{marginTop: "calc(180px + 4.5rem)"}}>
+                {Object.keys(facturasPorMes).length > 0 ? (
+                    <>
+                        <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                        sans-serif`}}>Cobranzas A/C</h2>
 
-                    <h2 style={{marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                    sans-serif`}}>Cobranzas A/C</h2>
-
-                    {pagos.length > 0 ? (
-                        <>
-                            <div className="tableDivContainer">
-                                <table className="tableContainerSinPaginacion">
-                                    <thead>
-                                        <tr>
-                                            <th>N° Pago</th>
-                                            <th>Fecha</th>
-                                            <th>Monto</th>
-                                            <th>Destino</th>
-                                            <th>Estado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {pagos.map((pago, index) => (
-                                            <tr key={index}>
-                                                <td>{pago.id}</td>
-                                                <td>{pago.fecha}</td>
-                                                <td>${formatearNumero(pago.monto)}</td>
-                                                <td>{pago.destino}</td>
-                                                <td>{pago.flag_imputado ? "IMPUTADA" : "PENDIENTE"}</td>
-                                            </tr>
-                                        ))}
-                                        <tr>
-                                            <td style={{fontWeight: "bold"}}>TOTAL</td>
-                                            <td></td>
-                                            <td style={{fontWeight: "bold"}}>${formatearNumero(totalPagadoFactura)}</td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </>  
-                    ) : (
-                        <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                            sans-serif`}}>
-                            No hay Cobranzas A/C para mostrar.
-                        </p>
-                    )}
-
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
-
-                    <h2 style={{marginTop: "2.5rem", marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                    sans-serif`}}>Facturas</h2>
-
-                    {Object.entries(facturasPorMes).map(([mesAnio, facturas]) => {
-                        return (
+                        {pagos.length > 0 ? (
                             <>
-                                <h2 style={{marginBottom: "1rem", marginTop: "2rem",textAlign: "center", fontSize: "22px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                                    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                                    sans-serif`}}>{obtenerNombreMes(mesAnio)}</h2>
-
                                 <div className="tableDivContainer">
                                     <table className="tableContainerSinPaginacion">
                                         <thead>
                                             <tr>
-                                                <th>N° Pedido</th>
-                                                <th>N° Remito</th>
+                                                <th>N° Pago</th>
                                                 <th>Fecha</th>
-                                                <th>Total</th>
-                                                <th>Descuento</th>
-                                                <th>A Pagar</th>
+                                                <th>Monto</th>
+                                                <th>Destino</th>
                                                 <th>Estado</th>
-                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {facturas.map((factura, index) => (
+                                            {pagos.map((pago, index) => (
                                                 <tr key={index}>
-                                                    <td>{factura.numero_pedido}</td>
-                                                    <td>{factura.numero_remito}</td>
-                                                    <td>{factura.fecha}</td>
-                                                    <td>${formatearNumero(factura.total)}</td>
-                                                    <td>{factura.descuento}%</td>
-                                                    <td>${formatearNumero(factura.a_pagar)}</td>
-                                                    <td>{factura.flag_imputada ? "IMPUTADA" : "PENDIENTE"}</td>
-                                                    <td>
-                                                        <button onClick={() => generarPdfRemito(factura)} className="botonEliminar" style={{padding: "3px", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "2px", marginBottom: "2px", background: "none"}}>
-                                                            <FontAwesomeIcon icon={faFileAlt} />
-                                                        </button>
-                                                    </td>
+                                                    <td>{pago.id}</td>
+                                                    <td>{pago.fecha}</td>
+                                                    <td>${formatearNumero(pago.monto)}</td>
+                                                    <td>{pago.destino}</td>
+                                                    <td>{pago.flag_imputado ? "IMPUTADA" : "PENDIENTE"}</td>
                                                 </tr>
                                             ))}
                                             <tr>
                                                 <td style={{fontWeight: "bold"}}>TOTAL</td>
                                                 <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td style={{fontWeight: "bold"}}>${formatearNumero(facturas.reduce((total, factura) => total + factura.a_pagar, 0))}</td>
+                                                <td style={{fontWeight: "bold"}}>${formatearNumero(totalPagadoFactura)}</td>
                                                 <td></td>
                                                 <td></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                            </>
-                        )
-                    })}
+                            </>  
+                        ) : (
+                            <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                                "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                                sans-serif`}}>
+                                No hay Cobranzas A/C para mostrar.
+                            </p>
+                        )}
 
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
+                        <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
 
-                    <h2 style={{marginTop: "2.5rem", marginBottom: "1rem", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                    sans-serif`}}>
-                        Cobranzas
-                    </h2>
+                        <h2 style={{marginTop: "0", marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                        sans-serif`}}>Facturas</h2>
 
-                    {imputaciones.length > 0 ? (
-                        <div className="tableDivContainer">
-                            <table className="tableContainerSinPaginacion">
-                                <thead>
-                                    <tr>
-                                        <th>N° Cobranza</th>
-                                        <th>Fecha</th>
-                                        <th>Monto</th>
-                                        <th>Pagado</th>
-                                        <th>Sobrante</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {imputaciones.map((imputacion, index) => (
-                                        <tr key={index}>
-                                            <td>{imputacion.numero_imputacion}</td>
-                                            <td>{imputacion.fecha}</td>
-                                            <td>${formatearNumero(imputacion.montoImputacion)}</td>
-                                            <td>${formatearNumero(imputacion.montoImputacion + imputacion.montoSobrante)}</td>
-                                            <td>${formatearNumero(imputacion.montoSobrante)}</td>
-                                            <td>
-                                                <button onClick={() => detallesImputacion(imputacion)} className="botonEliminar" style={{padding: "3px", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "2px", marginBottom: "2px", background: "none"}}>
-                                                    <FontAwesomeIcon icon={faEye} />
-                                                </button>
-                                            </td>
+                        {Object.entries(facturasPorMes).map(([mesAnio, facturas]) => {
+                            return (
+                                <>
+                                    <h2 style={{marginBottom: "0", marginTop: "1rem",textAlign: "center", fontSize: "22px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                                        sans-serif`}}>{obtenerNombreMes(mesAnio)}</h2>
+
+                                    <div className="tableDivContainer">
+                                        <table className="tableContainerSinPaginacion">
+                                            <thead>
+                                                <tr>
+                                                    <th>N° Pedido</th>
+                                                    <th>N° Remito</th>
+                                                    <th>Fecha</th>
+                                                    <th>Total</th>
+                                                    <th>Descuento</th>
+                                                    <th>A Pagar</th>
+                                                    <th>Estado</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {facturas.map((factura, index) => (
+                                                    <tr key={index}>
+                                                        <td>{factura.numero_pedido}</td>
+                                                        <td>{factura.numero_remito}</td>
+                                                        <td>{factura.fecha}</td>
+                                                        <td>${formatearNumero(factura.total)}</td>
+                                                        <td>{factura.descuento}%</td>
+                                                        <td>${formatearNumero(factura.a_pagar)}</td>
+                                                        <td>{factura.flag_imputada ? "IMPUTADA" : "PENDIENTE"}</td>
+                                                        <td>
+                                                            <button onClick={() => generarPdfRemito(factura)} className="botonEliminar" style={{padding: "3px", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "2px", marginBottom: "2px", background: "none"}}>
+                                                                <FontAwesomeIcon icon={faFileAlt} />
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                                <tr>
+                                                    <td style={{fontWeight: "bold"}}>TOTAL</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td style={{fontWeight: "bold"}}>${formatearNumero(facturas.reduce((total, factura) => total + factura.a_pagar, 0))}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </>
+                            )
+                        })}
+
+                        <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
+
+                        <h2 style={{marginTop: "0", marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                        sans-serif`}}>
+                            Cobranzas
+                        </h2>
+
+                        {imputaciones.length > 0 ? (
+                            <div className="tableDivContainer" style={{marginBottom: "1rem"}}>
+                                <table className="tableContainerSinPaginacion">
+                                    <thead>
+                                        <tr>
+                                            <th>N° Cobranza</th>
+                                            <th>Fecha</th>
+                                            <th>Monto</th>
+                                            <th>Pagado</th>
+                                            <th>Sobrante</th>
+                                            <th></th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                            sans-serif`}}>
-                            No hay cobranzas para mostrar.
-                        </p>
-                    )}
-                </>
-            ) : (
-                <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                    sans-serif`}}>
-                    No hay facturas para mostrar.
-                </p>
-            )}
+                                    </thead>
+                                    <tbody>
+                                        {imputaciones.map((imputacion, index) => (
+                                            <tr key={index}>
+                                                <td>{imputacion.numero_imputacion}</td>
+                                                <td>{imputacion.fecha}</td>
+                                                <td>${formatearNumero(imputacion.montoImputacion)}</td>
+                                                <td>${formatearNumero(imputacion.montoImputacion + imputacion.montoSobrante)}</td>
+                                                <td>${formatearNumero(imputacion.montoSobrante)}</td>
+                                                <td>
+                                                    <button onClick={() => detallesImputacion(imputacion)} className="botonEliminar" style={{padding: "3px", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "2px", marginBottom: "2px", background: "none"}}>
+                                                        <FontAwesomeIcon icon={faEye} />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : (
+                            <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                                "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                                sans-serif`}}>
+                                No hay cobranzas para mostrar.
+                            </p>
+                        )}
+                    </>
+                ) : (
+                    <p style={{marginTop: "5rem", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                        sans-serif`}}>
+                        No hay facturas para mostrar.
+                    </p>
+                )}
+            </div>
         </>
     );
 }

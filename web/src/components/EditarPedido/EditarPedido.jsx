@@ -328,7 +328,7 @@ const EditarPedido = () => {
             <NavbarAdm/>
             {pedido && (
                 <>
-                    <div className="editarPedidoContainerOriginalEdit">
+                    <div className="editarPedidoContainerOriginalEdit" style={{marginTop: "4.5rem"}}>
                         <section className="contenedor-tabla-grilla-editar-pedido">
                             <p className="pedido-edit-titulo">Pedido Original</p>
                             <div className="display-flex">

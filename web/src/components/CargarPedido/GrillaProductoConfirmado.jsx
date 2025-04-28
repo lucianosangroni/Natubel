@@ -3,7 +3,7 @@ function GrillasProductosConfirmados({ articulos, flag_resumen }) {
         <>
             <div className="contenedor-resumen-pedido">
                 {flag_resumen && (
-                    <h5 className="titulo-resumenPedido">Resumen de Pedido</h5>
+                    <h5 className="titulo-resumenPedido" style={{marginTop: "1rem", marginBottom: "0"}}>Resumen de Pedido</h5>
                 )}
                 <div className="grillas-container-resumen">
                 {articulos.map((articulo, articuloIndex) => {

@@ -6,10 +6,6 @@
     sans-serif;
 }
 
-#root {
-  margin-top: 5rem;
-}
-
 .react-table {
   width: 100%;
   overflow: auto;
@@ -492,7 +488,7 @@
 }
 
 .table-width-container {
-  width: 450px;
+  min-width: 450px;
 }
 
 .agregarProducto {
@@ -929,4 +925,19 @@
   margin: 1rem;
   margin-left: 1%;
   border: 1px solid #000;
+}
+
+.fixedCuentaCorriente {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 170px;
+  width: 100%;
+  top: 4.5rem;
+  left: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  z-index: 1049;
+  background-color: white;
 }

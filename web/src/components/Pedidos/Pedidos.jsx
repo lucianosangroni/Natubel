@@ -66,66 +66,68 @@ const HistorialPedidos = () => {
     <>
       {isInitialLoading && <Loading/>}
       <NavbarAdm selected={'Pedidos'}/>
-      <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-      <div className="tableDetailsContainer">
-        <div className="tableDivContainerPedidos">
-          <table {...getTableProps()} className="tableContainerPedidos">
-            <thead>
-              {headerGroups.map((headerGroup, index) => (
-                <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => (
-                    <th key={column.numero_pedido} {...column.getHeaderProps()}>{column.render("Header")}</th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {page.map((row, rowIndex) => {
-                prepareRow(row);
-                return (
-                  <tr
-                    key={rowIndex}
-                    {...row.getRowProps()}
-                    onClick={() => handleRowClick(row)}
-                    className={selectedRow === row.original ? "selected-row" : ""}
-                  >
-                    {row.cells.map((cell, cellIndex) => (
-                      <td key={cellIndex} {...cell.getCellProps()}>{cell.render("Cell")}</td>
+      <div style={{marginTop: "5.5rem"}}>
+        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+        <div className="tableDetailsContainer">
+          <div className="tableDivContainerPedidos">
+            <table {...getTableProps()} className="tableContainerPedidos">
+              <thead>
+                {headerGroups.map((headerGroup, index) => (
+                  <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => (
+                      <th key={column.numero_pedido} {...column.getHeaderProps()}>{column.render("Header")}</th>
                     ))}
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                ))}
+              </thead>
+              <tbody {...getTableBodyProps()}>
+                {page.map((row, rowIndex) => {
+                  prepareRow(row);
+                  return (
+                    <tr
+                      key={rowIndex}
+                      {...row.getRowProps()}
+                      onClick={() => handleRowClick(row)}
+                      className={selectedRow === row.original ? "selected-row" : ""}
+                    >
+                      {row.cells.map((cell, cellIndex) => (
+                        <td key={cellIndex} {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+              
+          <div className="paginacion">
+            <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </button>
+            <span>
+              Pagina{" "}
+              <strong>
+                {pageIndex + 1} de {pageOptions.length}
+              </strong>{" "}
+            </span>
+            <button onClick={() => nextPage()} disabled={!canNextPage}>
+              <FontAwesomeIcon icon={faArrowRight} />
+            </button>
+            <button
+              className={"boton-pedidor pedidor-seleccionado"}
+              onClick={() => cargarMasPedidos()}
+            >
+            Cargar Mas
+            </button>
+          </div>
+              
+            {selectedRow && (
+              <ListaProductosDePedido
+                pedido={selectedRow}
+                onCambiarEstado={actualizarEstado}
+                />
+            )}
         </div>
-
-        <div className="paginacion">
-          <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </button>
-          <span>
-            Pagina{" "}
-            <strong>
-              {pageIndex + 1} de {pageOptions.length}
-            </strong>{" "}
-          </span>
-          <button onClick={() => nextPage()} disabled={!canNextPage}>
-            <FontAwesomeIcon icon={faArrowRight} />
-          </button>
-          <button
-            className={"boton-pedidor pedidor-seleccionado"}
-            onClick={() => cargarMasPedidos()}
-          >
-          Cargar Mas
-          </button>
-        </div>
-
-          {selectedRow && (
-            <ListaProductosDePedido
-              pedido={selectedRow}
-              onCambiarEstado={actualizarEstado}
-              />
-          )}
       </div>
     </>
   );

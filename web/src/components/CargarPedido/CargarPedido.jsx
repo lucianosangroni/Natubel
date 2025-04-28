@@ -286,7 +286,7 @@ const CargarPedido = () => {
     <>
       {(isLoading || isInitialLoading) && <Loading/>}
       <NavbarAdm selected={'Cargar Pedido'}/>
-      <div className="contenedor-botones">
+      <div className="contenedor-botones" style={{marginTop: "4.5rem"}}>
         <button
           id="btn-pedidor-cliente"
           className={
@@ -309,7 +309,7 @@ const CargarPedido = () => {
           Proveedor
         </button>
       </div>
-      <div className="input-selector">
+      <div className="input-selector" style={{marginBottom: "0"}}>
         <Select
           options={pedidoresFiltrados.map((pedidor) => ({
             value: tipoPedidor === "cliente" ? pedidor.persona_id : pedidor.id,
@@ -360,10 +360,11 @@ const CargarPedido = () => {
           )}
         </div>
       </section>
+      
       {productosConfirmados.length > 0 && (
       <>
         <GrillasProductosConfirmados articulos={productosConfirmados} flag_resumen={true} />
-        <div className="centrar-boton-cargar">
+        <div className="centrar-boton-cargar" style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
           <button className="cargar-pedido-boton" onClick={handleCargarPedido}>
             Cargar Pedido
           </button>

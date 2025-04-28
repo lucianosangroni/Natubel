@@ -459,7 +459,7 @@ const ListadoProductos = () => {
     <>
       {(isLoading || isInitialLoading) && <Loading/>}
       <NavbarAdm selected={'Articulos'}/>
-      <div className="table-productos-contenedor">
+      <div className="table-productos-contenedor" style={{marginTop: "4.5rem"}}>
         <ListaArticulos articulos={data} onArticuloClick={handleArticuloClick} selectedArticulo={selectedProduct}/>
         {selectedProduct && (
           <GrillaProducto

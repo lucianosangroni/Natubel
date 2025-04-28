@@ -227,77 +227,79 @@ const ListadoClientes = () => {
       {(isLoading || isInitialLoading) && <Loading/>}
       {shouldRedirect && <Navigate to={`/admin/cuenta-corriente/${emailCuentaCorriente}`} />}
       <NavbarAdm selected={'Clientes'}/>
-      <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-      <div className="tableDivContainer">
-        <table {...getTableProps()} className="tableContainer">
-          <thead>
-            {headerGroups.map((headerGroups) => (
-              <tr {...headerGroups.getHeaderGroupProps()}>
-                {headerGroups.headers.map((columns) => (
-                  <th {...columns.getHeaderProps(columns)}>
-                    {columns.render("Header")}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {page.map((row) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>
-                        {cell.column.id === "eliminar" ? (
-                          <button onClick={() => handleDeleteRow(row)} className="botonEliminar">
-                            <FontAwesomeIcon icon={faTrashAlt} />
-                          </button>
-                        ) : cell.column.id === "editar" ? (
-                          <button onClick={() => handleEditRow(row)} className="botonEditar">
-                            <FontAwesomeIcon icon={faEdit} />
-                          </button>
-                        ) : cell.column.id === "cuenta-corriente" ? (
-                          <button onClick={() => handleCuentaCorriente(row)} className="botonEditar">
-                            <FontAwesomeIcon icon={faSackDollar} />
-                          </button>
-                        ) : (
-                          cell.render("Cell")
-                        )}
-                      </td>
-                    );
-                  })}
+      <div style={{marginTop: "5.5rem"}}>
+        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+        <div className="tableDivContainer">
+          <table {...getTableProps()} className="tableContainer">
+            <thead>
+              {headerGroups.map((headerGroups) => (
+                <tr {...headerGroups.getHeaderGroupProps()}>
+                  {headerGroups.headers.map((columns) => (
+                    <th {...columns.getHeaderProps(columns)}>
+                      {columns.render("Header")}
+                    </th>
+                  ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell) => {
+                      return (
+                        <td {...cell.getCellProps()}>
+                          {cell.column.id === "eliminar" ? (
+                            <button onClick={() => handleDeleteRow(row)} className="botonEliminar">
+                              <FontAwesomeIcon icon={faTrashAlt} />
+                            </button>
+                          ) : cell.column.id === "editar" ? (
+                            <button onClick={() => handleEditRow(row)} className="botonEditar">
+                              <FontAwesomeIcon icon={faEdit} />
+                            </button>
+                          ) : cell.column.id === "cuenta-corriente" ? (
+                            <button onClick={() => handleCuentaCorriente(row)} className="botonEditar">
+                              <FontAwesomeIcon icon={faSackDollar} />
+                            </button>
+                          ) : (
+                            cell.render("Cell")
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="paginacion">
+          <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </button>
+          <span>
+            Pagina{" "}
+            <strong>
+              {pageIndex + 1} de {pageOptions.length}
+            </strong>{" "}
+          </span>
+          <button onClick={() => nextPage()} disabled={!canNextPage}>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </button>
+        </div>
+        <ModalCliente onAddClient={handleAddCliente} refreshCliente={refreshNuevoCliente} onClienteRefresheado={handleClienteRefresheado} />
+        {isEditModalOpen && (
+          <ModalClienteEditar
+            data={editingData}
+            onClose={() => setIsEditModalOpen(false)}
+            onSave={(editedData) => {
+              updateTableRow(editedData)
+              setIsEditModalOpen(false);
+            }}
+          />
+        )}
       </div>
-      <div className="paginacion">
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </button>
-        <span>
-          Pagina{" "}
-          <strong>
-            {pageIndex + 1} de {pageOptions.length}
-          </strong>{" "}
-        </span>
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          <FontAwesomeIcon icon={faArrowRight} />
-        </button>
-      </div>
-      <ModalCliente onAddClient={handleAddCliente} refreshCliente={refreshNuevoCliente} onClienteRefresheado={handleClienteRefresheado} />
-      {isEditModalOpen && (
-        <ModalClienteEditar
-          data={editingData}
-          onClose={() => setIsEditModalOpen(false)}
-          onSave={(editedData) => {
-            updateTableRow(editedData)
-            setIsEditModalOpen(false);
-          }}
-        />
-      )}
     </>
   );
 };

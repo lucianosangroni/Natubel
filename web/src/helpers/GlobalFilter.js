@@ -10,11 +10,11 @@ const GlobalFilter = ({ filter, setFilter}) => {
       }, 300)
 
   return (
-    <div className='globalFilter'>
+    <div className='globalFilter' style={{marginTop: "0", marginBottom: "0"}}>
         <span role="img" aria-label="lupa" className="search-icon">
         🔍
       </span>
-        <input className='globalFilter-input' value={value || ""} placeholder="Buscar..." onChange={(e) => {
+        <input className='globalFilter-input' style={{margin: "0", marginLeft: "1rem"}} value={value || ""} placeholder="Buscar..." onChange={(e) => {
             setValue(e.target.value)
             onChange(e.target.value);
             

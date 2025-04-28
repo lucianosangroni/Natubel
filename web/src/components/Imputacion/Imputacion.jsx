@@ -169,14 +169,14 @@ const Imputacion = () => {
             <NavbarAdm/>
             {imputacion.facturas_pagos.length > 0 && (
                 <>
-                    <h1 style={{marginTop: "2.5rem", marginBottom: "1rem", textAlign: "center", fontSize: "50px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                    <h1 style={{marginTop: "5rem", marginBottom: "0", textAlign: "center", fontSize: "50px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
                         "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                         sans-serif`}}>
                         Cobranza N°{numeroImputacion}
                     </h1>
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
+                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
 
-                    <div style={{display: "flex", alignItems: "center", marginTop: "1rem", marginBottom: "1rem"}}>
+                    <div style={{display: "flex", alignItems: "center", marginTop: "0", marginBottom: "0"}}>
                         <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
                             <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content", justifyContent: "center"}}>
                                 <span style={{ fontWeight: "bold" }}>CLIENTE: <span style={{fontWeight: "normal"}}>{imputacion.personaNombre}</span></span>
@@ -193,7 +193,7 @@ const Imputacion = () => {
                         </div>
                     </div>
 
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "20px 0"}}/>
+                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
 
                     <div className="tableDivContainer">
                         <table className="tableContainerSinPaginacion">

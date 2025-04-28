@@ -181,7 +181,7 @@ const Precios = () => {
         <>
             {(isLoading || isInitialLoading) && <Loading/>}
             <NavbarAdm/>
-            <select value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)} style={{marginLeft: "1rem", marginTop: "1rem"}}>
+            <select value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)} style={{marginLeft: "1rem", marginTop: "5.5rem"}}>
                 <option value="todas">Todas las marcas</option>
                 {marcasData.map((marca) => (
                     <option key={marca.id} value={marca.id}>
