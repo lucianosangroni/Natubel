@@ -84,7 +84,17 @@ const CuentaCorriente = () => {
                         };
                     }
                 })
-                .sort((a, b) => b.numero_pedido - a.numero_pedido)
+                .sort((a, b) => {
+                    if (flagCliente) {
+                        return b.numero_pedido - a.numero_pedido;
+                    } else {
+                        const [diaA, mesA, anioA] = a.fecha.split("/");
+                        const [diaB, mesB, anioB] = b.fecha.split("/");
+                        const fechaA = new Date(`${anioA}-${mesA}-${diaA}`);
+                        const fechaB = new Date(`${anioB}-${mesB}-${diaB}`);
+                        return fechaB - fechaA;
+                    }
+                });
 
             let personaId;
 
