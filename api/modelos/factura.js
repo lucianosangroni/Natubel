@@ -1,5 +1,5 @@
 const { sequelize } = require("../config/dbConnect")
-const { DataTypes } = require("sequelize")
+const { DataTypes, Sequelize } = require("sequelize")
 const Pedido = require("./pedido")
 const Persona = require("./persona")
 
@@ -9,6 +9,10 @@ const Factura = sequelize.define(
         monto : {
             type: DataTypes.FLOAT,
             allowNull: false
+        },
+        fecha : {
+            type: DataTypes.DATEONLY,
+            defaultValue: Sequelize.NOW
         },
         flag_imputada: {
             type: DataTypes.BOOLEAN,

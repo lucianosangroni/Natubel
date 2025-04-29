@@ -39,19 +39,40 @@ const HistorialCuentaCorriente = () => {
         if (persona) {      
             const facturasCorrespondientes = facturasData.filter(factura => factura.persona_nombre === persona.nombre && factura.flag_cancelada === false)
                 .map(factura => {
-                    const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === factura.pedido_id);
-                    return {
-                        id: factura.id,
-                        numero_pedido: factura.pedido_id,
-                        numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
-                        flag_imputada: factura.flag_imputada,
-                        a_pagar: factura.monto,
-                        total: remitoCorrespondiente? factura.monto / (1 - remitoCorrespondiente.descuento / 100) : factura.monto,
-                        descuento: remitoCorrespondiente? remitoCorrespondiente.descuento: 0,
-                        fecha: formatearFecha(factura.createdAt)
-                    };
+                    if (!flagCliente) {
+                        return {
+                            id: factura.id,
+                            numero_pedido: factura.pedido_id,
+                            numero_remito: "-",
+                            flag_imputada: factura.flag_imputada,
+                            a_pagar: factura.monto,
+                            total: factura.monto,
+                            descuento: 0,
+                            fecha: formatearFechaPago(factura.fecha)
+                        };
+                    } else {
+                        const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === factura.pedido_id);
+                        return {
+                            id: factura.id,
+                            numero_pedido: factura.pedido_id,
+                            numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
+                            flag_imputada: factura.flag_imputada,
+                            a_pagar: factura.monto,
+                            total: remitoCorrespondiente? factura.monto / (1 - remitoCorrespondiente.descuento / 100) : factura.monto,
+                            descuento: remitoCorrespondiente? remitoCorrespondiente.descuento: 0,
+                            fecha: formatearFechaPago(factura.fecha)
+                        };
+                    }
                 })
-                .sort((a, b) => b.numero_pedido - a.numero_pedido)
+                .sort((a, b) => {
+                    const [diaA, mesA, anioA] = a.fecha.split("/");
+                    const [diaB, mesB, anioB] = b.fecha.split("/");
+                
+                    const fechaA = new Date(`${anioA}-${mesA}-${diaA}`);
+                    const fechaB = new Date(`${anioB}-${mesB}-${diaB}`);
+                
+                    return fechaB - fechaA;
+                });
 
             let personaId;
 

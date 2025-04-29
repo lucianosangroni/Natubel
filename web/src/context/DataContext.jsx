@@ -523,6 +523,10 @@ export const DataProviderAdmin = ({ children }) => {
         });
     }
 
+    const refreshFacturasAdd = (facturas) => {
+        setFacturasData(facturas)
+    }
+
     const refreshFacturas = (facturas) => {
         setFacturasData((prevFacturasData) => 
             prevFacturasData.map((fac) => {
@@ -531,6 +535,8 @@ export const DataProviderAdmin = ({ children }) => {
                     return {
                         ...fac,
                         monto: facturaActualizada.monto,
+                        fecha: facturaActualizada.fecha,
+                        pedido_id: facturaActualizada.pedido_id,
                         flag_imputada: facturaActualizada.flag_imputada
                     };
                 }
@@ -556,7 +562,7 @@ export const DataProviderAdmin = ({ children }) => {
     }
 
     return (
-        <DataContext.Provider value={{ imputacionesData, pedidosData, clientesData, proveedoresData, facturasData, remitosData, categoriasData, pagosData, refreshPagos, marcasData, articulosData, refreshRemitos, refreshFacturas, refreshData, addImputaciones, montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading, refreshConfig, refreshCategorias, refreshMarcas, refreshArticulos, refreshProveedores, refreshClientes, refreshPedidos, refreshPedidoCancelado}}>
+        <DataContext.Provider value={{ imputacionesData, pedidosData, clientesData, proveedoresData, facturasData, remitosData, categoriasData, pagosData, refreshPagos, refreshFacturasAdd, marcasData, articulosData, refreshRemitos, refreshFacturas, refreshData, addImputaciones, montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading, refreshConfig, refreshCategorias, refreshMarcas, refreshArticulos, refreshProveedores, refreshClientes, refreshPedidos, refreshPedidoCancelado}}>
             {children}
         </DataContext.Provider>
     );

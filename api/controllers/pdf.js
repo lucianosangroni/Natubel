@@ -937,7 +937,7 @@ const getCuentaCorriente = async (req, res) => {
                 numero_remito: remito?.numero_remito || null,
                 monto: factura.monto,
                 descuento: descuento,
-                fecha: factura.createdAt
+                fecha: factura.fecha
             };  
         });
 
@@ -1044,7 +1044,7 @@ const getCuentaCorriente = async (req, res) => {
                 if(!primeraFactura) doc.moveTo(15, y - 3).lineTo(510, y - 3).stroke('black'); 
                 doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_pedido, 15, y)
                 doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_remito? factura.numero_remito : "-", 120, y)
-                doc.fontSize(10).fillColor("black").font('Helvetica').text(formatearFechaFactura(factura.fecha), 220, y)
+                doc.fontSize(10).fillColor("black").font('Helvetica').text(formatearFechaPago(factura.fecha), 220, y)
                 doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_remito? "$" + formatearMonto(factura.monto / (1 - factura.descuento / 100)) : "$" + formatearMonto(factura.monto), 290, y)
                 doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.descuento + "%", 380, y)
                 doc.fontSize(10).fillColor("black").font('Helvetica').text("$" + formatearMonto(factura.monto), 440, y)
@@ -1128,7 +1128,7 @@ const getHistorial = async (req, res) => {
                 numero_remito: remito?.numero_remito || null,
                 monto: factura.monto,
                 descuento: descuento,
-                fecha: factura.createdAt
+                fecha: factura.fecha
             };  
         });
 
@@ -1233,7 +1233,7 @@ const getHistorial = async (req, res) => {
                 if(!primeraFactura) doc.moveTo(15, y - 3).lineTo(510, y - 3).stroke('black'); 
                 doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_pedido, 15, y)
                 doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_remito? factura.numero_remito : "-", 120, y)
-                doc.fontSize(10).fillColor("black").font('Helvetica').text(formatearFechaFactura(factura.fecha), 220, y)
+                doc.fontSize(10).fillColor("black").font('Helvetica').text(formatearFechaPago(factura.fecha), 220, y)
                 doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_remito? "$" +  formatearMonto(factura.monto / (1 - factura.descuento / 100)) : "$" + formatearMonto(factura.monto), 290, y)
                 doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.descuento + "%", 380, y)
                 doc.fontSize(10).fillColor("black").font('Helvetica').text("$" + formatearMonto(factura.monto), 440, y)
@@ -1279,7 +1279,7 @@ const agruparPorMes = (facturas) => {
         const fecha = new Date(factura.fecha);
 
         const mesAño = `${fecha.getMonth() + 1}-${fecha.getFullYear()}`;
-        
+
         if (!facturasAgrupadas[mesAño]) {
             facturasAgrupadas[mesAño] = [];
         }
@@ -1345,9 +1345,9 @@ const getImputacion = async (req, res) => {
                 numero_remito: remito?.numero_remito || null,
                 monto: factura.monto,
                 descuento: descuento,
-                fecha: factura.createdAt
+                fecha: factura.fecha
             };  
-        });
+        }).sort((a, b) => a.numero_pedido - b.numero_pedido);
 
         const persona = await personaModel.findByPk(facturas[0]?.persona_id);
 
@@ -1359,7 +1359,7 @@ const getImputacion = async (req, res) => {
 
         const stream = res.writeHead(200, {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename=cuenta-historial.pdf`,
+        'Content-Disposition': `attachment; filename=cobranza.pdf`,
         });
 
         doc.on('data', (data) => {stream.write(data)})
@@ -1376,7 +1376,7 @@ const getImputacion = async (req, res) => {
         doc.fontSize(12).fillColor("black").font('Helvetica').text(persona.nombre, 65, 50)
 
         doc.fontSize(12).fillColor("black").font('Helvetica-Bold').text("Fecha:", 15, 70)
-        doc.fontSize(12).fillColor("black").font('Helvetica').text(formatearFechaFactura(filasImputacion[0]?.createdAt), 65, 70)
+        doc.fontSize(12).fillColor("black").font('Helvetica').text(formatearFechaImputacion(filasImputacion[0]?.createdAt), 65, 70)
 
         doc.fontSize(12).fillColor("black").font('Helvetica-Bold').text("Total Facturas:", 321, 50)
         doc.fontSize(12).fillColor("black").font('Helvetica').text("$" + formatearMonto(totalMontoFacturas), 450, 50)
@@ -1414,7 +1414,7 @@ const getImputacion = async (req, res) => {
             doc.fontSize(10).fillColor("black").font('Helvetica').text("FAC", 15, y)
             doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_pedido, 65, y)
             doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_remito? factura.numero_remito : "-", 115, y)
-            doc.fontSize(10).fillColor("black").font('Helvetica').text(formatearFechaFactura(factura.fecha), 160, y)
+            doc.fontSize(10).fillColor("black").font('Helvetica').text(formatearFechaPago(factura.fecha), 160, y)
             doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.numero_remito? "$" +  formatearMonto(factura.monto / (1 - factura.descuento / 100)) : "$" + formatearMonto(factura.monto), 220, y)
             doc.fontSize(10).fillColor("black").font('Helvetica').text(factura.descuento + "%", 300, y)
             doc.fontSize(10).fillColor("black").font('Helvetica').text("$" + formatearMonto(factura.monto), 370, y)
@@ -1458,7 +1458,7 @@ const formatearFechaPago = (fechaDateOnly) => {
     return `${dia}/${mes}/${anio}`;
 };
 
-const formatearFechaFactura = (fechaDateTime) => {
+const formatearFechaImputacion = (fechaDateTime) => {
     const fecha = new Date(fechaDateTime);
     const dia = String(fecha.getDate()).padStart(2, '0');
     const mes = String(fecha.getMonth() + 1).padStart(2, '0');

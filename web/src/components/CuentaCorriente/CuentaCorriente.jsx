@@ -7,6 +7,7 @@ import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Loading from "../Common/Loading";
 import { apiUrl, bearerToken } from "../../config/config";
 import { Button } from "react-bootstrap";
+import ModalFactura from "./ModalFactura";
 import ModalPago from "./ModalPago";
 import ModalRemito from "./ModalRemito";
 import ModalRemitoEditar from "./ModalRemitoEditar";
@@ -16,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 
 const CuentaCorriente = () => {
     const { email } = useParams();
-    const { clientesData, proveedoresData, facturasData, refreshFacturas, remitosData, refreshRemitos, pagosData, refreshPagos, addImputaciones } = useData()
+    const { clientesData, proveedoresData, facturasData, refreshFacturas, refreshFacturasAdd, remitosData, refreshRemitos, pagosData, refreshPagos, addImputaciones } = useData()
     const [ persona, setPersona ] = useState(null);
     const [ facturas, setFacturas ] = useState([]);
     const [flagImputando, setFlagImputando] = useState(false)
@@ -28,6 +29,7 @@ const CuentaCorriente = () => {
     })
     const [isPagoModalOpen, setIsPagoModalOpen] = useState(false);
     const [isFacturaModalOpen, setIsFacturaModalOpen] = useState(false);
+    const [isFacturaEditModalOpen, setIsFacturaEditModalOpen] = useState(false);
     const [isPagoEditModalOpen, setIsPagoEditModalOpen] = useState(false);
     const [isRemitoModalOpen, setIsRemitoModalOpen] = useState(false);
     const [isRemitoEditModalOpen, setIsRemitoEditModalOpen] = useState(false);
@@ -59,16 +61,28 @@ const CuentaCorriente = () => {
         if (persona) {
             const facturasCorrespondientes = facturasData.filter(factura => factura.flag_imputada === false && factura.persona_nombre === persona.nombre && factura.flag_cancelada === false)
                 .map(factura => {
-                    const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === factura.pedido_id);
-                    return {
-                        id: factura.id,
-                        numero_pedido: factura.pedido_id,
-                        numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
-                        a_pagar: factura.monto,
-                        total: remitoCorrespondiente? factura.monto / (1 - remitoCorrespondiente.descuento / 100) : factura.monto,
-                        descuento: remitoCorrespondiente? remitoCorrespondiente.descuento: 0,
-                        fecha: formatearFecha(factura.createdAt)
-                    };
+                    if (!flagCliente) {
+                        return {
+                            id: factura.id,
+                            numero_pedido: factura.pedido_id,
+                            numero_remito: "-",
+                            a_pagar: factura.monto,
+                            total: factura.monto,
+                            descuento: 0,
+                            fecha: formatearFechaPago(factura.fecha)
+                        };
+                    } else {
+                        const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === factura.pedido_id);
+                        return {
+                            id: factura.id,
+                            numero_pedido: factura.pedido_id,
+                            numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
+                            a_pagar: factura.monto,
+                            total: remitoCorrespondiente? factura.monto / (1 - remitoCorrespondiente.descuento / 100) : factura.monto,
+                            descuento: remitoCorrespondiente? remitoCorrespondiente.descuento: 0,
+                            fecha: formatearFechaPago(factura.fecha)
+                        };
+                    }
                 })
                 .sort((a, b) => b.numero_pedido - a.numero_pedido)
 
@@ -133,15 +147,6 @@ const CuentaCorriente = () => {
             setMontoRestanteFactura(montoRestante)
         }
     }, [persona, facturasData, remitosData, pagosData]);   
-
-    const formatearFecha = (fechaDateTime) => {
-        const fecha = new Date(fechaDateTime);
-        const dia = String(fecha.getDate()).padStart(2, '0');
-        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-        const anio = fecha.getFullYear();
-        
-        return `${dia}/${mes}/${anio}`;
-    };
 
     const formatearFechaPago = (fechaDateOnly) => {
         const [anio, mes, dia] = fechaDateOnly.split('-');
@@ -368,7 +373,9 @@ const CuentaCorriente = () => {
         setIsLoading(true)
 
         const requestData = {
-            monto: factura.monto
+            monto: factura.monto,
+            fecha: factura.fecha,
+            pedido_id: factura.numero_pedido
         }
 
         fetch(`${apiUrl}/facturas/${factura.id}`, {
@@ -390,7 +397,7 @@ const CuentaCorriente = () => {
             if(result.message === "Factura editada con éxito") {
                 const facturaCorrespondiente = facturasData.find(fac => fac.id === factura.id);
 
-                const facturaActualizada = {...facturaCorrespondiente, monto: factura.monto}
+                const facturaActualizada = {...facturaCorrespondiente, monto: factura.monto, fecha: factura.fecha, pedido_id: factura.numero_pedido}
 
                 const updatedFacturas = facturasData.map(fac =>
                     fac.id === factura.id ? facturaActualizada : fac
@@ -404,6 +411,57 @@ const CuentaCorriente = () => {
         })
         .catch((error) => {
             console.error("Error en la solicitud PUT:", error)
+            setIsLoading(false)
+        });
+    }
+
+    const handleAddFactura = (monto, pedido_id, fecha) => {
+        setIsLoading(true)
+
+        const requestData = {
+            monto,
+            pedido_id,
+            fecha,
+            persona_id: persona.id
+        }
+
+        fetch(`${apiUrl}/facturas`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${bearerToken}`
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then((response) => {
+            if (!response.ok) {
+                alert("Error al crear, intente nuevamente")
+                throw new Error("Error en la solicitud POST");
+            }
+            return response.json();
+        })
+        .then((result) => {
+            if(result.message === "Factura creada con éxito") {
+                const nuevaFactura = {
+                    id: result.id,
+                    fecha: fecha,
+                    flag_cancelada: false,
+                    flag_imputada: false,
+                    monto: monto,
+                    pedido_id: pedido_id,
+                    persona_id: persona.id,
+                    persona_nombre: persona.nombre
+                }
+
+                const updatedFacturas = [...facturasData, nuevaFactura];
+                refreshFacturasAdd(updatedFacturas)
+            }
+            
+            alert(result.message)
+            setIsLoading(false)
+        })
+        .catch((error) => {
+            console.error("Error en la solicitud POST:", error)
             setIsLoading(false)
         });
     }
@@ -564,6 +622,44 @@ const CuentaCorriente = () => {
                     setIsLoading(false)
                 });
             }
+        }
+    }
+
+    const handleDeleteFactura = () => {
+        const shouldDelete = window.confirm(
+            `¿Estas seguro que deseas eliminar la factura de N° Pedido ${selectedRow.numero_pedido} cuyo monto es de $${selectedRow.total}?`
+        );
+    
+        if (shouldDelete) {
+            setIsLoading(true)
+    
+            fetch(`${apiUrl}/facturas/${selectedRow.id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${bearerToken}`,
+                },
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    alert("Error al eliminar factura, intente nuevamente");
+                    throw new Error("Error en la solicitud DELETE");
+                }
+                return response.json();
+            })
+            .then((result) => {
+                if(result.message === "Factura eliminada con éxito") {
+                    const updatedData = facturasData.filter((fac) => fac.id !== selectedRow.id);
+    
+                    refreshFacturasAdd(updatedData)
+                }
+                
+                alert(result.message)
+                setIsLoading(false)
+            })
+            .catch((error) => {
+                console.error("Error en la solicitud DELETE:", error);
+                setIsLoading(false)
+            });
         }
     }
 
@@ -807,6 +903,9 @@ const CuentaCorriente = () => {
                             </div>
                             <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
                                 <Button onClick={handleHistorial} className="btnRemito">Historial</Button>
+                                {!flagCliente && (
+                                    <Button onClick={() => setIsFacturaModalOpen(true)} className="btnRemito" style={{whiteSpace: "nowrap"}}>Agregar Factura</Button>
+                                )}
                                 <Button onClick={() => setIsPagoModalOpen(true)} className="btnRemito" style={{whiteSpace: "nowrap"}}>Agregar Cobranza A/C</Button>
                                 <Button onClick={() => setFlagImputando(true)} className="btnRemito">Imputar</Button>
                                 {flagCliente && (
@@ -987,17 +1086,18 @@ const CuentaCorriente = () => {
                                     )
                                     ) : (
                                         <div style={{marginTop: "1rem"}}>
-                                            <Button onClick={() => setIsFacturaModalOpen(true)} className="btnRemito" style={{width: "145px"}}>Editar Factura</Button>
+                                            <Button onClick={() => setIsFacturaEditModalOpen(true)} className="btnRemito" style={{width: "150px"}}>Editar Factura</Button>
+                                            <Button onClick={() => handleDeleteFactura()} className="btnRemito" style={{width: "150px"}}>Eliminar Factura</Button>
                                         </div>
                                     )
                                 )}
                             </div>
                         </div>
                             
-                        {isFacturaModalOpen && (
+                        {isFacturaEditModalOpen && (
                             <ModalFacturaEditar
                                 data={selectedRow}
-                                onClose={() => setIsFacturaModalOpen(false)}
+                                onClose={() => setIsFacturaEditModalOpen(false)}
                                 onSave={handleFacturaEdit}
                             />
                         )}
@@ -1035,6 +1135,12 @@ const CuentaCorriente = () => {
                         sans-serif`}}>
                         No hay facturas para mostrar.
                     </p>
+                )}
+                {isFacturaModalOpen && (
+                    <ModalFactura
+                        onClose={() => setIsFacturaModalOpen(false)}
+                        onSave={handleAddFactura}
+                    />
                 )}
             </div>
         </>

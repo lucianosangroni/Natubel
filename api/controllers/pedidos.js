@@ -88,14 +88,16 @@ const createItem = async (req, res) => {
             }
         };
         
-        facturaModel.create
-        (
-            {
-                persona_id,
-                monto: precio_total,
-                pedido_id: nuevoPedido.numero_pedido
-            }
-        )
+        if(!es_proveedor) {
+            facturaModel.create
+            (
+                {
+                    persona_id,
+                    monto: precio_total,
+                    pedido_id: nuevoPedido.numero_pedido
+                }
+            )
+        }
 
         res.status(201).json({ message: 'Pedido creado con éxito', numero_pedido: nuevoPedido.numero_pedido });
     } catch(e) {

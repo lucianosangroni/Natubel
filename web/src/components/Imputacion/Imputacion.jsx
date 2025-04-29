@@ -48,22 +48,34 @@ const Imputacion = () => {
         const pagosParsed = []
 
         for(const factura of facturas) {
-            const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === factura.pedido_id);
+            let numero_remito = "-";
+            let total = "$" + formatearNumero(factura.monto);
+            let descuento = "0%";
+
+            if (cliente) {
+                const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === factura.pedido_id);
+
+                if (remitoCorrespondiente) {
+                    numero_remito = remitoCorrespondiente.numero_remito;
+                    total = "$" + formatearNumero(factura.monto / (1 - remitoCorrespondiente.descuento / 100));
+                    descuento = remitoCorrespondiente.descuento + "%";
+                }
+            }
 
             const newFactura = {
                 tipo: "FAC",
                 numero: factura.pedido_id,
-                numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
-                fecha: formatearFecha(factura.createdAt),
-                total: remitoCorrespondiente? "$" + formatearNumero(factura.monto / (1 - remitoCorrespondiente.descuento / 100)) : "$" + formatearNumero(factura.monto),
-                descuento: remitoCorrespondiente? remitoCorrespondiente.descuento + "%" : "0%",
+                numero_remito,
+                fecha: formatearFechaPago(factura.fecha),
+                total,
+                descuento,
                 a_pagar: formatearNumero(factura.monto)
             }
 
             facturasParsed.push(newFactura)
         }
 
-        facturasParsed.sort((a, b) => a.numero_pedido - b.numero_pedido)
+        facturasParsed.sort((a, b) => a.numero - b.numero)
 
         for(const pago of pagos) {
             const newPago = {
