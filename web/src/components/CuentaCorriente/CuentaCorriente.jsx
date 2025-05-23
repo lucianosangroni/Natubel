@@ -75,7 +75,12 @@ const CuentaCorriente = () => {
                         const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === factura.pedido_id);
                         return {
                             id: factura.id,
-                            numero_pedido: factura.pedido_id,
+                            numero_pedido: <span
+                                                style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}
+                                                onClick={() => handleVerPedido(factura.pedido_id)}
+                                            >
+                                                {factura.pedido_id}
+                                            </span>,
                             numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
                             a_pagar: factura.monto,
                             total: remitoCorrespondiente? factura.monto / (1 - remitoCorrespondiente.descuento / 100) : factura.monto,
@@ -86,7 +91,7 @@ const CuentaCorriente = () => {
                 })
                 .sort((a, b) => {
                     if (flagCliente) {
-                        return b.numero_pedido - a.numero_pedido;
+                        return b.id - a.id;
                     } else {
                         const [diaA, mesA, anioA] = a.fecha.split("/");
                         const [diaB, mesB, anioB] = b.fecha.split("/");
@@ -871,6 +876,10 @@ const CuentaCorriente = () => {
         navigate(`/admin/cobranzas/${idImputacion}`);
     }
 
+    const handleVerPedido = (pedidoId) => {
+        navigate(`/admin/pedidos?selected=${pedidoId}`);
+    }
+    
     return (
         <>
             {isLoading && <Loading/>}
@@ -1045,7 +1054,7 @@ const CuentaCorriente = () => {
                                                         />
                                                     </td>
                                                 )}
-                                                <td>{factura.numero_pedido}</td>
+                                                <td style={{whiteSpace: "normal"}}>{factura.numero_pedido}</td>
                                                 <td>{factura.numero_remito}</td>
                                                 <td>{factura.fecha}</td>
                                                 <td>${formatearNumero(factura.total)}</td>

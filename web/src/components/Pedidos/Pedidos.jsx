@@ -8,12 +8,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import Loading from "../Common/Loading";
 import { useData } from "../../context/DataContext";
+import { useLocation } from "react-router-dom";
 
 const HistorialPedidos = () => {
   const { isInitialLoading, pedidosData, refreshPedidos, refreshPedidoCancelado } = useData()
   const columns = useMemo(() => COLUMNSPEDIDOS, []);
   const [data, setData] = useState(pedidosData);
   const [selectedRow, setSelectedRow] = useState(null);
+  const location = useLocation();
+  const selectedPedidoId = new URLSearchParams(location.search).get("selected");
 
    ////OBTENER PEDIDOS Y ARTICULOS DB
   useEffect(() => {
@@ -21,7 +24,23 @@ const HistorialPedidos = () => {
       setData(pedidosData)
       setSelectedRow(pedidosData[0])
     }
-  }, [pedidosData]);
+
+    if (selectedPedidoId && data.length > 0) {
+      // Encontrar el índice del pedido seleccionado
+      const index = data.findIndex(pedido => pedido.numero_pedido === parseInt(selectedPedidoId));
+      if (index !== -1) {
+        setSelectedRow(data[index]);
+  
+        // Calcular la página en la que está el pedido
+        // pageSize lo podés obtener de state.pageSize o setearlo manualmente (default 10)
+        const pageSize = state.pageSize || 10;
+        const pageNumber = Math.floor(index / pageSize);
+  
+        // Ir a esa página
+        gotoPage(pageNumber);
+      }
+    }
+  }, [selectedPedidoId, pedidosData]);
 
   const tableInstance = useTable(
     {
@@ -32,7 +51,7 @@ const HistorialPedidos = () => {
     usePagination
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, setGlobalFilter,state, page, nextPage, previousPage, canNextPage, canPreviousPage, pageOptions } = tableInstance
+  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, setGlobalFilter,state, page, nextPage, previousPage, canNextPage, canPreviousPage, pageOptions, gotoPage } = tableInstance
   const { globalFilter } = state;
   const { pageIndex } = state;
 
