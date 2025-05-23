@@ -64,7 +64,12 @@ const Imputacion = () => {
 
             const newFactura = {
                 tipo: "FAC",
-                numero: factura.pedido_id,
+                numero: <span
+                            style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}
+                            onClick={() => handleVerPedido(factura.pedido_id)}
+                        >
+                            {factura.pedido_id}
+                        </span>,
                 numero_remito,
                 fecha: formatearFechaPago(factura.fecha),
                 total,
@@ -173,6 +178,10 @@ const Imputacion = () => {
 
     const handleCuentaCorriente = () => {
         navigate(`/admin/cuenta-corriente/${imputacion.personaEmail}`);
+    }
+
+    const handleVerPedido = (pedidoId) => {
+        navigate(`/admin/pedidos?selected=${pedidoId}`);
     }
 
     return (

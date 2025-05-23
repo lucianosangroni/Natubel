@@ -54,7 +54,12 @@ const HistorialCuentaCorriente = () => {
                         const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === factura.pedido_id);
                         return {
                             id: factura.id,
-                            numero_pedido: factura.pedido_id,
+                            numero_pedido: <span
+                                                style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}
+                                                onClick={() => handleVerPedido(factura.pedido_id)}
+                                            >
+                                                {factura.pedido_id}
+                                            </span>,
                             numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
                             flag_imputada: factura.flag_imputada,
                             a_pagar: factura.monto,
@@ -66,7 +71,7 @@ const HistorialCuentaCorriente = () => {
                 })
                 .sort((a, b) => {
                     if (flagCliente) {
-                        return b.numero_pedido - a.numero_pedido;
+                        return b.id - a.id;
                     } else {
                         const [diaA, mesA, anioA] = a.fecha.split("/");
                         const [diaB, mesB, anioB] = b.fecha.split("/");
@@ -286,6 +291,10 @@ const HistorialCuentaCorriente = () => {
 
     const detallesImputacion = (imputacion) => {
         navigate(`/admin/cobranzas/${imputacion.numero_imputacion}`)
+    }
+
+    const handleVerPedido = (pedidoId) => {
+        navigate(`/admin/pedidos?selected=${pedidoId}`);
     }
 
     return (

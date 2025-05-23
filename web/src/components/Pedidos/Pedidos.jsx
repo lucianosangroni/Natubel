@@ -24,7 +24,9 @@ const HistorialPedidos = () => {
       setData(pedidosData)
       setSelectedRow(pedidosData[0])
     }
+  }, [pedidosData]);
 
+  useEffect(() => {
     if (selectedPedidoId && data.length > 0) {
       // Encontrar el índice del pedido seleccionado
       const index = data.findIndex(pedido => pedido.numero_pedido === parseInt(selectedPedidoId));
@@ -40,7 +42,7 @@ const HistorialPedidos = () => {
         gotoPage(pageNumber);
       }
     }
-  }, [selectedPedidoId, pedidosData]);
+  }, [selectedPedidoId])
 
   const tableInstance = useTable(
     {
