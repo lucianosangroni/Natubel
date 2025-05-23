@@ -506,6 +506,14 @@ export const DataProviderAdmin = ({ children }) => {
         setRemitosData(remitos)
     }
 
+    const refreshObservacionesPedido = (numero_pedido, nuevoTexto) => {
+        const pedidosDataActualizados = pedidosData.map(pedido => 
+            pedido.numero_pedido === numero_pedido
+                ? { ...pedido, razon_cancelado: nuevoTexto }
+                : pedido);
+        setPedidosData(pedidosDataActualizados)
+    }
+
     const refreshPagos = (pagos) => {
         setPagosData(pagos)
     }
@@ -562,7 +570,7 @@ export const DataProviderAdmin = ({ children }) => {
     }
 
     return (
-        <DataContext.Provider value={{ imputacionesData, pedidosData, clientesData, proveedoresData, facturasData, remitosData, categoriasData, pagosData, refreshPagos, refreshFacturasAdd, marcasData, articulosData, refreshRemitos, refreshFacturas, refreshData, addImputaciones, montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading, refreshConfig, refreshCategorias, refreshMarcas, refreshArticulos, refreshProveedores, refreshClientes, refreshPedidos, refreshPedidoCancelado}}>
+        <DataContext.Provider value={{ imputacionesData, pedidosData, clientesData, proveedoresData, facturasData, remitosData, categoriasData, pagosData, refreshObservacionesPedido, refreshPagos, refreshFacturasAdd, marcasData, articulosData, refreshRemitos, refreshFacturas, refreshData, addImputaciones, montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading, refreshConfig, refreshCategorias, refreshMarcas, refreshArticulos, refreshProveedores, refreshClientes, refreshPedidos, refreshPedidoCancelado}}>
             {children}
         </DataContext.Provider>
     );

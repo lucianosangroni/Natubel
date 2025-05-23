@@ -61,6 +61,14 @@ const HistorialPedidos = () => {
     setSelectedRow(row.original);
   };
 
+  const actualizarObservaciones = (numero_pedido, nuevoTexto) => {
+    const pedidosDataActualizados = pedidosData.map(pedido => 
+            pedido.numero_pedido === numero_pedido
+                ? { ...pedido, razon_cancelado: nuevoTexto }
+                : pedido);
+    setData(pedidosDataActualizados);
+  }
+
   const actualizarEstado = (pedido_id, nuevoEstado) => {
     const newData = data.map(pedido => {
       if (pedido.numero_pedido === pedido_id) {
@@ -152,6 +160,7 @@ const HistorialPedidos = () => {
               <ListaProductosDePedido
                 pedido={selectedRow}
                 onCambiarEstado={actualizarEstado}
+                onActualizarObservaciones={actualizarObservaciones}
                 />
             )}
         </div>

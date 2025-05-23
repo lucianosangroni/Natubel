@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { useData } from "../../context/DataContext";
 import ModalObservacionesEditar from "./ModalObservacionesEditar";
 
-function ListaProductosDePedido({ pedido, onCambiarEstado }) {
-    const { clientesData, proveedoresData, facturasData } = useData()
+function ListaProductosDePedido({ pedido, onCambiarEstado, onActualizarObservaciones }) {
+    const { clientesData, proveedoresData, facturasData, refreshObservacionesPedido } = useData()
     const [selectedArticulo, setSelectedArticulo] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate();
@@ -153,8 +153,13 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
         return response.json();
       })
       .then((result) => {
-        setIsLoading(false)
+        if(result.message === 'Pedido editado con éxito') {
+          refreshObservacionesPedido(pedido.numero_pedido, nuevoTexto)
+          onActualizarObservaciones(pedido.numero_pedido, nuevoTexto)
+        }
+        
         alert(result.message)
+        setIsLoading(false)
       })
       .catch((error) => {
         setIsLoading(false)
