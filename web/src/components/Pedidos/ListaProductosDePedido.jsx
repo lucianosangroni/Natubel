@@ -53,7 +53,7 @@ function ListaProductosDePedido({ pedido, onCambiarEstado, onActualizarObservaci
       const requestData = 
       {
         estado: nuevoEstado,
-        razon_cancelado: pedido.razon_cancelado,
+        razon_cancelado: pedido.razon_cancelado === null ? "" : pedido.razon_cancelado,
         productos
       }
 
