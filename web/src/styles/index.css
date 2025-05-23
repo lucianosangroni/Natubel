@@ -114,9 +114,7 @@
   border: 1px solid #000000;
   padding: 8px;
   text-align: left;
-  max-width: 300px;
-  white-space: normal;
-  word-break: break-word;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -141,9 +139,7 @@
   border: 1px solid #000000;
   padding: 0px 8px;
   text-align: left;
-  max-width: 300px;
-  white-space: normal;
-  word-break: break-word;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -214,9 +210,7 @@
   border: 1px solid #000000;
   padding: 8px;
   text-align: left;
-  max-width: 300px;
-  white-space: normal;
-  word-break: break-word;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
