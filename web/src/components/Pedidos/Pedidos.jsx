@@ -62,6 +62,12 @@ const HistorialPedidos = () => {
     setSelectedRow(pedidosData[0])
   }
 
+  const getEstadoClass = (estado) => {
+    if (estado === "CANCELADO") return "estado-cancelado";
+    if (estado === "COMPLETADO") return "estado-completado";
+    return "estado-normal";
+  };
+
   return (
     <>
       {isInitialLoading && <Loading/>}
@@ -88,7 +94,7 @@ const HistorialPedidos = () => {
                       key={rowIndex}
                       {...row.getRowProps()}
                       onClick={() => handleRowClick(row)}
-                      className={selectedRow === row.original ? "selected-row" : ""}
+                      className={`${selectedRow === row.original ? "selected-row" : ""} ${getEstadoClass(row.original.estado)}`}
                     >
                       {row.cells.map((cell, cellIndex) => (
                         <td key={cellIndex} {...cell.getCellProps()}>{cell.render("Cell")}</td>

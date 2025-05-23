@@ -14,7 +14,8 @@
 
 .react-table th,
 .react-table td {
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 5px;
@@ -114,7 +115,8 @@
   padding: 8px;
   text-align: left;
   max-width: 200px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -140,7 +142,8 @@
   padding: 0px 8px;
   text-align: left;
   max-width: 200px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -212,7 +215,8 @@
   padding: 8px;
   text-align: left;
   max-width: 200px;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -940,4 +944,16 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   z-index: 1049;
   background-color: white;
+}
+
+.estado-cancelado {
+  color: red;
+}
+
+.estado-completado {
+  color: green;
+}
+
+.estado-normal {
+  color: black;
 }
