@@ -37,7 +37,6 @@ export const COLUMNSPEDIDOS = [
         Header: "Creador",
         accessor:"creador",
         width: 'auto',
-        minWidth: 250,
     }
 ]
 
