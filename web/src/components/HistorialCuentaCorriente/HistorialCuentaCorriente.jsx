@@ -60,6 +60,7 @@ const HistorialCuentaCorriente = () => {
                                             >
                                                 {factura.pedido_id}
                                             </span>,
+                            numero_pedidoID: factura.pedido_id,
                             numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
                             flag_imputada: factura.flag_imputada,
                             a_pagar: factura.monto,
@@ -219,7 +220,7 @@ const HistorialCuentaCorriente = () => {
         } else {
             setIsLoading(true)
 
-            fetch(`${apiUrl}/pdf/remito/${factura.numero_pedido}`, {
+            fetch(`${apiUrl}/pdf/remito/${factura.numero_pedidoID}`, {
                 headers: {
                     Authorization: `Bearer ${bearerToken}`,
                 }

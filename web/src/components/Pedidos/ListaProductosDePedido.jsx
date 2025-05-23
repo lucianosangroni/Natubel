@@ -5,12 +5,14 @@ import ListaArticulos from "../Common/ListaArticulos";
 import Loading from "../Common/Loading";
 import { useNavigate } from 'react-router-dom';
 import { useData } from "../../context/DataContext";
+import ModalObservacionesEditar from "./ModalObservacionesEditar";
 
 function ListaProductosDePedido({ pedido, onCambiarEstado }) {
     const { clientesData, proveedoresData, facturasData } = useData()
     const [selectedArticulo, setSelectedArticulo] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate();
+    const [isObservacionesEditModalOpen, setIsObservacionesEditModalOpen] = useState(false)
 
     useEffect(() => {
       setSelectedArticulo(pedido.articulos[0])
@@ -51,7 +53,7 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
       const requestData = 
       {
         estado: nuevoEstado,
-        razon_cancelado: "",
+        razon_cancelado: pedido.razon_cancelado,
         productos
       }
 
@@ -128,6 +130,38 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
       }
     }
 
+    const handleEditarObservaciones = (nuevoTexto) => {
+      setIsLoading(true)
+      
+      const requestData = {
+        razon_cancelado: nuevoTexto
+    };
+
+      fetch(`${apiUrl}/editar-razon-cancelado/${pedido.numero_pedido}`, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${bearerToken}`
+        },
+        body: JSON.stringify(requestData)
+      })
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al editar el pedido, intente nuevamente");
+          throw new Error("Error en la solicitud PUT");
+        }
+        return response.json();
+      })
+      .then((result) => {
+        setIsLoading(false)
+        alert(result.message)
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        console.error('Error en la solicitud PUT:', error);
+      });
+    }
+
     const editarPedido = () => {
       const factura = facturasData.find(fac => fac.pedido_id === pedido.numero_pedido)
       if(factura.flag_imputada) {
@@ -140,37 +174,45 @@ function ListaProductosDePedido({ pedido, onCambiarEstado }) {
     return (
       <>
         {isLoading && <Loading/>}
-      <div className="table-productos-contenedor">
-        <ListaArticulos articulos={pedido.articulos} onArticuloClick={handleArticuloClick} selectedArticulo={selectedArticulo}/>
+        <div className="table-productos-contenedor">
+          <ListaArticulos articulos={pedido.articulos} onArticuloClick={handleArticuloClick} selectedArticulo={selectedArticulo}/>
 
-        {selectedArticulo && (
-            <GrillaProductosDePedido
-            articulo={selectedArticulo}
-            productos={pedido.productos}
-          />
-        )}
-
-        
-        {pedido.estado !== "CANCELADO" && (<>
-        <div className="contenedor-btns-estados">
-          <button className={`boton-estados completado ${pedido.estado === 'COMPLETADO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('COMPLETADO')}>Completado</button>
-          <button className={`boton-estados enviado ${pedido.estado === 'ENVIADO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('ENVIADO')}>Enviado</button>
-          <button className={`boton-estados pagado ${pedido.estado === 'PAGADO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('PAGADO')}>Pagado</button>
-          <button className={`boton-estados pedido ${pedido.estado === 'PEDIDO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('PEDIDO')}>Pedido</button>
-          <button className="boton-estados cancelado" onClick={() => cambiarEstado('CANCELADO')} style={{ marginBottom: 20 }}>Cancelado</button>
-        </div>
-        <div className="contenerdor-btns-pdfs-pedido">
-          <button className="boton-estados" onClick={() => generarPdfPedido()} style={{ width: 150 }}>Nota De Pedido</button>
-          <button className="boton-estados" onClick={() => redirectCuentaCorriente()} style={{ width: 150 }}>Cuenta Corriente</button>
-          {pedido.tipo !== "PROVEEDOR" && (
-            <>
-            <button className="boton-estados" onClick={() => editarPedido()} style={{ width: 150 }}>Editar Pedido</button>
-            </>
+          {selectedArticulo && (
+              <GrillaProductosDePedido
+              articulo={selectedArticulo}
+              productos={pedido.productos}
+            />
           )}
+
+
+          {pedido.estado !== "CANCELADO" ? (<>
+          <div className="contenedor-btns-estados">
+            <button className={`boton-estados completado ${pedido.estado === 'COMPLETADO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('COMPLETADO')}>Completado</button>
+            <button className={`boton-estados enviado ${pedido.estado === 'ENVIADO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('ENVIADO')}>Enviado</button>
+            <button className={`boton-estados pagado ${pedido.estado === 'PAGADO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('PAGADO')}>Pagado</button>
+            <button className={`boton-estados pedido ${pedido.estado === 'PEDIDO' ? 'selectedEstado' : ''}`} onClick={() => cambiarEstado('PEDIDO')}>Pedido</button>
+            <button className="boton-estados cancelado" onClick={() => cambiarEstado('CANCELADO')} style={{ marginBottom: 20 }}>Cancelado</button>
+          </div>
+          <div className="contenerdor-btns-pdfs-pedido">
+            <button className="boton-estados" onClick={() => generarPdfPedido()} style={{ width: 200 }}>Nota De Pedido</button>
+            <button className="boton-estados" onClick={() => redirectCuentaCorriente()} style={{ width: 200 }}>Cuenta Corriente</button>
+            <button className="boton-estados" onClick={() => setIsObservacionesEditModalOpen(true)} style={{ width: 200 }}>Editar Observaciones</button>
+            {pedido.tipo !== "PROVEEDOR" && (
+              <>
+              <button className="boton-estados" onClick={() => editarPedido()} style={{ width: 200 }}>Editar Pedido</button>
+              </>
+            )}
+          </div>
+          </>
+          ) : <button className="boton-estados" onClick={() => setIsObservacionesEditModalOpen(true)} style={{ width: 200 }}>Editar Observaciones</button>}
         </div>
-        </>
+        {isObservacionesEditModalOpen && (
+            <ModalObservacionesEditar
+                data={pedido.razon_cancelado}
+                onClose={() => setIsObservacionesEditModalOpen(false)}
+                onSave={handleEditarObservaciones}
+            />
         )}
-      </div>
       </>
     );
   }

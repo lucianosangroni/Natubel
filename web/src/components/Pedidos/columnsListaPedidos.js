@@ -37,7 +37,12 @@ export const COLUMNSPEDIDOS = [
         Header: "Creador",
         accessor:"creador",
         width: 'auto',
-    }
+    },
+    {
+        Header: "Observaciones",
+        accessor: "razon_cancelado",
+        width: 'auto',
+    },
 ]
 
 const formatearNumero = (numero) => {

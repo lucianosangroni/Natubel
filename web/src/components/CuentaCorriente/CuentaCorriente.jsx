@@ -81,6 +81,7 @@ const CuentaCorriente = () => {
                                             >
                                                 {factura.pedido_id}
                                             </span>,
+                            numero_pedidoID: factura.pedido_id,
                             numero_remito: remitoCorrespondiente? remitoCorrespondiente.numero_remito : "-",
                             a_pagar: factura.monto,
                             total: remitoCorrespondiente? factura.monto / (1 - remitoCorrespondiente.descuento / 100) : factura.monto,
@@ -138,7 +139,7 @@ const CuentaCorriente = () => {
             const facturasOrdenadas = facturasCorrespondientes.reverse()
             const pagosOrdenados = pagosCorrespondientes.reverse()
 
-            const facturaPedidoId = facturasOrdenadas[0]?.numero_pedido;
+            const facturaPedidoId = facturasOrdenadas[0]?.numero_pedidoID;
             if (facturaPedidoId) {
                 const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === facturaPedidoId);
             
@@ -178,7 +179,7 @@ const CuentaCorriente = () => {
     };
 
     const handleRowClick = (row) => {
-        const facturaPedidoId = row.numero_pedido;
+        const facturaPedidoId = row.numero_pedidoID;
 
         if (facturaPedidoId) {
             const remitoCorrespondiente = remitosData.find(remito => remito.pedido_id === facturaPedidoId);
@@ -202,7 +203,7 @@ const CuentaCorriente = () => {
             descuento: parseFloat(remito.descuento),
             dias_vencimiento: parseInt(remito.dias_vencimiento),
             cantidad_cajas: parseInt(remito.cantidad_cajas),
-            pedido_id: selectedRow.numero_pedido
+            pedido_id: selectedRow.numero_pedidoID
         }
 
         fetch(`${apiUrl}/remitos`, {
@@ -222,13 +223,13 @@ const CuentaCorriente = () => {
         })
         .then((result) => {
             if(result.message === "Remito creado con éxito") {
-                const facturaCorrespondiente = facturasData.find(fac => fac.pedido_id === selectedRow.numero_pedido);
+                const facturaCorrespondiente = facturasData.find(fac => fac.pedido_id === selectedRow.numero_pedidoID);
                 const nuevoMonto = facturaCorrespondiente.monto * (1 - remito.descuento / 100);
 
                 const facturaActualizada = {...facturaCorrespondiente, monto: nuevoMonto}
 
                 const updatedFacturas = facturasData.map(fac =>
-                    fac.pedido_id === selectedRow.numero_pedido ? facturaActualizada : fac
+                    fac.pedido_id === selectedRow.numero_pedidoID ? facturaActualizada : fac
                 );
 
                 const nuevoRemito = {
@@ -236,7 +237,7 @@ const CuentaCorriente = () => {
                     descuento: remito.descuento,
                     dias_vencimiento: remito.dias_vencimiento,
                     cantidad_cajas: remito.cantidad_cajas,
-                    pedido_id: selectedRow.numero_pedido
+                    pedido_id: selectedRow.numero_pedidoID
                 }
 
                 const updatedData = [...remitosData, nuevoRemito];
@@ -281,13 +282,13 @@ const CuentaCorriente = () => {
         })
         .then((result) => {
             if(result.message === "Remito editado con éxito") {
-                const facturaCorrespondiente = facturasData.find(fac => fac.pedido_id === selectedRow.numero_pedido);
+                const facturaCorrespondiente = facturasData.find(fac => fac.pedido_id === selectedRow.numero_pedidoID);
                 const nuevoMonto = result.nuevoMonto
 
                 const facturaActualizada = {...facturaCorrespondiente, monto: nuevoMonto}
 
                 const updatedFacturas = facturasData.map(fac =>
-                    fac.pedido_id === selectedRow.numero_pedido ? facturaActualizada : fac
+                    fac.pedido_id === selectedRow.numero_pedidoID ? facturaActualizada : fac
                 );
 
                 const nuevoRemito = {
@@ -650,7 +651,7 @@ const CuentaCorriente = () => {
 
     const handleDeleteFactura = () => {
         const shouldDelete = window.confirm(
-            `¿Estas seguro que deseas eliminar la factura de N° Pedido ${selectedRow.numero_pedido} cuyo monto es de $${selectedRow.total}?`
+            `¿Estas seguro que deseas eliminar la factura de N° Pedido ${selectedRow.numero_pedidoID} cuyo monto es de $${selectedRow.total}?`
         );
     
         if (shouldDelete) {
