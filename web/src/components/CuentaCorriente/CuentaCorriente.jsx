@@ -353,7 +353,15 @@ const CuentaCorriente = () => {
     const generarPdfCuenta = () => {
         setIsLoading(true)
 
-        fetch(`${apiUrl}/pdf/cuenta-corriente/${persona.persona_id}`, {
+        let personaId;
+
+        if(persona.persona_id) {
+            personaId = persona.persona_id
+        } else {
+            personaId = persona.id
+        }
+
+        fetch(`${apiUrl}/pdf/cuenta-corriente/${personaId}`, {
             headers: {
                 Authorization: `Bearer ${bearerToken}`,
             }
@@ -927,9 +935,7 @@ const CuentaCorriente = () => {
                                 )}
                                 <Button onClick={() => setIsPagoModalOpen(true)} className="btnRemito" style={{whiteSpace: "nowrap"}}>Agregar Cobranza A/C</Button>
                                 <Button onClick={() => setFlagImputando(true)} className="btnRemito">Imputar</Button>
-                                {flagCliente && (
-                                    <Button onClick={() => generarPdfCuenta()} className="btnRemito" style={{whiteSpace: "nowrap"}}>PDF Cuenta Corriente</Button> 
-                                )}       
+                                <Button onClick={() => generarPdfCuenta()} className="btnRemito" style={{whiteSpace: "nowrap"}}>PDF Cuenta Corriente</Button>     
                             </div>
                         </>
                     )}

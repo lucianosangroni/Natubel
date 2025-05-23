@@ -254,7 +254,15 @@ const HistorialCuentaCorriente = () => {
     const generarPdfHistorial = () => {
         setIsLoading(true)
 
-        fetch(`${apiUrl}/pdf/historial/${persona.persona_id}`, {
+        let personaId;
+
+        if(persona.persona_id) {
+            personaId = persona.persona_id
+        } else {
+            personaId = persona.id
+        }
+
+        fetch(`${apiUrl}/pdf/historial/${personaId}`, {
             headers: {
                 Authorization: `Bearer ${bearerToken}`,
             }
@@ -325,9 +333,7 @@ const HistorialCuentaCorriente = () => {
                     </div>
                     <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
                         <Button onClick={handleCuentaCorriente} className="btnRemito">Cuenta Corriente</Button>
-                        {flagCliente && (
-                            <Button onClick={generarPdfHistorial} className="btnRemito">PDF Historial</Button>
-                        )}
+                        <Button onClick={generarPdfHistorial} className="btnRemito">PDF Historial</Button>
                     </div>
                 </div>
             </div>

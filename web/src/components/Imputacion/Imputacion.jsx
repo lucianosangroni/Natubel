@@ -64,12 +64,12 @@ const Imputacion = () => {
 
             const newFactura = {
                 tipo: "FAC",
-                numero: <span
+                numero: cliente ? (<span
                             style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}
                             onClick={() => handleVerPedido(factura.pedido_id)}
                         >
                             {factura.pedido_id}
-                        </span>,
+                        </span>) : factura.pedido_id,
                 numero_remito,
                 fecha: formatearFechaPago(factura.fecha),
                 total,
