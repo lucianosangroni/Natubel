@@ -218,37 +218,18 @@ const HistorialCuentaCorriente = () => {
         if(factura.numero_remito === "-") {
             alert("No se puede imprimir la factura sin antes crear el remito")
         } else {
-            setIsLoading(true)
-
-            fetch(`${apiUrl}/pdf/remito/${factura.numero_pedidoID}`, {
-                headers: {
-                    Authorization: `Bearer ${bearerToken}`,
-                }
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    alert("Error al generar el pdf, intente nuevamente");
-                    throw new Error("Error en la solicitud GET");
-                }
-                return response.blob();
-            })
-            .then((result) => {
-                const url = URL.createObjectURL(result);
-
-                const newWindow = window.open(url, '_blank');
-
-                if (!newWindow) {
-                    alert('Habilite las ventanas emergentes para descargar el PDF');
-                }
-
-                URL.revokeObjectURL(url);
-
-                setIsLoading(false)
-            })
-            .catch((error) => {
-                setIsLoading(false)
-                console.error('Error en la solicitud GET:', error);
-            });
+            setIsLoading(true);
+                    
+            const ventana = window.open(
+                `${apiUrl}/pdf/remito/${factura.numero_pedidoID}`,
+                '_blank'
+            );
+            
+            if (!ventana) {
+                alert('Habilite las ventanas emergentes para ver o descargar el PDF');
+            }
+            
+            setIsLoading(false);
         }
     }
 
@@ -262,36 +243,17 @@ const HistorialCuentaCorriente = () => {
         } else {
             personaId = persona.id
         }
-
-        fetch(`${apiUrl}/pdf/historial/${personaId}`, {
-            headers: {
-                Authorization: `Bearer ${bearerToken}`,
-            }
-        })
-        .then((response) => {
-            if (!response.ok) {
-                alert("Error al generar el pdf, intente nuevamente");
-                throw new Error("Error en la solicitud GET");
-            }
-            return response.blob();
-        })
-        .then((result) => {
-            const url = URL.createObjectURL(result);
-
-            const newWindow = window.open(url, '_blank');
-
-            if (!newWindow) {
-                alert('Habilite las ventanas emergentes para descargar el PDF');
-            }
-
-            URL.revokeObjectURL(url);
-
-            setIsLoading(false)
-        })
-        .catch((error) => {
-            setIsLoading(false)
-            console.error('Error en la solicitud GET:', error);
-        });
+        
+        const ventana = window.open(
+            `${apiUrl}/pdf/historial/${personaId}`,
+            '_blank'
+        );
+        
+        if (!ventana) {
+            alert('Habilite las ventanas emergentes para ver o descargar el PDF');
+        }
+        
+        setIsLoading(false);
     }
 
     const handleCuentaCorriente = () => {

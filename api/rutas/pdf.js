@@ -9,14 +9,13 @@ const {
     getHistorial,
     getImputacion
     } = require("../controllers/pdf");
-const { checkAuth } = require("../middlewares/auth")
 
-router.get("/stock/admin", checkAuth, getStockAdmin);
-router.get("/stock/cliente", checkAuth, getStockCliente)
+router.get("/stock-admin", getStockAdmin);
+router.get("/stock-cliente", getStockCliente)
 router.get("/nota-pedido/:id", getNotaPedido);
-router.get("/remito/:id", checkAuth, getRemito);
-router.get("/cuenta-corriente/:persona_id", checkAuth, getCuentaCorriente);
-router.get("/historial/:persona_id", checkAuth, getHistorial);
-router.get("/imputacion/:numero_imputacion", checkAuth, getImputacion);
+router.get("/remito/:id", getRemito);
+router.get("/cuenta-corriente/:persona_id", getCuentaCorriente);
+router.get("/historial/:persona_id", getHistorial);
+router.get("/imputacion/:numero_imputacion", getImputacion);
 
 module.exports = router

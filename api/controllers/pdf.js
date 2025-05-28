@@ -70,13 +70,12 @@ const getStockAdmin = async (req, res) => {
 
         const doc = new PDFDocument({ margin: 0 });
 
-        const stream = res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename=stock.pdf`,
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="Stock para administradores.pdf"`,
         });
 
-        doc.on('data', (data) => {stream.write(data)})
-        doc.on('end', () => {stream.end()})
+        doc.pipe(res)
 
         doc.fontSize(15).fillColor('black').font('Helvetica-Bold').text(`STOCK ${marcaNombre.toUpperCase()}`, 30, 20);
 
@@ -270,13 +269,12 @@ const getStockCliente = async (req, res) => {
 
         const doc = new PDFDocument({ margin: 0 });
 
-        const stream = res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename=stock.pdf`,
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="Stock para clientes.pdf"`,
         });
 
-        doc.on('data', (data) => {stream.write(data)})
-        doc.on('end', () => {stream.end()})
+        doc.pipe(res)
 
         doc.fontSize(15).fillColor('black').font('Helvetica-Bold').text(`STOCK ${marcaNombre.toUpperCase()}`, 30, 20);
 
@@ -481,7 +479,7 @@ const getNotaPedido = async (req, res) => {
             }, 0);
         }, 0);
 
-        const nombreArchivo = `nota-de-pedido-${pedido_id}.pdf`;
+        const nombreArchivo = `Nota de pedido N°${pedido_id}.pdf`;
 
         const doc = new PDFDocument({ margin: 0 });
 
@@ -764,15 +762,16 @@ const getRemito = async (req, res) => {
             } else return null
         }).filter((articulo) => articulo !== null)
 
+        const nombreArchivo = `Remito N°${remito.numero_remito}.pdf`
+
         const doc = new PDFDocument();
 
-        const stream = res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename=remito.pdf`,
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="${nombreArchivo}"`,
         });
 
-        doc.on('data', (data) => {stream.write(data)})
-        doc.on('end', () => {stream.end()})
+        doc.pipe(res)
 
         doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
 
@@ -944,15 +943,16 @@ const getCuentaCorriente = async (req, res) => {
 
         const facturasPorMes = agruparPorMes(facturasConRemitos)
 
+        const nombreArchivo = `Resumen de cuenta de ${persona.nombre}.pdf`
+
         const doc = new PDFDocument();
 
-        const stream = res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename=cuenta-actual.pdf`,
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="${nombreArchivo}"`,
         });
 
-        doc.on('data', (data) => {stream.write(data)})
-        doc.on('end', () => {stream.end()})
+        doc.pipe(res)
 
         doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
 
@@ -1135,15 +1135,16 @@ const getHistorial = async (req, res) => {
 
         const facturasPorMes = agruparPorMes(facturasConRemitos)
 
+        const nombreArchivo = `Historial de cuenta de ${persona.nombre}.pdf`
+
         const doc = new PDFDocument();
 
-        const stream = res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename=cuenta-historial.pdf`,
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="${nombreArchivo}"`,
         });
 
-        doc.on('data', (data) => {stream.write(data)})
-        doc.on('end', () => {stream.end()})
+        doc.pipe(res)
 
         doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
 
@@ -1356,15 +1357,16 @@ const getImputacion = async (req, res) => {
         const totalMontoPagos = pagos.reduce((sum, pago) => sum + pago.monto, 0);
         const totalMontoSobrante = totalMontoPagos - totalMontoFacturas
 
+        const nombreArchivo = `Cobranza N°${req.params.numero_imputacion}.pdf`
+
         const doc = new PDFDocument();
 
-        const stream = res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename=cobranza.pdf`,
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="${nombreArchivo}"`,
         });
 
-        doc.on('data', (data) => {stream.write(data)})
-        doc.on('end', () => {stream.end()})
+        doc.pipe(res)
 
         doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
 

@@ -230,37 +230,18 @@ const ListadoProductos = () => {
   }
 
   const generarPDFAdmin = (marcaElegida, flagSinStock) => {
-    setIsLoading(true)
-
-    fetch(`${apiUrl}/pdf/stock/admin?marca=${encodeURIComponent(marcaElegida)}&flagSinStock=${flagSinStock}`, {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-      }
-    })
-    .then((response) => {
-      if (!response.ok) {
-        alert("Error al generar el pdf, intente nuevamente");
-        throw new Error("Error en la solicitud GET");
-      }
-      return response.blob();
-    })
-    .then((result) => {
-      const url = URL.createObjectURL(result);
-
-      const newWindow = window.open(url, '_blank');
-
-      if (!newWindow) {
-          alert('Habilite las ventanas emergentes para descargar el PDF');
-      }
-
-      URL.revokeObjectURL(url);
-
-      setIsLoading(false)
-    })
-    .catch((error) => {
-      setIsLoading(false)
-      console.error('Error en la solicitud GET:', error);
-    });
+    setIsLoading(true);
+    
+    const ventana = window.open(
+      `${apiUrl}/pdf/stock-admin?marca=${encodeURIComponent(marcaElegida)}&flagSinStock=${flagSinStock}`,
+      '_blank'
+    );
+    
+    if (!ventana) {
+      alert('Habilite las ventanas emergentes para ver o descargar el PDF');
+    }
+    
+    setIsLoading(false);
   }
 
   const handlePrecios = () => {
@@ -280,37 +261,18 @@ const ListadoProductos = () => {
   }
 
   const generarPDFCliente = (marcaElegida, flagSinStock) => {
-    setIsLoading(true)
-
-    fetch(`${apiUrl}/pdf/stock/cliente?marca=${encodeURIComponent(marcaElegida)}&flagSinStock=${flagSinStock}`, {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-      }
-    })
-    .then((response) => {
-      if (!response.ok) {
-        alert("Error al generar el pdf, intente nuevamente");
-        throw new Error("Error en la solicitud GET");
-      }
-      return response.blob();
-    })
-    .then((result) => {
-      const url = URL.createObjectURL(result);
-
-      const newWindow = window.open(url, '_blank');
-
-      if (!newWindow) {
-          alert('Habilite las ventanas emergentes para descargar el PDF');
-      }
-
-      URL.revokeObjectURL(url);
-
-      setIsLoading(false)
-    })
-    .catch((error) => {
-      setIsLoading(false)
-      console.error('Error en la solicitud GET:', error);
-    });
+    setIsLoading(true);
+    
+    const ventana = window.open(
+      `${apiUrl}/pdf/stock-cliente?marca=${encodeURIComponent(marcaElegida)}&flagSinStock=${flagSinStock}`,
+      '_blank'
+    );
+    
+    if (!ventana) {
+      alert('Habilite las ventanas emergentes para ver o descargar el PDF');
+    }
+    
+    setIsLoading(false);
   }
 
   const handleNuevaCategoria = (nuevaCategoria) => {

@@ -318,37 +318,18 @@ const CuentaCorriente = () => {
     }
 
     const generarPdfRemito = () => {
-        setIsLoading(true)
-
-        fetch(`${apiUrl}/pdf/remito/${remitoExiste.pedido_id}`, {
-            headers: {
-                Authorization: `Bearer ${bearerToken}`,
-            }
-        })
-        .then((response) => {
-            if (!response.ok) {
-                alert("Error al generar el pdf, intente nuevamente");
-                throw new Error("Error en la solicitud GET");
-            }
-            return response.blob();
-        })
-        .then((result) => {
-            const url = URL.createObjectURL(result);
-            
-            const newWindow = window.open(url, '_blank');
-            
-            if (!newWindow) {
-                alert('Habilite las ventanas emergentes para descargar el PDF');
-            }
-
-            URL.revokeObjectURL(url);
-
-            setIsLoading(false)
-        })
-        .catch((error) => {
-            setIsLoading(false)
-            console.error('Error en la solicitud GET:', error);
-        });
+        setIsLoading(true);
+        
+        const ventana = window.open(
+            `${apiUrl}/pdf/remito/${remitoExiste.pedido_id}`,
+            '_blank'
+        );
+        
+        if (!ventana) {
+            alert('Habilite las ventanas emergentes para ver o descargar el PDF');
+        }
+        
+        setIsLoading(false);
     }
 
     const generarPdfCuenta = () => {
@@ -362,35 +343,17 @@ const CuentaCorriente = () => {
             personaId = persona.id
         }
 
-        fetch(`${apiUrl}/pdf/cuenta-corriente/${personaId}`, {
-            headers: {
-                Authorization: `Bearer ${bearerToken}`,
-            }
-        })
-        .then((response) => {
-            if (!response.ok) {
-                alert("Error al generar el pdf, intente nuevamente");
-                throw new Error("Error en la solicitud GET");
-            }
-            return response.blob();
-        })
-        .then((result) => {
-            const url = URL.createObjectURL(result);
-            
-            const newWindow = window.open(url, '_blank');
-            
-            if (!newWindow) {
-                alert('Habilite las ventanas emergentes para descargar el PDF');
-            }
-
-            URL.revokeObjectURL(url);
-
-            setIsLoading(false)
-        })
-        .catch((error) => {
-            setIsLoading(false)
-            console.error('Error en la solicitud GET:', error);
-        });
+        
+        const ventana = window.open(
+            `${apiUrl}/pdf/cuenta-corriente/${personaId}`,
+            '_blank'
+        );
+        
+        if (!ventana) {
+            alert('Habilite las ventanas emergentes para ver o descargar el PDF');
+        }
+        
+        setIsLoading(false);
     }
 
     const handleFacturaEdit = (factura) => {

@@ -94,39 +94,6 @@ function ListaProductosDePedido({ pedido, onCambiarEstado, onActualizarObservaci
         }
       
         setIsLoading(false);
-
-
-      /*setIsLoading(true)
-
-      fetch(`${apiUrl}/pdf/nota-pedido/${pedido.numero_pedido}`, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        }
-      })
-      .then((response) => {
-        if (!response.ok) {
-          alert("Error al generar el pdf, intente nuevamente");
-          throw new Error("Error en la solicitud GET");
-        }
-        return response.blob();
-      })
-      .then((result) => {
-        const url = URL.createObjectURL(result);
-  
-        const newWindow = window.open(url, '_blank');
-  
-        if (!newWindow) {
-            alert('Habilite las ventanas emergentes para descargar el PDF');
-        }
-  
-        URL.revokeObjectURL(url);
-
-        setIsLoading(false)
-      })
-      .catch((error) => {
-        setIsLoading(false)
-        console.error('Error en la solicitud GET:', error);
-      });*/
     }
 
     const redirectCuentaCorriente = () => {
