@@ -342,8 +342,7 @@ const CuentaCorriente = () => {
         } else {
             personaId = persona.id
         }
-
-        
+    
         const ventana = window.open(
             `${apiUrl}/pdf/cuenta-corriente/${personaId}`,
             '_blank'
