@@ -82,7 +82,21 @@ function ListaProductosDePedido({ pedido, onCambiarEstado, onActualizarObservaci
     }
 
     const generarPdfPedido = () => {
-      setIsLoading(true)
+        setIsLoading(true);
+
+        const ventana = window.open(
+          `${apiUrl}/pdf/nota-pedido/${pedido.numero_pedido}`,
+          '_blank'
+        );
+      
+        if (!ventana) {
+          alert('Habilite las ventanas emergentes para ver o descargar el PDF');
+        }
+      
+        setIsLoading(false);
+
+
+      /*setIsLoading(true)
 
       fetch(`${apiUrl}/pdf/nota-pedido/${pedido.numero_pedido}`, {
         headers: {
@@ -112,7 +126,7 @@ function ListaProductosDePedido({ pedido, onCambiarEstado, onActualizarObservaci
       .catch((error) => {
         setIsLoading(false)
         console.error('Error en la solicitud GET:', error);
-      });
+      });*/
     }
 
     const redirectCuentaCorriente = () => {

@@ -481,15 +481,16 @@ const getNotaPedido = async (req, res) => {
             }, 0);
         }, 0);
 
+        const nombreArchivo = `nota-de-pedido-${pedido_id}.pdf`;
+
         const doc = new PDFDocument({ margin: 0 });
 
-        const stream = res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename=nota-pedido.pdf`,
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="${nombreArchivo}"`,
         });
 
-        doc.on('data', (data) => {stream.write(data)})
-        doc.on('end', () => {stream.end()})
+        doc.pipe(res);
 
         doc.fontSize(15).fillColor('black').font('Helvetica-Bold').text('NOTA DE PEDIDO', 30, 20);
         doc.fontSize(15).fillColor('black').text("N° " + pedido_id, 162, 20)
