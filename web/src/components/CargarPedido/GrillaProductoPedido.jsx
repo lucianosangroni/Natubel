@@ -144,15 +144,15 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
             </table>
         </div>
         <div style={{display: "flex", flexDirection: "column", gap: "0.75rem", marginRight: "3rem", marginTop: "1rem"}}>
-            <div style={{display: "flex", justifyContent: "flex-start", gap: "1.5rem", color: "#000000", fontWeight: "bold"}}>
+            <div style={{display: "flex", justifyContent: "flex-start", gap: "1.5rem", whiteSpace: "nowrap", color: "#000000", fontWeight: "bold"}}>
                 <span>Precio Minorista: </span>
                 <span>${formatearNumero(articulo.precio_minorista)}</span>
             </div>
-            <div style={{display: "flex", justifyContent: "flex-start", gap: "1.5rem", color: "#000000", fontWeight: "bold"}}>
+            <div style={{display: "flex", justifyContent: "flex-start", gap: "1.5rem", whiteSpace: "nowrap", color: "#000000", fontWeight: "bold"}}>
                 <span>Precio Mayorista: </span>
                 <span>${formatearNumero(articulo.precio_mayorista)}</span>
             </div>
-            <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", color: "#000000", fontWeight: "bold"}}>
+            <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000", fontWeight: "bold"}}>
                 <span>Precio Distribuidor: </span>
                 <span>${formatearNumero(articulo.precio_distribuidor)}</span>
             </div>
