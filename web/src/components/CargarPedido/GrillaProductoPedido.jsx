@@ -100,7 +100,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
 
     return (
     <>
-        <div style={{minWidth: "500px"}}>
+        <div style={{minWidth: "550px"}}>
             <table className="table-grilla">
                 <thead >
                     <tr >
