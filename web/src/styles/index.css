@@ -390,14 +390,18 @@
 }
 
 .confirmarCargarPedido {
-  padding: 0.5rem;
-  border: 1px solid #000;
-  border-radius: 0.5rem;
+  height: 4rem;
+  width: 10rem;
   background-color: #dcd9d9;
-  margin-bottom: 1rem;
-  margin-right: 1rem;
-  margin-top: auto;
-  margin-left: 1rem;
+  color: #000000;
+  font-weight: bold;
+  border: 1px solid #000;
+  padding: 0.5rem;
+  border-radius: 5px;
+  margin-bottom: 0;
+  margin-right: 0;
+  margin-left: 0;
+  margin-top: 2rem;
 }
 
 .contenedor-resumen-pedido {

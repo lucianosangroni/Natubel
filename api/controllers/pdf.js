@@ -68,19 +68,22 @@ const getStockAdmin = async (req, res) => {
             });
         }
 
+        const fechaDeHoy = new Date();
+        const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
+
+        const nombreArchivo = `Stock adm ${marcaNombre} ${fechaFormateada.replace(/\//g, '-')}.pdf`;
+
         const doc = new PDFDocument({ margin: 0 });
 
         res.writeHead(200, {
             'Content-Type': 'application/pdf',
-            'Content-Disposition': `inline; filename="Stock para administradores.pdf"`,
+            'Content-Disposition': `inline; filename="${nombreArchivo}"`,
         });
 
         doc.pipe(res)
 
         doc.fontSize(15).fillColor('black').font('Helvetica-Bold').text(`STOCK ${marcaNombre.toUpperCase()}`, 30, 20);
-
-        const fechaDeHoy = new Date();
-        const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
+        
         doc.fontSize(12).text(fechaFormateada, 540, 22);
 
         doc.moveTo(20, 10).lineTo(592, 10).stroke('black');
@@ -267,19 +270,22 @@ const getStockCliente = async (req, res) => {
             });
         }
 
+        const fechaDeHoy = new Date();
+        const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
+
+        const nombreArchivo = `Stock ${marcaNombre} ${fechaFormateada.replace(/\//g, '-')}.pdf`;
+
         const doc = new PDFDocument({ margin: 0 });
 
         res.writeHead(200, {
             'Content-Type': 'application/pdf',
-            'Content-Disposition': `inline; filename="Stock para clientes.pdf"`,
+            'Content-Disposition': `inline; filename="${nombreArchivo}"`,
         });
 
         doc.pipe(res)
 
         doc.fontSize(15).fillColor('black').font('Helvetica-Bold').text(`STOCK ${marcaNombre.toUpperCase()}`, 30, 20);
 
-        const fechaDeHoy = new Date();
-        const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
         doc.fontSize(12).text(fechaFormateada, 540, 22);
 
         doc.moveTo(20, 10).lineTo(592, 10).stroke('black');
@@ -479,7 +485,7 @@ const getNotaPedido = async (req, res) => {
             }, 0);
         }, 0);
 
-        const nombreArchivo = `Nota de pedido N°${pedido_id}.pdf`;
+        const nombreArchivo = `${persona.nombre} Pedido N°${pedido_id}.pdf`;
 
         const doc = new PDFDocument({ margin: 0 });
 
@@ -762,7 +768,7 @@ const getRemito = async (req, res) => {
             } else return null
         }).filter((articulo) => articulo !== null)
 
-        const nombreArchivo = `Remito N°${remito.numero_remito}.pdf`
+        const nombreArchivo = `${persona.nombre} Remito N°${remito.numero_remito}.pdf`
 
         const doc = new PDFDocument();
 
@@ -943,7 +949,10 @@ const getCuentaCorriente = async (req, res) => {
 
         const facturasPorMes = agruparPorMes(facturasConRemitos)
 
-        const nombreArchivo = `Resumen de cuenta de ${persona.nombre}.pdf`
+        const fechaDeHoy = new Date();
+        const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
+
+        const nombreArchivo = `Cuenta Corriente de ${persona.nombre} ${fechaFormateada.replace(/\//g, '-')}.pdf`
 
         const doc = new PDFDocument();
 
@@ -964,8 +973,6 @@ const getCuentaCorriente = async (req, res) => {
         doc.fontSize(12).fillColor("black").font('Helvetica-Bold').text("Cliente:", 15, 50)
         doc.fontSize(12).fillColor("black").font('Helvetica').text(persona.nombre, 65, 50)
 
-        const fechaDeHoy = new Date();
-        const fechaFormateada = `${fechaDeHoy.getDate()}/${fechaDeHoy.getMonth() + 1}/${fechaDeHoy.getFullYear() % 100}`;
         doc.fontSize(12).fillColor("black").font('Helvetica-Bold').text("Fecha:", 15, 70)
         doc.fontSize(12).fillColor("black").font('Helvetica').text(fechaFormateada, 65, 70)
 
@@ -1357,7 +1364,7 @@ const getImputacion = async (req, res) => {
         const totalMontoPagos = pagos.reduce((sum, pago) => sum + pago.monto, 0);
         const totalMontoSobrante = totalMontoPagos - totalMontoFacturas
 
-        const nombreArchivo = `Cobranza N°${req.params.numero_imputacion}.pdf`
+        const nombreArchivo = `Cobranza N°${req.params.numero_imputacion} ${persona.nombre}.pdf`
 
         const doc = new PDFDocument();
 

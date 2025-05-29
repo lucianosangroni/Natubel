@@ -348,7 +348,7 @@ const CargarPedido = () => {
 
           <ListaArticulos articulos={data} onArticuloClick={handleProductClick} selectedArticulo={selectedProduct}/>
         </div>
-        <div style={{width: "80%", display: "flex"}}>
+        <div style={{width: "80%", display: "flex", alignItems: "flex-start"}}>
           {selectedProduct && (
             <GrillaProductoPedido
               articulo={selectedProduct}

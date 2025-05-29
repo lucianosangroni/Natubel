@@ -1,9 +1,57 @@
+import { useEffect, useState } from "react";
+
 function GrillasProductosConfirmados({ articulos, flag_resumen }) {
+    const [precioMinorista, setPrecioMinorista] = useState(0);
+    const [precioMayorista, setPrecioMayorista] = useState(0);
+    const [precioDistribuidor, setPrecioDistribuidor] = useState(0);
+    
+    useEffect(() => {
+        let precioMinoristaActualizado = 0;
+        let precioMayoristaActualizado = 0;
+        let precioDistribuidorActualizado = 0;
+
+        for (const art of articulos) {
+            const claves = Object.keys(art.cantidades);
+
+            for (const clave of claves) {
+                const cantidad = art.cantidades[clave];
+
+                precioMinoristaActualizado += cantidad * art.precio_minorista
+                precioMayoristaActualizado += cantidad * art.precio_mayorista
+                precioDistribuidorActualizado += cantidad * art.precio_distribuidor
+            }
+        }
+
+        setPrecioMinorista(precioMinoristaActualizado)
+        setPrecioMayorista(precioMayoristaActualizado)
+        setPrecioDistribuidor(precioDistribuidorActualizado)
+    }, [articulos]);
+
+    const formatearNumero = (numero) => {
+        return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
     return (
         <>
             <div className="contenedor-resumen-pedido">
                 {flag_resumen && (
-                    <h5 className="titulo-resumenPedido" style={{marginTop: "1rem", marginBottom: "0"}}>Resumen de Pedido</h5>
+                    <>
+                        <h5 className="titulo-resumenPedido" style={{marginTop: "1rem", marginBottom: "0"}}>Resumen de Pedido</h5>
+                        <div style={{display: "flex", flexDirection: "column", gap: "0.75rem", marginTop: "1rem"}}>
+                            <div style={{display: "flex", justifyContent: "flex-start", gap: "1.5rem", color: "#000000", fontWeight: "bold"}}>
+                                <span>Precio Minorista: </span>
+                                <span>${formatearNumero(precioMinorista)}</span>
+                            </div>
+                            <div style={{display: "flex", justifyContent: "flex-start", gap: "1.5rem", color: "#000000", fontWeight: "bold"}}>
+                                <span>Precio Mayorista: </span>
+                                <span>${formatearNumero(precioMayorista)}</span>
+                            </div>
+                            <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", color: "#000000", fontWeight: "bold"}}>
+                                <span>Precio Distribuidor: </span>
+                                <span>${formatearNumero(precioDistribuidor)}</span>
+                            </div>
+                        </div>
+                    </>
                 )}
                 <div className="grillas-container-resumen">
                 {articulos.map((articulo, articuloIndex) => {

@@ -94,49 +94,69 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
         }
     }
 
+    const formatearNumero = (numero) => {
+        return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
     return (
     <>
-        <table className="table-grilla">
-            <thead >
-                <tr >
-                    <th id="articulo-grilla-elegido" >ART. {articulo.numero_articulo}</th>
-                    {talles.map((talle, index) => (
-                        <th key={index}>{talle}</th>
+        <div style={{minWidth: "500px"}}>
+            <table className="table-grilla">
+                <thead >
+                    <tr >
+                        <th id="articulo-grilla-elegido" >ART. {articulo.numero_articulo}</th>
+                        {talles.map((talle, index) => (
+                            <th key={index}>{talle}</th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {colores.map((color, index) => (
+                    <tr key={index}>
+                        <td>{color}</td>
+                        {talles.map((talle, talleIndex) => {
+                            const matchingProduct = articulo.productos.find(
+                                (producto) => producto.color === color && producto.talle === talle
+                            );
+                            const stock = matchingProduct ? matchingProduct.stock : 0;
+                            const productKey = `${color}-${talle}`;
+                            const cantidad = cantidades[productKey] || "";
+
+                            inputRefs[productKey] = React.createRef();
+
+                            return (
+                                <td key={talleIndex} className='table-grilla-input'>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <input
+                                            type="text"
+                                            defaultValue={cantidad}
+                                            onKeyDown={(e) => handleKeyDown(e, productKey, stock)}
+                                            ref={inputRefs[productKey]}
+                                        />
+                                        <span className="stock-label">&nbsp;({stock})</span>
+                                    </div>
+                                </td>
+                            );
+                        })}
+                    </tr>
                     ))}
-                </tr>
-            </thead>
-            <tbody>
-                {colores.map((color, index) => (
-                <tr key={index}>
-                    <td>{color}</td>
-                    {talles.map((talle, talleIndex) => {
-                        const matchingProduct = articulo.productos.find(
-                            (producto) => producto.color === color && producto.talle === talle
-                        );
-                        const stock = matchingProduct ? matchingProduct.stock : 0;
-                        const productKey = `${color}-${talle}`;
-                        const cantidad = cantidades[productKey] || "";
-
-                        inputRefs[productKey] = React.createRef();
-
-                        return (
-                            <td key={talleIndex} className='table-grilla-input'>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <input
-                                        type="text"
-                                        defaultValue={cantidad}
-                                        onKeyDown={(e) => handleKeyDown(e, productKey, stock)}
-                                        ref={inputRefs[productKey]}
-                                    />
-                                    <span className="stock-label">&nbsp;({stock})</span>
-                                </div>
-                            </td>
-                        );
-                    })}
-                </tr>
-                ))}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
+        <div style={{display: "flex", flexDirection: "column", gap: "0.75rem", marginRight: "3rem", marginTop: "1rem"}}>
+            <div style={{display: "flex", justifyContent: "flex-start", gap: "1.5rem", color: "#000000", fontWeight: "bold"}}>
+                <span>Precio Minorista: </span>
+                <span>${formatearNumero(articulo.precio_minorista)}</span>
+            </div>
+            <div style={{display: "flex", justifyContent: "flex-start", gap: "1.5rem", color: "#000000", fontWeight: "bold"}}>
+                <span>Precio Mayorista: </span>
+                <span>${formatearNumero(articulo.precio_mayorista)}</span>
+            </div>
+            <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", color: "#000000", fontWeight: "bold"}}>
+                <span>Precio Distribuidor: </span>
+                <span>${formatearNumero(articulo.precio_distribuidor)}</span>
+            </div>
+        </div>
         <button className="confirmarCargarPedido" onClick={handleConfirmarProducto}>Confirmar</button>
     </>
     );
