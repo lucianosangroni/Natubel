@@ -35,7 +35,6 @@ const EditarPedido = () => {
             if(selectedPedido) {
                 setTipoPrecio(clientesData.find(cli => cli.nombre === selectedPedido.persona_nombre).tipo_cliente)
                 setPedido(selectedPedido)
-                setPrecioNuevoTotal(selectedPedido.precio_total)
                 setSelectedArticuloOriginal(selectedPedido.articulos[0])
             } else {
                 alert("No se encontró el pedido")
