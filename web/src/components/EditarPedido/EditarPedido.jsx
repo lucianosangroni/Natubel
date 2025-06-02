@@ -11,9 +11,10 @@ import { Button } from "react-bootstrap";
 import { apiUrl, bearerToken } from "../../config/config";
 
 const EditarPedido = () => {
-    const { isInitialLoading, pedidosData, articulosData } = useData()
+    const { isInitialLoading, pedidosData, articulosData, clientesData, marcasData } = useData()
     const { numero_pedido } = useParams();
     const [ articulosDataActualizados, setArticulosDataActualizados ] = useState([])
+    const [ articulosDataActualizadosInit, setArticulosDataActualizadosInit ] = useState([])
     const [ pedido, setPedido ] = useState(null);
     const [ selectedArticulo, setSelectedArticulo ] = useState(null);
     const [ selectedArticuloOriginal, setSelectedArticuloOriginal ] = useState(null)
@@ -22,14 +23,19 @@ const EditarPedido = () => {
     const [ productosConfirmados, setProductosConfirmados ] = useState([]);
     const [ articulosConfirmados, setArticulosConfirmados ] = useState([])
     const [ productosConfirmadosGrilla, setProductosConfirmadosGrilla ] = useState([])
+    const [ tipoPrecio, setTipoPrecio ] = useState("MINORISTA")
+    const [selectedMarca, setSelectedMarca] = useState("todas");
     const navigate = useNavigate();
     const [ isLoading, setIsLoading ] = useState(false)
+    const [ precioNuevoTotal, setPrecioNuevoTotal ] = useState(0)
 
     useEffect(() => {
         if(pedidosData.length > 0) {
             const selectedPedido = pedidosData.find(pedido => pedido.numero_pedido === parseInt(numero_pedido))
             if(selectedPedido) {
+                setTipoPrecio(clientesData.find(cli => cli.nombre === selectedPedido.persona_nombre).tipo_cliente)
                 setPedido(selectedPedido)
+                setPrecioNuevoTotal(selectedPedido.precio_total)
                 setSelectedArticuloOriginal(selectedPedido.articulos[0])
             } else {
                 alert("No se encontró el pedido")
@@ -41,13 +47,24 @@ const EditarPedido = () => {
     useEffect(() => {
         if(pedido && articulosData.length > 0) {
             const articulosConStockDelPedido = initArticulos()
+            
+            setArticulosDataActualizadosInit(articulosConStockDelPedido)
             setArticulosDataActualizados(articulosConStockDelPedido)
             setSelectedArticulo(articulosConStockDelPedido[0])
         }
     }, [pedido, articulosData])
 
     useEffect(() => {
-        if(pedido && articulosDataActualizados.length > 0) {
+        const filtered = selectedMarca === "todas"
+            ? articulosDataActualizadosInit
+            : articulosDataActualizadosInit.filter(art => String(art.marca_id) === String(selectedMarca));
+
+        setArticulosDataActualizados(filtered)
+        setSelectedArticulo(filtered[0])
+    }, [selectedMarca])
+
+    useEffect(() => {
+        if(pedido && articulosDataActualizadosInit.length > 0 && productosConfirmados.length === 0) {
             const productosConfirmadosIniciales = getProductosConfirmadosIniciales()
             setProductosConfirmados(productosConfirmadosIniciales)
         }
@@ -57,7 +74,7 @@ const EditarPedido = () => {
         const productos = []
 
         for(const articulo of productosConfirmados) {
-            const articulo_id = articulosDataActualizados.find(art => art.numero_articulo === articulo.numero_articulo).id
+            const articulo_id = articulosDataActualizadosInit.find(art => art.numero_articulo === articulo.numero_articulo).id
 
             for(const [productKey, cantidad] of Object.entries(articulo.cantidades)) {
                 const [color, talle] = productKey.split('-');
@@ -75,13 +92,27 @@ const EditarPedido = () => {
         }
 
         setProductosConfirmadosGrilla(productos)
+        setPrecioNuevoTotal(calcularPrecio(productos))
     }, [productosConfirmados])
+
+    const calcularPrecio = (productos) => {
+        let precioTotal = 0;
+
+        for(const producto of productos) {
+            const articulo = articulosData.find(art => art.id === producto.articulo_id)
+            const precio_articulo = tipoPrecio === "MINORISTA" ? articulo.precio_minorista : tipoPrecio === "MAYORISTA" ? articulo.precio_mayorista : articulo.precio_distribuidor
+
+            precioTotal += precio_articulo * producto.productos_x_pedido.cantidad
+        }
+
+        return precioTotal
+    }
 
     const getProductosConfirmadosIniciales = () => {
         const productosConfirmadosIniciales = []
 
         for (const articulo of pedido.articulos) {
-            const articuloData = articulosDataActualizados.find(art => art.numero_articulo === articulo.numero_articulo)
+            const articuloData = articulosDataActualizadosInit.find(art => art.numero_articulo === articulo.numero_articulo)
 
             const cantidades = {}
 
@@ -132,7 +163,7 @@ const EditarPedido = () => {
         const articulosConfirmadosSet = new Set()
 
         for(const producto of productosConfirmados) {
-            const articulo = articulosDataActualizados.find(art => art.numero_articulo === producto.numero_articulo)
+            const articulo = articulosDataActualizadosInit.find(art => art.numero_articulo === producto.numero_articulo)
 
             articulosConfirmadosSet.add(articulo)
         }
@@ -275,7 +306,7 @@ const EditarPedido = () => {
             }
 
             for(const producto of productosConfirmados) {
-                const articulo_id = articulosDataActualizados.find(art => art.numero_articulo === producto.numero_articulo).id
+                const articulo_id = articulosDataActualizadosInit.find(art => art.numero_articulo === producto.numero_articulo).id
 
                 const articulo = {
                     id: articulo_id,
@@ -322,6 +353,22 @@ const EditarPedido = () => {
         }
     }
 
+    const formatearNumero = (numero) => {
+        return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    const handleChangeMarca = (marcaId) => {
+        if (Object.keys(cantidadesArticuloActual).length > 0) {
+            const confirmCambio = window.confirm(`El articulo actual no está confirmado, ¿Estas seguro que quieres cambiar de marca? al hacerlo perderás los datos del mismo`);
+            if (!confirmCambio) {
+                return;
+            }
+        }
+
+        setCantidadesArticuloActual({});
+        setSelectedMarca(marcaId);
+    }
+
     return (
         <>
             {(isLoading || isInitialLoading) && <Loading/>}
@@ -339,7 +386,12 @@ const EditarPedido = () => {
                                     productos={pedido.productos}
                                     />
                                 )}
+                                <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000", fontWeight: "bold", marginTop: "2.5rem"}}>
+                                    <span>Precio Total: </span>
+                                    <span>${formatearNumero(pedido.precio_total)}</span>
+                                </div>
                             </div>
+                            
                         </section>
                         <section className="contenedor-tabla-grilla-editar-pedido">
                             <p className="pedido-edit-titulo">Pedido Final</p>
@@ -355,6 +407,10 @@ const EditarPedido = () => {
                                         )}
                                     </>
                                 )}
+                                <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000", fontWeight: "bold", marginTop: "2.5rem"}}>
+                                    <span>Precio Total: </span>
+                                    <span>${formatearNumero(precioNuevoTotal)}</span>
+                                </div>
                             </div>
                         </section>
                         {/** 
@@ -377,7 +433,19 @@ const EditarPedido = () => {
                         */}
                     </div>
                     <section className="contenedor-tabla-grilla-editar-pedido-carga">
-                        <ListaArticulos articulos={articulosDataActualizados} onArticuloClick={handleArticuloClick} selectedArticulo={selectedArticulo}/>
+                        <div style={{width: "20%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+                            <select value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)} style={{marginLeft: "1rem", marginTop: "1rem", marginBottom: "1rem"}}>
+                                <option value="todas">Todas las marcas</option>
+                                {marcasData.map((marca) => (
+                                    <option key={marca.id} value={marca.id}>
+                                        {marca.nombre}
+                                    </option>
+                                ))}
+                            </select>
+
+                            <ListaArticulos articulos={articulosDataActualizados} onArticuloClick={handleArticuloClick} selectedArticulo={selectedArticulo}/>
+                        </div>
+                        
                         {selectedArticulo && (
                             <GrillaProductoPedido
                             articulo={selectedArticulo}

@@ -899,7 +899,7 @@
   margin-left: 1%;
   margin-right: 0;
   border: 1px solid #000;
-  width: 32%;
+  width: 48.5%;
   padding-bottom: 1rem;
 }
 
@@ -910,13 +910,13 @@
 .pedido-edit-titulo {
   text-align: center;
   background-color: #dcd9d9;
-  width: 40%;
+  width: 20%;
   padding: 0.7rem;
   border: 1px solid #000;
   border-radius: 0.5rem;
   margin-top: 1rem;
   margin-bottom: 0;
-  margin-left: 30%;
+  margin-left: 40%;
 }
 
 .contenedor-tabla-grilla-editar-pedido-carga {
