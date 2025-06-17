@@ -5,6 +5,7 @@ import ModalCategorias from "./ModalCategorias";
 import ModalMarcas from "./ModalMarcas";
 import ModalConfig from "./ModalConfig";
 import ModalStock from "./ModalStock";
+import ModalCupones from "./ModalCupones";
 import ListaArticulos from "../Common/ListaArticulos";
 import GrillaProducto from "./GrillaProducto";
 import { apiUrl, bearerToken } from "../../config/config";
@@ -14,16 +15,18 @@ import { useData } from "../../context/DataContext";
 import { useNavigate } from 'react-router-dom';
 
 const ListadoProductos = () => {
-  const { articulosData, categoriasData, marcasData, refreshCategorias, refreshMarcas, refreshArticulos, isInitialLoading } = useData()
+  const { articulosData, categoriasData, marcasData, cuponesData, refreshCupones, refreshCategorias, refreshMarcas, refreshArticulos, isInitialLoading } = useData()
   const [data, setData] = useState(articulosData);
   const [categorias, setCategorias] = useState(categoriasData);
   const [marcas, setMarcas] = useState(marcasData);
+  const [cupones, setCupones] = useState(cuponesData)
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [tipoStock, setTipoStock] = useState(null);
   const [isCategoriasModalOpen, setIsCategoriasModalOpen] = useState(false);
   const [isMarcasModalOpen, setIsMarcasModalOpen] = useState(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
+  const [isCuponesModalOpen, setIsCuponesModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate();
 
@@ -33,7 +36,8 @@ const ListadoProductos = () => {
     setSelectedProduct(articulosData[0]);
     setCategorias(categoriasData)
     setMarcas(marcasData);
-  }, [categoriasData, marcasData, articulosData]);
+    setCupones(cuponesData)
+  }, [categoriasData, marcasData, cuponesData, articulosData]);
 
   //AGREGAR ARTICULO DB
   const handleAddArticulo = (newArticulo) => {
@@ -256,6 +260,10 @@ const ListadoProductos = () => {
     setIsMarcasModalOpen(true);
   }
 
+  const handleCupones = () => {
+    setIsCuponesModalOpen(true)
+  }
+
   const handleConfig = () => {
     setIsConfigModalOpen(true)
   }
@@ -417,6 +425,13 @@ const ListadoProductos = () => {
     setMarcas(marcasActualizadas)
   }
 
+  const handleNuevoCupon = (nuevoCupon) => {
+    const newCupones = [...cupones, nuevoCupon]
+    refreshCupones(newCupones)
+    setCupones(newCupones)
+    console.log(newCupones)
+  }
+
   return (
     <>
       {(isLoading || isInitialLoading) && <Loading/>}
@@ -437,8 +452,9 @@ const ListadoProductos = () => {
         <Button onClick={handleMarcas} id="btnDescargarStock" style={{right: "340px", width: "145px"}}>Marcas</Button>
         <Button onClick={handlePrecios} id="btnDescargarStock" style={{right: "500px" , width: "145px"}}>Precios</Button>
         <Button onClick={() => handleAbrirModalStock("Admin")} id="btnDescargarStock" style={{right: "660px", width: "145px"}}>Stock Admin</Button>
-        <Button onClick={() => handleAbrirModalStock("Cliente")} id="btnDescargarStock" style={{right: "820px", width: "145px"}}>Stock Cliente</Button>   
-        <Button onClick={handleConfig} id="btnDescargarStock" style={{right: "980px", width: "145px"}}>Configuración</Button>
+        <Button onClick={() => handleAbrirModalStock("Cliente")} id="btnDescargarStock" style={{right: "820px", width: "145px"}}>Stock Cliente</Button>
+        <Button onClick={handleCupones} id="btnDescargarStock" style={{right: "980px", width: "145px"}}>Cupones</Button>   
+        <Button onClick={handleConfig} id="btnDescargarStock" style={{right: "1140px", width: "145px"}}>Configuración</Button>
         {isCategoriasModalOpen && (
         <ModalCategorias
           data={categorias}
@@ -456,6 +472,13 @@ const ListadoProductos = () => {
           onEditMarca={(nuevaMarca) => handleEditMarca(nuevaMarca)}
           onEliminarMarca={(marca) => handleEliminarMarca(marca)}
         />
+        )}
+        {isCuponesModalOpen && (
+          <ModalCupones
+            data={cupones}
+            onNuevoCupon={(nuevoCupon) => handleNuevoCupon(nuevoCupon)}
+            onClose={() => setIsCuponesModalOpen(false)}
+          />
         )}
         {isConfigModalOpen && (
         <ModalConfig

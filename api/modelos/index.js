@@ -14,7 +14,8 @@ const modelos = {
     marcaModel: require("./marca"),
     facturaModel: require("./factura"),
     pagoModel: require("./pago"),
-    imputacionModel: require("./imputacion")
+    imputacionModel: require("./imputacion"),
+    cuponModel: require("./cupon")
 }
 
 module.exports = modelos

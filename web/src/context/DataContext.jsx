@@ -13,6 +13,7 @@ export const DataProviderAdmin = ({ children }) => {
     const [ imputacionesData, setImputacionesData ] = useState([])
     const [ categoriasData, setCategoriasData ] = useState([]);
     const [ marcasData, setMarcasData ] = useState([]);
+    const [ cuponesData, setCuponesData] = useState([])
     const [ articulosData, setArticulosData ] = useState([]);
     const [ montoMinimoMayorista, setMontoMinimoMayorista ] = useState(0)
     const [ montoMinimoDistribuidor, setMontoMinimoDistribuidor ] = useState(0)
@@ -65,31 +66,31 @@ export const DataProviderAdmin = ({ children }) => {
                     return response.json();
                 })
                 .then(marcasData => {
-                    fetch(`${apiUrl}/articulos`, {
+                    fetch(`${apiUrl}/cupones`, {
                         headers: {
                             Authorization: `Bearer ${bearerToken}`
                         }
                     })
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error("Error en la solicitud GET para artículos");
+                            throw new Error("Error en la solicitud GET para cupones");
                         }
                         return response.json();
                     })
-                    .then(articulosData => {
-                        fetch(`${apiUrl}/facturas`, {
+                    .then(cuponesData => {
+                        fetch(`${apiUrl}/articulos`, {
                             headers: {
                                 Authorization: `Bearer ${bearerToken}`
                             }
                         })
-                        .then((response) => {
+                        .then(response => {
                             if (!response.ok) {
-                                throw new Error("Error en la solicitud GET");
+                                throw new Error("Error en la solicitud GET para artículos");
                             }
                             return response.json();
                         })
-                        .then((facturasData) => {
-                            fetch(`${apiUrl}/remitos`, {
+                        .then(articulosData => {
+                            fetch(`${apiUrl}/facturas`, {
                                 headers: {
                                     Authorization: `Bearer ${bearerToken}`
                                 }
@@ -100,8 +101,8 @@ export const DataProviderAdmin = ({ children }) => {
                                 }
                                 return response.json();
                             })
-                            .then((remitosData) => {
-                                fetch(`${apiUrl}/pagos`, {
+                            .then((facturasData) => {
+                                fetch(`${apiUrl}/remitos`, {
                                     headers: {
                                         Authorization: `Bearer ${bearerToken}`
                                     }
@@ -112,8 +113,8 @@ export const DataProviderAdmin = ({ children }) => {
                                     }
                                     return response.json();
                                 })
-                                .then((pagosData) => {
-                                    fetch(`${apiUrl}/imputaciones`, {
+                                .then((remitosData) => {
+                                    fetch(`${apiUrl}/pagos`, {
                                         headers: {
                                             Authorization: `Bearer ${bearerToken}`
                                         }
@@ -124,8 +125,8 @@ export const DataProviderAdmin = ({ children }) => {
                                         }
                                         return response.json();
                                     })
-                                    .then((imputacionesData) => {
-                                        fetch(`${apiUrl}/proveedores`, {
+                                    .then((pagosData) => {
+                                        fetch(`${apiUrl}/imputaciones`, {
                                             headers: {
                                                 Authorization: `Bearer ${bearerToken}`
                                             }
@@ -136,8 +137,8 @@ export const DataProviderAdmin = ({ children }) => {
                                             }
                                             return response.json();
                                         })
-                                        .then((proveedoresData) => {
-                                            fetch(`${apiUrl}/clientes`, {
+                                        .then((imputacionesData) => {
+                                            fetch(`${apiUrl}/proveedores`, {
                                                 headers: {
                                                     Authorization: `Bearer ${bearerToken}`
                                                 }
@@ -148,35 +149,11 @@ export const DataProviderAdmin = ({ children }) => {
                                                 }
                                                 return response.json();
                                             })
-                                            .then((clientesData) => {
-                                                const clientes = []
-                                                for (const dataResult of clientesData) {
-                                                    const cliente = 
-                                                    {
-                                                        id: dataResult.id,
-                                                        persona_id: dataResult.persona_id,
-                                                        nombre: dataResult.persona.nombre,
-                                                        cuit_cuil: dataResult.persona.cuit_cuil,
-                                                        direccion: dataResult.persona.direccion,
-                                                        codigo_postal: dataResult.codigo_postal,
-                                                        telefono: dataResult.persona.telefono,
-                                                        dni: dataResult.dni,
-                                                        ciudad: dataResult.ciudad,
-                                                        provincia: dataResult.provincia,
-                                                        descuento: dataResult.descuento,
-                                                        tipo_envio: dataResult.tipo_envio,
-                                                        forma_de_envio: dataResult.forma_de_envio,
-                                                        email: dataResult.persona.email,
-                                                        tipo_cliente: dataResult.tipo_cliente,
-                                                    }
-
-                                                    clientes.push(cliente)
-                                                }
-                                            
-                                                fetch(`${apiUrl}/pedidos?limit=${limitPedidos}&offset=${offsetPedidos}`, {
+                                            .then((proveedoresData) => {
+                                                fetch(`${apiUrl}/clientes`, {
                                                     headers: {
-                                                        Authorization: `Bearer ${bearerToken}`,
-                                                    },
+                                                        Authorization: `Bearer ${bearerToken}`
+                                                    }
                                                 })
                                                 .then((response) => {
                                                     if (!response.ok) {
@@ -184,154 +161,195 @@ export const DataProviderAdmin = ({ children }) => {
                                                     }
                                                     return response.json();
                                                 })
-                                                .then((pedidosData) => {
-                                                    setOffsetPedidos(prev => prev + limitPedidos);
-                                                    if (pedidosData.length < limitPedidos) {setHasMorePedidos(false)}
+                                                .then((clientesData) => {
+                                                    const clientes = []
+                                                    for (const dataResult of clientesData) {
+                                                        const cliente = 
+                                                        {
+                                                            id: dataResult.id,
+                                                            persona_id: dataResult.persona_id,
+                                                            nombre: dataResult.persona.nombre,
+                                                            cuit_cuil: dataResult.persona.cuit_cuil,
+                                                            direccion: dataResult.persona.direccion,
+                                                            codigo_postal: dataResult.codigo_postal,
+                                                            telefono: dataResult.persona.telefono,
+                                                            dni: dataResult.dni,
+                                                            ciudad: dataResult.ciudad,
+                                                            provincia: dataResult.provincia,
+                                                            descuento: dataResult.descuento,
+                                                            tipo_envio: dataResult.tipo_envio,
+                                                            forma_de_envio: dataResult.forma_de_envio,
+                                                            email: dataResult.persona.email,
+                                                            tipo_cliente: dataResult.tipo_cliente,
+                                                        }
 
-                                                    const pedidos = [];
+                                                        clientes.push(cliente)
+                                                    }
+                                                
+                                                    fetch(`${apiUrl}/pedidos?limit=${limitPedidos}&offset=${offsetPedidos}`, {
+                                                        headers: {
+                                                            Authorization: `Bearer ${bearerToken}`,
+                                                        },
+                                                    })
+                                                    .then((response) => {
+                                                        if (!response.ok) {
+                                                            throw new Error("Error en la solicitud GET");
+                                                        }
+                                                        return response.json();
+                                                    })
+                                                    .then((pedidosData) => {
+                                                        setOffsetPedidos(prev => prev + limitPedidos);
+                                                        if (pedidosData.length < limitPedidos) {setHasMorePedidos(false)}
 
-                                                    for (const dataResult of pedidosData) {
-                                                        const newArticulosPedido = []
-                                                        const articulosDelPedido = dataResult.productos.map(({ articulo_id, productos_x_pedido }) => ({ id: articulo_id, precio_unitario: productos_x_pedido.precio_unitario }));
-                                                    
-                                                        const uniqueArticuloData = new Map();
+                                                        const pedidos = [];
 
-                                                        const uniqueArticulosDelPedido = articulosDelPedido.filter((articulo) => {
-                                                            if (!uniqueArticuloData.has(articulo.id)) {
-                                                                uniqueArticuloData.set(articulo.id, articulo.precio_unitario);
-                                                                return true;
-                                                            }
-                                                            return false;
-                                                        });
-                                                    
-                                                        for (const articulo of uniqueArticulosDelPedido) {
-                                                            const articuloIndex = articulosData.findIndex(
-                                                                (item) => item.id === articulo.id
-                                                            )
+                                                        for (const dataResult of pedidosData) {
+                                                            const newArticulosPedido = []
+                                                            const articulosDelPedido = dataResult.productos.map(({ articulo_id, productos_x_pedido }) => ({ id: articulo_id, precio_unitario: productos_x_pedido.precio_unitario }));
+                                                        
+                                                            const uniqueArticuloData = new Map();
 
-                                                            if (articuloIndex !== -1) {
-                                                                const tallesDesordenados = Array.from(new Set(articulosData[articuloIndex].productos.map((producto) => producto.talle)));
-                                                                const coloresDesordenados = Array.from(new Set(articulosData[articuloIndex].productos.map((producto) => producto.color)));
+                                                            const uniqueArticulosDelPedido = articulosDelPedido.filter((articulo) => {
+                                                                if (!uniqueArticuloData.has(articulo.id)) {
+                                                                    uniqueArticuloData.set(articulo.id, articulo.precio_unitario);
+                                                                    return true;
+                                                                }
+                                                                return false;
+                                                            });
+                                                        
+                                                            for (const articulo of uniqueArticulosDelPedido) {
+                                                                const articuloIndex = articulosData.findIndex(
+                                                                    (item) => item.id === articulo.id
+                                                                )
 
-                                                                const talles = tallesDesordenados.sort((a, b) => {
-                                                                    if (!isNaN(a) && !isNaN(b)) {
-                                                                        return a - b;
+                                                                if (articuloIndex !== -1) {
+                                                                    const tallesDesordenados = Array.from(new Set(articulosData[articuloIndex].productos.map((producto) => producto.talle)));
+                                                                    const coloresDesordenados = Array.from(new Set(articulosData[articuloIndex].productos.map((producto) => producto.color)));
+
+                                                                    const talles = tallesDesordenados.sort((a, b) => {
+                                                                        if (!isNaN(a) && !isNaN(b)) {
+                                                                            return a - b;
+                                                                        }
+                                                                    
+                                                                        const talleOrden = { 's': 1, 'm': 2, 'l': 3, 'xl': 4, 'xxl': 5, 'xxxl': 6, 'xxxxl': 7, 'xxxxxl': 8 };
+                                                                        return talleOrden[a.toLowerCase()] - talleOrden[b.toLowerCase()];
+                                                                    });
+                                                                
+                                                                    const colores = coloresDesordenados.sort((a, b) => a.localeCompare(b, 'es', {ignorePunctuation: true}));
+                                                                
+                                                                    const newArticuloPedido = {
+                                                                        id: articulo.id,
+                                                                        numero_articulo: articulosData[articuloIndex].numero_articulo,
+                                                                        talles,
+                                                                        colores,
+                                                                        precio_unitario: articulo.precio_unitario
                                                                     }
                                                                 
-                                                                    const talleOrden = { 's': 1, 'm': 2, 'l': 3, 'xl': 4, 'xxl': 5, 'xxxl': 6, 'xxxxl': 7, 'xxxxxl': 8 };
-                                                                    return talleOrden[a.toLowerCase()] - talleOrden[b.toLowerCase()];
-                                                                });
-                                                            
-                                                                const colores = coloresDesordenados.sort((a, b) => a.localeCompare(b, 'es', {ignorePunctuation: true}));
-                                                            
-                                                                const newArticuloPedido = {
-                                                                    id: articulo.id,
-                                                                    numero_articulo: articulosData[articuloIndex].numero_articulo,
-                                                                    talles,
-                                                                    colores,
-                                                                    precio_unitario: articulo.precio_unitario
+                                                                    newArticulosPedido.push(newArticuloPedido)
                                                                 }
-                                                            
-                                                                newArticulosPedido.push(newArticuloPedido)
                                                             }
-                                                        }
 
-                                                        newArticulosPedido.sort((articuloA, articuloB) => {
-                                                            const numeroA = parseInt(articuloA.numero_articulo);
-                                                            const numeroB = parseInt(articuloB.numero_articulo);
+                                                            newArticulosPedido.sort((articuloA, articuloB) => {
+                                                                const numeroA = parseInt(articuloA.numero_articulo);
+                                                                const numeroB = parseInt(articuloB.numero_articulo);
+                                                            
+                                                                if (numeroA !== numeroB) {
+                                                                    return numeroA - numeroB;
+                                                                } else {
+                                                                    const letrasA = articuloA.numero_articulo.replace(/^\d+\s*/, '');
+                                                                    const letrasB = articuloB.numero_articulo.replace(/^\d+\s*/, '');
+                                                                
+                                                                    return letrasA.localeCompare(letrasB);
+                                                                }
+                                                            });
+
+                                                            const fechaPedido = new Date(dataResult.createdAt);
+                                                            const fechaFormateada = `${fechaPedido.getDate()}/${fechaPedido.getMonth() + 1}/${fechaPedido.getFullYear() % 100}`;
+
+                                                            let persona = proveedoresData.find(prov => prov.id === dataResult.persona_id)
+                                                            if(!persona) {
+                                                                persona = clientesData.find(cli => cli.persona.id === dataResult.persona_id).persona
+                                                            }
+
+                                                            const pedido = {
+                                                                numero_pedido: dataResult.numero_pedido,
+                                                                fecha: fechaFormateada,
+                                                                persona_nombre: persona.nombre,
+                                                                estado: dataResult.estado,
+                                                                precio_total: dataResult.precio_total,
+                                                                tipo: persona.es_proveedor ? "PROVEEDOR" : "CLIENTE",
+                                                                razon_cancelado: dataResult.razon_cancelado,
+                                                                articulos: newArticulosPedido,
+                                                                productos: dataResult.productos,
+                                                                creador: dataResult.creador
+                                                            };
                                                         
-                                                            if (numeroA !== numeroB) {
-                                                                return numeroA - numeroB;
-                                                            } else {
-                                                                const letrasA = articuloA.numero_articulo.replace(/^\d+\s*/, '');
-                                                                const letrasB = articuloB.numero_articulo.replace(/^\d+\s*/, '');
-                                                            
-                                                                return letrasA.localeCompare(letrasB);
-                                                            }
-                                                        });
-
-                                                        const fechaPedido = new Date(dataResult.createdAt);
-                                                        const fechaFormateada = `${fechaPedido.getDate()}/${fechaPedido.getMonth() + 1}/${fechaPedido.getFullYear() % 100}`;
-
-                                                        let persona = proveedoresData.find(prov => prov.id === dataResult.persona_id)
-                                                        if(!persona) {
-                                                            persona = clientesData.find(cli => cli.persona.id === dataResult.persona_id).persona
+                                                            pedidos.push(pedido);
                                                         }
 
-                                                        const pedido = {
-                                                            numero_pedido: dataResult.numero_pedido,
-                                                            fecha: fechaFormateada,
-                                                            persona_nombre: persona.nombre,
-                                                            estado: dataResult.estado,
-                                                            precio_total: dataResult.precio_total,
-                                                            tipo: persona.es_proveedor ? "PROVEEDOR" : "CLIENTE",
-                                                            razon_cancelado: dataResult.razon_cancelado,
-                                                            articulos: newArticulosPedido,
-                                                            productos: dataResult.productos,
-                                                            creador: dataResult.creador
-                                                        };
+                                                        pedidos.sort((a, b) => b.numero_pedido - a.numero_pedido)
                                                     
-                                                        pedidos.push(pedido);
-                                                    }
+                                                        const articulosActivos = articulosData.filter(art => art.flag_mostrar === true)
 
-                                                    pedidos.sort((a, b) => b.numero_pedido - a.numero_pedido)
-                                                
-                                                    const articulosActivos = articulosData.filter(art => art.flag_mostrar === true)
+                                                        for (const factura of facturasData) {
+                                                            let persona = proveedoresData.find(prov => prov.id === factura.persona_id)
+                                                            if(!persona) {
+                                                                persona = clientesData.find(cli => cli.persona.id === factura.persona_id).persona
+                                                            }
 
-                                                    for (const factura of facturasData) {
-                                                        let persona = proveedoresData.find(prov => prov.id === factura.persona_id)
-                                                        if(!persona) {
-                                                            persona = clientesData.find(cli => cli.persona.id === factura.persona_id).persona
+                                                            factura.persona_nombre = persona.nombre
                                                         }
 
-                                                        factura.persona_nombre = persona.nombre
-                                                    }
-
-                                                    setPedidosData(pedidos);
-                                                    setFacturasData(facturasData)
-                                                    setRemitosData(remitosData)
-                                                    setClientesData(clientes)
-                                                    setProveedoresData(proveedoresData)
-                                                    setArticulosData(articulosActivos);
-                                                    setCategoriasData(categoriasData);
-                                                    setMarcasData(marcasData)
-                                                    setPagosData(pagosData)
-                                                    setImputacionesData(imputacionesData)
-                                                    setMontoMinimoMayorista(configData.montoMinimoMayorista)
-                                                    setMontoMinimoDistribuidor(configData.montoMinimoDistribuidor)
-                                                    setStartPedidos(true)
-                                                    setIsInitialLoading(false)
+                                                        setPedidosData(pedidos);
+                                                        setFacturasData(facturasData)
+                                                        setRemitosData(remitosData)
+                                                        setClientesData(clientes)
+                                                        setProveedoresData(proveedoresData)
+                                                        setArticulosData(articulosActivos);
+                                                        setCategoriasData(categoriasData);
+                                                        setMarcasData(marcasData)
+                                                        setCuponesData(cuponesData)
+                                                        setPagosData(pagosData)
+                                                        setImputacionesData(imputacionesData)
+                                                        setMontoMinimoMayorista(configData.montoMinimoMayorista)
+                                                        setMontoMinimoDistribuidor(configData.montoMinimoDistribuidor)
+                                                        setStartPedidos(true)
+                                                        setIsInitialLoading(false)
+                                                    })
+                                                    .catch((error) => {
+                                                        console.error("Error en la solicitud GET:", error)
+                                                    });
                                                 })
                                                 .catch((error) => {
                                                     console.error("Error en la solicitud GET:", error)
                                                 });
                                             })
                                             .catch((error) => {
-                                                console.error("Error en la solicitud GET:", error)
+                                                console.error("Error en la solicitud GET para proveedores:", error);
                                             });
                                         })
                                         .catch((error) => {
-                                            console.error("Error en la solicitud GET para proveedores:", error);
+                                            console.error("Error en la solicitud GET para imputaciones:", error);
                                         });
                                     })
                                     .catch((error) => {
-                                        console.error("Error en la solicitud GET para imputaciones:", error);
+                                        console.error("Error en la solicitud GET para pagos:", error);
                                     });
                                 })
                                 .catch((error) => {
-                                    console.error("Error en la solicitud GET para pagos:", error);
+                                    console.error("Error en la solicitud GET para remitos:", error);
                                 });
                             })
                             .catch((error) => {
-                                console.error("Error en la solicitud GET para remitos:", error);
+                                console.error("Error en la solicitud GET para facturas:", error);
                             });
                         })
-                        .catch((error) => {
-                            console.error("Error en la solicitud GET para facturas:", error);
+                        .catch(error => {
+                            console.error("Error en la solicitud GET para artículos:", error);
                         });
                     })
                     .catch(error => {
-                        console.error("Error en la solicitud GET para artículos:", error);
+                        console.error("Error en la solicitud GET para cupones:", error);
                     });
                 })
                 .catch(error => {
@@ -486,6 +504,10 @@ export const DataProviderAdmin = ({ children }) => {
         setMarcasData(marcas)
     }
 
+    const refreshCupones = (cupones) => {
+        setCuponesData(cupones)
+    }
+
     const refreshArticulos = (articulos) => {
         setArticulosData(articulos)
     }
@@ -570,7 +592,7 @@ export const DataProviderAdmin = ({ children }) => {
     }
 
     return (
-        <DataContext.Provider value={{ imputacionesData, pedidosData, clientesData, proveedoresData, facturasData, remitosData, categoriasData, pagosData, refreshObservacionesPedido, refreshPagos, refreshFacturasAdd, marcasData, articulosData, refreshRemitos, refreshFacturas, refreshData, addImputaciones, montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading, refreshConfig, refreshCategorias, refreshMarcas, refreshArticulos, refreshProveedores, refreshClientes, refreshPedidos, refreshPedidoCancelado}}>
+        <DataContext.Provider value={{ imputacionesData, pedidosData, clientesData, proveedoresData, facturasData, remitosData, categoriasData, pagosData, refreshObservacionesPedido, refreshPagos, refreshFacturasAdd, marcasData, cuponesData, refreshCupones, articulosData, refreshRemitos, refreshFacturas, refreshData, addImputaciones, montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading, refreshConfig, refreshCategorias, refreshMarcas, refreshArticulos, refreshProveedores, refreshClientes, refreshPedidos, refreshPedidoCancelado}}>
             {children}
         </DataContext.Provider>
     );
