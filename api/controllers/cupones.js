@@ -2,7 +2,9 @@ const { cuponModel } = require("../modelos");
 
 const getItems = async (req, res) => {
     try {
-        const cupones = await cuponModel.findAll()
+        const cupones = await cuponModel.findAll({
+            where: { flag_eliminado: false }
+        })
         res.status(200).send(cupones)
     } catch (e) {
         console.log("Error al buscar los cupones: ", e)
@@ -69,7 +71,30 @@ const cambiarActivacionItem = async (req, res) => {
 };
 
 const deleteItem = async (req, res) => {
+    try {
+        const cupon_id = req.params.id
 
+        // Validar si el articulo existe antes de intentar actualizarla
+        const cuponExiste = await cuponModel.findByPk(cupon_id);
+        if (!cuponExiste) {
+            return res.status(404).json({ message: 'Cupon no encontrado' });
+        }
+
+        await cuponModel.update
+            (
+                {
+                    flag_eliminado: true
+                }, 
+                {
+                    where: { id: cupon_id }
+                }
+            )
+
+        res.status(200).json({ message: 'Cupon eliminado con éxito' });
+    } catch(e) {
+        console.log("Error al eliminar el cupon: ", e)
+        res.status(500).json({ message: 'Error al eliminar el cupon' });
+    }
 };
 
 

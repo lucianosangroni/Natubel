@@ -29,13 +29,11 @@ const Cupon = sequelize.define(
         },
         flag_eliminado: {
             type: DataTypes.BOOLEAN,
-            defaultValue: true,
+            defaultValue: false,
         },
     },
     {
         tableName: "cupon",
-        paranoid: true,
-        deletedAt: "flag_eliminado",
     }
 )
 

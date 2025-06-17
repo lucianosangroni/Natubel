@@ -4,7 +4,7 @@ import { apiUrl, bearerToken } from "../../config/config";
 import ModalNuevoCupon from "./ModalNuevoCupon";
 import Loading from "../Common/Loading";
 
-function ModalCupones({ data, onNuevoCupon, onClose, onCambiarActivacion }) {
+function ModalCupones({ data, onNuevoCupon, onClose, onCambiarActivacion, onDeleteCupon }) {
     const [isNuevoCuponModalOpen, setIsNuevoCuponModalOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
@@ -39,7 +39,35 @@ function ModalCupones({ data, onNuevoCupon, onClose, onCambiarActivacion }) {
     }
 
     const handleEliminarCupon = (cupon) => {
+        const shouldDelete = window.confirm(
+            `¿Estas seguro que deseas eliminar el cupon ${cupon.clave}?`
+        );
 
+        if (shouldDelete) {
+            setIsLoading(true)
+
+            fetch(`${apiUrl}/cupones/${cupon.id}`, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${bearerToken}`,
+                    },
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        alert("Error al eliminar cupon, intente nuevamente");
+                        throw new Error("Error en la solicitud DELETE");
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    onDeleteCupon(cupon)
+                    setIsLoading(false)
+                })
+                .catch((error) => {
+                    setIsLoading(false)
+                    console.error("Error en la solicitud DELETE:", error);
+                });
+        }
     }
 
     const formatearCreatedAt = (fecha) => {

@@ -433,11 +433,17 @@ const ListadoProductos = () => {
 
   const handleCambiarActivacion = (cupon) => {
     const cuponesActualizados = cupones.map((cup) =>
-          cup.id === cupon.id
-            ? { ...cup, flag_activo: !cup.flag_activo }
-            : cup
-        );
-        
+      cup.id === cupon.id
+        ? { ...cup, flag_activo: !cup.flag_activo }
+        : cup
+    );
+
+    refreshCupones(cuponesActualizados)
+    setCupones(cuponesActualizados)
+  }
+
+  const handleEliminarCupon = (cupon) => {
+    const cuponesActualizados = cupones.filter((cup) => cup.id != cupon.id)
     refreshCupones(cuponesActualizados)
     setCupones(cuponesActualizados)
   }
@@ -488,6 +494,7 @@ const ListadoProductos = () => {
             data={cupones}
             onNuevoCupon={(nuevoCupon) => handleNuevoCupon(nuevoCupon)}
             onCambiarActivacion={(cupon) => handleCambiarActivacion(cupon)}
+            onDeleteCupon={(cupon) => handleEliminarCupon(cupon)}
             onClose={() => setIsCuponesModalOpen(false)}
           />
         )}
