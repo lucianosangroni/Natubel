@@ -431,6 +431,17 @@ const ListadoProductos = () => {
     setCupones(newCupones)
   }
 
+  const handleCambiarActivacion = (cupon) => {
+    const cuponesActualizados = cupones.map((cup) =>
+          cup.id === cupon.id
+            ? { ...cup, flag_activo: !cup.flag_activo }
+            : cup
+        );
+        
+    refreshCupones(cuponesActualizados)
+    setCupones(cuponesActualizados)
+  }
+
   return (
     <>
       {(isLoading || isInitialLoading) && <Loading/>}
@@ -476,6 +487,7 @@ const ListadoProductos = () => {
           <ModalCupones
             data={cupones}
             onNuevoCupon={(nuevoCupon) => handleNuevoCupon(nuevoCupon)}
+            onCambiarActivacion={(cupon) => handleCambiarActivacion(cupon)}
             onClose={() => setIsCuponesModalOpen(false)}
           />
         )}

@@ -43,7 +43,29 @@ const updateItem = async (req, res) => {
 };
 
 const cambiarActivacionItem = async (req, res) => {
+    try {
+        const cupon_id = req.params.id
 
+        const cuponExiste = await cuponModel.findByPk(cupon_id);
+        if (!cuponExiste) {
+            return res.status(404).json({ message: 'Cupon no encontrado' });
+        }
+
+        await cuponModel.update
+            (
+                {
+                    flag_activo: !cuponExiste.flag_activo
+                }, 
+                {
+                where: { id: cupon_id }
+                }
+            )
+
+        res.status(200).json({ message: 'Cupon editado con éxito' });
+    } catch(e) {
+        console.log("Error al editar el cupon: ", e)
+        res.status(500).json({ message: 'Error al editar el cupon' });
+    }
 };
 
 const deleteItem = async (req, res) => {

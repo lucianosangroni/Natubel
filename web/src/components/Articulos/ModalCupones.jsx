@@ -2,19 +2,43 @@ import { useState  } from "react";
 import { Modal, Button, Form, Table } from "react-bootstrap";
 import { apiUrl, bearerToken } from "../../config/config";
 import ModalNuevoCupon from "./ModalNuevoCupon";
+import Loading from "../Common/Loading";
 
-function ModalCupones({ data, onNuevoCupon, onClose }) {
+function ModalCupones({ data, onNuevoCupon, onClose, onCambiarActivacion }) {
     const [isNuevoCuponModalOpen, setIsNuevoCuponModalOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
-    const handleEditarCupon = () => {
-
-    }
-
-    const handleDesactivarCupon = () => {
+    const handleEditarCupon = (cupon) => {
 
     }
 
-    const handleEliminarCupon = () => {
+    const handleDesactivarCupon = (cupon) => {
+        setIsLoading(true)
+
+        fetch(`${apiUrl}/cupones/activacion/${cupon.id}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${bearerToken}`,
+                },
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    alert("Error al editar cupon, verifique los datos ingresados");
+                    throw new Error("Error en la solicitud PUT");
+                }
+                return response.json();
+            })
+            .then(() => {
+                onCambiarActivacion(cupon)
+                setIsLoading(false)
+            })
+            .catch((error) => {
+                setIsLoading(false)
+                console.error("Error en la solicitud PUT:", error);
+            });
+    }
+
+    const handleEliminarCupon = (cupon) => {
 
     }
 
@@ -54,6 +78,7 @@ function ModalCupones({ data, onNuevoCupon, onClose }) {
 
     return (
     <>
+        {isLoading && <Loading/>}
         <Modal show={true} onHide={onClose} size="xl">
             <Modal.Header closeButton>
                 <Modal.Title>Cupones de Descuento</Modal.Title>
@@ -82,7 +107,7 @@ function ModalCupones({ data, onNuevoCupon, onClose }) {
                                 <td>{formatearCreatedAt(cupon.createdAt)}</td>
                                 <td>{formatearFechaFinCupon(cupon.fecha_fin)}</td>
                                 <td>{estadoCupon(cupon)}</td>
-                                <td>
+                                <td style={{display: "flex", gap: "10px"}}>
                                     <Button
                                         style={{
                                             backgroundColor: "#dcd9d9",
@@ -100,6 +125,7 @@ function ModalCupones({ data, onNuevoCupon, onClose }) {
                                             backgroundColor: "#dcd9d9",
                                             color: "black",
                                             borderColor: "black",
+                                            minWidth: "85px",
                                         }}
                                         size="sm"
                                         onClick={() => handleDesactivarCupon(cupon)}
