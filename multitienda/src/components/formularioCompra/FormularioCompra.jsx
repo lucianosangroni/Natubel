@@ -321,7 +321,7 @@ const FormularioCompra = () => {
       persona_id,
       precio_total: parseFloat(precioTotal(tipoPrecios())),
       es_proveedor: false,
-      creador: "Distribuidora.com.ar",
+      creador: "BenkaLenceria.com.ar",
       productos
     }
 

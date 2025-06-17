@@ -102,7 +102,7 @@ const ItemList = ({ productos, productosFiltroTalles, productosFiltroColores, se
         )}
         {productosBuscados.length === 0 && productos.length > 0 && (
           <div className="noHayArtContainer">
-            <p className="noHayArticulos">No existe el articulo buscado</p>
+            <p className="noHayArticulos">Sin stock momentáneamente</p>
           </div>
         )}
         <div className="productosContainer">

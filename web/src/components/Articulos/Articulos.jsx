@@ -429,7 +429,6 @@ const ListadoProductos = () => {
     const newCupones = [...cupones, nuevoCupon]
     refreshCupones(newCupones)
     setCupones(newCupones)
-    console.log(newCupones)
   }
 
   return (

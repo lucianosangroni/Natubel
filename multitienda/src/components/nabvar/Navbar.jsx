@@ -49,7 +49,7 @@ const Navbar = () => {
                 <FontAwesomeIcon icon={faBars} style={{ color: 'white', fontSize: '24px', listStyle: "none", }} />
               </div>
               <Link to="/" className="logo">
-                <h1>Distribuidora</h1>
+                <h1>BenkaLenceria</h1>
               </Link>
               <CartWidget />
             </div>
@@ -87,7 +87,7 @@ const Navbar = () => {
           </p>
           <nav className="navbar">
             <Link to="/" className="logo">
-              <h1>Distribuidora</h1>
+              <h1>BenkaLenceria</h1>
             </Link>
             <ul className="menu">
               <li>
