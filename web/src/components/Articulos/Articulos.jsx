@@ -448,6 +448,48 @@ const ListadoProductos = () => {
     setCupones(cuponesActualizados)
   }
 
+  const handleEditCupon = (cuponEditado) => {
+    setIsLoading(true)
+
+    const requestData = {
+      clave: cuponEditado.clave,
+      descuento: cuponEditado.descuento,
+      fecha_fin: cuponEditado.fecha_fin,
+    }
+
+    fetch(`${apiUrl}/cupones/${cuponEditado.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${bearerToken}`,
+      },
+      body: JSON.stringify(requestData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al editar cupon, verifique los datos ingresados");
+          throw new Error("Error en la solicitud PUT");
+        }
+        return response.json();
+      })
+      .then(() => {
+        const cuponesActualizados = cupones.map((cup) =>
+          cup.id === cuponEditado.id
+            ? { ...cup, clave: cuponEditado.clave, descuento: cuponEditado.descuento, fecha_fin: cuponEditado.fecha_fin }
+            : cup
+        );
+
+        refreshCupones(cuponesActualizados)
+        setCupones(cuponesActualizados);
+        alert("Cupon editado con éxito")
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud PUT:", error);
+        setIsLoading(false)
+      });
+  }
+
   return (
     <>
       {(isLoading || isInitialLoading) && <Loading/>}
@@ -495,6 +537,7 @@ const ListadoProductos = () => {
             onNuevoCupon={(nuevoCupon) => handleNuevoCupon(nuevoCupon)}
             onCambiarActivacion={(cupon) => handleCambiarActivacion(cupon)}
             onDeleteCupon={(cupon) => handleEliminarCupon(cupon)}
+            onEditCupon={(cupon) => handleEditCupon(cupon)}
             onClose={() => setIsCuponesModalOpen(false)}
           />
         )}

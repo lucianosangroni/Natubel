@@ -3,13 +3,17 @@ import { Modal, Button, Form, Table } from "react-bootstrap";
 import { apiUrl, bearerToken } from "../../config/config";
 import ModalNuevoCupon from "./ModalNuevoCupon";
 import Loading from "../Common/Loading";
+import ModalCuponEdit from "./ModalCuponEdit";
 
-function ModalCupones({ data, onNuevoCupon, onClose, onCambiarActivacion, onDeleteCupon }) {
+function ModalCupones({ data, onClose, onNuevoCupon, onCambiarActivacion, onDeleteCupon, onEditCupon }) {
     const [isNuevoCuponModalOpen, setIsNuevoCuponModalOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [isEditCuponModalOpen, setIsEditCuponModalOpen] = useState(false)
+    const [editCupon, setEditCupon] = useState(null)
 
     const handleEditarCupon = (cupon) => {
-
+        setEditCupon(cupon)
+        setIsEditCuponModalOpen(true)
     }
 
     const handleDesactivarCupon = (cupon) => {
@@ -188,6 +192,13 @@ function ModalCupones({ data, onNuevoCupon, onClose, onCambiarActivacion, onDele
             <ModalNuevoCupon
                 onClose={() => setIsNuevoCuponModalOpen(false)}
                 onSave={(nuevoCupon) => onNuevoCupon(nuevoCupon)}
+            />
+        )}
+        {isEditCuponModalOpen && (
+            <ModalCuponEdit
+                data={editCupon}
+                onClose={() => setIsEditCuponModalOpen(false)}
+                onSave={(cuponEditado) => onEditCupon(cuponEditado)}
             />
         )}
     </>
