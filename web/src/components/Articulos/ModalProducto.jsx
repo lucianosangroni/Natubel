@@ -11,6 +11,7 @@ function ModalProducto({ onAddProducto, categorias, marcas }) {
     precio_minorista: "",
     precio_mayorista: "",
     precio_distribuidor: "",
+    precio_de_marca: "",
     talles: [""],
     colores: [""],
   });
@@ -68,6 +69,7 @@ function ModalProducto({ onAddProducto, categorias, marcas }) {
           precio_minorista: "",
           precio_mayorista: "",
           precio_distribuidor: "",
+          precio_de_marca: "",
           talles: [""],
           colores: [""],
         });
@@ -293,6 +295,19 @@ function ModalProducto({ onAddProducto, categorias, marcas }) {
                   setNewProduct({
                     ...newProduct,
                     precio_distribuidor: e.target.value,
+                  });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Precio de Marca</Form.Label>
+              <Form.Control
+                type="text"
+                value={newProduct.precio_de_marca}
+                onChange={(e) => {
+                  setNewProduct({
+                    ...newProduct,
+                    precio_de_marca: e.target.value,
                   });
                 }}
               />

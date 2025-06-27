@@ -8,6 +8,7 @@ import Loading from "../Common/Loading";
 import { apiUrl, bearerToken } from "../../config/config";
 import { Button } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
+import ModalPdfRemito from "../CuentaCorriente/ModalPdfRemito";
 
 const HistorialCuentaCorriente = () => {
     const { email } = useParams();
@@ -20,6 +21,8 @@ const HistorialCuentaCorriente = () => {
     const [montoRestanteFactura, setMontoRestanteFactura] = useState(null)
     const [imputaciones, setImputaciones] = useState([])
     const [flagCliente, setFlagCliente] = useState(false)
+    const [isPdfRemitoModalOpen, setIsPdfRemitoModalOpen] = useState(false);
+    const [selectedFacturaPdfRemito, setSelectedFacturaPdfRemito] = useState(null)
     const navigate = useNavigate();
     
     useEffect(() => {
@@ -214,14 +217,14 @@ const HistorialCuentaCorriente = () => {
         return `${meses[parseInt(mes) - 1]} ${anyo}`;
     };
 
-    const generarPdfRemito = (factura) => {
-        if(factura.numero_remito === "-") {
+    const generarPdfRemito = (tipo) => {
+        if(selectedFacturaPdfRemito.numero_remito === "-") {
             alert("No se puede imprimir la factura sin antes crear el remito")
         } else {
             setIsLoading(true);
                     
             const ventana = window.open(
-                `${apiUrl}/pdf/remito/${factura.numero_pedidoID}`,
+                `${apiUrl}/pdf/remito/${tipo}/${selectedFacturaPdfRemito.numero_pedidoID}`,
                 '_blank'
             );
             
@@ -266,6 +269,11 @@ const HistorialCuentaCorriente = () => {
 
     const handleVerPedido = (pedidoId) => {
         navigate(`/admin/pedidos?selected=${pedidoId}`);
+    }
+
+    const handlePdfRemitoClick = (factura) => {
+        setSelectedFacturaPdfRemito(factura)
+        setIsPdfRemitoModalOpen(true)
     }
 
     return (
@@ -388,7 +396,7 @@ const HistorialCuentaCorriente = () => {
                                                         <td>${formatearNumero(factura.a_pagar)}</td>
                                                         <td>{factura.flag_imputada ? "IMPUTADA" : "PENDIENTE"}</td>
                                                         <td>
-                                                            <button onClick={() => generarPdfRemito(factura)} className="botonEliminar" style={{padding: "3px", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "2px", marginBottom: "2px", background: "none"}}>
+                                                            <button onClick={() => handlePdfRemitoClick(factura)} className="botonEliminar" style={{padding: "3px", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "2px", marginBottom: "2px", background: "none"}}>
                                                                 <FontAwesomeIcon icon={faFileAlt} />
                                                             </button>
                                                         </td>
@@ -466,6 +474,12 @@ const HistorialCuentaCorriente = () => {
                     </p>
                 )}
             </div>
+            {isPdfRemitoModalOpen && (
+                <ModalPdfRemito
+                    onClose={() => setIsPdfRemitoModalOpen(false)}
+                    onSave={generarPdfRemito}
+                />
+            )}
         </>
     );
 }

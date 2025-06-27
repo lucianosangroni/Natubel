@@ -701,7 +701,7 @@ const getNotaPedido = async (req, res) => {
     }
 };
 
-const getRemito = async (req, res) => {
+const getRemitoNatubel = async (req, res) => {
     try {
         const pedido_id = req.params.id
 
@@ -896,6 +896,182 @@ const getRemito = async (req, res) => {
         res.status(500).json({ message: 'Error al buscar los articulos' });
     }
 };
+
+const getRemitoLody = async (req, res) => {
+    try {
+        const pedido_id = req.params.id
+
+        const remito = await remitoModel.findOne({ where: {pedido_id: pedido_id}} )
+        if (!remito) {
+            return res.status(404).json({ message: 'Remito no encontrado' });
+        }
+
+        const pedido = await pedidoModel.findByPk(pedido_id, {
+            include: [
+                {
+                  model: productoModel,
+                  through: {
+                    model: productoXPedidoModel,
+                    attributes: ['cantidad', 'precio_unitario'],
+                  },
+                },
+              ],
+        });
+        if (!pedido) {
+            return res.status(404).json({ message: 'Pedido no encontrado' });
+        }  
+
+        const persona = await personaModel.findByPk(pedido.persona_id);
+        if (!persona) {
+            return res.status(404).json({ message: 'Persona no encontrada' });
+        }
+
+        const articulosDelPedido = Array.from(new Set(pedido.productos.map((producto) => producto.articulo_id)))
+
+        const articulos = await articuloModel.findAll(
+            {
+                include: 
+                [
+                    {
+                        model: productoModel,
+                    }
+                ],
+                order: sequelize.literal("CAST(SUBSTRING_INDEX(numero_articulo, ' ', 1) AS UNSIGNED), SUBSTRING_INDEX(numero_articulo, ' ', -1) ASC")
+            }
+        )
+
+        const articulosAMostrar = articulos.map((articulo) => {
+            if(articulosDelPedido.includes(articulo.id)) {
+                let cantidad = 0;
+                let precio = 0;
+
+                for (const producto of articulo.productos) {
+                    const productoCoincidencia = pedido.productos.find((productoPedido) => productoPedido.id === producto.id)
+                    if(productoCoincidencia) {
+                        cantidad += productoCoincidencia.productos_x_pedido.cantidad
+                        precio = productoCoincidencia.productos_x_pedido.precio_unitario
+                    }
+                }
+
+                const newArticulo = {
+                    numero_articulo: articulo.numero_articulo,
+                    descripcion: articulo.descripcion,
+                    cantidad,
+                    precio
+                }
+
+                return newArticulo;
+            } else return null
+        }).filter((articulo) => articulo !== null)
+
+        const nombreArchivo = `${persona.nombre} Remito N°${remito.numero_remito}.pdf`
+
+        const doc = new PDFDocument();
+
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="${nombreArchivo}"`,
+        });
+
+        doc.pipe(res)
+
+        doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
+
+        doc.fontSize(8).fillColor("black").text('DOCUMENTO NO VALIDO COMO FACTURA', 15, 11);
+        doc.fontSize(10).fillColor("black").text('REMITO N°: ' + remito.numero_remito, 200, 10);
+        doc.fontSize(10).fillColor("black").text('PEDIDO N°: ' + pedido.numero_pedido, 285, 10);
+        const fechaPedido = new Date(pedido.createdAt);
+        const fechaPedidoFormateada = `${fechaPedido.getDate()}/${fechaPedido.getMonth() + 1}/${fechaPedido.getFullYear() % 100}`;
+        doc.fontSize(10).fillColor("black").text(`FECHA: ${fechaPedidoFormateada}`, 380, 10);
+        const fechaVencimiento = new Date(fechaPedido.getTime() + remito.dias_vencimiento * 24 * 60 * 60 * 1000);
+        const fechaVencimientoFormateada = `${fechaVencimiento.getDate()}/${fechaVencimiento.getMonth() + 1}/${fechaVencimiento.getFullYear() % 100}`;
+        doc.fontSize(10).fillColor("black").text(`VENCIMIENTO: ${fechaVencimientoFormateada}`, 470, 10);
+
+        doc.moveTo(0, 25).lineTo(612, 25).stroke('black');
+
+        doc.fontSize(10).fillColor("black").text('RAZON SOCIAL:', 15, 40)
+        doc.fontSize(10).fillColor("black").text(persona.nombre, 102, 40)
+        doc.moveTo(100, 50).lineTo(300, 50).stroke('black');
+        doc.fontSize(10).fillColor("black").text('CUIT:', 15, 70)
+        doc.fontSize(10).fillColor("black").text(persona.cuit_cuil, 102, 70)
+        doc.moveTo(100, 80).lineTo(300, 80).stroke('black');
+        doc.fontSize(10).fillColor("black").text('Direc. de Entrega:', 15, 100)
+        doc.fontSize(10).fillColor("black").text(persona.direccion, 102, 100)
+        doc.moveTo(100, 110).lineTo(300, 110).stroke('black');
+
+        let subtotal = 0;
+
+        for (const articulo of articulosAMostrar) {
+            subtotal += articulo.cantidad * articulo.precio
+        }
+
+        doc.fontSize(10).fillColor("black").text(`CANTIDAD DE CAJAS: ${remito.cantidad_cajas}`, 380, 32);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('SUBTOTAL', 380, 50);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 480, 50);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('Descuento ' + remito.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) + "%", 380, 65);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (subtotal * remito.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) + ")", 480, 65);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('SUBTOTAL', 380, 80);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 480, 80);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('IVA Insc. 0.00%', 380, 95);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$0,00', 480, 95);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('TOTAL', 380, 110);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 480, 110);
+
+        doc.moveTo(0, 130).lineTo(612, 130).stroke('black');
+
+        //for (let i = 0; i <= 32; i++) {
+        //    doc.moveTo(18, 200 + 17 * i).lineTo(570, 200 + 17 * i).stroke('black');
+        //}
+        /*doc.moveTo(18, 140).lineTo(18, 157).stroke('black');
+        doc.moveTo(570, 140).lineTo(570, 157).stroke('black');
+        doc.moveTo(68, 140).lineTo(68, 157).stroke('black');
+        doc.moveTo(358, 140).lineTo(358, 157).stroke('black');
+        doc.moveTo(418, 140).lineTo(418, 157).stroke('black');
+        doc.moveTo(498, 140).lineTo(498, 157).stroke('black');*/
+        doc.moveTo(18, 157).lineTo(570, 157).stroke('black');
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('Articulo', 20, 145);
+        doc.fontSize(10).fillColor("black").text('Descripcion', 70, 145);
+        doc.fontSize(10).fillColor("black").text('Cantidad', 360, 145);
+        doc.fontSize(10).fillColor("black").text('Precio', 420, 145);
+        doc.fontSize(10).fillColor("black").text('Total', 500, 145);
+
+        let articuloHeight = 163;
+        let lineStartHeight = 157;
+        let lineEndHeight = 174;
+
+        for (const articulo of articulosAMostrar) {
+            doc.fontSize(10).fillColor("black").text(articulo.numero_articulo, 20, articuloHeight);
+            const descripcion = articulo.descripcion
+            if (descripcion === "") {
+                doc.fontSize(10).fillColor("black").text("-", 70, articuloHeight);
+            } else {
+                if (doc.widthOfString(descripcion) > 285) {
+                    let lengthThatFits = 0;
+                    let currentWidth = 0;
+                    while (currentWidth < 285 && lengthThatFits < descripcion.length) {
+                        currentWidth += doc.widthOfString(descripcion[lengthThatFits]);
+                        lengthThatFits++;
+                    }
+                    doc.fontSize(10).fillColor("black").text(descripcion.substring(0, lengthThatFits - 3) + '...', 70, articuloHeight);
+                } else {
+                    doc.fontSize(10).fillColor("black").text(descripcion, 70, articuloHeight);
+                }
+            }
+            doc.fontSize(10).fillColor("black").text(articulo.cantidad, 360, articuloHeight);
+            doc.fontSize(10).fillColor("black").text('$' + articulo.precio.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 420, articuloHeight);
+            doc.fontSize(10).fillColor("black").text('$' + (articulo.cantidad * articulo.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, articuloHeight);
+
+            articuloHeight += 17;
+            lineStartHeight += 17;
+            lineEndHeight += 17;
+        }
+
+        doc.end();
+    } catch (e) {
+        console.log(e)
+        res.status(500).json({ message: 'Error al buscar los articulos' });
+    }
+}
 
 const getCuentaCorriente = async (req, res) => {
     try {
@@ -1485,4 +1661,4 @@ const formatearMonto = (numero) => {
     return numero;
 };
 
-module.exports = {getStockAdmin, getStockCliente, getNotaPedido, getRemito, getCuentaCorriente, getHistorial, getImputacion};
+module.exports = {getStockAdmin, getStockCliente, getNotaPedido, getRemitoNatubel, getRemitoLody, getCuentaCorriente, getHistorial, getImputacion};

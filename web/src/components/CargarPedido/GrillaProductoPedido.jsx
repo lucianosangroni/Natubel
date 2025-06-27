@@ -156,6 +156,10 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
                 <span>Precio Distribuidor: </span>
                 <span>${formatearNumero(articulo.precio_distribuidor)}</span>
             </div>
+            <div style={{display: "flex", justifyContent: "flex-start", gap: "1.8rem", whiteSpace: "nowrap", color: "#000000", fontWeight: "bold"}}>
+                <span>Precio de Marca: </span>
+                <span>${formatearNumero(articulo.precio_de_marca)}</span>
+            </div>
         </div>
         <button className="confirmarCargarPedido" onClick={handleConfirmarProducto}>Confirmar</button>
     </>

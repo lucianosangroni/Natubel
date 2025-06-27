@@ -1,7 +1,7 @@
 .container {
   max-width: 1140px;
   padding-inline: 1.5rem;
-  margin: 5rem auto;
+  margin: 0 auto;
 }
 
 .formulario {
@@ -40,10 +40,10 @@
 
 .container-enviar {
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
+  align-items: flex-start;
+  justify-content: center;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .enviar {
@@ -96,6 +96,13 @@
 
 .required-asterisk-cel {
   display: none;
+}
+
+@media (max-width: 970px) {
+  .container-form-y-cupon {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
 }
 
 @media (max-width: 675px) {

@@ -25,6 +25,11 @@ const Articulo = sequelize.define(
             type: DataTypes.FLOAT,
             allowNull: false,
         },
+        precio_de_marca: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+            defaultValue: 0,
+        },
         flag_activo: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,

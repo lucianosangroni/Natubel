@@ -54,7 +54,7 @@ const getItems = async (req, res) => {
 
 const createItem = async (req, res) => {
     try {
-        const { numero_articulo, categorias: categoriasString, marca_id, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, talles: tallesString, colores: coloresString } = req.body
+        const { numero_articulo, categorias: categoriasString, marca_id, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, precio_de_marca, talles: tallesString, colores: coloresString } = req.body
         //const imagenes = []
         const categorias = JSON.parse(categoriasString);
         const talles = JSON.parse(tallesString);
@@ -81,7 +81,8 @@ const createItem = async (req, res) => {
                 descripcion,
                 precio_mayorista,
                 precio_minorista,
-                precio_distribuidor
+                precio_distribuidor,
+                precio_de_marca
             }
         )
 
@@ -133,15 +134,13 @@ const createItem = async (req, res) => {
 const updateItem = async (req, res) => {
     try {
         const articulo_id = req.params.id
-        const { numero_articulo, categorias: categoriasString, marca_id, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, productos: productosString, talles: tallesString, colores: coloresString, imagenesRemove: imagenesRemoveString } = req.body
+        const { numero_articulo, categorias: categoriasString, marca_id, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, precio_de_marca, productos: productosString, talles: tallesString, colores: coloresString, imagenesRemove: imagenesRemoveString } = req.body
         //const imagenesAdd = req.files.map((file) => file.filename);
         //const imagenesRemove = JSON.parse(imagenesRemoveString)
         const categorias = JSON.parse(categoriasString);
         const productos = JSON.parse(productosString);
         const talles = JSON.parse(tallesString);
         const colores = JSON.parse(coloresString);
-
-        console.log(marca_id)
 
         // Validar si el articulo existe antes de intentar actualizarla
         const articuloExiste = await articuloModel.findByPk(articulo_id);
@@ -157,7 +156,8 @@ const updateItem = async (req, res) => {
                 marca_id,
                 precio_mayorista,
                 precio_minorista,
-                precio_distribuidor
+                precio_distribuidor,
+                precio_de_marca
             }, 
             {
             where: { id: articulo_id }

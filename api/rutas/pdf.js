@@ -4,7 +4,8 @@ const {
     getStockAdmin,
     getStockCliente,
     getNotaPedido,
-    getRemito,
+    getRemitoNatubel,
+    getRemitoLody,
     getCuentaCorriente,
     getHistorial,
     getImputacion
@@ -13,7 +14,8 @@ const {
 router.get("/stock-admin", getStockAdmin);
 router.get("/stock-cliente", getStockCliente)
 router.get("/nota-pedido/:id", getNotaPedido);
-router.get("/remito/:id", getRemito);
+router.get("/remito/Natubel/:id", getRemitoNatubel);
+router.get("/remito/Lody/:id", getRemitoLody);
 router.get("/cuenta-corriente/:persona_id", getCuentaCorriente);
 router.get("/historial/:persona_id", getHistorial);
 router.get("/imputacion/:numero_imputacion", getImputacion);

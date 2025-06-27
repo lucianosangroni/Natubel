@@ -41,6 +41,7 @@ const FormularioCompra = () => {
   const [ formulario, setFormulario] = useState(null)
   const [ cliente, setCliente ] = useState(null)
   const [isOtroSelected, setIsOtroSelected] = useState(false);
+  const [claveCupon, setClaveCupon] = useState("")
 
   useEffect(() => {
     const nuevoCarrito = verificarStock();
@@ -411,6 +412,9 @@ const FormularioCompra = () => {
     return /^[0-9]{11}$/.test(value);
   }
 
+  const handleCanjearCupon = () => {
+    console.log(claveCupon)
+  }
 
   return (
     <>
@@ -456,207 +460,223 @@ const FormularioCompra = () => {
         ) : (
           <>
             {carrito.length > 0 ? (
-              <form onSubmit={handleSubmitForm(onSubmitForm)}>
-                <div className="formulario">
-                  <div className="casilla-asterisk-container">
-                    <label>Email: </label>
-                    <span class="required-asterisk-cel">*</span>
-                  </div>
-                  <input
-                    type="email" 
-                    {...registerForm("email", {
-                      required: "Este campo es obligatorio.",
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Correo electrónico inválido",
-                      },
-                    })}
-                  />
-                  <span class="required-asterisk">*</span>
-                  {errors.email && (
-                    <p className="obligatorio">{errors.email.message}</p>
-                  )}
-                </div>
-                <div className="formulario">
-                  <div className="casilla-asterisk-container">
-                    <label>Nombre completo:</label>
-                    <span class="required-asterisk-cel">*</span>
-                  </div>
-                  <input
-                    type="text"
-                    {...registerForm("nombreCompleto", { required: true })}
-                  /> <span class="required-asterisk">*</span>
-                  {errors.nombreCompleto && (
-                    <p className="obligatorio">Este campo es obligatorio.</p>
-                  )}
-                  
-                </div>
-                <div className="formulario">
-                  <div className="casilla-asterisk-container">
-                    <label>Teléfono:</label>
-                    <span class="required-asterisk-cel">*</span>
-                  </div>
-                  <input
-                    type="tel"
-                    {...registerForm("telefono", { required: true })}
-                  /><span class="required-asterisk">*</span>
-                  {errors.telefono && (
-                    <p className="obligatorio">Este campo es obligatorio.</p>
-                  )}
-                </div>
-                <div className="formulario">
-                  <label>DNI:</label>
-                  <input
-                    type="text"
-                    {...registerForm("dni", { validate: validateDni })}
-                  />
-                  {errors.dni && <p className="obligatorio">Debe tener 8 dígitos.</p>}
-                </div>
-                <div className="formulario">
-                  <label>CUIT / CUIL:</label>
-                  <input
-                    type="text"
-                    {...registerForm("cuitCuil", { validate: validateCuit })}
-                  />
-                  {errors.cuitCuil && <p className="obligatorio">Debe tener 11 dígitos.</p>}
-                </div>
-                <div className="formulario">
-                  <label>Forma de Envío:</label>
-                  <div
-                    onClick={() => {
-                      document.getElementById("envio-radio1").click();
-                    }}
-                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
-                  >
-                    <input
-                      id="envio-radio1"
-                      style={{ width: "fit-content", cursor: "pointer" }}
-                      type="radio"
-                      value="DOMICILIO"
-                      {...registerForm("tipo_envio")}
-                      defaultChecked
-                    />
-                    <span>Envío a domicilio</span>
-                  </div>
-                  <div></div>
-                  <div
-                    onClick={() => {
-                      document.getElementById("envio-radio2").click();
-                    }}
-                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
-                  >
-                    <input
-                      id="envio-radio2"
-                      style={{ width: "fit-content", cursor: "pointer" }}
-                      type="radio"
-                      value="SUCURSAL"
-                      {...registerForm("tipo_envio")}
-                    />
-                    <span>Retiro en sucursal del transporte</span>
-                  </div>
-                  <div></div>
-                  <div
-                    onClick={() => {
-                      document.getElementById("envio-radio3").click();
-                    }}
-                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
-                  >
-                    <input
-                      id="envio-radio3"
-                      style={{ width: "fit-content", cursor: "pointer" }}
-                      type="radio"
-                      value="DEPOSITO"
-                      {...registerForm("tipo_envio")}
-                    />
-                    <span>Retiro en depósito del vendedor</span>
-                  </div>
-                </div>
-                <div className="formulario">
-                  <label>Transporte:</label>
+              <>
+                <div style={{display: "flex", justifyContent: "space-between"}} className="container-form-y-cupon">
+                  <form onSubmit={handleSubmitForm(onSubmitForm)} id="miFormulario">
+                    <div className="formulario">
+                      <div className="casilla-asterisk-container">
+                        <label>Email: </label>
+                        <span class="required-asterisk-cel">*</span>
+                      </div>
+                      <input
+                        type="email" 
+                        {...registerForm("email", {
+                          required: "Este campo es obligatorio.",
+                          pattern: {
+                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            message: "Correo electrónico inválido",
+                          },
+                        })}
+                      />
+                      <span class="required-asterisk">*</span>
+                      {errors.email && (
+                        <p className="obligatorio">{errors.email.message}</p>
+                      )}
+                    </div>
+                    <div className="formulario">
+                      <div className="casilla-asterisk-container">
+                        <label>Nombre completo:</label>
+                        <span class="required-asterisk-cel">*</span>
+                      </div>
+                      <input
+                        type="text"
+                        {...registerForm("nombreCompleto", { required: true })}
+                      /> <span class="required-asterisk">*</span>
+                      {errors.nombreCompleto && (
+                        <p className="obligatorio">Este campo es obligatorio.</p>
+                      )}
 
-                  <div
-                    onClick={() => {
-                      document.getElementById("transporte-radio1").click();
-                      setIsOtroSelected(false)
-                    }}
-                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
-                  >
-                    <input
-                      id="transporte-radio1"
-                      style={{ width: "fit-content", cursor: "pointer" }}
-                      type="radio"
-                      value="Correo Argentino"
-                      {...registerForm("forma_de_envio")}
-                      defaultChecked
-                    />
-                    <span>Correo Argentino</span>
-                  </div>
-                  <div></div>
+                    </div>
+                    <div className="formulario">
+                      <div className="casilla-asterisk-container">
+                        <label>Teléfono:</label>
+                        <span class="required-asterisk-cel">*</span>
+                      </div>
+                      <input
+                        type="tel"
+                        {...registerForm("telefono", { required: true })}
+                      /><span class="required-asterisk">*</span>
+                      {errors.telefono && (
+                        <p className="obligatorio">Este campo es obligatorio.</p>
+                      )}
+                    </div>
+                    <div className="formulario">
+                      <label>DNI:</label>
+                      <input
+                        type="text"
+                        {...registerForm("dni", { validate: validateDni })}
+                      />
+                      {errors.dni && <p className="obligatorio">Debe tener 8 dígitos.</p>}
+                    </div>
+                    <div className="formulario">
+                      <label>CUIT / CUIL:</label>
+                      <input
+                        type="text"
+                        {...registerForm("cuitCuil", { validate: validateCuit })}
+                      />
+                      {errors.cuitCuil && <p className="obligatorio">Debe tener 11 dígitos.</p>}
+                    </div>
+                    <div className="formulario">
+                      <label>Forma de Envío:</label>
+                      <div
+                        onClick={() => {
+                          document.getElementById("envio-radio1").click();
+                        }}
+                        style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                      >
+                        <input
+                          id="envio-radio1"
+                          style={{ width: "fit-content", cursor: "pointer" }}
+                          type="radio"
+                          value="DOMICILIO"
+                          {...registerForm("tipo_envio")}
+                          defaultChecked
+                        />
+                        <span>Envío a domicilio</span>
+                      </div>
+                      <div></div>
+                      <div
+                        onClick={() => {
+                          document.getElementById("envio-radio2").click();
+                        }}
+                        style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                      >
+                        <input
+                          id="envio-radio2"
+                          style={{ width: "fit-content", cursor: "pointer" }}
+                          type="radio"
+                          value="SUCURSAL"
+                          {...registerForm("tipo_envio")}
+                        />
+                        <span>Retiro en sucursal del transporte</span>
+                      </div>
+                      <div></div>
+                      <div
+                        onClick={() => {
+                          document.getElementById("envio-radio3").click();
+                        }}
+                        style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                      >
+                        <input
+                          id="envio-radio3"
+                          style={{ width: "fit-content", cursor: "pointer" }}
+                          type="radio"
+                          value="DEPOSITO"
+                          {...registerForm("tipo_envio")}
+                        />
+                        <span>Retiro en depósito del vendedor</span>
+                      </div>
+                    </div>
+                    <div className="formulario">
+                      <label>Transporte:</label>
 
-                  <div
-                    onClick={() => {
-                      document.getElementById("transporte-radio2").click();
-                      setIsOtroSelected(false)
-                    }}
-                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
-                  >
-                    <input
-                      id="transporte-radio2"
-                      style={{ width: "fit-content", cursor: "pointer" }}
-                      type="radio"
-                      value="Vía Cargo"
-                      {...registerForm("forma_de_envio")}
-                    />
-                    <span>Vía Cargo</span>
-                  </div>
-                  <div></div>
+                      <div
+                        onClick={() => {
+                          document.getElementById("transporte-radio1").click();
+                          setIsOtroSelected(false)
+                        }}
+                        style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                      >
+                        <input
+                          id="transporte-radio1"
+                          style={{ width: "fit-content", cursor: "pointer" }}
+                          type="radio"
+                          value="Correo Argentino"
+                          {...registerForm("forma_de_envio")}
+                          defaultChecked
+                        />
+                        <span>Correo Argentino</span>
+                      </div>
+                      <div></div>
 
-                  <div
-                    onClick={() => {
-                      document.getElementById("transporte-radio3").click();
-                      setIsOtroSelected(true)
-                    }}
-                    style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
-                  >
-                    <input
-                      id="transporte-radio3"
-                      style={{ width: "fit-content", cursor: "pointer" }}
-                      type="radio"
-                      value="OTRO"
-                      {...registerForm("forma_de_envio")}
-                    />
-                    <span>Otro: </span>
-                  </div>
-                  <div></div>
+                      <div
+                        onClick={() => {
+                          document.getElementById("transporte-radio2").click();
+                          setIsOtroSelected(false)
+                        }}
+                        style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                      >
+                        <input
+                          id="transporte-radio2"
+                          style={{ width: "fit-content", cursor: "pointer" }}
+                          type="radio"
+                          value="Vía Cargo"
+                          {...registerForm("forma_de_envio")}
+                        />
+                        <span>Vía Cargo</span>
+                      </div>
+                      <div></div>
 
-                  <input
-                    type="text"
-                    disabled={!isOtroSelected}
-                    {...registerForm("otro_transporte")}
-                  />
+                      <div
+                        onClick={() => {
+                          document.getElementById("transporte-radio3").click();
+                          setIsOtroSelected(true)
+                        }}
+                        style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+                      >
+                        <input
+                          id="transporte-radio3"
+                          style={{ width: "fit-content", cursor: "pointer" }}
+                          type="radio"
+                          value="OTRO"
+                          {...registerForm("forma_de_envio")}
+                        />
+                        <span>Otro: </span>
+                      </div>
+                      <div></div>
+
+                      <input
+                        type="text"
+                        disabled={!isOtroSelected}
+                        {...registerForm("otro_transporte")}
+                      />
+                    </div>
+                    <div className="formulario">
+                      <label>Dirección:</label>
+                      <input type="text" {...registerForm("direccion")} />
+                    </div>
+                    <div className="formulario">
+                      <label>Código Postal:</label>
+                      <input type="text" {...registerForm("cp")} />
+                    </div>
+                    <div className="formulario">
+                      <label>Ciudad:</label>
+                      <input type="text" {...registerForm("ciudad")} />
+                    </div>
+                    <div className="formulario">
+                      <label>Provincia:</label>
+                      <input type="text" {...registerForm("provincia")} />
+                    </div>
+                  </form>
+
+                  <div className="formulario" style={{flexDirection: "column", alignItems: "flex-end"}}>
+                    <label style={{width: "14rem", textAlign: "center"}}>CUPON DE DESCUENTO</label>
+                    <input style={{width: "14rem"}} type="text" value={claveCupon}  onChange={(e) => setClaveCupon(e.target.value)}/>
+                    <button className="enviar" style={{width: "14rem", margin: "0"}} onClick={() => handleCanjearCupon()}>
+                      Canjear
+                    </button>
+                    <div style={{width: "14rem"}}>
+                      <h5 style={{textAlign: "center"}}>Tienes 0% de descuento</h5>
+                    </div>
+                  </div>
                 </div>
-                <div className="formulario">
-                  <label>Dirección:</label>
-                  <input type="text" {...registerForm("direccion")} />
-                </div>
-                <div className="formulario">
-                  <label>Código Postal:</label>
-                  <input type="text" {...registerForm("cp")} />
-                </div>
-                <div className="formulario">
-                  <label>Ciudad:</label>
-                  <input type="text" {...registerForm("ciudad")} />
-                </div>
-                <div className="formulario">
-                  <label>Provincia:</label>
-                  <input type="text" {...registerForm("provincia")} />
-                </div>
+
                 <div className="container-enviar">
-                  <button className="enviar" type="submit">
+                  <button style={{ width: "14rem"}} className="enviar" type="submit" form="miFormulario">
                     Finalizar compra
                   </button>
                 </div>
-              </form>
+              </>
             ) : (
               <div className="carritoVacioContainer">
                 <h2 className="carritoVacio">El carrito está vacío...</h2>

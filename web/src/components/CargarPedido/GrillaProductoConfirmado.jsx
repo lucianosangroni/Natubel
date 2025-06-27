@@ -4,11 +4,13 @@ function GrillasProductosConfirmados({ articulos, flag_resumen }) {
     const [precioMinorista, setPrecioMinorista] = useState(0);
     const [precioMayorista, setPrecioMayorista] = useState(0);
     const [precioDistribuidor, setPrecioDistribuidor] = useState(0);
+    const [precioDeMarca, setPrecioDeMarca] = useState(0);
     
     useEffect(() => {
         let precioMinoristaActualizado = 0;
         let precioMayoristaActualizado = 0;
         let precioDistribuidorActualizado = 0;
+        let precioDeMarcaActualizado = 0;
 
         for (const art of articulos) {
             const claves = Object.keys(art.cantidades);
@@ -19,12 +21,14 @@ function GrillasProductosConfirmados({ articulos, flag_resumen }) {
                 precioMinoristaActualizado += cantidad * art.precio_minorista
                 precioMayoristaActualizado += cantidad * art.precio_mayorista
                 precioDistribuidorActualizado += cantidad * art.precio_distribuidor
+                precioDeMarcaActualizado += cantidad * art.precio_de_marca
             }
         }
 
         setPrecioMinorista(precioMinoristaActualizado)
         setPrecioMayorista(precioMayoristaActualizado)
         setPrecioDistribuidor(precioDistribuidorActualizado)
+        setPrecioDeMarca(precioDeMarcaActualizado)
     }, [articulos]);
 
     const formatearNumero = (numero) => {
@@ -49,6 +53,10 @@ function GrillasProductosConfirmados({ articulos, flag_resumen }) {
                             <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", color: "#000000", fontWeight: "bold"}}>
                                 <span>Precio Distribuidor: </span>
                                 <span>${formatearNumero(precioDistribuidor)}</span>
+                            </div>
+                            <div style={{display: "flex", justifyContent: "flex-start", gap: "1.8rem", color: "#000000", fontWeight: "bold"}}>
+                                <span>Precio de Marca: </span>
+                                <span>${formatearNumero(precioDeMarca)}</span>
                             </div>
                         </div>
                     </>

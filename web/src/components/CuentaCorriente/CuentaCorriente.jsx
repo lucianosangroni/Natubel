@@ -14,6 +14,7 @@ import ModalRemitoEditar from "./ModalRemitoEditar";
 import ModalFacturaEditar from "./ModalFacturaEditar";
 import ModalPagoEditar from "./ModalPagoEditar";
 import { useNavigate } from 'react-router-dom';
+import ModalPdfRemito from "./ModalPdfRemito";
 
 const CuentaCorriente = () => {
     const { email } = useParams();
@@ -33,6 +34,7 @@ const CuentaCorriente = () => {
     const [isPagoEditModalOpen, setIsPagoEditModalOpen] = useState(false);
     const [isRemitoModalOpen, setIsRemitoModalOpen] = useState(false);
     const [isRemitoEditModalOpen, setIsRemitoEditModalOpen] = useState(false);
+    const [isPdfRemitoModalOpen, setIsPdfRemitoModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
     const [selectedRowPago, setSelectedRowPago] = useState(null);
@@ -317,11 +319,11 @@ const CuentaCorriente = () => {
         });
     }
 
-    const generarPdfRemito = () => {
+    const generarPdfRemito = (tipo) => {
         setIsLoading(true);
-        
+
         const ventana = window.open(
-            `${apiUrl}/pdf/remito/${remitoExiste.pedido_id}`,
+            `${apiUrl}/pdf/remito/${tipo}/${remitoExiste.pedido_id}`,
             '_blank'
         );
         
@@ -1065,7 +1067,7 @@ const CuentaCorriente = () => {
                                     remitoExiste ? (
                                         <div style={{display: "flex", justifyContent: "center", marginBottom: "1rem"}}>
                                             <Button onClick={() => setIsRemitoEditModalOpen(true)} className="btnRemito" style={{width: "145px"}}>Editar Remito</Button>
-                                            <Button onClick={() => generarPdfRemito()} className="btnRemito" style={{width: "145px"}}>PDF Remito</Button>
+                                            <Button onClick={() => setIsPdfRemitoModalOpen(true)} className="btnRemito" style={{width: "145px"}}>PDF Remito</Button>
                                         </div>
                                     ) : (
                                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "1rem"}}>
@@ -1114,6 +1116,12 @@ const CuentaCorriente = () => {
                                 onClose={() => setIsRemitoEditModalOpen(false)}
                                 onSave={handleEditRemito}
                                 remitoEdit={remitoExiste}
+                            />
+                        )}
+                        {isPdfRemitoModalOpen && (
+                            <ModalPdfRemito
+                                onClose={() => setIsPdfRemitoModalOpen(false)}
+                                onSave={generarPdfRemito}
                             />
                         )}
                     </>

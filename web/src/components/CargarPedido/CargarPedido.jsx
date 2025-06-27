@@ -20,6 +20,7 @@ const CargarPedido = () => {
   const [productosConfirmados, setProductosConfirmados] = useState([]);
   const [cantidadesArticuloActual, setCantidadesArticuloActual] = useState({});
   const [selectedMarca, setSelectedMarca] = useState("todas");
+  const [marcaDelPedido, setMarcaDelPedido] = useState("todas");
   const [isLoading, setIsLoading] = useState(false)
 
   ////OBTENER ARTICULOS, CLIENTES Y PROVEEDORES DB
@@ -40,7 +41,25 @@ const CargarPedido = () => {
     setSelectedPedidor("");
   };
 
+  const handleChangeMarcaPedido = (marcaId) => {
+    if (productosConfirmados.length > 0) {
+        const confirmCambio = window.confirm(`Al comenzar un pedido a precio de marca perderas los articulos confirmados, ¿Estas seguro de hacerlo?`);
+        if (!confirmCambio) {
+            return;
+        }
+    }
+
+    setProductosConfirmados([])
+    setSelectedMarca(marcaId);
+    setMarcaDelPedido(marcaId)
+  }
+
   const handleChangeMarca = (marcaId) => {
+    if(marcaDelPedido !== "todas") {
+      alert("No se puede cambiar de marca al ser un pedido a precio de marca")
+      return;
+    }
+
     if (Object.keys(cantidadesArticuloActual).length > 0) {
         const confirmCambio = window.confirm(`El articulo actual no está confirmado, ¿Estas seguro que quieres cambiar de marca? al hacerlo perderás los datos del mismo`);
         if (!confirmCambio) {
@@ -89,6 +108,7 @@ const CargarPedido = () => {
         precio_minorista: articulo.precio_minorista,
         precio_mayorista: articulo.precio_mayorista,
         precio_distribuidor: articulo.precio_distribuidor,
+        precio_de_marca: articulo.precio_de_marca,
         productos: articulo.productos,
         numero_articulo: articulo.numero_articulo,
         cantidades,
@@ -126,17 +146,21 @@ const CargarPedido = () => {
         for (const clave of claves) {
           const cantidad = articulo.cantidades[clave];
 
-          switch (tipo_cliente) {
-            case 'MINORISTA':
-              precioTotal += cantidad * articulo.precio_minorista;
-              break;
-            case 'MAYORISTA':
-              precioTotal += cantidad * articulo.precio_mayorista;
-              break;
-            case 'DISTRIBUIDOR':
-              precioTotal += cantidad * articulo.precio_distribuidor;
-              break;
-            default: break;
+          if(marcaDelPedido !== "todas") {
+            precioTotal += cantidad * articulo.precio_de_marca;
+          } else {
+            switch (tipo_cliente) {
+              case 'MINORISTA':
+                precioTotal += cantidad * articulo.precio_minorista;
+                break;
+              case 'MAYORISTA':
+                precioTotal += cantidad * articulo.precio_mayorista;
+                break;
+              case 'DISTRIBUIDOR':
+                precioTotal += cantidad * articulo.precio_distribuidor;
+                break;
+              default: break;
+            }
           }
         }
       }
@@ -159,17 +183,21 @@ const CargarPedido = () => {
         const cantidad = articulo.cantidades[key] || 0;
 
         if (tipoPedidor === "cliente") {
-          switch (tipo_cliente) {
-            case 'MINORISTA':
-              precio_unitario = articulo.precio_minorista;
-              break;
-            case 'MAYORISTA':
-              precio_unitario = articulo.precio_mayorista;
-              break;
-            case 'DISTRIBUIDOR':
-              precio_unitario = articulo.precio_distribuidor;
-              break;
-            default: break;
+          if(marcaDelPedido !== "todas") {
+            precio_unitario = articulo.precio_de_marca;
+          } else {
+            switch (tipo_cliente) {
+              case 'MINORISTA':
+                precio_unitario = articulo.precio_minorista;
+                break;
+              case 'MAYORISTA':
+                precio_unitario = articulo.precio_mayorista;
+                break;
+              case 'DISTRIBUIDOR':
+                precio_unitario = articulo.precio_distribuidor;
+                break;
+              default: break;
+            }
           }
         }
 
@@ -332,9 +360,22 @@ const CargarPedido = () => {
               tipoPedidor === "cliente" ? "cliente" : "proveedor"
             }`
           }
-        />
+        /> 
       </div>
       
+      <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+        <h4>Pedido de Marca:</h4>
+        <select value={marcaDelPedido} onChange={(e) => handleChangeMarcaPedido(e.target.value)} style={{marginLeft: "1rem", marginTop: "1rem", marginBottom: "1rem"}}>
+          <option value="todas">-</option>
+          {marcasData.map((marca) => (
+              <option key={marca.id} value={marca.id}>
+                  {marca.nombre}
+              </option>
+          ))}
+        </select>
+      </div>
+      
+
       <section className="contenedor-tabla-grilla">
         <div style={{width: "20%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
           <select value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)} style={{marginLeft: "1rem", marginTop: "1rem", marginBottom: "1rem"}}>
