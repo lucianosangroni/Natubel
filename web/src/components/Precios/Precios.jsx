@@ -47,12 +47,16 @@ const Precios = () => {
                     nextInputId = `${articuloId}-mayorista`;
                 } else if (tipo === 'mayorista') {
                     nextInputId = `${articuloId}-distribuidor`;
+                } else if (tipo === 'distribuidor') {
+                    nextInputId = `${articuloId}-marca`;
                 }
             } else if (key === 'ArrowLeft') {
                 if (tipo === 'mayorista') {
                     nextInputId = `${articuloId}-minorista`;
                 } else if (tipo === 'distribuidor') {
                     nextInputId = `${articuloId}-mayorista`;
+                } else if (tipo === 'marca') {
+                    nextInputId = `${articuloId}-distribuidor`;
                 }
             } else if (key === 'ArrowDown') {
                 const nextIndex = data.findIndex(articulo => articulo.id === parseInt(articuloId)) + 1;
@@ -127,6 +131,8 @@ const Precios = () => {
                             articulo.precio_mayorista = parseFloat(value)
                         } else if (tipo === "distribuidor") {
                             articulo.precio_distribuidor = parseFloat(value)
+                        } else if (tipo === "marca") {
+                            articulo.precio_de_marca = parseFloat(value);
                         }
 
                         articulosCambiadosSet.add(articuloId);
@@ -144,7 +150,8 @@ const Precios = () => {
                     id: articuloCambiado.id,
                     precio_minorista: articuloCambiado.precio_minorista,
                     precio_mayorista: articuloCambiado.precio_mayorista,
-                    precio_distribuidor: articuloCambiado.precio_distribuidor
+                    precio_distribuidor: articuloCambiado.precio_distribuidor,
+                    precio_de_marca: articuloCambiado.precio_de_marca
                 }
 
                 requestData.push(articulo)
@@ -198,6 +205,7 @@ const Precios = () => {
                             <th id="articulo-grilla-elegido" style={{width: "200px"}}>Precio Minorista</th>
                             <th id="articulo-grilla-elegido" style={{width: "200px"}}>Precio Mayorista</th>
                             <th id="articulo-grilla-elegido" style={{width: "200px"}}>Precio Distribuidor</th>
+                            <th id="articulo-grilla-elegido" style={{width: "200px"}}>Precio de Marca</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -205,10 +213,12 @@ const Precios = () => {
                             const cantidadMinorista = cantidades[articulo.id + "-minorista"] || "";
                             const cantidadMayorista = cantidades[articulo.id + "-mayorista"] || "";
                             const cantidadDistribuidor = cantidades[articulo.id + "-distribuidor"] || "";
-
+                            const cantidadMarca = cantidades[articulo.id + "-marca"] || "";
+                            
                             inputRefs[articulo.id + "-minorista"] = React.createRef();
                             inputRefs[articulo.id + "-mayorista"] = React.createRef();
                             inputRefs[articulo.id + "-distribuidor"] = React.createRef();
+                            inputRefs[articulo.id + "-marca"] = React.createRef();
 
                             return (
                                 <tr key={index}>
@@ -244,6 +254,18 @@ const Precios = () => {
                                                 ref={inputRefs[articulo.id + "-distribuidor"]}
                                             />
                                             <span className="stock-label">&nbsp;(${articulo.precio_distribuidor})</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <input
+                                                style={{width: "80px"}}
+                                                type="text"
+                                                defaultValue={cantidadMarca}
+                                                onKeyDown={(e) => handleKeyDown(e, articulo.id + "-marca")}
+                                                ref={inputRefs[articulo.id + "-marca"]}
+                                            />
+                                            <span className="stock-label">&nbsp;(${articulo.precio_de_marca})</span>
                                         </div>
                                     </td>
                                 </tr>
