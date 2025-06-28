@@ -13,7 +13,8 @@ const updateItems = async (req, res) => {
                     {
                         precio_minorista: articulo.precio_minorista,
                         precio_mayorista: articulo.precio_mayorista,
-                        precio_distribuidor: articulo.precio_distribuidor
+                        precio_distribuidor: articulo.precio_distribuidor,
+                        precio_de_marca: articulo.precio_de_marca
                     }, 
                     {
                         where: { id: articulo.id }
