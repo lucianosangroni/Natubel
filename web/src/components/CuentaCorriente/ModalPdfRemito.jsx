@@ -35,6 +35,15 @@ function ModalPdfRemito({ onClose, onSave }) {
                             onChange={() => setTipo("Lody")}
                         />
                     </Form.Group>
+                    <Form.Group>
+                        <Form.Check
+                            inline
+                            type="radio"
+                            label="Maxima"
+                            checked={tipo === "Maxima"}
+                            onChange={() => setTipo("Maxima")}
+                        />
+                    </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>

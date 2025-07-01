@@ -977,6 +977,181 @@ const getRemitoLody = async (req, res) => {
 
         doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
 
+        doc.fontSize(8).fillColor("black").text('DOCUMENTO NO VALIDO COMO FACTURA', 440, 5);
+        doc.moveTo(430, 15).lineTo(612, 15).stroke('black');
+        doc.moveTo(430, 0).lineTo(430, 15).stroke('black');
+
+
+        doc.fontSize(10).fillColor("black").text('REMITO N°: ' + remito.numero_remito, 15, 10);
+        doc.fontSize(10).fillColor("black").text('PEDIDO N°: ' + pedido.numero_pedido, 105, 10);
+        const fechaPedido = new Date(pedido.createdAt);
+        const fechaPedidoFormateada = `${fechaPedido.getDate()}/${fechaPedido.getMonth() + 1}/${fechaPedido.getFullYear() % 100}`;
+        doc.fontSize(10).fillColor("black").text(`FECHA: ${fechaPedidoFormateada}`, 200, 10);
+        const fechaVencimiento = new Date(fechaPedido.getTime() + remito.dias_vencimiento * 24 * 60 * 60 * 1000);
+        const fechaVencimientoFormateada = `${fechaVencimiento.getDate()}/${fechaVencimiento.getMonth() + 1}/${fechaVencimiento.getFullYear() % 100}`;
+        doc.fontSize(10).fillColor("black").text(`VENCIMIENTO: ${fechaVencimientoFormateada}`, 290, 10);
+
+        doc.fontSize(10).fillColor("black").text('RAZON SOCIAL:', 15, 40)
+        doc.fontSize(10).fillColor("black").text(persona.nombre, 102, 40)
+        doc.moveTo(100, 50).lineTo(300, 50).stroke('black');
+        doc.fontSize(10).fillColor("black").text('Direc. de Entrega:', 15, 70)
+        doc.fontSize(10).fillColor("black").text(persona.direccion, 102, 70)
+        doc.moveTo(100, 80).lineTo(300, 80).stroke('black');
+        doc.fontSize(10).fillColor("black").text('CUIT:', 15, 100)
+        doc.fontSize(10).fillColor("black").text(persona.cuit_cuil, 102, 100)
+        doc.moveTo(100, 110).lineTo(300, 110).stroke('black');
+
+        let subtotal = 0;
+
+        for (const articulo of articulosAMostrar) {
+            subtotal += articulo.cantidad * articulo.precio
+        }
+
+        doc.rect(380, 40, 180, 17).fillAndStroke('dimgray', 'black');
+        doc.moveTo(380, 40).lineTo(380, 113).stroke('black');
+        doc.moveTo(380, 113).lineTo(560, 113).stroke('black');
+        doc.moveTo(560, 40).lineTo(560, 113).stroke('black');
+        doc.fontSize(10).fillColor("white").text('CANTIDAD DE CAJAS', 420, 45);
+        doc.fontSize(40).fillColor("black").text(remito.cantidad_cajas, (180 - doc.widthOfString(remito.cantidad_cajas.toString())) / 2 + 380, 70);
+
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('Articulo', 20, 145);
+        doc.fontSize(10).fillColor("black").text('Descripcion', 70, 145);
+        doc.fontSize(10).fillColor("black").text('Cantidad', 360, 145);
+        doc.fontSize(10).fillColor("black").text('Precio', 420, 145);
+        doc.fontSize(10).fillColor("black").text('Total', 500, 145);
+        doc.moveTo(18, 157).lineTo(570, 157).stroke('black');
+
+        let articuloHeight = 163;
+
+        for (const articulo of articulosAMostrar) {
+            doc.fontSize(10).fillColor("black").text(articulo.numero_articulo, 20, articuloHeight);
+            const descripcion = articulo.descripcion
+            if (descripcion === "") {
+                doc.fontSize(10).fillColor("black").text("-", 70, articuloHeight);
+            } else {
+                if (doc.widthOfString(descripcion) > 285) {
+                    let lengthThatFits = 0;
+                    let currentWidth = 0;
+                    while (currentWidth < 285 && lengthThatFits < descripcion.length) {
+                        currentWidth += doc.widthOfString(descripcion[lengthThatFits]);
+                        lengthThatFits++;
+                    }
+                    doc.fontSize(10).fillColor("black").text(descripcion.substring(0, lengthThatFits - 3) + '...', 70, articuloHeight);
+                } else {
+                    doc.fontSize(10).fillColor("black").text(descripcion, 70, articuloHeight);
+                }
+            }
+            doc.fontSize(10).fillColor("black").text(articulo.cantidad, 360, articuloHeight);
+            doc.fontSize(10).fillColor("black").text('$' + articulo.precio.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 420, articuloHeight);
+            doc.fontSize(10).fillColor("black").text('$' + (articulo.cantidad * articulo.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, articuloHeight);
+
+            articuloHeight += 17;
+        }
+
+        let totalesHeight = articuloHeight + 13;
+
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('SUBTOTAL', 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
+        totalesHeight+=15;
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('Descuento ' + remito.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) + "%", 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (subtotal * remito.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) + ")", 500, totalesHeight);
+        totalesHeight+=15;
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('SUBTOTAL', 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
+        totalesHeight+=15;
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('IVA Insc. 0.00%', 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$0,00', 500, totalesHeight);
+        totalesHeight+=15;
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('TOTAL', 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
+
+        doc.end();
+    } catch (e) {
+        console.log(e)
+        res.status(500).json({ message: 'Error al buscar los articulos' });
+    }
+}
+
+const getRemitoMaxima = async (req, res) => {
+    try {
+        const pedido_id = req.params.id
+
+        const remito = await remitoModel.findOne({ where: {pedido_id: pedido_id}} )
+        if (!remito) {
+            return res.status(404).json({ message: 'Remito no encontrado' });
+        }
+
+        const pedido = await pedidoModel.findByPk(pedido_id, {
+            include: [
+                {
+                  model: productoModel,
+                  through: {
+                    model: productoXPedidoModel,
+                    attributes: ['cantidad', 'precio_unitario'],
+                  },
+                },
+              ],
+        });
+        if (!pedido) {
+            return res.status(404).json({ message: 'Pedido no encontrado' });
+        }  
+
+        const persona = await personaModel.findByPk(pedido.persona_id);
+        if (!persona) {
+            return res.status(404).json({ message: 'Persona no encontrada' });
+        }
+
+        const articulosDelPedido = Array.from(new Set(pedido.productos.map((producto) => producto.articulo_id)))
+
+        const articulos = await articuloModel.findAll(
+            {
+                include: 
+                [
+                    {
+                        model: productoModel,
+                    }
+                ],
+                order: sequelize.literal("CAST(SUBSTRING_INDEX(numero_articulo, ' ', 1) AS UNSIGNED), SUBSTRING_INDEX(numero_articulo, ' ', -1) ASC")
+            }
+        )
+
+        const articulosAMostrar = articulos.map((articulo) => {
+            if(articulosDelPedido.includes(articulo.id)) {
+                let cantidad = 0;
+                let precio = 0;
+
+                for (const producto of articulo.productos) {
+                    const productoCoincidencia = pedido.productos.find((productoPedido) => productoPedido.id === producto.id)
+                    if(productoCoincidencia) {
+                        cantidad += productoCoincidencia.productos_x_pedido.cantidad
+                        precio = productoCoincidencia.productos_x_pedido.precio_unitario
+                    }
+                }
+
+                const newArticulo = {
+                    numero_articulo: articulo.numero_articulo,
+                    descripcion: articulo.descripcion,
+                    cantidad,
+                    precio
+                }
+
+                return newArticulo;
+            } else return null
+        }).filter((articulo) => articulo !== null)
+
+        const nombreArchivo = `${persona.nombre} Remito N°${remito.numero_remito}.pdf`
+
+        const doc = new PDFDocument();
+
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="${nombreArchivo}"`,
+        });
+
+        doc.pipe(res)
+
+        doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
+
         doc.fontSize(8).fillColor("black").text('DOCUMENTO NO VALIDO COMO FACTURA', 15, 11);
         doc.fontSize(10).fillColor("black").text('REMITO N°: ' + remito.numero_remito, 200, 10);
         doc.fontSize(10).fillColor("black").text('PEDIDO N°: ' + pedido.numero_pedido, 285, 10);
@@ -1655,4 +1830,4 @@ const formatearMonto = (numero) => {
     return numero;
 };
 
-module.exports = {getStockAdmin, getStockCliente, getNotaPedido, getRemitoNatubel, getRemitoLody, getCuentaCorriente, getHistorial, getImputacion};
+module.exports = {getStockAdmin, getStockCliente, getNotaPedido, getRemitoNatubel, getRemitoLody, getRemitoMaxima, getCuentaCorriente, getHistorial, getImputacion};
