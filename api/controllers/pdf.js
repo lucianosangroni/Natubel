@@ -1048,7 +1048,7 @@ const getRemitoLody = async (req, res) => {
             articuloHeight += 17;
         }
 
-        let totalesHeight = articuloHeight + 13;
+        let totalesHeight = 700;
 
         doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('SUBTOTAL', 400, totalesHeight);
         doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
@@ -1218,22 +1218,22 @@ const getRemitoMaxima = async (req, res) => {
             articuloHeight += 17;
         }
 
-        let totalesHeight = articuloHeight + 13;
+        let totalesHeight = 700;
 
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('SUBTOTAL', 20, totalesHeight);
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 120, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('SUBTOTAL', 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
         totalesHeight+=15;
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('Descuento ' + remito.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) + "%", 20, totalesHeight);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (subtotal * remito.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) + ")", 120, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('Descuento ' + remito.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) + "%", 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (subtotal * remito.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) + ")", 500, totalesHeight);
         totalesHeight+=15;
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('SUBTOTAL', 20, totalesHeight);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 120, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('SUBTOTAL', 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
         totalesHeight+=15;
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('IVA Insc. 0.00%', 20, totalesHeight);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('$0,00', 120, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('IVA Insc. 0.00%', 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$0,00', 500, totalesHeight);
         totalesHeight+=15;
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('TOTAL', 20, totalesHeight);
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 120, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('TOTAL', 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
 
         doc.end();
     } catch (e) {
