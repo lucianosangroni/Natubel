@@ -981,25 +981,11 @@ const getRemitoLody = async (req, res) => {
         doc.moveTo(430, 15).lineTo(612, 15).stroke('black');
         doc.moveTo(430, 0).lineTo(430, 15).stroke('black');
 
-
         doc.fontSize(10).fillColor("black").text('REMITO N°: ' + remito.numero_remito, 15, 10);
-        doc.fontSize(10).fillColor("black").text('PEDIDO N°: ' + pedido.numero_pedido, 105, 10);
-        const fechaPedido = new Date(pedido.createdAt);
-        const fechaPedidoFormateada = `${fechaPedido.getDate()}/${fechaPedido.getMonth() + 1}/${fechaPedido.getFullYear() % 100}`;
-        doc.fontSize(10).fillColor("black").text(`FECHA: ${fechaPedidoFormateada}`, 200, 10);
-        const fechaVencimiento = new Date(fechaPedido.getTime() + remito.dias_vencimiento * 24 * 60 * 60 * 1000);
-        const fechaVencimientoFormateada = `${fechaVencimiento.getDate()}/${fechaVencimiento.getMonth() + 1}/${fechaVencimiento.getFullYear() % 100}`;
-        doc.fontSize(10).fillColor("black").text(`VENCIMIENTO: ${fechaVencimientoFormateada}`, 290, 10);
-
-        doc.fontSize(10).fillColor("black").text('RAZON SOCIAL:', 15, 40)
-        doc.fontSize(10).fillColor("black").text(persona.nombre, 102, 40)
-        doc.moveTo(100, 50).lineTo(300, 50).stroke('black');
-        doc.fontSize(10).fillColor("black").text('Direc. de Entrega:', 15, 70)
-        doc.fontSize(10).fillColor("black").text(persona.direccion, 102, 70)
-        doc.moveTo(100, 80).lineTo(300, 80).stroke('black');
-        doc.fontSize(10).fillColor("black").text('CUIT:', 15, 100)
-        doc.fontSize(10).fillColor("black").text(persona.cuit_cuil, 102, 100)
-        doc.moveTo(100, 110).lineTo(300, 110).stroke('black');
+        doc.fontSize(10).fillColor("black").text('PEDIDO N°: ' + pedido.numero_pedido, 100, 10);
+        doc.fontSize(10).fillColor("black").text('RAZON SOCIAL: ' + persona.nombre, 15, 40)
+        doc.fontSize(10).fillColor("black").text('Direc. de Entrega: ' + persona.direccion, 15, 70)
+        doc.fontSize(10).fillColor("black").text('CUIT: ' + persona.cuit_cuil, 15, 100)
 
         let subtotal = 0;
 
@@ -1007,12 +993,21 @@ const getRemitoLody = async (req, res) => {
             subtotal += articulo.cantidad * articulo.precio
         }
 
-        doc.rect(380, 40, 180, 17).fillAndStroke('dimgray', 'black');
-        doc.moveTo(380, 40).lineTo(380, 113).stroke('black');
-        doc.moveTo(380, 113).lineTo(560, 113).stroke('black');
-        doc.moveTo(560, 40).lineTo(560, 113).stroke('black');
-        doc.fontSize(10).fillColor("white").text('CANTIDAD DE CAJAS', 420, 45);
-        doc.fontSize(40).fillColor("black").text(remito.cantidad_cajas, (180 - doc.widthOfString(remito.cantidad_cajas.toString())) / 2 + 380, 70);
+        doc.rect(350, 40, 120, 17).fillAndStroke('dimgray', 'black');
+        doc.moveTo(350, 40).lineTo(350, 113).stroke('black');
+        doc.moveTo(350, 113).lineTo(470, 113).stroke('black');
+        doc.moveTo(470, 40).lineTo(470, 113).stroke('black');
+        doc.fontSize(10).fillColor("white").text('CANTIDAD DE CAJAS', 358, 45);
+        doc.fontSize(40).fillColor("black").text(remito.cantidad_cajas, (120 - doc.widthOfString(remito.cantidad_cajas.toString())) / 2 + 350, 70);
+
+        const fechaPedido = new Date(pedido.createdAt);
+        const fechaPedidoFormateada = `${fechaPedido.getDate()}/${fechaPedido.getMonth() + 1}/${fechaPedido.getFullYear() % 100}`;
+        doc.fontSize(10).fillColor("black").text(`FECHA`, 525, 50);
+        doc.fontSize(10).fillColor("black").text(`${fechaPedidoFormateada}`, 525, 62);
+        const fechaVencimiento = new Date(fechaPedido.getTime() + remito.dias_vencimiento * 24 * 60 * 60 * 1000);
+        const fechaVencimientoFormateada = `${fechaVencimiento.getDate()}/${fechaVencimiento.getMonth() + 1}/${fechaVencimiento.getFullYear() % 100}`;
+        doc.fontSize(10).fillColor("black").text(`VENCIMIENTO`, 510, 80);
+        doc.fontSize(10).fillColor("black").text(`${fechaVencimientoFormateada}`, 525, 92);
 
         doc.fontSize(10).fillColor("black").font('Helvetica').text('Articulo', 20, 145);
         doc.fontSize(10).fillColor("black").text('Descripcion', 70, 145);
@@ -1020,6 +1015,10 @@ const getRemitoLody = async (req, res) => {
         doc.fontSize(10).fillColor("black").text('Precio', 420, 145);
         doc.fontSize(10).fillColor("black").text('Total', 500, 145);
         doc.moveTo(18, 157).lineTo(570, 157).stroke('black');
+        doc.moveTo(65, 140).lineTo(65, 684).stroke('black');
+        doc.moveTo(355, 140).lineTo(355, 684).stroke('black');
+        doc.moveTo(415, 140).lineTo(415, 684).stroke('black');
+        doc.moveTo(495, 140).lineTo(495, 684).stroke('black');
 
         let articuloHeight = 163;
 
