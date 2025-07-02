@@ -100,8 +100,25 @@ const getStockAdmin = async (req, res) => {
             const total = articulo.productos.reduce((sum, producto) => sum + producto.stock, 0);
 
             const talles = tallesDesordenados.sort((a, b) => {
+                const rangoRegex = /^(\d+)\/(\d+)(?:\s+.*)?$/i;
+
+                const parseRango = (x) => {
+                    const match = x.match(rangoRegex);
+                    if (!match) return null;
+                    return {
+                        start: parseInt(match[1]),
+                        end: parseInt(match[2]),
+                        texto: x.substring(match[0].length).trim()
+                    };
+                };
+
+                const rangoA = parseRango(a);
+                const rangoB = parseRango(b);
+
                 if (!isNaN(a) && !isNaN(b)) {
                     return a - b;
+                } else if (rangoA && rangoB) {
+                    return rangoA.start - rangoB.start;
                 }
                 
                 const talleOrden = { 's': 1, 'm': 2, 'l': 3, 'xl': 4, 'xxl': 5, 'xxxl': 6, 'xxxxl': 7, 'xxxxxl': 8 };
@@ -301,8 +318,25 @@ const getStockCliente = async (req, res) => {
             const coloresDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
 
             const talles = tallesDesordenados.sort((a, b) => {
+                const rangoRegex = /^(\d+)\/(\d+)(?:\s+.*)?$/i;
+
+                const parseRango = (x) => {
+                    const match = x.match(rangoRegex);
+                    if (!match) return null;
+                    return {
+                        start: parseInt(match[1]),
+                        end: parseInt(match[2]),
+                        texto: x.substring(match[0].length).trim()
+                    };
+                };
+
+                const rangoA = parseRango(a);
+                const rangoB = parseRango(b);
+
                 if (!isNaN(a) && !isNaN(b)) {
                     return a - b;
+                } else if (rangoA && rangoB) {
+                    return rangoA.start - rangoB.start;
                 }
                 
                 const talleOrden = { 's': 1, 'm': 2, 'l': 3, 'xl': 4, 'xxl': 5, 'xxxl': 6, 'xxxxl': 7, 'xxxxxl': 8 };
@@ -589,8 +623,25 @@ const getNotaPedido = async (req, res) => {
             const total = articulo.productos.reduce((sum, producto) => sum + producto.cantidad, 0);
 
             const talles = tallesDesordenados.sort((a, b) => {
+                const rangoRegex = /^(\d+)\/(\d+)(?:\s+.*)?$/i;
+
+                const parseRango = (x) => {
+                    const match = x.match(rangoRegex);
+                    if (!match) return null;
+                    return {
+                        start: parseInt(match[1]),
+                        end: parseInt(match[2]),
+                        texto: x.substring(match[0].length).trim()
+                    };
+                };
+
+                const rangoA = parseRango(a);
+                const rangoB = parseRango(b);
+
                 if (!isNaN(a) && !isNaN(b)) {
                     return a - b;
+                } else if (rangoA && rangoB) {
+                    return rangoA.start - rangoB.start;
                 }
                 
                 const talleOrden = { 's': 1, 'm': 2, 'l': 3, 'xl': 4, 'xxl': 5, 'xxxl': 6, 'xxxxl': 7, 'xxxxxl': 8 };

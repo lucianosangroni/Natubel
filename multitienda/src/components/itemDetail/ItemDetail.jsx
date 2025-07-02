@@ -60,11 +60,26 @@ const ItemDetail = ({ item }) => {
       XXXXL: 8,
       XXXXXL: 9,
     };
+    const rangoRegex = /^(\d+)\/(\d+)(?:\s+.*)?$/i;
+    const parseRango = (x) => {
+      const match = x.match(rangoRegex);
+      if (!match) return null;
+      return {
+        start: parseInt(match[1]),
+        end: parseInt(match[2]),
+        texto: x.substring(match[0].length).trim(),
+      };
+    };
+
+    const rangoA = parseRango(a);
+    const rangoB = parseRango(b);
 
     if (isNumberA && isNumberB) {
       return a - b;
     } else if (isNumberA || isNumberB) {
       return isNumberA ? 1 : -1;
+    } else if (rangoA && rangoB) {
+      return rangoA.start - rangoB.start;
     } else {
       const aMayus = a.toUpperCase();
       const bMayus = b.toUpperCase();

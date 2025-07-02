@@ -25,11 +25,26 @@ function GrillaMayorista({ articulo }) {
             const isNumberA = !isNaN(a);
             const isNumberB = !isNaN(b);
             const talleOrden = { 'UNICO': 1 ,'S': 2, 'M': 3, 'L': 4, 'XL': 5, 'XXL': 6, 'XXXL': 7, 'XXXXL': 8, 'XXXXXL': 9 };
-
+            const rangoRegex = /^(\d+)\/(\d+)(?:\s+.*)?$/i;
+            const parseRango = (x) => {
+                const match = x.match(rangoRegex);
+                if (!match) return null;
+                return {
+                    start: parseInt(match[1]),
+                    end: parseInt(match[2]),
+                    texto: x.substring(match[0].length).trim(),
+                };
+            };
+            
+            const rangoA = parseRango(a);
+            const rangoB = parseRango(b);
+            
             if (isNumberA && isNumberB) {
                 return a - b;
             }  else if (isNumberA || isNumberB) {
                 return isNumberA ? 1 : -1;
+            } else if (rangoA && rangoB) {
+                return rangoA.start - rangoB.start;
             } else {
                 const aMayus = a.toUpperCase()
                 const bMayus = b.toUpperCase()
