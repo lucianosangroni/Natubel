@@ -224,7 +224,8 @@ const FormularioCompra = () => {
         ciudad: formulario.ciudad.trim() !== '' ? formulario.ciudad : cliente.ciudad,
         provincia: formulario.provincia.trim() !== '' ? formulario.provincia : cliente.provincia,
         persona_id: cliente.persona_id,
-        descuento: cliente.descuento
+        descuento: cliente.descuento,
+        tipo_pdf_remito: cliente.tipo_pdf_remito
       }
 
       fetch(`${apiUrl}/clientes/${cliente.id}`, {
@@ -270,7 +271,8 @@ const FormularioCompra = () => {
         codigo_postal: formulario.cp,
         ciudad: formulario.ciudad,
         provincia: formulario.provincia,
-        descuento: 0
+        descuento: 0,
+        tipo_pdf_remito: "Natubel"
       }
     
       fetch(`${apiUrl}/clientes`, {
