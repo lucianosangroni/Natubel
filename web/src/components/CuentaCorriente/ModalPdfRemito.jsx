@@ -1,8 +1,12 @@
-import { useState  } from "react";
+import { useState, useEffect  } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
-function ModalPdfRemito({ onClose, onSave }) {
+function ModalPdfRemito({ onClose, onSave, persona }) {
     const [tipo, setTipo] = useState("Natubel")
+
+    useEffect(() => {
+        if(persona.tipo_pdf_remito) setTipo(persona.tipo_pdf_remito)
+    }, [persona]);
 
     const handleGenerarPdf = () => {
         onSave(tipo)

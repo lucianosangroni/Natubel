@@ -478,6 +478,7 @@ const HistorialCuentaCorriente = () => {
                 <ModalPdfRemito
                     onClose={() => setIsPdfRemitoModalOpen(false)}
                     onSave={generarPdfRemito}
+                    persona={persona}
                 />
             )}
         </>

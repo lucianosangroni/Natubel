@@ -76,7 +76,7 @@ const createItem = async (req, res) => {
     try {
         req = matchedData(req);
 
-        const { nombre, email, telefono, direccion, dni, cuit_cuil, tipo_cliente, tipo_envio, forma_de_envio, codigo_postal, ciudad, provincia, descuento } = req
+        const { nombre, email, telefono, direccion, dni, cuit_cuil, tipo_cliente, tipo_envio, forma_de_envio, codigo_postal, ciudad, provincia, descuento, tipo_pdf_remito } = req
 
         const existingPersonaEmail = await personaModel.findOne({ where: { email: email } })
         if(existingPersonaEmail) {
@@ -125,7 +125,8 @@ const createItem = async (req, res) => {
                 codigo_postal,
                 ciudad,
                 provincia,
-                descuento
+                descuento,
+                tipo_pdf_remito
             }
         )
         
@@ -141,7 +142,7 @@ const updateItem = async (req, res) => {
         req = matchedData(req);
 
         const cliente_id = req.id
-        const { nombre, email, telefono, direccion, persona_id, dni, cuit_cuil, tipo_cliente, tipo_envio, forma_de_envio, codigo_postal, ciudad, provincia, descuento } = req
+        const { nombre, email, telefono, direccion, persona_id, dni, cuit_cuil, tipo_cliente, tipo_envio, forma_de_envio, codigo_postal, ciudad, provincia, descuento, tipo_pdf_remito } = req
 
         // Validar si la persona existe antes de intentar actualizarla
         const personaExiste = await personaModel.findByPk(persona_id);
@@ -198,7 +199,8 @@ const updateItem = async (req, res) => {
                 codigo_postal,
                 ciudad,
                 provincia,
-                descuento
+                descuento,
+                tipo_pdf_remito
             },
             {
                 where: { id: cliente_id }

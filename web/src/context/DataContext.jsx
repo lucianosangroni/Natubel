@@ -177,6 +177,7 @@ export const DataProviderAdmin = ({ children }) => {
                                                             ciudad: dataResult.ciudad,
                                                             provincia: dataResult.provincia,
                                                             descuento: dataResult.descuento,
+                                                            tipo_pdf_remito: dataResult.tipo_pdf_remito,
                                                             tipo_envio: dataResult.tipo_envio,
                                                             forma_de_envio: dataResult.forma_de_envio,
                                                             email: dataResult.persona.email,

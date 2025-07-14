@@ -33,6 +33,10 @@ const Cliente = sequelize.define(
           type: DataTypes.FLOAT,
           allowNull: false,
         },
+        tipo_pdf_remito: {
+          type: DataTypes.ENUM('Natubel', 'Lody', 'Maxima'),
+          defaultValue: "Natubel",
+        },
         flag_activo: {
           type: DataTypes.BOOLEAN,
           defaultValue: true,

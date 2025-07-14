@@ -71,6 +71,11 @@ export const COLUMNSCLIENTES = [
     width: 'auto',
 },
 {
+    Header: "PDF",
+    accessor:"tipo_pdf_remito",
+    width: 'auto',
+},
+{
     Header: "",
     accessor:"cuenta-corriente",
     width: 'auto',

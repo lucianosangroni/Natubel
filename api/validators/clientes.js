@@ -14,6 +14,7 @@ const validatorCreateItem = [
     check("ciudad").exists().isString(),
     check("provincia").exists().isString(),
     check("descuento").exists().isFloat().custom((descuento) => descuento >= 0  && descuento <= 100),
+    check("tipo_pdf_remito").exists().isIn(["Natubel", "Lody", "Maxima"]),
     (req, res, next) => {
         try {
             validationResult(req).throw()
@@ -40,6 +41,7 @@ const validatorUpdateItem = [
     check("provincia").exists().isString(),
     check("descuento").exists().isFloat().custom((descuento) => descuento >= 0  && descuento <= 100),
     check("persona_id").exists().isInt().custom((persona_id) => persona_id > 0),
+    check("tipo_pdf_remito").exists().isIn(["Natubel", "Lody", "Maxima"]),
     (req, res, next) => {
         try {
             validationResult(req).throw()

@@ -1122,6 +1122,7 @@ const CuentaCorriente = () => {
                             <ModalPdfRemito
                                 onClose={() => setIsPdfRemitoModalOpen(false)}
                                 onSave={generarPdfRemito}
+                                persona={persona}
                             />
                         )}
                     </>

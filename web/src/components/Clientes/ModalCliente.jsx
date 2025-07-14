@@ -15,6 +15,7 @@ function ModalCliente({ onAddClient, refreshCliente, onClienteRefresheado }) {
       ciudad: "",
       provincia: "",
       descuento: "",
+      tipo_pdf_remito: "Natubel",
       forma_de_envio: "",
       tipo_envio: "DOMICILIO",
       email: "",
@@ -34,6 +35,7 @@ function ModalCliente({ onAddClient, refreshCliente, onClienteRefresheado }) {
       ciudad: "",
       provincia: "",
       descuento: "",
+      tipo_pdf_remito: "Natubel",
       forma_de_envio: "",
       tipo_envio: "DOMICILIO",
       email: "",
@@ -216,6 +218,19 @@ function ModalCliente({ onAddClient, refreshCliente, onClienteRefresheado }) {
                 <option value="MINORISTA">MINORISTA</option>
                 <option value="MAYORISTA">MAYORISTA</option>
                 <option value="DISTRIBUIDOR">DISTRIBUIDOR</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>PDF Remito Predeterminado</Form.Label>
+              <Form.Control
+                as="select"
+                value={newClient.tipo_pdf_remito}
+                onChange={(e) => {
+                  setNewClient({ ...newClient, tipo_pdf_remito: e.target.value });
+                }}>
+                <option value="Natubel">Natubel</option>
+                <option value="Lody">Lody</option>
+                <option value="Maxima">Maxima</option>
               </Form.Control>
             </Form.Group>
           </Form>

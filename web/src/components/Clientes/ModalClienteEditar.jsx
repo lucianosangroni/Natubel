@@ -192,6 +192,19 @@ function ModalClienteEditar({ data, onClose, onSave }) {
               <option value="DISTRIBUIDOR">DISTRIBUIDOR</option>
             </Form.Control>
           </Form.Group>
+          <Form.Group>
+            <Form.Label>PDF Remito Predeterminado</Form.Label>
+            <Form.Control
+              as="select"
+              value={editedData.tipo_pdf_remito}
+              onChange={(e) => {
+                setEditedData({ ...editedData, tipo_pdf_remito: e.target.value });
+              }}>
+              <option value="Natubel">Natubel</option>
+              <option value="Lody">Lody</option>
+              <option value="Maxima">Maxima</option>
+            </Form.Control>
+          </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>
