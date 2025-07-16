@@ -4,8 +4,6 @@ const updateItem = async (req, res) => {
     try {
         const pedido_id = req.params.id
         const { razon_cancelado } = req.body
-        
-        console.log(razon_cancelado)
 
         // Validar si el pedido existe antes de intentar actualizarla
         const pedido = await pedidoModel.findByPk(pedido_id);

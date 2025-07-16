@@ -1,4 +1,4 @@
-const { articuloModel, productoModel, pedidoModel, personaModel, productoXPedidoModel, remitoModel, clienteModel, marcaModel, pagoModel, facturaModel, imputacionModel } = require("../modelos");
+const { articuloModel, productoModel, pedidoModel, personaModel, productoXPedidoModel, remitoModel, clienteModel, marcaModel, pagoModel, facturaModel, imputacionModel, cuponModel } = require("../modelos");
 const PDFDocument = require('pdfkit');
 const { sequelize } = require("../config/dbConnect");
 
@@ -776,6 +776,8 @@ const getRemitoNatubel = async (req, res) => {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }  
 
+        const cupon = await cuponModel.findByPk(pedido.cupon_id);
+
         const persona = await personaModel.findByPk(pedido.persona_id);
         if (!persona) {
             return res.status(404).json({ message: 'Persona no encontrada' });
@@ -863,15 +865,15 @@ const getRemitoNatubel = async (req, res) => {
 
         doc.fontSize(10).fillColor("black").text('PEDIDO N°: ' + pedido.numero_pedido, 15, 117);
 
-        for (let i = 0; i <= 32; i++) {
+        for (let i = 0; i <= 31; i++) {
             doc.moveTo(18, 140 + 17 * i).lineTo(570, 140 + 17 * i).stroke('black');
         }
-        doc.moveTo(18, 140).lineTo(18, 684).stroke('black');
-        doc.moveTo(570, 140).lineTo(570, 684).stroke('black');
-        doc.moveTo(68, 140).lineTo(68, 684).stroke('black');
-        doc.moveTo(358, 140).lineTo(358, 684).stroke('black');
-        doc.moveTo(418, 140).lineTo(418, 684).stroke('black');
-        doc.moveTo(498, 140).lineTo(498, 684).stroke('black');
+        doc.moveTo(18, 140).lineTo(18, 667).stroke('black');
+        doc.moveTo(570, 140).lineTo(570, 667).stroke('black');
+        doc.moveTo(68, 140).lineTo(68, 667).stroke('black');
+        doc.moveTo(358, 140).lineTo(358, 667).stroke('black');
+        doc.moveTo(418, 140).lineTo(418, 667).stroke('black');
+        doc.moveTo(498, 140).lineTo(498, 667).stroke('black');
         doc.fontSize(10).fillColor("black").text('Articulo', 20, 145);
         doc.fontSize(10).fillColor("black").text('Descripcion', 70, 145);
         doc.fontSize(10).fillColor("black").text('Cantidad', 360, 145);
@@ -881,7 +883,7 @@ const getRemitoNatubel = async (req, res) => {
         let articuloHeight = 163;
         let lineStartHeight = 157;
         let lineEndHeight = 174;
-        let subtotal = 0;
+        const subtotal = cupon ? pedido.precio_total / (1 - cupon.descuento / 100) : pedido.precio_total;
 
         for (const articulo of articulosAMostrar) {
             doc.fontSize(10).fillColor("black").text(articulo.numero_articulo, 20, articuloHeight);
@@ -908,8 +910,6 @@ const getRemitoNatubel = async (req, res) => {
             articuloHeight += 17;
             lineStartHeight += 17;
             lineEndHeight += 17;
-
-            subtotal += articulo.cantidad * articulo.precio
         }
     
         doc.rect(50, 700, 122, 17).fillAndStroke('dimgray', 'black');
@@ -919,27 +919,33 @@ const getRemitoNatubel = async (req, res) => {
         doc.fontSize(10).fillColor("white").text('CANTIDAD DE CAJAS', 60, 705);
         doc.fontSize(40).fillColor("black").text(remito.cantidad_cajas, (122 - doc.widthOfString(remito.cantidad_cajas.toString())) / 2 + 50, 730);
 
-        doc.rect(370, 695, 100, 62).fillAndStroke('lightgrey', 'lightgrey');
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('SUBTOTAL', 375, 700);
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 480, 700);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('Descuento:  ' + remito.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) + "%", 375, 715);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (subtotal * remito.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) + ")", 480, 715);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('SUBTOTAL', 375, 730);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 480, 730);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('IVA Insc.:       0.00%', 375, 745);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('$0,00', 480, 745);
-        doc.rect(370, 756, 100, 15).fillAndStroke('black', 'black');
-        doc.fontSize(10).fillColor("white").font('Helvetica-Bold').text('TOTAL', 404, 760);
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 480, 760);
-        doc.moveTo(370, 695).lineTo(565, 695).stroke('black');
-        doc.moveTo(370, 711).lineTo(565, 711).stroke('black');
-        doc.moveTo(370, 726).lineTo(565, 726).stroke('black');
-        doc.moveTo(370, 741).lineTo(565, 741).stroke('black');
-        doc.moveTo(370, 756).lineTo(565, 756).stroke('black');
-        doc.moveTo(370, 771).lineTo(565, 771).stroke('black');
-        doc.moveTo(370, 695).lineTo(370, 771).stroke('black');
-        doc.moveTo(565, 695).lineTo(565, 771).stroke('black');
-        doc.moveTo(470, 695).lineTo(470, 771).stroke('black');
+        doc.rect(370, 675, 100, 92).fillAndStroke('lightgrey', 'lightgrey');
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('SUBTOTAL', 375, 680);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 480, 680);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('Cupón:         ' + (cupon? cupon.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) : "0,00") + "%", 375, 695);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (cupon? (subtotal * cupon.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) : "0,00") + ")", 480, 695);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('SUBTOTAL', 375, 710);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + pedido.precio_total.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 480, 710);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('Descuento:  ' + remito.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) + "%", 375, 725);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (pedido.precio_total * remito.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) + ")", 480, 725);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('SUBTOTAL', 375, 740);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + (pedido.precio_total - (pedido.precio_total * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 480, 740);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('IVA Insc.:       0,00%', 375, 755);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$0,00', 480, 755);
+        doc.rect(370, 766, 100, 15).fillAndStroke('black', 'black');
+        doc.fontSize(10).fillColor("white").font('Helvetica-Bold').text('TOTAL', 404, 770);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + (pedido.precio_total - (pedido.precio_total * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 480, 770);
+        doc.moveTo(370, 675).lineTo(565, 675).stroke('black');
+        doc.moveTo(370, 691).lineTo(565, 691).stroke('black');
+        doc.moveTo(370, 705).lineTo(565, 705).stroke('black');
+        doc.moveTo(370, 721).lineTo(565, 721).stroke('black');
+        doc.moveTo(370, 736).lineTo(565, 736).stroke('black');
+        doc.moveTo(370, 751).lineTo(565, 751).stroke('black');
+        doc.moveTo(370, 766).lineTo(565, 766).stroke('black');
+        doc.moveTo(370, 781).lineTo(565, 781).stroke('black');
+        doc.moveTo(370, 675).lineTo(370, 781).stroke('black');
+        doc.moveTo(565, 675).lineTo(565, 781).stroke('black');
+        doc.moveTo(470, 675).lineTo(470, 781).stroke('black');
 
         doc.end();
     } catch (e) {
@@ -971,6 +977,8 @@ const getRemitoLody = async (req, res) => {
         if (!pedido) {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }  
+
+        const cupon = await cuponModel.findByPk(pedido.cupon_id);
 
         const persona = await personaModel.findByPk(pedido.persona_id);
         if (!persona) {
@@ -1038,11 +1046,7 @@ const getRemitoLody = async (req, res) => {
         doc.fontSize(10).fillColor("black").text('Direc. de Entrega: ' + persona.direccion, 15, 70)
         doc.fontSize(10).fillColor("black").text('CUIT: ' + persona.cuit_cuil, 15, 100)
 
-        let subtotal = 0;
-
-        for (const articulo of articulosAMostrar) {
-            subtotal += articulo.cantidad * articulo.precio
-        }
+        const subtotal = cupon ? pedido.precio_total / (1 - cupon.descuento / 100) : pedido.precio_total;
 
         doc.rect(350, 40, 120, 17).fillAndStroke('dimgray', 'black');
         doc.moveTo(350, 40).lineTo(350, 113).stroke('black');
@@ -1066,10 +1070,10 @@ const getRemitoLody = async (req, res) => {
         doc.fontSize(10).fillColor("black").text('Precio', 420, 145);
         doc.fontSize(10).fillColor("black").text('Total', 500, 145);
         doc.moveTo(18, 157).lineTo(570, 157).stroke('black');
-        doc.moveTo(65, 140).lineTo(65, 684).stroke('black');
-        doc.moveTo(355, 140).lineTo(355, 684).stroke('black');
-        doc.moveTo(415, 140).lineTo(415, 684).stroke('black');
-        doc.moveTo(495, 140).lineTo(495, 684).stroke('black');
+        doc.moveTo(65, 140).lineTo(65, 667).stroke('black');
+        doc.moveTo(355, 140).lineTo(355, 667).stroke('black');
+        doc.moveTo(415, 140).lineTo(415, 667).stroke('black');
+        doc.moveTo(495, 140).lineTo(495, 667).stroke('black');
 
         let articuloHeight = 163;
 
@@ -1098,22 +1102,28 @@ const getRemitoLody = async (req, res) => {
             articuloHeight += 17;
         }
 
-        let totalesHeight = 700;
+        let totalesHeight = 680;
 
         doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('SUBTOTAL', 400, totalesHeight);
         doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
         totalesHeight+=15;
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('Descuento ' + remito.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) + "%", 400, totalesHeight);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (subtotal * remito.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) + ")", 500, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('Cupón: ' + (cupon? cupon.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) : "0,00") + "%", 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (cupon? (subtotal * cupon.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) : "0,00") + ")", 500, totalesHeight);
         totalesHeight+=15;
         doc.fontSize(10).fillColor("black").font('Helvetica').text('SUBTOTAL', 400, totalesHeight);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + pedido.precio_total.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
         totalesHeight+=15;
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('IVA Insc. 0.00%', 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('Descuento ' + remito.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) + "%", 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (pedido.precio_total * remito.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) + ")", 500, totalesHeight);
+        totalesHeight+=15;
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('SUBTOTAL', 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + (pedido.precio_total - (pedido.precio_total * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
+        totalesHeight+=15;
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('IVA Insc. 0,00%', 400, totalesHeight);
         doc.fontSize(10).fillColor("black").font('Helvetica').text('$0,00', 500, totalesHeight);
         totalesHeight+=15;
         doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('TOTAL', 400, totalesHeight);
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + (pedido.precio_total - (pedido.precio_total * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
 
         doc.end();
     } catch (e) {
@@ -1145,6 +1155,8 @@ const getRemitoMaxima = async (req, res) => {
         if (!pedido) {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }  
+
+        const cupon = await cuponModel.findByPk(pedido.cupon_id);
 
         const persona = await personaModel.findByPk(pedido.persona_id);
         if (!persona) {
@@ -1224,11 +1236,7 @@ const getRemitoMaxima = async (req, res) => {
         doc.fontSize(10).fillColor("black").text(persona.direccion, 102, 100)
         doc.moveTo(100, 110).lineTo(300, 110).stroke('black');
 
-        let subtotal = 0;
-
-        for (const articulo of articulosAMostrar) {
-            subtotal += articulo.cantidad * articulo.precio
-        }
+        const subtotal = cupon ? pedido.precio_total / (1 - cupon.descuento / 100) : pedido.precio_total;
 
         doc.fontSize(12).fillColor("black").font('Helvetica-Bold').text(`CANTIDAD DE CAJAS: ${remito.cantidad_cajas}`, 380, 73);
 
@@ -1268,22 +1276,28 @@ const getRemitoMaxima = async (req, res) => {
             articuloHeight += 17;
         }
 
-        let totalesHeight = 700;
+        let totalesHeight = 680;
 
         doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('SUBTOTAL', 400, totalesHeight);
         doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
         totalesHeight+=15;
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('Descuento ' + remito.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) + "%", 400, totalesHeight);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (subtotal * remito.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) + ")", 500, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('Cupón: ' + (cupon? cupon.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) : "0,00") + "%", 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (cupon? (subtotal * cupon.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) : "0,00") + ")", 500, totalesHeight);
         totalesHeight+=15;
         doc.fontSize(10).fillColor("black").font('Helvetica').text('SUBTOTAL', 400, totalesHeight);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + pedido.precio_total.toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
         totalesHeight+=15;
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('IVA Insc. 0.00%', 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('Descuento ' + remito.descuento.toLocaleString('es-AR', { minimumFractionDigits: 2 }) + "%", 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('($' + (pedido.precio_total * remito.descuento / 100).toLocaleString('es-AR', { minimumFractionDigits: 2 }) + ")", 500, totalesHeight);
+        totalesHeight+=15;
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('SUBTOTAL', 400, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('$' + (pedido.precio_total - (pedido.precio_total * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
+        totalesHeight+=15;
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('IVA Insc. 0,00%', 400, totalesHeight);
         doc.fontSize(10).fillColor("black").font('Helvetica').text('$0,00', 500, totalesHeight);
         totalesHeight+=15;
         doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('TOTAL', 400, totalesHeight);
-        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + (subtotal - (subtotal * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('$' + (pedido.precio_total - (pedido.precio_total * remito.descuento / 100)).toLocaleString('es-AR', { minimumFractionDigits: 2 }), 500, totalesHeight);
 
         doc.end();
     } catch (e) {

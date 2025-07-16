@@ -239,6 +239,7 @@ const CargarPedido = () => {
       precio_total,
       es_proveedor: tipoPedidor === "proveedor",
       productos,
+      cupon_id: null,
       creador
     };
 

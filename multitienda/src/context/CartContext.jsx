@@ -62,12 +62,24 @@ export const CartProvider = ({ children }) => {
     return carrito.reduce((acc, prod) => acc + prod.cantidad, 0);
   };
 
-  const precioTotal = (tipoPrecio) => {
-    switch(tipoPrecio) {
-      case "MINORISTA": return precioTotalMinorista();
-      case "MAYORISTA": return precioTotalMayorista();
-      case "DISTRIBUIDOR": return precioTotalDistribuidor();
+  const precioTotal = (tipoPrecio, descuento) => {
+    let base = 0;
+
+    switch (tipoPrecio) {
+      case "MINORISTA":
+        base = precioTotalMinorista();
+        break;
+      case "MAYORISTA":
+        base = precioTotalMayorista();
+        break;
+      case "DISTRIBUIDOR":
+        base = precioTotalDistribuidor();
+        break;
     }
+
+    if (descuento === 0) return base;
+
+    return base * (1 - descuento / 100);
   };
 
   const precioTotalMinorista = () => {

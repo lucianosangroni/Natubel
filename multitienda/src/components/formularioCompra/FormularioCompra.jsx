@@ -42,6 +42,7 @@ const FormularioCompra = () => {
   const [ cliente, setCliente ] = useState(null)
   const [isOtroSelected, setIsOtroSelected] = useState(false);
   const [claveCupon, setClaveCupon] = useState("")
+  const [descuentoCupon, setDescuentoCupon] = useState({descuento: 0, id: null})
 
   useEffect(() => {
     const nuevoCarrito = verificarStock();
@@ -322,9 +323,10 @@ const FormularioCompra = () => {
 
     const requestDataPedido = {
       persona_id,
-      precio_total: parseFloat(precioTotal(tipoPrecios())),
+      precio_total: parseFloat(precioTotal(tipoPrecios(), descuentoCupon.descuento)),
       es_proveedor: false,
       creador: "BenkaLenceria.com.ar",
+      cupon_id: descuentoCupon.id,
       productos
     }
 
@@ -415,7 +417,39 @@ const FormularioCompra = () => {
   }
 
   const handleCanjearCupon = () => {
-    console.log(claveCupon)
+    fetch(`${apiUrl}/cupones/${claveCupon}`, {
+        headers: {
+            Authorization: `Bearer ${tokenBearer}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Error en la solicitud GET para el cupon");
+        }
+        return response.json();
+    })
+    .then(cuponData => {
+      if(cuponData.message === 'El cupón se canjeó con éxito') {
+        toast.success(cuponData.message, {
+          position: "top-center",
+          hideProgressBar: true,
+          autoClose: 1300, 
+          closeButton: false,
+        });
+
+        setDescuentoCupon({descuento: cuponData.descuento, id: cuponData.id})
+      } else {
+        toast.error(cuponData.message, {
+            position: "top-center",
+            hideProgressBar: true,
+            autoClose: 1300, 
+            closeButton: false,
+        });
+      }
+    })
+    .catch(error => {
+        console.error("Error en la solicitud GET para el cupon:", error);
+    });  
   }
 
   return (
@@ -662,13 +696,13 @@ const FormularioCompra = () => {
                   </form>
 
                   <div className="formulario" style={{flexDirection: "column", alignItems: "flex-end"}}>
-                    <label style={{width: "14rem", textAlign: "center"}}>CUPON DE DESCUENTO</label>
+                    <label style={{width: "14rem", textAlign: "center"}}>CUPÓN DE DESCUENTO</label>
                     <input style={{width: "14rem"}} type="text" value={claveCupon}  onChange={(e) => setClaveCupon(e.target.value)}/>
-                    <button className="enviar" style={{width: "14rem", margin: "0"}} onClick={() => handleCanjearCupon()}>
+                    <button className="enviar" style={{width: "14rem", margin: "0"}} onClick={() => handleCanjearCupon()} disabled={descuentoCupon.descuento != 0}>
                       Canjear
                     </button>
                     <div style={{width: "14rem"}}>
-                      <h5 style={{textAlign: "center"}}>Tienes 0% de descuento</h5>
+                      <h5 style={{textAlign: "center"}}>Tienes {descuentoCupon.descuento}% de descuento</h5>
                     </div>
                   </div>
                 </div>

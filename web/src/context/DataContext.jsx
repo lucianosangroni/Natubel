@@ -296,6 +296,7 @@ export const DataProviderAdmin = ({ children }) => {
                                                                 precio_total: dataResult.precio_total,
                                                                 tipo: persona.es_proveedor ? "PROVEEDOR" : "CLIENTE",
                                                                 razon_cancelado: dataResult.razon_cancelado,
+                                                                cupon_id: dataResult.cupon_id,
                                                                 articulos: newArticulosPedido,
                                                                 productos: dataResult.productos,
                                                                 creador: dataResult.creador
@@ -502,6 +503,7 @@ export const DataProviderAdmin = ({ children }) => {
                     precio_total: dataResult.precio_total,
                     tipo: proveedor ? "PROVEEDOR" : "CLIENTE",
                     razon_cancelado: dataResult.razon_cancelado,
+                    cupon_id: dataResult.cupon_id,
                     articulos: newArticulosPedido,
                     productos: dataResult.productos,
                     creador: dataResult.creador

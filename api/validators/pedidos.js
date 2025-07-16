@@ -5,6 +5,7 @@ const validatorCreateItem = [
     check("precio_total").exists().isFloat().custom((precio_total) => precio_total >= 0),
     check("es_proveedor").exists().isBoolean(),
     check("creador").exists().isString().notEmpty(),
+    check("cupon_id").exists(),
     check("productos").exists().isArray({ min: 1 }).custom((productos) => productos.every((producto) => 
         typeof producto.producto_id === "number" && producto.producto_id > 0 &&
         typeof producto.cantidad === "number" && producto.cantidad > 0 &&

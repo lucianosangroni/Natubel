@@ -1,6 +1,7 @@
 const { sequelize } = require("../config/dbConnect")
 const { DataTypes } = require("sequelize")
-const Persona = require("./persona")
+const Persona = require("./persona");
+const Cupon = require("./cupon");
 
 const Pedido = sequelize.define(
     "pedido",
@@ -33,5 +34,6 @@ const Pedido = sequelize.define(
 )
 
 Persona.hasMany(Pedido, { foreignKey: "persona_id" });
+Cupon.hasMany(Pedido, { foreignKey: "cupon_id" })
 
 module.exports = Pedido;

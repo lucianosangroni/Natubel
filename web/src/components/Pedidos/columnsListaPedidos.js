@@ -1,4 +1,4 @@
-export const COLUMNSPEDIDOS = [
+export const COLUMNSPEDIDOS = (cuponesData) => [
     {
         Header: "Nº Pedido",
         accessor: "numero_pedido",
@@ -42,6 +42,22 @@ export const COLUMNSPEDIDOS = [
         Header: "Observaciones",
         accessor: "razon_cancelado",
         width: 'auto',
+        Cell: ({ row }) => {
+        const { cupon_id, razon_cancelado } = row.original;
+        const cupon = cuponesData.find(c => c.id === cupon_id);
+
+        if (cupon) {
+            return (
+                <>
+                    {`Cupón: ${cupon.clave} - ${cupon.descuento}%`}
+                    <br />
+                    {razon_cancelado || ''}
+                </>
+            );
+        }
+
+        return razon_cancelado || '';
+        },
     },
 ]
 

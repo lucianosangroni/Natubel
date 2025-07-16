@@ -11,8 +11,8 @@ import { useData } from "../../context/DataContext";
 import { useLocation } from "react-router-dom";
 
 const HistorialPedidos = () => {
-  const { isInitialLoading, pedidosData, refreshPedidos, refreshPedidoCancelado } = useData()
-  const columns = useMemo(() => COLUMNSPEDIDOS, []);
+  const { isInitialLoading, pedidosData, refreshPedidos, refreshPedidoCancelado, cuponesData } = useData()
+  const columns = useMemo(() => COLUMNSPEDIDOS(cuponesData), [cuponesData]);
   const [data, setData] = useState(pedidosData);
   const [selectedRow, setSelectedRow] = useState(null);
   const location = useLocation();
