@@ -1,4 +1,4 @@
-const { pedidoModel, productoModel, productoXPedidoModel, clienteModel, articuloModel, facturaModel, remitoModel } = require("../modelos");
+const { pedidoModel, productoModel, productoXPedidoModel, clienteModel, articuloModel, facturaModel, remitoModel, cuponModel } = require("../modelos");
 
 const updateItem = async (req, res) => {
     try {
@@ -194,6 +194,9 @@ const updateItem = async (req, res) => {
 
             precioTotal += precioProducto
         }
+
+        const cupon = await cuponModel.findByPk(pedido.cupon_id);
+        if(cupon) precioTotal = precioTotal * (1 - cupon.descuento / 100)
 
         await pedidoModel.update({
             precio_total: precioTotal

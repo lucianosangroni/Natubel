@@ -11,7 +11,7 @@ import { Button } from "react-bootstrap";
 import { apiUrl, bearerToken } from "../../config/config";
 
 const EditarPedido = () => {
-    const { isInitialLoading, pedidosData, articulosData, clientesData, marcasData } = useData()
+    const { isInitialLoading, pedidosData, articulosData, clientesData, marcasData, cuponesData } = useData()
     const { numero_pedido } = useParams();
     const [ articulosDataActualizados, setArticulosDataActualizados ] = useState([])
     const [ articulosDataActualizadosInit, setArticulosDataActualizadosInit ] = useState([])
@@ -28,11 +28,16 @@ const EditarPedido = () => {
     const navigate = useNavigate();
     const [ isLoading, setIsLoading ] = useState(false)
     const [ precioNuevoTotal, setPrecioNuevoTotal ] = useState(0)
+    const [ precioSubtotal, setPrecioSubtotal ] = useState(0)
+    const [ descuentoCupon, setDescuentoCupon ] = useState(0)
 
     useEffect(() => {
         if(pedidosData.length > 0) {
             const selectedPedido = pedidosData.find(pedido => pedido.numero_pedido === parseInt(numero_pedido))
             if(selectedPedido) {
+                const cupon = cuponesData.find(c => c.id === selectedPedido.cupon_id)
+                if(cupon) setDescuentoCupon(cupon.descuento)
+
                 setTipoPrecio(clientesData.find(cli => cli.nombre === selectedPedido.persona_nombre).tipo_cliente)
                 setPedido(selectedPedido)
                 setSelectedArticuloOriginal(selectedPedido.articulos[0])
@@ -91,10 +96,11 @@ const EditarPedido = () => {
         }
 
         setProductosConfirmadosGrilla(productos)
-        setPrecioNuevoTotal(calcularPrecio(productos))
+        setPrecioSubtotal(calcularPrecio(productos, false))
+        setPrecioNuevoTotal(calcularPrecio(productos, true))
     }, [productosConfirmados])
 
-    const calcularPrecio = (productos) => {
+    const calcularPrecio = (productos, flag_aplicar_descuento) => {
         let precioTotal = 0;
 
         for(const producto of productos) {
@@ -104,7 +110,7 @@ const EditarPedido = () => {
             precioTotal += precio_articulo * producto.productos_x_pedido.cantidad
         }
 
-        return precioTotal
+        return flag_aplicar_descuento ? precioTotal * (1 - descuentoCupon / 100) : precioTotal;
     }
 
     const getProductosConfirmadosIniciales = () => {
@@ -400,9 +406,19 @@ const EditarPedido = () => {
                                     productos={pedido.productos}
                                     />
                                 )}
-                                <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000", fontWeight: "bold", marginTop: "2.5rem"}}>
-                                    <span>Precio Total: </span>
-                                    <span>${formatearNumero(pedido.precio_total)}</span>
+                                <div style={{display: "flex", flexDirection: "column", gap: "0.75rem", marginRight: "3rem", marginTop: "1rem"}}>
+                                    <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000"}}>
+                                        <span>Subtotal: </span>
+                                        <span>${formatearNumero(pedido.precio_total / (1 - descuentoCupon / 100))}</span>
+                                    </div>
+                                    <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000"}}>
+                                        <span>Cupón: </span>
+                                        <span>{formatearNumero(descuentoCupon)}%</span>
+                                    </div>
+                                    <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000", fontWeight: "bold"}}>
+                                        <span>Precio Total: </span>
+                                        <span>${formatearNumero(pedido.precio_total)}</span>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -421,9 +437,19 @@ const EditarPedido = () => {
                                         )}
                                     </>
                                 )}
-                                <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000", fontWeight: "bold", marginTop: "2.5rem"}}>
-                                    <span>Precio Total: </span>
-                                    <span>${formatearNumero(precioNuevoTotal)}</span>
+                                <div style={{display: "flex", flexDirection: "column", gap: "0.75rem", marginRight: "3rem", marginTop: "1rem"}}>
+                                    <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000"}}>
+                                        <span>Subtotal: </span>
+                                        <span>${formatearNumero(precioSubtotal)}</span>
+                                    </div>
+                                    <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000"}}>
+                                        <span>Cupón: </span>
+                                        <span>{formatearNumero(descuentoCupon)}%</span>
+                                    </div>
+                                    <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000", fontWeight: "bold"}}>
+                                        <span>Precio Total: </span>
+                                        <span>${formatearNumero(precioNuevoTotal)}</span>
+                                    </div>
                                 </div>
                             </div>
                         </section>
