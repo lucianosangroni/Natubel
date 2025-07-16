@@ -345,7 +345,7 @@ const Carrito = () => {
               {cliente === null && selectedPrecios === "DISTRIBUIDOR" ? (
                 "Precio total: X"
               ) : (
-                `Precio total: $${formatearNumero(precioTotal(selectedPrecios))}`
+                `Precio total: $${formatearNumero(precioTotal(selectedPrecios, 0))}`
               )}
             </p>
           </div>
