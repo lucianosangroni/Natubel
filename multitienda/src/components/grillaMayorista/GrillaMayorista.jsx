@@ -55,7 +55,7 @@ function GrillaMayorista({ articulo }) {
         const inicializarCantidades = {};
         coloresInit.forEach(color => {
             tallesInit.forEach(talle => {
-                const productKey = `${color}-${talle}`;
+                const productKey = `${color}|-|${talle}`;
                 inicializarCantidades[productKey] = 0;
             });
         });
@@ -70,7 +70,7 @@ function GrillaMayorista({ articulo }) {
 
         for (const parProducto of cantidadesConStock) {
             const cantidad = parProducto[1];
-            const [color, talle] = parProducto[0].split('-');
+            const [color, talle] = parProducto[0].split('|-|');
             agregarAlCarrito(articulo.numero_articulo, color, talle, cantidad)
         }
 
@@ -103,7 +103,7 @@ function GrillaMayorista({ articulo }) {
                                 (producto) => producto.color === color && producto.talle === talle
                             );
                             const stock = matchingProduct ? matchingProduct.stock : 0;
-                            const productKey = `${color}-${talle}`;
+                            const productKey = `${color}|-|${talle}`;
                             const cantidad = cantidades[productKey] || 0;
                             
                             const handleBotonMenos = () => {

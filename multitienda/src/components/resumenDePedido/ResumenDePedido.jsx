@@ -30,7 +30,7 @@ function ResumenDePedido() {
                 };
             }
 
-            const clave = `${producto.color.toUpperCase()}-${producto.talle.toUpperCase()}`;
+            const clave = `${producto.color.toUpperCase()}|-|${producto.talle.toUpperCase()}`;
 
             if (nuevaListaArticulos[numeroArticulo].cantidades[clave]) {
                 nuevaListaArticulos[numeroArticulo].cantidades[clave] += producto.cantidad;
@@ -90,7 +90,7 @@ function ResumenDePedido() {
                             })
                             const totalPedido = talles.reduce((total, talle) => {
                                 const sumaTalle = colores.reduce((acc, color) => {
-                                    const key = `${color}-${talle}`;
+                                    const key = `${color}|-|${talle}`;
                                     return acc + (articulo.cantidades[key] || 0);
                                 }, 0);
                                 return total + sumaTalle;
@@ -112,7 +112,7 @@ function ResumenDePedido() {
                                             <tr key={index}>
                                                 <td>{color}</td>
                                                 {talles.map((talle, talleIndex) => {
-                                                    const key = `${color}-${talle}`;
+                                                    const key = `${color}|-|${talle}`;
                                                     const cantidad = articulo.cantidades[key] || "";
                                                     return (
                                                         <td key={talleIndex}>

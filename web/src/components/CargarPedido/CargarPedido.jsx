@@ -179,7 +179,7 @@ const CargarPedido = () => {
 
     for (const articulo of productosConfirmados) {
       for (const producto of articulo.productos) {
-        const key = `${producto.color}-${producto.talle}`;
+        const key = `${producto.color}|-|${producto.talle}`;
         const cantidad = articulo.cantidades[key] || 0;
 
         if (tipoPedidor === "cliente") {
@@ -287,7 +287,7 @@ const CargarPedido = () => {
 
       if (articuloIndex !== -1) {
         for (const producto of articulo.productos) {
-          const key = `${producto.color}-${producto.talle}`;
+          const key = `${producto.color}|-|${producto.talle}`;
           const cantidad = articulo.cantidades[key] || 0;
 
           const productoIndex = newData[articuloIndex].productos.findIndex(

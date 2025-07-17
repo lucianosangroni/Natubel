@@ -34,7 +34,7 @@ const updateItem = async (req, res) => {
         
         for(const articulo of articulos) {
             for(const [productKey, cantidad] of Object.entries(articulo.cantidades)) {
-                const [color, talle] = productKey.split('-');
+                const [color, talle] = productKey.split('|-|');
                 
                 const productoExistente = await productoModel.findOne({
                     where: {

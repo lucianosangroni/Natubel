@@ -95,7 +95,7 @@ function GrillasProductosConfirmados({ articulos, flag_resumen }) {
 
                         const totalPedido = talles.reduce((total, talle) => {
                             const sumaTalle = colores.reduce((acc, color) => {
-                                const key = `${color}-${talle}`;
+                                const key = `${color}|-|${talle}`;
                                 return acc + (articulo.cantidades[key] || 0);
                             }, 0);
                             return total + sumaTalle;
@@ -118,7 +118,7 @@ function GrillasProductosConfirmados({ articulos, flag_resumen }) {
                                         <tr key={index}>
                                             <td className="table-cell-grilla">{color}</td>
                                             {talles.map((talle, talleIndex) => {
-                                                const key = `${color}-${talle}`;
+                                                const key = `${color}|-|${talle}`;
                                                 const cantidad = articulo.cantidades[key] || "";
                                                 return (
                                                     <td key={talleIndex}>

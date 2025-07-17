@@ -81,13 +81,17 @@ const EditarPedido = () => {
     }, [pedido, articulosDataActualizados])
 
     useEffect(() => {
+        console.log(productosConfirmados)
+
         const productos = []
 
         for(const articulo of productosConfirmados) {
             const articulo_id = articulosDataActualizadosInit.find(art => art.numero_articulo === articulo.numero_articulo).id
 
             for(const [productKey, cantidad] of Object.entries(articulo.cantidades)) {
-                const [color, talle] = productKey.split('-');
+                const [color, talle] = productKey.split('|-|');
+                console.log(color)
+                console.log(talle)
                 const productos_x_pedido = {cantidad}
 
                 const prod = {
@@ -136,7 +140,7 @@ const EditarPedido = () => {
 
             for(const producto of pedido.productos) {
                 if(producto.articulo_id === articulo.id) {
-                    const productKey = `${producto.color}-${producto.talle}`
+                    const productKey = `${producto.color}|-|${producto.talle}`
                     cantidades[productKey] = producto.productos_x_pedido.cantidad
                 }
             }

@@ -36,7 +36,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
     useEffect(() => {
         setCantidades({});
         onSetCantidades({});
-        const initialProductKey = `${colores[0]}-${talles[0]}`;
+        const initialProductKey = `${colores[0]}|-|${talles[0]}`;
         inputRefs[initialProductKey].current.focus();
     }, [articulo]);
 
@@ -77,8 +77,8 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
             const newCantidad = (String(cantidades[productKey]) || "").slice(0, -1);
             handleCantidadChange(productKey, stock, newCantidad)
         } else if (key === "ArrowRight" || key === "ArrowLeft" || key === "ArrowUp" || key === "ArrowDown") {
-            const rowIndex = colores.indexOf(productKey.split('-')[0]);
-            const colIndex = talles.indexOf(productKey.split('-')[1]);
+            const rowIndex = colores.indexOf(productKey.split('|-|')[0]);
+            const colIndex = talles.indexOf(productKey.split('|-|')[1]);
     
             let nextRowIndex, nextColIndex;
             if (key === "ArrowRight") {
@@ -96,7 +96,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
             }
     
             if (colores[nextRowIndex] && talles[nextColIndex]) {
-                const nextProductKey = `${colores[nextRowIndex]}-${talles[nextColIndex]}`;
+                const nextProductKey = `${colores[nextRowIndex]}|-|${talles[nextColIndex]}`;
                 inputRefs[nextProductKey].current.focus();
             }
         }
@@ -135,7 +135,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
                                 (producto) => producto.color === color && producto.talle === talle
                             );
                             const stock = matchingProduct ? matchingProduct.stock : 0;
-                            const productKey = `${color}-${talle}`;
+                            const productKey = `${color}|-|${talle}`;
                             const cantidad = cantidades[productKey] || "";
 
                             inputRefs[productKey] = React.createRef();
