@@ -247,8 +247,6 @@ const ItemDetail = ({ item }) => {
               </form>
             </div>
 
-            <span>{selectedStock} unidades disponibles</span>
-
             <ItemCount
               cantidad={cantidad}
               handleSumar={handleSumar}
