@@ -23,6 +23,11 @@ const Pedido = sequelize.define(
             type: DataTypes.STRING,
             defaultValue: null
         },
+        flag_de_marca: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
+        },
         creador: {
             type: DataTypes.STRING,
             allowNull: false

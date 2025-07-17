@@ -240,6 +240,7 @@ const CargarPedido = () => {
       es_proveedor: tipoPedidor === "proveedor",
       productos,
       cupon_id: null,
+      flag_de_marca: marcaDelPedido !== "todas",
       creador
     };
 

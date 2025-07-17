@@ -34,7 +34,7 @@ const createItem = async (req, res) => {
     try {
         req = matchedData(req);
 
-        const { persona_id, precio_total, es_proveedor, productos, cupon_id, creador } = req
+        const { persona_id, precio_total, es_proveedor, productos, cupon_id, flag_de_marca, creador } = req
 
         if(!es_proveedor) {
             for (const producto of productos) {
@@ -53,6 +53,7 @@ const createItem = async (req, res) => {
                 precio_total,
                 estado: "PEDIDO",
                 cupon_id,
+                flag_de_marca,
                 creador
             }
         )

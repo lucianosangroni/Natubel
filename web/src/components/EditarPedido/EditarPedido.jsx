@@ -28,7 +28,7 @@ const EditarPedido = () => {
     const navigate = useNavigate();
     const [ isLoading, setIsLoading ] = useState(false)
     const [ precioNuevoTotal, setPrecioNuevoTotal ] = useState(0)
-    const [ precioSubtotal, setPrecioSubtotal ] = useState(0)
+    const [ precioNuevoSubtotal, setPrecioNuevoSubtotal ] = useState(0)
     const [ descuentoCupon, setDescuentoCupon ] = useState(0)
 
     useEffect(() => {
@@ -55,6 +55,12 @@ const EditarPedido = () => {
             setArticulosDataActualizadosInit(articulosConStockDelPedido)
             setArticulosDataActualizados(articulosConStockDelPedido)
             setSelectedArticulo(articulosConStockDelPedido[0])
+
+            if(pedido.flag_de_marca) {
+                const articuloParaMarca = articulosData.find(art => art.numero_articulo === pedido.articulos[0].numero_articulo)
+                const marcaDelPedido = marcasData.find(marca => marca.id === articuloParaMarca.marca_id)
+                setSelectedMarca(marcaDelPedido.id)
+            }
         }
     }, [pedido, articulosData])
 
@@ -96,7 +102,7 @@ const EditarPedido = () => {
         }
 
         setProductosConfirmadosGrilla(productos)
-        setPrecioSubtotal(calcularPrecio(productos, false))
+        setPrecioNuevoSubtotal(calcularPrecio(productos, false))
         setPrecioNuevoTotal(calcularPrecio(productos, true))
     }, [productosConfirmados])
 
@@ -105,7 +111,14 @@ const EditarPedido = () => {
 
         for(const producto of productos) {
             const articulo = articulosData.find(art => art.id === producto.articulo_id)
-            const precio_articulo = tipoPrecio === "MINORISTA" ? articulo.precio_minorista : tipoPrecio === "MAYORISTA" ? articulo.precio_mayorista : articulo.precio_distribuidor
+            let precio_articulo = 0;
+            
+            if(pedido.flag_de_marca) {
+                precio_articulo = articulo.precio_de_marca;
+            } else {
+                precio_articulo = tipoPrecio === "MINORISTA" ? articulo.precio_minorista : tipoPrecio === "MAYORISTA" ? articulo.precio_mayorista : articulo.precio_distribuidor
+            }
+            
 
             precioTotal += precio_articulo * producto.productos_x_pedido.cantidad
         }
@@ -440,7 +453,7 @@ const EditarPedido = () => {
                                 <div style={{display: "flex", flexDirection: "column", gap: "0.75rem", marginRight: "3rem", marginTop: "1rem"}}>
                                     <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000"}}>
                                         <span>Subtotal: </span>
-                                        <span>${formatearNumero(precioSubtotal)}</span>
+                                        <span>${formatearNumero(precioNuevoSubtotal)}</span>
                                     </div>
                                     <div style={{display: "flex", justifyContent: "flex-start", gap: "0.5rem", whiteSpace: "nowrap", color: "#000000"}}>
                                         <span>Cupón: </span>
@@ -474,7 +487,7 @@ const EditarPedido = () => {
                     </div>
                     <section className="contenedor-tabla-grilla-editar-pedido-carga">
                         <div style={{width: "20%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-                            <select value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)} style={{marginLeft: "1rem", marginTop: "1rem", marginBottom: "1rem"}}>
+                            <select disabled={pedido.flag_de_marca} value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)} style={{marginLeft: "1rem", marginTop: "1rem", marginBottom: "1rem"}}>
                                 <option value="todas">Todas las marcas</option>
                                 {marcasData.map((marca) => (
                                     <option key={marca.id} value={marca.id}>

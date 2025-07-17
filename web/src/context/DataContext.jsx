@@ -297,6 +297,7 @@ export const DataProviderAdmin = ({ children }) => {
                                                                 tipo: persona.es_proveedor ? "PROVEEDOR" : "CLIENTE",
                                                                 razon_cancelado: dataResult.razon_cancelado,
                                                                 cupon_id: dataResult.cupon_id,
+                                                                flag_de_marca: dataResult.flag_de_marca,
                                                                 articulos: newArticulosPedido,
                                                                 productos: dataResult.productos,
                                                                 creador: dataResult.creador
@@ -504,6 +505,7 @@ export const DataProviderAdmin = ({ children }) => {
                     tipo: proveedor ? "PROVEEDOR" : "CLIENTE",
                     razon_cancelado: dataResult.razon_cancelado,
                     cupon_id: dataResult.cupon_id,
+                    flag_de_marca: dataResult.flag_de_marca,
                     articulos: newArticulosPedido,
                     productos: dataResult.productos,
                     creador: dataResult.creador
