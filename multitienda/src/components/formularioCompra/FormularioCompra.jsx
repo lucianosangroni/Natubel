@@ -326,6 +326,7 @@ const FormularioCompra = () => {
       precio_total: parseFloat(precioTotal(tipoPrecios(), descuentoCupon.descuento)),
       es_proveedor: false,
       creador: "BenkaLenceria.com.ar",
+      flag_de_marca: false,
       cupon_id: descuentoCupon.id,
       productos
     }
