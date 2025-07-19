@@ -45,7 +45,7 @@ const HistorialCuentaCorriente = () => {
                     if (!flagCliente) {
                         return {
                             id: factura.id,
-                            numero_pedido: factura.pedido_id,
+                            numero_pedido: factura.numero_factura,
                             numero_remito: "-",
                             flag_imputada: factura.flag_imputada,
                             a_pagar: factura.monto,
@@ -375,7 +375,7 @@ const HistorialCuentaCorriente = () => {
                                         <table className="tableContainerSinPaginacion">
                                             <thead>
                                                 <tr>
-                                                    <th>N° Pedido</th>
+                                                    <th>N° {flagCliente ? "Pedido" : "Factura"}</th>
                                                     <th>N° Remito</th>
                                                     <th>Fecha</th>
                                                     <th>Total</th>

@@ -69,7 +69,7 @@ const Imputacion = () => {
                             onClick={() => handleVerPedido(factura.pedido_id)}
                         >
                             {factura.pedido_id}
-                        </span>) : factura.pedido_id,
+                        </span>) : factura.numero_factura,
                 numero_remito,
                 fecha: formatearFechaPago(factura.fecha),
                 total,

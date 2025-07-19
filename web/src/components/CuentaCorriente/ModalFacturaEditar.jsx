@@ -2,29 +2,22 @@ import { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { useData } from "../../context/DataContext";
 
 function ModalFacturaEditar({ data, onClose, onSave }) {
     const [editedData, setEditedData] = useState(data);
     const [fechaInicial, setFechaInicial] = useState(null)
     const [fechaMaxima, setFechaMaxima] = useState(null)
-    const { pedidosData } = useData()
-    const [numeroPedidoMax, setNumeroPedidoMax] = useState(null)
 
     useEffect(() => {
         const fechaHoy = new Date().toISOString().split("T")[0];
         setFechaMaxima(fechaHoy);
 
-        
         const fechaFormateada = convertDateToInputFormat(editedData.fecha);
         setEditedData((prevData) => ({
             ...prevData,
             fecha: fechaFormateada,
         }));
         setFechaInicial(fechaFormateada);
-
-        const numeroPedidoMaximo = pedidosData.reduce((max, pedido) => { return pedido.numero_pedido > max ? pedido.numero_pedido : max;}, 0);
-        setNumeroPedidoMax(numeroPedidoMaximo)
     }, []);
 
     const convertDateToInputFormat = (date) => {
@@ -34,11 +27,11 @@ function ModalFacturaEditar({ data, onClose, onSave }) {
 
     const handleSave = () => {
         const montoValido = parseFloat(editedData.total);
-        const numeroPedidoValido = parseInt(editedData.numero_pedido);
+        const numeroFacturaValido = parseInt(editedData.numero_pedido);
 
         if (editedData.total && !isNaN(montoValido) && montoValido > 0) {
-            if(editedData.numero_pedido && !isNaN(numeroPedidoValido) && numeroPedidoValido > 0 && numeroPedidoValido <= numeroPedidoMax) {
-                onSave({ ...editedData, monto: montoValido, numero_pedido: numeroPedidoValido });
+            if(editedData.numero_pedido && !isNaN(numeroFacturaValido) && numeroFacturaValido > 0) {
+                onSave({ ...editedData, monto: montoValido, numero_factura: numeroFacturaValido });
                 onClose();
             } else {
                 alert("Por favor, ingrese un número de pedido válido.");
@@ -66,7 +59,7 @@ function ModalFacturaEditar({ data, onClose, onSave }) {
             <Modal.Body>
                 <Form>
                     <Form.Group>
-                        <Form.Label>Número Pedido</Form.Label>
+                        <Form.Label>Número de Factura</Form.Label>
                         <Form.Control
                             type="text"
                             value={editedData.numero_pedido}

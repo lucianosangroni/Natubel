@@ -362,6 +362,28 @@ const CargarPedido = () => {
               tipoPedidor === "cliente" ? "cliente" : "proveedor"
             }`
           }
+
+          styles={{
+            control: (provided) => ({
+              ...provided,
+              minWidth: "fit-content", // 👈 permite que se ajuste al contenido
+              width: "auto",
+              maxWidth: "100%", // para no romper el contenedor padre
+            }),
+            singleValue: (provided) => ({
+              ...provided,
+              whiteSpace: "nowrap",
+            }),
+            option: (provided) => ({
+              ...provided,
+              whiteSpace: "nowrap",
+            }),
+            menu: (provided) => ({
+              ...provided,
+              minWidth: "fit-content",
+              width: "auto",
+            }),
+          }}
         /> 
       </div>
       

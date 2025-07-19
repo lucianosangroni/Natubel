@@ -1348,7 +1348,7 @@ const getCuentaCorriente = async (req, res) => {
             const descuento = remito?.descuento || 0;
 
             return {
-                numero_pedido: factura.pedido_id,
+                numero_pedido: factura.numero_factura? factura.numero_factura : factura.pedido_id,
                 numero_remito: remito?.numero_remito || null,
                 monto: factura.monto,
                 descuento: descuento,
@@ -1541,7 +1541,7 @@ const getHistorial = async (req, res) => {
             const descuento = remito?.descuento || 0;
 
             return {
-                numero_pedido: factura.pedido_id,
+                numero_pedido: factura.numero_factura? factura.numero_factura : factura.pedido_id,
                 numero_remito: remito?.numero_remito || null,
                 monto: factura.monto,
                 descuento: descuento,
@@ -1759,7 +1759,7 @@ const getImputacion = async (req, res) => {
             const descuento = remito?.descuento || 0;
 
             return {
-                numero_pedido: factura.pedido_id,
+                numero_pedido: factura.numero_factura? factura.numero_factura : factura.pedido_id,
                 numero_remito: remito?.numero_remito || null,
                 monto: factura.monto,
                 descuento: descuento,

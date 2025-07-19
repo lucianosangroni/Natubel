@@ -6,6 +6,9 @@ const Persona = require("./persona")
 const Factura = sequelize.define(
     "factura",
     {
+        numero_factura : {
+            type: DataTypes.INTEGER,
+        },
         monto : {
             type: DataTypes.FLOAT,
             allowNull: false

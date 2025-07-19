@@ -2,32 +2,26 @@ import { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { useData } from "../../context/DataContext";
 
 function ModalFactura({ onClose, onSave }) {
     const [monto, setMonto] = useState("")
-    const [numeroPedido, setNumeroPedido] = useState("")
+    const [numeroFactura, setNumeroFactura] = useState("")
     const [fecha, setFecha] = useState(null)
     const [fechaMaxima, setFechaMaxima] = useState(null)
-    const { pedidosData } = useData()
-    const [numeroPedidoMax, setNumeroPedidoMax] = useState(null)
 
     useEffect(() => {
         const fechaHoy = new Date().toISOString().split("T")[0];
         setFecha(fechaHoy);
         setFechaMaxima(fechaHoy);
-
-        const numeroPedidoMaximo = pedidosData.reduce((max, pedido) => { return pedido.numero_pedido > max ? pedido.numero_pedido : max;}, 0);
-        setNumeroPedidoMax(numeroPedidoMaximo)
     }, []);
 
     const handleSave = () => {
         const montoValido = parseFloat(monto);
-        const numeroPedidoValido = parseInt(numeroPedido);
+        const numeroFacturaValido = parseInt(numeroFactura);
 
         if (monto && !isNaN(montoValido) && montoValido > 0) {
-            if(numeroPedido && !isNaN(numeroPedidoValido) && numeroPedidoValido > 0 && numeroPedidoValido <= numeroPedidoMax) {
-                onSave(montoValido, numeroPedidoValido, fecha)
+            if(numeroFactura && !isNaN(numeroFacturaValido) && numeroFacturaValido > 0) {
+                onSave(montoValido, numeroFacturaValido, fecha)
                 onClose()
             } else {
                 alert("Por favor, ingrese un número de pedido válido.");
@@ -53,12 +47,12 @@ function ModalFactura({ onClose, onSave }) {
             <Modal.Body>
                 <Form>
                     <Form.Group>
-                        <Form.Label>Número Pedido</Form.Label>
+                        <Form.Label>Número de Factura</Form.Label>
                         <Form.Control
                             type="text"
-                            value={numeroPedido}
+                            value={numeroFactura}
                             onChange={(e) => {
-                                setNumeroPedido(e.target.value)
+                                setNumeroFactura(e.target.value)
                             }}
                         />
                     </Form.Group>

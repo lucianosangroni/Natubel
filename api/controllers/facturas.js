@@ -13,17 +13,20 @@ const getItems = async (req, res) => {
 
 const createItem = async (req, res) => {
     try {
+        console.log("ajugnujainhgsau")
+
         req = matchedData(req);
 
-        const { monto, pedido_id, persona_id, fecha } = req
+        const { monto, numero_factura, persona_id, fecha, pedido_id } = req
 
         const nuevaFactura = await facturaModel.create
         (
             {
                 monto,
-                pedido_id,
+                numero_factura,
                 persona_id,
-                fecha
+                fecha,
+                pedido_id
             }
         )
 
@@ -39,7 +42,7 @@ const updateItem = async (req, res) => {
         req = matchedData(req);
 
         const factura_id = req.id
-        const { monto, fecha, pedido_id } = req
+        const { monto, fecha, numero_factura } = req
     
         // Validar si el articulo existe antes de intentar actualizarla
         const facturaExiste = await facturaModel.findByPk(factura_id);
@@ -52,7 +55,7 @@ const updateItem = async (req, res) => {
             {
                 monto,
                 fecha,
-                pedido_id
+                numero_factura
             }, 
             {
             where: { id: factura_id }

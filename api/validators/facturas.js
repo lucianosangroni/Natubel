@@ -4,6 +4,7 @@ const validatorCreateItem = [
     check("monto").exists().isFloat().custom((precio) => precio >= 0),
     check("pedido_id").exists().isInt().custom((id) => id > 0),
     check("persona_id").exists().isInt().custom((id) => id > 0),
+    check("numero_factura").exists().isInt().custom((num) => num > 0),
     check("fecha").exists(),
     (req, res, next) => {
         try {
@@ -18,7 +19,7 @@ const validatorCreateItem = [
 
 const validatorUpdateItem = [
     check("monto").exists().isFloat().custom((precio) => precio >= 0),
-    check("pedido_id").exists().isInt().custom((id) => id > 0),
+    check("numero_factura").exists().isInt().custom((num) => num > 0),
     check("fecha").exists(),
     (req, res, next) => {
         try {

@@ -603,7 +603,7 @@ export const DataProviderAdmin = ({ children }) => {
                         ...fac,
                         monto: facturaActualizada.monto,
                         fecha: facturaActualizada.fecha,
-                        pedido_id: facturaActualizada.pedido_id,
+                        numero_factura: facturaActualizada.numero_factura,
                         flag_imputada: facturaActualizada.flag_imputada
                     };
                 }

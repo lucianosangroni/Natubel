@@ -66,7 +66,7 @@ const CuentaCorriente = () => {
                     if (!flagCliente) {
                         return {
                             id: factura.id,
-                            numero_pedido: factura.pedido_id,
+                            numero_pedido: factura.numero_factura,
                             numero_remito: "-",
                             a_pagar: factura.monto,
                             total: factura.monto,
@@ -363,7 +363,7 @@ const CuentaCorriente = () => {
         const requestData = {
             monto: factura.monto,
             fecha: factura.fecha,
-            pedido_id: factura.numero_pedido
+            numero_factura: factura.numero_factura,
         }
 
         fetch(`${apiUrl}/facturas/${factura.id}`, {
@@ -385,7 +385,7 @@ const CuentaCorriente = () => {
             if(result.message === "Factura editada con éxito") {
                 const facturaCorrespondiente = facturasData.find(fac => fac.id === factura.id);
 
-                const facturaActualizada = {...facturaCorrespondiente, monto: factura.monto, fecha: factura.fecha, pedido_id: factura.numero_pedido}
+                const facturaActualizada = {...facturaCorrespondiente, monto: factura.monto, fecha: factura.fecha, numero_factura: factura.numero_factura}
 
                 const updatedFacturas = facturasData.map(fac =>
                     fac.id === factura.id ? facturaActualizada : fac
@@ -403,14 +403,15 @@ const CuentaCorriente = () => {
         });
     }
 
-    const handleAddFactura = (monto, pedido_id, fecha) => {
+    const handleAddFactura = (monto, numero_factura, fecha) => {
         setIsLoading(true)
 
         const requestData = {
             monto,
-            pedido_id,
+            numero_factura,
             fecha,
-            persona_id: persona.id
+            persona_id: persona.id,
+            pedido_id: 9
         }
 
         fetch(`${apiUrl}/facturas`, {
@@ -436,7 +437,8 @@ const CuentaCorriente = () => {
                     flag_cancelada: false,
                     flag_imputada: false,
                     monto: monto,
-                    pedido_id: pedido_id,
+                    pedido_id: 9,
+                    numero_factura: numero_factura,
                     persona_id: persona.id,
                     persona_nombre: persona.nombre
                 }
@@ -615,7 +617,7 @@ const CuentaCorriente = () => {
 
     const handleDeleteFactura = () => {
         const shouldDelete = window.confirm(
-            `¿Estas seguro que deseas eliminar la factura de N° Pedido ${selectedRow.numero_pedidoID} cuyo monto es de $${selectedRow.total}?`
+            `¿Estas seguro que deseas eliminar la factura de N° ${selectedRow.numero_pedido} cuyo monto es de $${selectedRow.total}?`
         );
     
         if (shouldDelete) {
@@ -1000,7 +1002,7 @@ const CuentaCorriente = () => {
                                                     />
                                                 </th>
                                             }
-                                            <th>N° Pedido</th>
+                                            <th>N° {flagCliente ? "Pedido" : "Factura"}</th>
                                             <th>N° Remito</th>
                                             <th>Fecha</th>
                                             <th>Total</th>
