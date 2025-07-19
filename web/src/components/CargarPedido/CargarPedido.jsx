@@ -22,6 +22,10 @@ const CargarPedido = () => {
   const [selectedMarca, setSelectedMarca] = useState("todas");
   const [marcaDelPedido, setMarcaDelPedido] = useState("todas");
   const [isLoading, setIsLoading] = useState(false)
+  const [montoFactura, setMontoFactura] = useState("")
+  const [numeroFactura, setNumeroFactura] = useState("")
+  const [fechaFactura, setFechaFactura] = useState(null)
+  const [fechaFacturaMaxima, setFechaFacturaMaxima] = useState(null)
 
   ////OBTENER ARTICULOS, CLIENTES Y PROVEEDORES DB
   useEffect(() => {
@@ -35,10 +39,29 @@ const CargarPedido = () => {
     setProveedores(proveedoresData);
   }, [articulosData, clientesData, proveedoresData, selectedMarca]);
 
+  useEffect(() => {
+      const fechaHoy = new Date().toISOString().split("T")[0];
+      setFechaFactura(fechaHoy);
+      setFechaFacturaMaxima(fechaHoy);
+  }, []);
+
+  const handleFechaBlur = () => {
+      if (fechaFactura && fechaFactura > fechaFacturaMaxima) {
+          alert("La fecha no puede ser futura.");
+          setFechaFactura(fechaFacturaMaxima);
+      }
+  };
+
   const handleCambiarTipoPedidor = (pedidor) => {
+    if (marcaDelPedido !== "todas") {
+        alert("No puedes cambiar a pedido de proveedor cuando estás haciendo un pedido de marca")
+        return
+    }
+
     setTipoPedidor(pedidor);
     setFiltroBusqueda("");
     setSelectedPedidor("");
+    setSelectedMarca("todas")
   };
 
   const handleChangeMarcaPedido = (marcaId) => {
@@ -241,7 +264,10 @@ const CargarPedido = () => {
       productos,
       cupon_id: null,
       flag_de_marca: marcaDelPedido !== "todas",
-      creador
+      creador,
+      numero_factura: numeroFactura,
+      monto_factura: montoFactura,
+      fecha_factura: fechaFactura
     };
 
     fetch(`${apiUrl}/pedidos`, {
@@ -387,18 +413,56 @@ const CargarPedido = () => {
         /> 
       </div>
       
-      <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-        <h4>Pedido de Marca:</h4>
-        <select value={marcaDelPedido} onChange={(e) => handleChangeMarcaPedido(e.target.value)} style={{marginLeft: "1rem", marginTop: "1rem", marginBottom: "1rem"}}>
-          <option value="todas">-</option>
-          {marcasData.map((marca) => (
-              <option key={marca.id} value={marca.id}>
-                  {marca.nombre}
-              </option>
-          ))}
-        </select>
+      <div style={{height: "150px", display: "flex", alignItems: "center", justifyContent: "center"}}>
+        {tipoPedidor === "cliente" && (
+          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <h4>Pedido de Marca:</h4>
+            <select value={marcaDelPedido} onChange={(e) => handleChangeMarcaPedido(e.target.value)} style={{marginLeft: "1rem", marginTop: "1rem", marginBottom: "1rem"}}>
+              <option value="todas">-</option>
+              {marcasData.map((marca) => (
+                  <option key={marca.id} value={marca.id}>
+                      {marca.nombre}
+                  </option>
+              ))}
+            </select>
+          </div>
+        )}
+        {tipoPedidor === "proveedor" && (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "5px" }}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <h4 style={{width: "220px"}}>Número de Factura:</h4>
+              <input
+                type="text"
+                value={numeroFactura}
+                onChange={(e) => setNumeroFactura(e.target.value)}
+                style={{ flex: 1, padding: "0.5rem", width: "200px", marginLeft: "10px" }}
+              />
+            </div>
+                
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <h4 style={{width: "220px"}}>Monto:</h4>
+              <input
+                type="text"
+                value={montoFactura}
+                onChange={(e) => setMontoFactura(e.target.value)}
+                style={{ flex: 1, padding: "0.5rem", width: "200px", marginLeft: "10px" }}
+              />
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <h4 style={{width: "220px"}}>Fecha:</h4>
+              <input
+                type="date"
+                value={fechaFactura}
+                onChange={(e) => setFechaFactura(e.target.value)}
+                max={fechaFacturaMaxima}
+                onBlur={handleFechaBlur}
+                style={{ flex: 1, padding: "0.5rem", width: "200px", marginLeft: "10px" }}
+              />
+            </div>
+          </div>
+        )}
       </div>
-      
 
       <section className="contenedor-tabla-grilla">
         <div style={{width: "20%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>

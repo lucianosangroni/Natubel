@@ -34,7 +34,11 @@ const createItem = async (req, res) => {
     try {
         req = matchedData(req);
 
-        const { persona_id, precio_total, es_proveedor, productos, cupon_id, flag_de_marca, creador } = req
+        const { persona_id, precio_total, es_proveedor, productos, cupon_id, flag_de_marca, creador, numero_factura, monto_factura, fecha_factura } = req
+
+        console.log(numero_factura)
+        console.log(monto_factura)
+        console.log(fecha_factura)
 
         if(!es_proveedor) {
             for (const producto of productos) {
@@ -99,6 +103,24 @@ const createItem = async (req, res) => {
                     pedido_id: nuevoPedido.numero_pedido
                 }
             )
+        } else {
+            if(numero_factura.trim() !== "" && monto_factura.trim() !== "") {
+                const montoValido = parseFloat(monto_factura);
+                const numeroFacturaValido = parseInt(numero_factura);
+
+                if (!isNaN(numeroFacturaValido) && !isNaN(montoValido) && numeroFacturaValido > 0 && montoValido > 0) {
+                    facturaModel.create
+                    (
+                        {
+                            persona_id,
+                            monto: montoValido,
+                            pedido_id: 9,
+                            fecha: fecha_factura,
+                            numero_factura: numeroFacturaValido
+                        }
+                    )
+                }
+            }
         }
 
         res.status(201).json({ message: 'Pedido creado con éxito', numero_pedido: nuevoPedido.numero_pedido });
