@@ -50,6 +50,12 @@ function NavbarAdm({ selected }) {
           >
             Pedidos
           </Link>
+          <Link
+            className={`navbar-link ${selected === 'Estadisticas' ? 'active' : ''}`}
+            to="/admin/estadisticas"
+          >
+            Estadísticas
+          </Link>
         </div>
 
         <button className="navbar-logout" onClick={handleLogout}>

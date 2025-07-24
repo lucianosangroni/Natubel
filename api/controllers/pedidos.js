@@ -34,11 +34,7 @@ const createItem = async (req, res) => {
     try {
         req = matchedData(req);
 
-        const { persona_id, precio_total, es_proveedor, productos, cupon_id, flag_de_marca, creador, numero_factura, monto_factura, fecha_factura } = req
-
-        console.log(numero_factura)
-        console.log(monto_factura)
-        console.log(fecha_factura)
+        const { persona_id, precio_total, es_proveedor, productos, cupon_id, flag_de_marca, creador, numero_factura, monto_factura, fecha_factura, tipo_precio } = req
 
         if(!es_proveedor) {
             for (const producto of productos) {
@@ -58,6 +54,7 @@ const createItem = async (req, res) => {
                 estado: "PEDIDO",
                 cupon_id,
                 flag_de_marca,
+                tipo_precio,
                 creador
             }
         )

@@ -256,6 +256,12 @@ const CargarPedido = () => {
     const precio_total = calcularPrecioTotal();
     const productos = getProductos();
     const creador = localStorage.getItem("username");
+    let tipo_precio = null;
+
+    if (tipoPedidor === "cliente") {
+      const clienteSeleccionado = clientes.find(cliente => cliente.persona_id === selectedPedidor);
+      tipo_precio = clienteSeleccionado ? clienteSeleccionado.tipo_cliente : null
+    }
 
     const requestData = {
       persona_id: selectedPedidor,
@@ -267,7 +273,8 @@ const CargarPedido = () => {
       creador,
       numero_factura: numeroFactura,
       monto_factura: montoFactura,
-      fecha_factura: fechaFactura
+      fecha_factura: fechaFactura,
+      tipo_precio
     };
 
     fetch(`${apiUrl}/pedidos`, {

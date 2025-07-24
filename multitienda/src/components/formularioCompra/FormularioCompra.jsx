@@ -328,7 +328,11 @@ const FormularioCompra = () => {
       creador: "BenkaLenceria.com.ar",
       flag_de_marca: false,
       cupon_id: descuentoCupon.id,
-      productos
+      productos,
+      tipo_precio: tipoPrecios(),
+      numero_factura: null,
+      monto_factura: null,
+      fecha_factura: null
     }
 
     fetch(`${apiUrl}/pedidos`, {

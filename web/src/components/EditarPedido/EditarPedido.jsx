@@ -11,7 +11,7 @@ import { Button } from "react-bootstrap";
 import { apiUrl, bearerToken } from "../../config/config";
 
 const EditarPedido = () => {
-    const { isInitialLoading, pedidosData, articulosData, clientesData, marcasData, cuponesData } = useData()
+    const { isInitialLoading, pedidosData, articulosData, marcasData, cuponesData } = useData()
     const { numero_pedido } = useParams();
     const [ articulosDataActualizados, setArticulosDataActualizados ] = useState([])
     const [ articulosDataActualizadosInit, setArticulosDataActualizadosInit ] = useState([])
@@ -38,7 +38,7 @@ const EditarPedido = () => {
                 const cupon = cuponesData.find(c => c.id === selectedPedido.cupon_id)
                 if(cupon) setDescuentoCupon(cupon.descuento)
 
-                setTipoPrecio(clientesData.find(cli => cli.nombre === selectedPedido.persona_nombre).tipo_cliente)
+                setTipoPrecio(selectedPedido.tipo_precio)
                 setPedido(selectedPedido)
                 setSelectedArticuloOriginal(selectedPedido.articulos[0])
             } else {

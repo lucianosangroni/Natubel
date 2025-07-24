@@ -10,6 +10,7 @@ const validatorCreateItem = [
     check("numero_factura").exists(),
     check("monto_factura").exists(),
     check("fecha_factura").exists(),
+    check("tipo_precio").exists(),
     check("productos").exists().isArray({ min: 1 }).custom((productos) => productos.every((producto) => 
         typeof producto.producto_id === "number" && producto.producto_id > 0 &&
         typeof producto.cantidad === "number" && producto.cantidad > 0 &&

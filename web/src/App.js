@@ -12,6 +12,7 @@ import EditarPedido from './components/EditarPedido/EditarPedido';
 import CuentaCorriente from './components/CuentaCorriente/CuentaCorriente';
 import HistorialCuentaCorriente from './components/HistorialCuentaCorriente/HistorialCuentaCorriente';
 import Imputacion from './components/Imputacion/Imputacion';
+import Estadisticas from './components/Estadisticas/Estadisticas';
 
 function App() {
     return (
@@ -52,6 +53,9 @@ function App() {
             </Route>
             <Route element={<ProtectedRoute/>}>
               <Route path="admin/cobranzas/:numeroImputacion" element={<Imputacion/>} />
+            </Route>
+            <Route element={<ProtectedRoute/>}>
+              <Route path="admin/estadisticas" element={<Estadisticas/>} />
             </Route>
           </Routes>
         </AuthProvider>

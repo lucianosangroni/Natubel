@@ -28,6 +28,10 @@ const Pedido = sequelize.define(
             allowNull: false,
             defaultValue: false,
         },
+        tipo_precio: {
+            type: DataTypes.ENUM('MINORISTA', 'MAYORISTA', 'DISTRIBUIDOR'),
+            defaultValue: null
+        },
         creador: {
             type: DataTypes.STRING,
             allowNull: false
