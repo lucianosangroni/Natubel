@@ -81,8 +81,6 @@ const EditarPedido = () => {
     }, [pedido, articulosDataActualizados])
 
     useEffect(() => {
-        console.log(productosConfirmados)
-
         const productos = []
 
         for(const articulo of productosConfirmados) {
@@ -90,8 +88,6 @@ const EditarPedido = () => {
 
             for(const [productKey, cantidad] of Object.entries(articulo.cantidades)) {
                 const [color, talle] = productKey.split('|-|');
-                console.log(color)
-                console.log(talle)
                 const productos_x_pedido = {cantidad}
 
                 const prod = {

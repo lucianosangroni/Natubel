@@ -11,7 +11,7 @@ import { Button } from "react-bootstrap";
 import ModalPorcentajes from "./ModalPorcentajes";
 
 const Estadisticas = () => {
-    const { isInitialLoading, pedidosData, facturasData, remitosData, marcasData, articulosData, clientesData } = useData()
+    const { isInitialLoading, pedidosData, facturasData, remitosData, marcasData, articulosData, clientesData, porcentajesData } = useData()
     const [selectedMonthYear, setSelectedMonthYear] = useState("");
     const meses = [""/*Para que el índice 1 sea Enero*/,"Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
     const columns = useMemo(() => COLUMNSSTATS, []);
@@ -26,6 +26,16 @@ const Estadisticas = () => {
     const [data5, setData5] = useState([])
     const [data10, setData10] = useState([])
     const [isModalPorcentajesOpen, setIsModalPorcentajesOpen] = useState(false)
+    const [porcentajeMinorista ,setPorcentajeMinorista] = useState(0)
+    const [porcentajeMayorista ,setPorcentajeMayorista] = useState(0)
+    const [porcentajeDistribuidor ,setPorcentajeDistribuidor] = useState(0)
+    const [porcentaje5 ,setPorcentaje5] = useState(0)
+    const [porcentaje10 ,setPorcentaje10] = useState(0)
+    const [gananciaMinoristaMixto, setGananciaMinoristaMixto] = useState(0)
+    const [gananciaMayoristaMixto, setGananciaMayoristaMixto] = useState(0)
+    const [gananciaDistribuidorMixto, setGananciaDistribuidorMixto] = useState(0)
+    const [ganancia5Mixto, setGanancia5Mixto] = useState(0)
+    const [ganancia10Mixto, setGanancia10Mixto] = useState(0)
 
     useEffect(() => {
         const grupos = {}
@@ -80,8 +90,9 @@ const Estadisticas = () => {
                         }
                     }
 
+                    const cliente = clientesData.find(c => c.nombre === p.persona_nombre)
+
                     if(!p.tipo_precio) {
-                        const cliente = clientesData.find(c => c.nombre === p.persona_nombre)
                         tipo_tabla = cliente.tipo_cliente
                     } 
 
@@ -99,6 +110,22 @@ const Estadisticas = () => {
                             }
                         }
                     })
+                    
+                    const precios_x_marca = {}
+
+                    if (marcaIdFinal === "mixto") {
+                        for(const prod of p.productos) {
+                            const articuloCorrespondiente = articulosData.find(a => a.id === prod.articulo_id)
+                            const marcaId = String(articuloCorrespondiente?.marca_id)
+
+                            if (!precios_x_marca[marcaId]) {
+                                precios_x_marca[marcaId] = 0;
+                            }
+
+                            const precioTotalDelArticulo = prod.productos_x_pedido.cantidad * prod.productos_x_pedido.precio_unitario
+                            precios_x_marca[marcaId] += precioTotalDelArticulo;
+                        }
+                    }
 
                     const pedidoFormateado = {
                         numero_pedido: <span
@@ -113,6 +140,7 @@ const Estadisticas = () => {
                         monto: facturaCorrespondiente? facturaCorrespondiente.monto : 0,
                         tipo_tabla: tipo_tabla,
                         marca: marcaIdFinal,
+                        precios_x_marca,
                         grupo: clave
                     }
 
@@ -128,9 +156,10 @@ const Estadisticas = () => {
     useEffect(() => {
         if(data.length > 0) {
             const dataActual = data.filter(p => p.marca === selectedMarca && p.grupo === selectedMonthYear)
-            const dataDistribuidor = dataActual.filter(p => p.tipo_tabla === "DISTRIBUIDOR")
-            const dataMayorista = dataActual.filter(p => p.tipo_tabla === "MAYORISTA")
+
             const dataMinorista = dataActual.filter(p => p.tipo_tabla === "MINORISTA")
+            const dataMayorista = dataActual.filter(p => p.tipo_tabla === "MAYORISTA")
+            const dataDistribuidor = dataActual.filter(p => p.tipo_tabla === "DISTRIBUIDOR")
             const data5 = dataActual.filter(p => p.tipo_tabla === "5%")
             const data10 = dataActual.filter(p => p.tipo_tabla === "10%")
             setDataDistribuidor(dataDistribuidor);
@@ -138,6 +167,61 @@ const Estadisticas = () => {
             setDataMinorista(dataMinorista)
             setData5(data5)
             setData10(data10)
+
+            if (selectedMarca !== "mixto") {
+                const porcMin = porcentajesData?.[selectedMarca]?.minorista ?? 0;
+                const porcMay = porcentajesData?.[selectedMarca]?.mayorista ?? 0;
+                const porcDist = porcentajesData?.[selectedMarca]?.distribuidor ?? 0;
+                const porc5 = porcentajesData?.[selectedMarca]?.cinco ?? 0;
+                const porc10 = porcentajesData?.[selectedMarca]?.diez ?? 0;
+                setPorcentajeMinorista(porcMin)
+                setPorcentajeMayorista(porcMay)
+                setPorcentajeDistribuidor(porcDist)
+                setPorcentaje5(porc5)
+                setPorcentaje10(porc10)
+            } else {
+                let gananciaMinorista = 0;
+                let gananciaMayorista = 0;
+                let gananciaDistribuidor = 0;
+                let ganancia5 = 0;
+                let ganancia10 = 0;
+
+                for (const pedido of dataMinorista) {
+                    for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
+                        gananciaMinorista += subtotal * (porcentajesData?.[marcaId].minorista ?? 0) / 100;
+                    }
+                }
+
+                for (const pedido of dataMayorista) {
+                    for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
+                        gananciaMayorista += subtotal * (porcentajesData?.[marcaId].mayorista ?? 0) / 100;
+                    }
+                }
+
+                for (const pedido of dataDistribuidor) {
+                    for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
+                        gananciaDistribuidor += subtotal * (porcentajesData?.[marcaId].distribuidor ?? 0) / 100;
+                    }
+                }
+
+                for (const pedido of data5) {
+                    for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
+                        ganancia5 += subtotal * (porcentajesData?.[marcaId].cinco ?? 0) / 100;
+                    }
+                }
+
+                for (const pedido of data10) {
+                    for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
+                        ganancia10 += subtotal * (porcentajesData?.[marcaId].diez ?? 0) / 100;
+                    }
+                }
+            
+                setGananciaMinoristaMixto(gananciaMinorista);
+                setGananciaMayoristaMixto(gananciaMayorista);
+                setGananciaDistribuidorMixto(gananciaDistribuidor);
+                setGanancia5Mixto(ganancia5);
+                setGanancia10Mixto(ganancia10);
+            }
         }
     }, [selectedMonthYear, selectedMarca, data]);
 
@@ -264,11 +348,19 @@ const Estadisticas = () => {
         setSelectedMarca(marcaId);
     }
 
+    const formatearNumero = (numero) => {
+        if (typeof numero === 'number') {
+            const [entero, decimal] = numero.toFixed(2).toString().split('.');
+            return `${entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}${decimal ? `,${decimal}` : ''}`;
+        }
+        return numero;
+    };
+
     return (
         <>
             {(isInitialLoading) && <Loading/>}
             <NavbarAdm selected={'Estadisticas'}/>
-            <div style={{marginTop: "5.5rem"}}>
+            <div style={{marginTop: "5.5rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px"}}>
                 {opcionesMeses.length > 0 && (
                     <select
                         value={selectedMonthYear}
@@ -290,285 +382,309 @@ const Estadisticas = () => {
                         </option>
                     ))}
                 </select>
+            </div>
 
-                {dataMinorista.length > 0 && (
-                <>
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
-                    <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                            sans-serif`}}>Minorista</h2>
-                    <div className="tableDivContainer">
-                        <table {...getTablePropsMin()} className="tableContainer">
-                            <thead>
-                                {headerGroupsMin.map((headerGroups) => (
-                                    <tr {...headerGroups.getHeaderGroupProps()}>
-                                        {headerGroups.headers.map((columns) => (
-                                            <th {...columns.getHeaderProps(columns)}>
-                                                {columns.render("Header")}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody {...getTableBodyPropsMin()}>
-                                {pageMin.map((row) => {
-                                    prepareRowMin(row);
-                                    return (
-                                        <tr {...row.getRowProps()}>
-                                            {row.cells.map((cell) => {
-                                                return (
-                                                    <td {...cell.getCellProps()}>
-                                                        {cell.render("Cell")}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className="paginacion">
-                        <button onClick={() => previousPageMin()} disabled={!canPreviousPageMin}>
-                            <FontAwesomeIcon icon={faArrowLeft} />
-                        </button>
-                        <span>
-                            Pagina{" "}
-                            <strong>
-                                {pageIndexMin + 1} de {pageOptionsMin.length}
-                            </strong>{" "}
-                        </span>
-                        <button onClick={() => nextPageMin()} disabled={!canNextPageMin}>
-                            <FontAwesomeIcon icon={faArrowRight} />
-                        </button>
-                    </div>
-                </>
-                )}
-                
-                {dataMayorista.length > 0 && (
-                <>
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
-                    <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                            sans-serif`}}>Mayorista</h2>
-                    <div className="tableDivContainer">
-                        <table {...getTablePropsMay()} className="tableContainer">
-                            <thead>
-                                {headerGroupsMay.map((headerGroups) => (
-                                    <tr {...headerGroups.getHeaderGroupProps()}>
-                                        {headerGroups.headers.map((columns) => (
-                                            <th {...columns.getHeaderProps(columns)}>
-                                                {columns.render("Header")}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody {...getTableBodyPropsMay()}>
-                                {pageMay.map((row) => {
-                                    prepareRowMay(row);
-                                    return (
-                                        <tr {...row.getRowProps()}>
-                                            {row.cells.map((cell) => {
-                                                return (
-                                                    <td {...cell.getCellProps()}>
-                                                        {cell.render("Cell")}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className="paginacion">
-                        <button onClick={() => previousPageMay()} disabled={!canPreviousPageMay}>
-                            <FontAwesomeIcon icon={faArrowLeft} />
-                        </button>
-                        <span>
-                            Pagina{" "}
-                            <strong>
-                                {pageIndexMay + 1} de {pageOptionsMay.length}
-                            </strong>{" "}
-                        </span>
-                        <button onClick={() => nextPageMay()} disabled={!canNextPageMay}>
-                            <FontAwesomeIcon icon={faArrowRight} />
-                        </button>
-                    </div>
-                </>
-                )}
+            <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
 
-                {dataDistribuidor.length > 0 && (
-                <>
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
-                    <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                            sans-serif`}}>Distribuidor</h2>
-                    <div className="tableDivContainer">
-                        <table {...getTablePropsDist()} className="tableContainer">
-                            <thead>
-                                {headerGroupsDist.map((headerGroups) => (
-                                    <tr {...headerGroups.getHeaderGroupProps()}>
-                                        {headerGroups.headers.map((columns) => (
-                                            <th {...columns.getHeaderProps(columns)}>
-                                                {columns.render("Header")}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody {...getTableBodyPropsDist()}>
-                                {pageDist.map((row) => {
-                                    prepareRowDist(row);
-                                    return (
-                                        <tr {...row.getRowProps()}>
-                                            {row.cells.map((cell) => {
-                                                return (
-                                                    <td {...cell.getCellProps()}>
-                                                        {cell.render("Cell")}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+            <div style={{display: "flex", alignItems: "center", justifyContent: "space-evenly", gap: "7px"}}>
+                <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
+                    <span style={{ fontWeight: "bold" }}>TOTAL MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMinorista.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                    <span style={{ fontWeight: "bold" }}>TOTAL MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMayorista.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                    <span style={{ fontWeight: "bold" }}>TOTAL DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(dataDistribuidor.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                    <span style={{ fontWeight: "bold" }}>TOTAL 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(data5.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                    <span style={{ fontWeight: "bold" }}>TOTAL 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(data10.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                </div>
+                {selectedMarca !== "mixto" ? (
+                    <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
+                        <span style={{ fontWeight: "bold" }}>GANANCIA MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMinorista.reduce((acc, pedido) => acc + pedido.monto, 0) * porcentajeMinorista / 100)} ({porcentajeMinorista}%)</span></span>
+                        <span style={{ fontWeight: "bold" }}>GANANCIA MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMayorista.reduce((acc, pedido) => acc + pedido.monto, 0) * porcentajeMayorista / 100)} ({porcentajeMayorista}%)</span></span>
+                        <span style={{ fontWeight: "bold" }}>GANANCIA DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(dataDistribuidor.reduce((acc, pedido) => acc + pedido.monto, 0) * porcentajeDistribuidor / 100)} ({porcentajeDistribuidor}%)</span></span>
+                        <span style={{ fontWeight: "bold" }}>GANANCIA 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(data5.reduce((acc, pedido) => acc + pedido.monto, 0) * porcentaje5 / 100)} ({porcentaje5}%)</span></span>
+                        <span style={{ fontWeight: "bold" }}>GANANCIA 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(data10.reduce((acc, pedido) => acc + pedido.monto, 0) * porcentaje10 / 100)} ({porcentaje10}%)</span></span>
                     </div>
-                    <div className="paginacion">
-                        <button onClick={() => previousPageDist()} disabled={!canPreviousPageDist}>
-                            <FontAwesomeIcon icon={faArrowLeft} />
-                        </button>
-                        <span>
-                            Pagina{" "}
-                            <strong>
-                                {pageIndexDist + 1} de {pageOptionsDist.length}
-                            </strong>{" "}
-                        </span>
-                        <button onClick={() => nextPageDist()} disabled={!canNextPageDist}>
-                            <FontAwesomeIcon icon={faArrowRight} />
-                        </button>
+                ) : (
+                    <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
+                        <span style={{ fontWeight: "bold" }}>GANANCIA MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinoristaMixto)}</span></span>
+                        <span style={{ fontWeight: "bold" }}>GANANCIA MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMayoristaMixto)}</span></span>
+                        <span style={{ fontWeight: "bold" }}>GANANCIA DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDistribuidorMixto)}</span></span>
+                        <span style={{ fontWeight: "bold" }}>GANANCIA 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia5Mixto)}</span></span>
+                        <span style={{ fontWeight: "bold" }}>GANANCIA 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia10Mixto)}</span></span>
                     </div>
-                </>
-                )}
-
-                {data5.length > 0 && (
-                <>
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
-                    <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                            sans-serif`}}>5%</h2>
-                    <div className="tableDivContainer">
-                        <table {...getTableProps5()} className="tableContainer">
-                            <thead>
-                                {headerGroups5.map((headerGroups) => (
-                                    <tr {...headerGroups.getHeaderGroupProps()}>
-                                        {headerGroups.headers.map((columns) => (
-                                            <th {...columns.getHeaderProps(columns)}>
-                                                {columns.render("Header")}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody {...getTableBodyProps5()}>
-                                {page5.map((row) => {
-                                    prepareRow5(row);
-                                    return (
-                                        <tr {...row.getRowProps()}>
-                                            {row.cells.map((cell) => {
-                                                return (
-                                                    <td {...cell.getCellProps()}>
-                                                        {cell.render("Cell")}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className="paginacion">
-                        <button onClick={() => previousPage5()} disabled={!canPreviousPage5}>
-                            <FontAwesomeIcon icon={faArrowLeft} />
-                        </button>
-                        <span>
-                            Pagina{" "}
-                            <strong>
-                                {pageIndex5 + 1} de {pageOptions5.length}
-                            </strong>{" "}
-                        </span>
-                        <button onClick={() => nextPage5()} disabled={!canNextPage5}>
-                            <FontAwesomeIcon icon={faArrowRight} />
-                        </button>
-                    </div>
-                </>
-                )}
-
-                {data10.length > 0 && (
-                <>
-                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
-                    <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                            "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                            sans-serif`}}>10%</h2>
-                    <div className="tableDivContainer">
-                        <table {...getTableProps10()} className="tableContainer">
-                            <thead>
-                                {headerGroups10.map((headerGroups) => (
-                                    <tr {...headerGroups.getHeaderGroupProps()}>
-                                        {headerGroups.headers.map((columns) => (
-                                            <th {...columns.getHeaderProps(columns)}>
-                                                {columns.render("Header")}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody {...getTableBodyProps10()}>
-                                {page10.map((row) => {
-                                    prepareRow10(row);
-                                    return (
-                                        <tr {...row.getRowProps()}>
-                                            {row.cells.map((cell) => {
-                                                return (
-                                                    <td {...cell.getCellProps()}>
-                                                        {cell.render("Cell")}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className="paginacion">
-                        <button onClick={() => previousPage10()} disabled={!canPreviousPage10}>
-                            <FontAwesomeIcon icon={faArrowLeft} />
-                        </button>
-                        <span>
-                            Pagina{" "}
-                            <strong>
-                                {pageIndex10 + 1} de {pageOptions10.length}
-                            </strong>{" "}
-                        </span>
-                        <button onClick={() => nextPage10()} disabled={!canNextPage10}>
-                            <FontAwesomeIcon icon={faArrowRight} />
-                        </button>
-                    </div>
-                </>
-                )}
-
-                <Button onClick={() => setIsModalPorcentajesOpen(true)} id="btnDescargarStock" style={{right: "10px", width: "145px"}}>Porcentajes</Button>
-
-                {isModalPorcentajesOpen && (
-                    <ModalPorcentajes
-                        onClose={() => setIsModalPorcentajesOpen(false)}
-                    />
                 )}
             </div>
+
+            {dataMinorista.length > 0 && (
+            <>
+                <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                        sans-serif`}}>Minorista</h2>
+                <div className="tableDivContainer">
+                    <table {...getTablePropsMin()} className="tableContainer">
+                        <thead>
+                            {headerGroupsMin.map((headerGroups) => (
+                                <tr {...headerGroups.getHeaderGroupProps()}>
+                                    {headerGroups.headers.map((columns) => (
+                                        <th {...columns.getHeaderProps(columns)}>
+                                            {columns.render("Header")}
+                                        </th>
+                                    ))}
+                                </tr>
+                            ))}
+                        </thead>
+                        <tbody {...getTableBodyPropsMin()}>
+                            {pageMin.map((row) => {
+                                prepareRowMin(row);
+                                return (
+                                    <tr {...row.getRowProps()}>
+                                        {row.cells.map((cell) => {
+                                            return (
+                                                <td {...cell.getCellProps()}>
+                                                    {cell.render("Cell")}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="paginacion">
+                    <button onClick={() => previousPageMin()} disabled={!canPreviousPageMin}>
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                    </button>
+                    <span>
+                        Pagina{" "}
+                        <strong>
+                            {pageIndexMin + 1} de {pageOptionsMin.length}
+                        </strong>{" "}
+                    </span>
+                    <button onClick={() => nextPageMin()} disabled={!canNextPageMin}>
+                        <FontAwesomeIcon icon={faArrowRight} />
+                    </button>
+                </div>
+            </>
+            )}
+            
+            {dataMayorista.length > 0 && (
+            <>
+                <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                        sans-serif`}}>Mayorista</h2>
+                <div className="tableDivContainer">
+                    <table {...getTablePropsMay()} className="tableContainer">
+                        <thead>
+                            {headerGroupsMay.map((headerGroups) => (
+                                <tr {...headerGroups.getHeaderGroupProps()}>
+                                    {headerGroups.headers.map((columns) => (
+                                        <th {...columns.getHeaderProps(columns)}>
+                                            {columns.render("Header")}
+                                        </th>
+                                    ))}
+                                </tr>
+                            ))}
+                        </thead>
+                        <tbody {...getTableBodyPropsMay()}>
+                            {pageMay.map((row) => {
+                                prepareRowMay(row);
+                                return (
+                                    <tr {...row.getRowProps()}>
+                                        {row.cells.map((cell) => {
+                                            return (
+                                                <td {...cell.getCellProps()}>
+                                                    {cell.render("Cell")}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="paginacion">
+                    <button onClick={() => previousPageMay()} disabled={!canPreviousPageMay}>
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                    </button>
+                    <span>
+                        Pagina{" "}
+                        <strong>
+                            {pageIndexMay + 1} de {pageOptionsMay.length}
+                        </strong>{" "}
+                    </span>
+                    <button onClick={() => nextPageMay()} disabled={!canNextPageMay}>
+                        <FontAwesomeIcon icon={faArrowRight} />
+                    </button>
+                </div>
+            </>
+            )}
+            {dataDistribuidor.length > 0 && (
+            <>
+                <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                        sans-serif`}}>Distribuidor</h2>
+                <div className="tableDivContainer">
+                    <table {...getTablePropsDist()} className="tableContainer">
+                        <thead>
+                            {headerGroupsDist.map((headerGroups) => (
+                                <tr {...headerGroups.getHeaderGroupProps()}>
+                                    {headerGroups.headers.map((columns) => (
+                                        <th {...columns.getHeaderProps(columns)}>
+                                            {columns.render("Header")}
+                                        </th>
+                                    ))}
+                                </tr>
+                            ))}
+                        </thead>
+                        <tbody {...getTableBodyPropsDist()}>
+                            {pageDist.map((row) => {
+                                prepareRowDist(row);
+                                return (
+                                    <tr {...row.getRowProps()}>
+                                        {row.cells.map((cell) => {
+                                            return (
+                                                <td {...cell.getCellProps()}>
+                                                    {cell.render("Cell")}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="paginacion">
+                    <button onClick={() => previousPageDist()} disabled={!canPreviousPageDist}>
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                    </button>
+                    <span>
+                        Pagina{" "}
+                        <strong>
+                            {pageIndexDist + 1} de {pageOptionsDist.length}
+                        </strong>{" "}
+                    </span>
+                    <button onClick={() => nextPageDist()} disabled={!canNextPageDist}>
+                        <FontAwesomeIcon icon={faArrowRight} />
+                    </button>
+                </div>
+            </>
+            )}
+            {data5.length > 0 && (
+            <>
+                <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                        sans-serif`}}>5%</h2>
+                <div className="tableDivContainer">
+                    <table {...getTableProps5()} className="tableContainer">
+                        <thead>
+                            {headerGroups5.map((headerGroups) => (
+                                <tr {...headerGroups.getHeaderGroupProps()}>
+                                    {headerGroups.headers.map((columns) => (
+                                        <th {...columns.getHeaderProps(columns)}>
+                                            {columns.render("Header")}
+                                        </th>
+                                    ))}
+                                </tr>
+                            ))}
+                        </thead>
+                        <tbody {...getTableBodyProps5()}>
+                            {page5.map((row) => {
+                                prepareRow5(row);
+                                return (
+                                    <tr {...row.getRowProps()}>
+                                        {row.cells.map((cell) => {
+                                            return (
+                                                <td {...cell.getCellProps()}>
+                                                    {cell.render("Cell")}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="paginacion">
+                    <button onClick={() => previousPage5()} disabled={!canPreviousPage5}>
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                    </button>
+                    <span>
+                        Pagina{" "}
+                        <strong>
+                            {pageIndex5 + 1} de {pageOptions5.length}
+                        </strong>{" "}
+                    </span>
+                    <button onClick={() => nextPage5()} disabled={!canNextPage5}>
+                        <FontAwesomeIcon icon={faArrowRight} />
+                    </button>
+                </div>
+            </>
+            )}
+            {data10.length > 0 && (
+            <>
+                <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                        sans-serif`}}>10%</h2>
+                <div className="tableDivContainer">
+                    <table {...getTableProps10()} className="tableContainer">
+                        <thead>
+                            {headerGroups10.map((headerGroups) => (
+                                <tr {...headerGroups.getHeaderGroupProps()}>
+                                    {headerGroups.headers.map((columns) => (
+                                        <th {...columns.getHeaderProps(columns)}>
+                                            {columns.render("Header")}
+                                        </th>
+                                    ))}
+                                </tr>
+                            ))}
+                        </thead>
+                        <tbody {...getTableBodyProps10()}>
+                            {page10.map((row) => {
+                                prepareRow10(row);
+                                return (
+                                    <tr {...row.getRowProps()}>
+                                        {row.cells.map((cell) => {
+                                            return (
+                                                <td {...cell.getCellProps()}>
+                                                    {cell.render("Cell")}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="paginacion">
+                    <button onClick={() => previousPage10()} disabled={!canPreviousPage10}>
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                    </button>
+                    <span>
+                        Pagina{" "}
+                        <strong>
+                            {pageIndex10 + 1} de {pageOptions10.length}
+                        </strong>{" "}
+                    </span>
+                    <button onClick={() => nextPage10()} disabled={!canNextPage10}>
+                        <FontAwesomeIcon icon={faArrowRight} />
+                    </button>
+                </div>
+            </>
+            )}
+            <Button onClick={() => setIsModalPorcentajesOpen(true)} id="btnDescargarStock" style={{right: "10px", width: "145px"}}>Porcentajes</Button>
+            {isModalPorcentajesOpen && (
+                <ModalPorcentajes
+                    onClose={() => setIsModalPorcentajesOpen(false)}
+                />
+            )}
         </>
     );
 };
