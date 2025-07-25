@@ -188,31 +188,31 @@ const Estadisticas = () => {
 
                 for (const pedido of dataMinorista) {
                     for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
-                        gananciaMinorista += subtotal * (porcentajesData?.[marcaId].minorista ?? 0) / 100;
+                        gananciaMinorista += subtotal * (porcentajesData?.[marcaId]?.minorista ?? 0) / 100;
                     }
                 }
 
                 for (const pedido of dataMayorista) {
                     for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
-                        gananciaMayorista += subtotal * (porcentajesData?.[marcaId].mayorista ?? 0) / 100;
+                        gananciaMayorista += subtotal * (porcentajesData?.[marcaId]?.mayorista ?? 0) / 100;
                     }
                 }
 
                 for (const pedido of dataDistribuidor) {
                     for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
-                        gananciaDistribuidor += subtotal * (porcentajesData?.[marcaId].distribuidor ?? 0) / 100;
+                        gananciaDistribuidor += subtotal * (porcentajesData?.[marcaId]?.distribuidor ?? 0) / 100;
                     }
                 }
 
                 for (const pedido of data5) {
                     for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
-                        ganancia5 += subtotal * (porcentajesData?.[marcaId].cinco ?? 0) / 100;
+                        ganancia5 += subtotal * (porcentajesData?.[marcaId]?.cinco ?? 0) / 100;
                     }
                 }
 
                 for (const pedido of data10) {
                     for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
-                        ganancia10 += subtotal * (porcentajesData?.[marcaId].diez ?? 0) / 100;
+                        ganancia10 += subtotal * (porcentajesData?.[marcaId]?.diez ?? 0) / 100;
                     }
                 }
             
