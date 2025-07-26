@@ -69,6 +69,9 @@ const Estadisticas = () => {
     }, [pedidosData]);
 
     useEffect(() => {
+        console.log("Remitos cargados:", remitosData.length);
+        console.log("Facturas cargadas:", facturasData.length);
+
         if(Object.keys(pedidosPorMes).length > 0) {
             const pedidosFormateados = []
 
@@ -151,7 +154,7 @@ const Estadisticas = () => {
 
             setData(pedidosFormateados)
         }
-    }, [pedidosPorMes]);
+    }, [pedidosPorMes, facturasData, remitosData, articulosData, clientesData]);
 
     useEffect(() => {
         if(data.length > 0) {
