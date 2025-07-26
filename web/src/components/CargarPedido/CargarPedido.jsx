@@ -299,6 +299,9 @@ const CargarPedido = () => {
           setTipoPedidor("cliente");
           setFiltroBusqueda("");
           setSelectedProduct(data[0]);
+          setMontoFactura("")
+          setNumeroFactura("")
+          setFechaFactura(fechaFacturaMaxima)
         }
 
         alert(result.message);

@@ -29,6 +29,7 @@ const ListadoProductos = () => {
   const [isCuponesModalOpen, setIsCuponesModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate();
+  const [selectedMarca, setSelectedMarca] = useState("todas");
 
   //OBTENER ARTICULOS DB
   useEffect(() => {
@@ -38,6 +39,14 @@ const ListadoProductos = () => {
     setMarcas(marcasData);
     setCupones(cuponesData)
   }, [categoriasData, marcasData, cuponesData, articulosData]);
+
+  useEffect(() => {
+      const filtered = selectedMarca === "todas"
+          ? articulosData
+          : articulosData.filter(art => String(art.marca_id) === String(selectedMarca));
+      setData(filtered);
+      setSelectedProduct(filtered[0])
+  }, [selectedMarca]);
 
   //AGREGAR ARTICULO DB
   const handleAddArticulo = (newArticulo) => {
@@ -497,12 +506,27 @@ const ListadoProductos = () => {
       });
   }
 
+  const handleChangeMarca = (marcaId) => {
+      setSelectedMarca(marcaId);
+  }
+
   return (
     <>
       {(isLoading || isInitialLoading) && <Loading/>}
       <NavbarAdm selected={'Articulos'}/>
+      
       <div className="table-productos-contenedor" style={{marginTop: "4.5rem"}}>
-        <ListaArticulos articulos={data} onArticuloClick={handleArticuloClick} selectedArticulo={selectedProduct}/>
+        <div>
+          <select value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)} style={{marginLeft: "1rem", marginRight: "1rem", marginTop: "1rem"}}>
+                  <option value="todas">Todas las marcas</option>
+                  {marcasData.map((marca) => (
+                      <option key={marca.id} value={marca.id}>
+                          {marca.nombre}
+                      </option>
+                  ))}
+              </select>
+          <ListaArticulos articulos={data} onArticuloClick={handleArticuloClick} selectedArticulo={selectedProduct}/>
+        </div>
         {selectedProduct && (
           <GrillaProducto
             articulo={selectedProduct}
