@@ -69,8 +69,7 @@ const Estadisticas = () => {
     }, [pedidosData]);
 
     useEffect(() => {
-        console.log("Remitos cargados:", remitosData.length);
-        console.log("Facturas cargadas:", facturasData.length);
+        
 
         if(Object.keys(pedidosPorMes).length > 0) {
             const pedidosFormateados = []
@@ -82,6 +81,12 @@ const Estadisticas = () => {
 
                     let tipo_tabla = p.tipo_precio
 
+                    const cliente = clientesData.find(c => c.nombre === p.persona_nombre)
+
+                    if(!p.tipo_precio) {
+                        tipo_tabla = cliente.tipo_cliente
+                    } 
+
                     if (tipo_tabla === "DISTRIBUIDOR" && remitoCorrespondiente) {
                         const descuento = parseInt(remitoCorrespondiente.descuento);
                         if (descuento === 5) {
@@ -92,12 +97,6 @@ const Estadisticas = () => {
                             tipo_tabla = "DISTRIBUIDOR";
                         }
                     }
-
-                    const cliente = clientesData.find(c => c.nombre === p.persona_nombre)
-
-                    if(!p.tipo_precio) {
-                        tipo_tabla = cliente.tipo_cliente
-                    } 
 
                     let marcaIdFinal = null;
 
