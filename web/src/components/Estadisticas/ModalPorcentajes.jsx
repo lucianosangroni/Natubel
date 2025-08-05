@@ -17,6 +17,7 @@ function ModalPorcentajes({ onClose }) {
                     minorista: porcentajesData?.[marca.id]?.minorista ?? "",
                     mayorista: porcentajesData?.[marca.id]?.mayorista ?? "",
                     distribuidor: porcentajesData?.[marca.id]?.distribuidor ?? "",
+                    deMarca: porcentajesData?.[marca.id]?.deMarca ?? "",
                     cinco: porcentajesData?.[marca.id]?.cinco ?? "",
                     diez: porcentajesData?.[marca.id]?.diez ?? ""
                 };
@@ -30,7 +31,7 @@ function ModalPorcentajes({ onClose }) {
             ...prev,
             [marcaId]: {
                 ...prev[marcaId],
-                [tipo]: parseFloat(value)
+                [tipo]: value
             }
         }));
     };
@@ -38,7 +39,16 @@ function ModalPorcentajes({ onClose }) {
     const handleSave = () => {
         setIsLoading(true)
 
-        const requestData = { porcentajes }
+        const porcentajesParsed = {};
+        for (const marcaId in porcentajes) {
+            porcentajesParsed[marcaId] = {};
+            for (const tipo in porcentajes[marcaId]) {
+                const val = porcentajes[marcaId][tipo];
+                porcentajesParsed[marcaId][tipo] = val !== "" ? parseFloat(val) : null;
+            }
+        }
+
+        const requestData = { porcentajes: porcentajesParsed }
         
         fetch(`${apiUrl}/porcentajes`, {
             method: "POST",
@@ -57,7 +67,7 @@ function ModalPorcentajes({ onClose }) {
         })
         .then((result) => {
             if(result.message === "Porcentajes actualizados con éxito") {
-                refreshPorcentajes(porcentajes)
+                refreshPorcentajes(porcentajesParsed)
             }
     
             alert(result.message)
@@ -86,6 +96,7 @@ function ModalPorcentajes({ onClose }) {
                             <th>Minorista</th>
                             <th>Mayorista</th>
                             <th>Distribuidor</th>
+                            <th>De Marca</th>
                             <th>5%</th>
                             <th>10%</th>
                         </tr>
@@ -97,10 +108,11 @@ function ModalPorcentajes({ onClose }) {
                                 <td>
                                     <Form.Control
                                         type="number"
+                                        step="0.01"
                                         min="0"
                                         max="100"
                                         className="no-spinner"
-                                        style={{width: "52px"}}
+                                        style={{width: "65px"}}
                                         value={porcentajes[marca.id]?.minorista}
                                         onChange={e =>
                                             handleChange(marca.id, "minorista", e.target.value)
@@ -110,10 +122,11 @@ function ModalPorcentajes({ onClose }) {
                                 <td>
                                     <Form.Control
                                         type="number"
+                                        step="0.01"
                                         min="0"
                                         max="100"
                                         className="no-spinner"
-                                        style={{width: "52px"}}
+                                        style={{width: "65px"}}
                                         value={porcentajes[marca.id]?.mayorista}
                                         onChange={e =>
                                             handleChange(marca.id, "mayorista", e.target.value)
@@ -123,10 +136,11 @@ function ModalPorcentajes({ onClose }) {
                                 <td>
                                     <Form.Control
                                         type="number"
+                                        step="0.01"
                                         min="0"
                                         max="100"
                                         className="no-spinner"
-                                        style={{width: "52px"}}
+                                        style={{width: "65px"}}
                                         value={porcentajes[marca.id]?.distribuidor}
                                         onChange={e =>
                                             handleChange(marca.id, "distribuidor", e.target.value)
@@ -136,10 +150,25 @@ function ModalPorcentajes({ onClose }) {
                                 <td>
                                     <Form.Control
                                         type="number"
+                                        step="0.01"
                                         min="0"
                                         max="100"
                                         className="no-spinner"
-                                        style={{width: "52px"}}
+                                        style={{width: "65px"}}
+                                        value={porcentajes[marca.id]?.deMarca}
+                                        onChange={e =>
+                                            handleChange(marca.id, "deMarca", e.target.value)
+                                        }
+                                    />
+                                </td>
+                                <td>
+                                    <Form.Control
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        max="100"
+                                        className="no-spinner"
+                                        style={{width: "65px"}}
                                         value={porcentajes[marca.id]?.cinco}
                                         onChange={e =>
                                             handleChange(marca.id, "cinco", e.target.value)
@@ -149,10 +178,11 @@ function ModalPorcentajes({ onClose }) {
                                 <td>
                                     <Form.Control
                                         type="number"
+                                        step="0.01"
                                         min="0"
                                         max="100"
                                         className="no-spinner"
-                                        style={{width: "52px"}}
+                                        style={{width: "65px"}}
                                         value={porcentajes[marca.id]?.diez}
                                         onChange={e =>
                                             handleChange(marca.id, "diez", e.target.value)

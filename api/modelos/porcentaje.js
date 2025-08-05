@@ -6,7 +6,7 @@ const Porcentaje = sequelize.define(
     "porcentaje",
     {
         tipo_precio: {
-            type: DataTypes.ENUM("MINORISTA", "MAYORISTA", "DISTRIBUIDOR", "5%", "10%"),
+            type: DataTypes.ENUM("MINORISTA", "MAYORISTA", "DISTRIBUIDOR", "DE MARCA", "5%", "10%"),
             allowNull: false,
         },
         ganancia: {

@@ -4,7 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useData } from "../../context/DataContext";
 import { COLUMNSSTATS } from "./columnsEstadisticas";
 import { useTable, useGlobalFilter, usePagination, useRowSelect} from "react-table";
-import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowRight, faL } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "react-bootstrap";
@@ -20,22 +20,36 @@ const Estadisticas = () => {
     const [selectedMarca, setSelectedMarca] = useState("mixto");
     const [pedidosPorMes, setPedidosPorMes] = useState({})
     const [opcionesMeses, setOpcionesMeses] = useState([])
-    const [dataDistribuidor, setDataDistribuidor] = useState([])
-    const [dataMayorista, setDataMayorista] = useState([])
     const [dataMinorista, setDataMinorista] = useState([])
+    const [dataMayorista, setDataMayorista] = useState([])
+    const [dataDistribuidor, setDataDistribuidor] = useState([])
+    const [dataDeMarca, setDataDeMarca] = useState([])
     const [data5, setData5] = useState([])
     const [data10, setData10] = useState([])
     const [isModalPorcentajesOpen, setIsModalPorcentajesOpen] = useState(false)
     const [porcentajeMinorista ,setPorcentajeMinorista] = useState(0)
     const [porcentajeMayorista ,setPorcentajeMayorista] = useState(0)
     const [porcentajeDistribuidor ,setPorcentajeDistribuidor] = useState(0)
+    const [porcentajeDeMarca, setPorcentajeDeMarca] = useState(0)
     const [porcentaje5 ,setPorcentaje5] = useState(0)
     const [porcentaje10 ,setPorcentaje10] = useState(0)
+    const [gananciaMinorista, setGananciaMinorista] = useState(0)
+    const [gananciaMayorista, setGananciaMayorista] = useState(0)
+    const [gananciaDistribuidor, setGananciaDistribuidor] = useState(0)
+    const [gananciaDeMarca, setGananciaDeMarca] = useState(0)
+    const [ganancia5, setGanancia5] = useState(0)
+    const [ganancia10, setGanancia10] = useState(0)
+    const [gananciaTotal, setGananciaTotal] = useState(0)
     const [gananciaMinoristaMixto, setGananciaMinoristaMixto] = useState(0)
     const [gananciaMayoristaMixto, setGananciaMayoristaMixto] = useState(0)
     const [gananciaDistribuidorMixto, setGananciaDistribuidorMixto] = useState(0)
+    const [gananciaDeMarcaMixto, setGananciaDeMarcaMixto] = useState(0)
     const [ganancia5Mixto, setGanancia5Mixto] = useState(0)
     const [ganancia10Mixto, setGanancia10Mixto] = useState(0)
+    const [selectedMonthYearGananciaTotalInicial, setSelectedMonthYearGananciaTotalInicial] = useState("")
+    const [selectedMonthYearGananciaTotalFinal, setSelectedMonthYearGananciaTotalFinal] = useState("")
+    const [tipoGananciaTotal, setTipoGananciaTotal] = useState("Marca actual")
+    const [flagGananciaInicial, setFlagGananciaInicial] = useState(false)
 
     useEffect(() => {
         const grupos = {}
@@ -66,11 +80,11 @@ const Estadisticas = () => {
         setPedidosPorMes(grupos)
         setOpcionesMeses(opciones)
         setSelectedMonthYear(opciones[0]?.value)
+        setSelectedMonthYearGananciaTotalInicial(opciones[0]?.value)
+        setSelectedMonthYearGananciaTotalFinal(opciones[0]?.value)
     }, [pedidosData]);
 
     useEffect(() => {
-        
-
         if(Object.keys(pedidosPorMes).length > 0) {
             const pedidosFormateados = []
 
@@ -81,9 +95,11 @@ const Estadisticas = () => {
 
                     let tipo_tabla = p.tipo_precio
 
+                    if(p.flag_de_marca) tipo_tabla = "DE MARCA"
+
                     const cliente = clientesData.find(c => c.nombre === p.persona_nombre)
 
-                    if(!p.tipo_precio) {
+                    if(!p.tipo_precio && !p.flag_de_marca) {
                         tipo_tabla = cliente.tipo_cliente
                     } 
 
@@ -162,11 +178,13 @@ const Estadisticas = () => {
             const dataMinorista = dataActual.filter(p => p.tipo_tabla === "MINORISTA")
             const dataMayorista = dataActual.filter(p => p.tipo_tabla === "MAYORISTA")
             const dataDistribuidor = dataActual.filter(p => p.tipo_tabla === "DISTRIBUIDOR")
+            const dataDeMarca = dataActual.filter(p => p.tipo_tabla === "DE MARCA")
             const data5 = dataActual.filter(p => p.tipo_tabla === "5%")
             const data10 = dataActual.filter(p => p.tipo_tabla === "10%")
             setDataDistribuidor(dataDistribuidor);
             setDataMayorista(dataMayorista)
             setDataMinorista(dataMinorista)
+            setDataDeMarca(dataDeMarca)
             setData5(data5)
             setData10(data10)
 
@@ -174,58 +192,155 @@ const Estadisticas = () => {
                 const porcMin = porcentajesData?.[selectedMarca]?.minorista ?? 0;
                 const porcMay = porcentajesData?.[selectedMarca]?.mayorista ?? 0;
                 const porcDist = porcentajesData?.[selectedMarca]?.distribuidor ?? 0;
+                const porcDeMarca = porcentajesData?.[selectedMarca]?.deMarca ?? 0;
                 const porc5 = porcentajesData?.[selectedMarca]?.cinco ?? 0;
                 const porc10 = porcentajesData?.[selectedMarca]?.diez ?? 0;
                 setPorcentajeMinorista(porcMin)
                 setPorcentajeMayorista(porcMay)
                 setPorcentajeDistribuidor(porcDist)
+                setPorcentajeDeMarca(porcDeMarca)
                 setPorcentaje5(porc5)
                 setPorcentaje10(porc10)
+
+                const gananciaMinorista = dataMinorista.reduce((acc, pedido) => acc + pedido.monto, 0) * porcMin / 100;
+                const gananciaMayorista = dataMayorista.reduce((acc, pedido) => acc + pedido.monto, 0) * porcMay / 100;
+                const gananciaDistribuidor = dataDistribuidor.reduce((acc, pedido) => acc + pedido.monto, 0) * porcDist / 100;
+                const gananciaDeMarca = dataDeMarca.reduce((acc, pedido) => acc + pedido.monto, 0) * porcDeMarca / 100;
+                const ganancia5 = data5.reduce((acc, pedido) => acc + pedido.monto, 0) * porc5 / 100;
+                const ganancia10 = data10.reduce((acc, pedido) => acc + pedido.monto, 0) * porc10 / 100;
+
+                setGananciaMinorista(gananciaMinorista)
+                setGananciaMayorista(gananciaMayorista)
+                setGananciaDistribuidor(gananciaDistribuidor)
+                setGananciaDeMarca(gananciaDeMarca)
+                setGanancia5(ganancia5)
+                setGanancia10(ganancia10)
+
+                if(!flagGananciaInicial) {
+                    const gananciaTotalInicial = gananciaMinorista + gananciaMayorista + gananciaDistribuidor + gananciaDeMarca + ganancia5 + ganancia10
+                    setGananciaTotal(gananciaTotalInicial)
+                    setFlagGananciaInicial(true)
+                }
             } else {
-                let gananciaMinorista = 0;
-                let gananciaMayorista = 0;
-                let gananciaDistribuidor = 0;
-                let ganancia5 = 0;
-                let ganancia10 = 0;
+                let gananciaMinoristaM = 0;
+                let gananciaMayoristaM = 0;
+                let gananciaDistribuidorM = 0;
+                const gananciaDeMarcaM = 0;
+                let ganancia5M = 0;
+                let ganancia10M = 0;
 
                 for (const pedido of dataMinorista) {
                     for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
-                        gananciaMinorista += subtotal * (porcentajesData?.[marcaId]?.minorista ?? 0) / 100;
+                        gananciaMinoristaM += subtotal * (porcentajesData?.[marcaId]?.minorista ?? 0) / 100;
                     }
                 }
 
                 for (const pedido of dataMayorista) {
                     for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
-                        gananciaMayorista += subtotal * (porcentajesData?.[marcaId]?.mayorista ?? 0) / 100;
+                        gananciaMayoristaM += subtotal * (porcentajesData?.[marcaId]?.mayorista ?? 0) / 100;
                     }
                 }
 
                 for (const pedido of dataDistribuidor) {
                     for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
-                        gananciaDistribuidor += subtotal * (porcentajesData?.[marcaId]?.distribuidor ?? 0) / 100;
+                        gananciaDistribuidorM += subtotal * (porcentajesData?.[marcaId]?.distribuidor ?? 0) / 100;
                     }
                 }
 
                 for (const pedido of data5) {
                     for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
-                        ganancia5 += subtotal * (porcentajesData?.[marcaId]?.cinco ?? 0) / 100;
+                        ganancia5M += subtotal * (porcentajesData?.[marcaId]?.cinco ?? 0) / 100;
                     }
                 }
 
                 for (const pedido of data10) {
                     for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
-                        ganancia10 += subtotal * (porcentajesData?.[marcaId]?.diez ?? 0) / 100;
+                        ganancia10M += subtotal * (porcentajesData?.[marcaId]?.diez ?? 0) / 100;
                     }
                 }
-            
-                setGananciaMinoristaMixto(gananciaMinorista);
-                setGananciaMayoristaMixto(gananciaMayorista);
-                setGananciaDistribuidorMixto(gananciaDistribuidor);
-                setGanancia5Mixto(ganancia5);
-                setGanancia10Mixto(ganancia10);
+
+                setGananciaMinoristaMixto(gananciaMinoristaM);
+                setGananciaMayoristaMixto(gananciaMayoristaM);
+                setGananciaDistribuidorMixto(gananciaDistribuidorM);
+                setGananciaDeMarcaMixto(gananciaDeMarcaM)
+                setGanancia5Mixto(ganancia5M);
+                setGanancia10Mixto(ganancia10M);
+
+                if(!flagGananciaInicial) {
+                    const gananciaTotalInicial = gananciaMinoristaM + gananciaMayoristaM + gananciaDistribuidorM + gananciaDeMarcaM + ganancia5M + ganancia10M
+                    setGananciaTotal(gananciaTotalInicial)
+                    setFlagGananciaInicial(true)
+                }
             }
         }
     }, [selectedMonthYear, selectedMarca, data]);
+
+    useEffect(() => {
+        if (!selectedMonthYearGananciaTotalInicial || !selectedMonthYearGananciaTotalFinal || data.length === 0) return;
+
+        const [mesInicio, anioInicio] = selectedMonthYearGananciaTotalInicial.split("/").map(Number);
+        const [mesFin, anioFin] = selectedMonthYearGananciaTotalFinal.split("/").map(Number);
+
+        const enRango = (mes, anio) => {
+            const desde = anioInicio * 100 + mesInicio;
+            const hasta = anioFin * 100 + mesFin;
+            const actual = anio * 100 + mes;
+            return actual >= desde && actual <= hasta;
+        }
+
+        const dataEnRango = data.filter(p => {
+            const [mes, anio] = p.grupo.split("/").map(Number);
+            return enRango(mes, anio);
+        });
+
+        let total = 0;
+
+        const calcularGanancia = (pedidos, tipo) => {
+            return pedidos.reduce((acc, pedido) => {
+                if (pedido.marca === "mixto") {
+                    for (const [marcaId, subtotal] of Object.entries(pedido.precios_x_marca)) {
+                        const porcentaje = porcentajesData?.[marcaId]?.[tipo] ?? 0;
+                        acc += subtotal * porcentaje / 100;
+                    }
+                } else {
+                    const porcentaje = porcentajesData?.[pedido.marca]?.[tipo] ?? 0;
+                    acc += pedido.monto * porcentaje / 100;
+                }
+                return acc;
+            }, 0);
+        }
+
+        const tipos = ["minorista", "mayorista", "distribuidor", "deMarca", "cinco", "diez"];
+        const etiquetas = {
+            minorista: "MINORISTA",
+            mayorista: "MAYORISTA",
+            distribuidor: "DISTRIBUIDOR",
+            deMarca: "DE MARCA",
+            cinco: "5%",
+            diez: "10%"
+        };
+
+        for (const tipo of tipos) {
+            const pedidosTipo = dataEnRango.filter(p => p.tipo_tabla === etiquetas[tipo]);
+
+            if (tipoGananciaTotal === "Marca actual") {
+                if (selectedMarca === "mixto") {
+                    // Acumulamos por marca en cada pedido mixto
+                    const pedidosMixto = pedidosTipo.filter(p => p.marca === "mixto")
+                    total += calcularGanancia(pedidosMixto, tipo);
+                } else {
+                    // Solo sumamos los pedidos de la marca seleccionada
+                    const pedidosMarca = pedidosTipo.filter(p => p.marca === selectedMarca);
+                    total += calcularGanancia(pedidosMarca, tipo);
+                }
+            } else if (tipoGananciaTotal === "Todas las marcas") {
+                // Siempre acumulamos todos los pedidos, por marca en cada caso
+                total += calcularGanancia(pedidosTipo, tipo);
+            }
+        }
+
+        setGananciaTotal(total);
+    }, [selectedMonthYearGananciaTotalInicial, selectedMonthYearGananciaTotalFinal, tipoGananciaTotal, selectedMarca, data]);
 
     const handleVerPedido = (pedidoId) => {
         navigate(`/admin/pedidos?selected=${pedidoId}`);
@@ -299,6 +414,29 @@ const Estadisticas = () => {
         useRowSelect
     );
     const { pageIndex: pageIndexDist } = stateDist;
+
+    const {
+        getTableProps: getTablePropsDeMarca,
+        getTableBodyProps: getTableBodyPropsDeMarca,
+        headerGroups: headerGroupsDeMarca,
+        page: pageDeMarca,
+        nextPage: nextPageDeMarca,
+        previousPage: previousPageDeMarca,
+        canNextPage: canNextPageDeMarca,
+        canPreviousPage: canPreviousPageDeMarca,
+        pageOptions: pageOptionsDeMarca,
+        prepareRow: prepareRowDeMarca,
+        state: stateDeMarca,
+    } = useTable(
+        {
+            columns,
+            data: dataDeMarca,
+        },
+        useGlobalFilter,
+        usePagination,
+        useRowSelect
+    );
+    const { pageIndex: pageIndexDeMarca } = stateDeMarca;
 
     const {
         getTableProps: getTableProps5,
@@ -393,26 +531,78 @@ const Estadisticas = () => {
                     <span style={{ fontWeight: "bold" }}>TOTAL MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMinorista.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
                     <span style={{ fontWeight: "bold" }}>TOTAL MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMayorista.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
                     <span style={{ fontWeight: "bold" }}>TOTAL DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(dataDistribuidor.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                    <span style={{ fontWeight: "bold" }}>TOTAL DE MARCA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataDeMarca.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
                     <span style={{ fontWeight: "bold" }}>TOTAL 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(data5.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
                     <span style={{ fontWeight: "bold" }}>TOTAL 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(data10.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                    <span style={{ fontWeight: "bold", marginLeft: "10px" }}>SUBTOTAL: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMinorista.reduce((acc, pedido) => acc + pedido.monto, 0) + dataMayorista.reduce((acc, pedido) => acc + pedido.monto, 0) + dataDistribuidor.reduce((acc, pedido) => acc + pedido.monto, 0) + dataDeMarca.reduce((acc, pedido) => acc + pedido.monto, 0) + data5.reduce((acc, pedido) => acc + pedido.monto, 0) + data10.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
                 </div>
                 {selectedMarca !== "mixto" ? (
-                    <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
-                        <span style={{ fontWeight: "bold" }}>GANANCIA MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMinorista.reduce((acc, pedido) => acc + pedido.monto, 0) * porcentajeMinorista / 100)} ({porcentajeMinorista}%)</span></span>
-                        <span style={{ fontWeight: "bold" }}>GANANCIA MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMayorista.reduce((acc, pedido) => acc + pedido.monto, 0) * porcentajeMayorista / 100)} ({porcentajeMayorista}%)</span></span>
-                        <span style={{ fontWeight: "bold" }}>GANANCIA DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(dataDistribuidor.reduce((acc, pedido) => acc + pedido.monto, 0) * porcentajeDistribuidor / 100)} ({porcentajeDistribuidor}%)</span></span>
-                        <span style={{ fontWeight: "bold" }}>GANANCIA 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(data5.reduce((acc, pedido) => acc + pedido.monto, 0) * porcentaje5 / 100)} ({porcentaje5}%)</span></span>
-                        <span style={{ fontWeight: "bold" }}>GANANCIA 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(data10.reduce((acc, pedido) => acc + pedido.monto, 0) * porcentaje10 / 100)} ({porcentaje10}%)</span></span>
-                    </div>
+                    <>
+                        <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinorista)} ({porcentajeMinorista}%)</span></span>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMayorista)} ({porcentajeMayorista}%)</span></span>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDistribuidor)} ({porcentajeDistribuidor}%)</span></span>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA DE MARCA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDeMarca)} ({porcentajeDeMarca}%)</span></span>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia5)} ({porcentaje5}%)</span></span>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia10)} ({porcentaje10}%)</span></span>
+                            <span style={{ fontWeight: "bold", marginLeft: "10px" }}>SUBTOTAL: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinorista + gananciaMayorista + gananciaDistribuidor + gananciaDeMarca + ganancia5 + ganancia10)}</span></span>
+                        </div>
+                    </>
                 ) : (
-                    <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
-                        <span style={{ fontWeight: "bold" }}>GANANCIA MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinoristaMixto)}</span></span>
-                        <span style={{ fontWeight: "bold" }}>GANANCIA MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMayoristaMixto)}</span></span>
-                        <span style={{ fontWeight: "bold" }}>GANANCIA DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDistribuidorMixto)}</span></span>
-                        <span style={{ fontWeight: "bold" }}>GANANCIA 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia5Mixto)}</span></span>
-                        <span style={{ fontWeight: "bold" }}>GANANCIA 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia10Mixto)}</span></span>
-                    </div>
+                    <>
+                        <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinoristaMixto)}</span></span>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMayoristaMixto)}</span></span>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDistribuidorMixto)}</span></span>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA DE MARCA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDeMarcaMixto)}</span></span>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia5Mixto)}</span></span>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia10Mixto)}</span></span>
+                            <span style={{ fontWeight: "bold", marginLeft: "10px" }}>SUBTOTAL: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinoristaMixto + gananciaMayoristaMixto + gananciaDistribuidorMixto + ganancia5Mixto + ganancia10Mixto)}</span></span>
+                        </div>
+                    </>
                 )}
+                <div style={{display: "flex", flexDirection: "column", gap: "7px", alignItems: "center"}}>
+                    <span style={{ fontWeight: "bold" }}>GANANCIA TOTAL</span>
+                    <div style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "10px"}}>
+                        <span style={{ fontWeight: "bold" }}>desde</span>
+                        <select
+                            value={selectedMonthYearGananciaTotalInicial}
+                            onChange={(e) => setSelectedMonthYearGananciaTotalInicial(e.target.value)}
+                        >
+                            {opcionesMeses.map((opcion) => (
+                                <option key={opcion.value} value={opcion.value}>
+                                    {opcion.label}
+                                </option>
+                            ))}
+                        </select>
+                        <span style={{ fontWeight: "bold" }}>hasta</span>
+                        <select
+                            value={selectedMonthYearGananciaTotalFinal}
+                            onChange={(e) => setSelectedMonthYearGananciaTotalFinal(e.target.value)}
+                        >
+                            {opcionesMeses.map((opcion) => (
+                                <option key={opcion.value} value={opcion.value}>
+                                    {opcion.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "10px"}}>
+                        <span style={{ fontWeight: "bold" }}>para</span>
+                        <select
+                            value={tipoGananciaTotal}
+                            onChange={(e) => setTipoGananciaTotal(e.target.value)}
+                        >
+                            <option key={"Marca actual"} value={"Marca actual"}>
+                                la Marca Actual
+                            </option>
+                            <option key={"Todas las marcas"} value={"Todas las marcas"}>
+                                Todas las Marcas
+                            </option>
+                        </select>
+                    </div>
+                    <span style={{ fontWeight: "normal" }}>${formatearNumero(gananciaTotal)}</span>
+                </div>
             </div>
 
             {dataMinorista.length > 0 && (
@@ -570,6 +760,59 @@ const Estadisticas = () => {
                         </strong>{" "}
                     </span>
                     <button onClick={() => nextPageDist()} disabled={!canNextPageDist}>
+                        <FontAwesomeIcon icon={faArrowRight} />
+                    </button>
+                </div>
+            </>
+            )}
+            {dataDeMarca.length > 0 && (
+            <>
+                <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                        sans-serif`}}>De Marca</h2>
+                <div className="tableDivContainer">
+                    <table {...getTablePropsDeMarca()} className="tableContainer">
+                        <thead>
+                            {headerGroupsDeMarca.map((headerGroups) => (
+                                <tr {...headerGroups.getHeaderGroupProps()}>
+                                    {headerGroups.headers.map((columns) => (
+                                        <th {...columns.getHeaderProps(columns)}>
+                                            {columns.render("Header")}
+                                        </th>
+                                    ))}
+                                </tr>
+                            ))}
+                        </thead>
+                        <tbody {...getTableBodyPropsDeMarca()}>
+                            {pageDeMarca.map((row) => {
+                                prepareRowDeMarca(row);
+                                return (
+                                    <tr {...row.getRowProps()}>
+                                        {row.cells.map((cell) => {
+                                            return (
+                                                <td {...cell.getCellProps()}>
+                                                    {cell.render("Cell")}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="paginacion">
+                    <button onClick={() => previousPageDeMarca()} disabled={!canPreviousPageDeMarca}>
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                    </button>
+                    <span>
+                        Pagina{" "}
+                        <strong>
+                            {pageIndexDeMarca + 1} de {pageOptionsDeMarca.length}
+                        </strong>{" "}
+                    </span>
+                    <button onClick={() => nextPageDeMarca()} disabled={!canNextPageDeMarca}>
                         <FontAwesomeIcon icon={faArrowRight} />
                     </button>
                 </div>

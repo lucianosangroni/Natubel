@@ -20,7 +20,7 @@ const createItem = async (req, res) => {
             for (const [tipo_precioKey, valor] of Object.entries(datos)) {
                 let ganancia = parseFloat(valor);
                 if (isNaN(ganancia)) ganancia = 0;
-                const tipo_precio = tipo_precioKey.toLowerCase() === "cinco" ? "5%" : tipo_precioKey.toLowerCase() === "diez" ? "10%" : tipo_precioKey.toUpperCase();
+                const tipo_precio = tipo_precioKey.toLowerCase() === "cinco" ? "5%" : tipo_precioKey.toLowerCase() === "diez" ? "10%" : tipo_precioKey.toLowerCase() === "demarca" ? "DE MARCA" : tipo_precioKey.toUpperCase();
                 
                 const registroExistente = await porcentajeModel.findOne({
                     where: { marca_id: marcaId, tipo_precio },

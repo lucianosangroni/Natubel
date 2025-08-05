@@ -341,6 +341,7 @@ export const DataProviderAdmin = ({ children }) => {
                                                                 let key = tipo_precio.toLowerCase();
                                                                 if (key === "5%") key = "cinco";
                                                                 else if (key === "10%") key = "diez";
+                                                                else if (key === "de marca") key = "deMarca"
 
                                                                 porcentajesDataFormateados[marca_id][key] = ganancia;
                                                             });

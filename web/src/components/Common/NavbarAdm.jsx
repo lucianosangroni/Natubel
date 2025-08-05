@@ -51,6 +51,12 @@ function NavbarAdm({ selected }) {
             Pedidos
           </Link>
           <Link
+            className={`navbar-link ${selected === 'Cobranzas' ? 'active' : ''}`}
+            to="/admin/cobranzas"
+          >
+            Cobranzas
+          </Link>
+          <Link
             className={`navbar-link ${selected === 'Estadisticas' ? 'active' : ''}`}
             to="/admin/estadisticas"
           >
