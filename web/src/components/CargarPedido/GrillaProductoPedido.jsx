@@ -53,29 +53,27 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
         return resultado
     }
 
-    const handleCantidadChange = (productKey, stock, cantidad) => {
+    const handleCantidadChange = (productKey, cantidad) => {
         const parsedCantidad = parseInt(cantidad) || ""
 
-        if((tipoPedidor === "cliente" && parsedCantidad <= stock) || tipoPedidor === "proveedor" || parsedCantidad === "") {
-            const newCantidades = {...cantidades, [productKey]: parsedCantidad}
-            const filteredCantidades = filtrarDiccionario(newCantidades)
-            setCantidades(filteredCantidades);
-            onSetCantidades(filteredCantidades);
-        }
+        const newCantidades = {...cantidades, [productKey]: parsedCantidad}
+        const filteredCantidades = filtrarDiccionario(newCantidades)
+        setCantidades(filteredCantidades);
+        onSetCantidades(filteredCantidades);
     };
 
-    const handleKeyDown = (e, productKey, stock) => {
+    const handleKeyDown = (e, productKey) => {
         e.preventDefault()
         const key = e.key
 
         if(key >= '0' && key <= '9') {
             const newCantidad = (cantidades[productKey] || "") + key;
-            handleCantidadChange(productKey, stock, newCantidad)
+            handleCantidadChange(productKey, newCantidad)
         } else if (key === "Delete") {
-            handleCantidadChange(productKey, stock, "")
+            handleCantidadChange(productKey, "")
         } else if (key === "Backspace") {
             const newCantidad = (String(cantidades[productKey]) || "").slice(0, -1);
-            handleCantidadChange(productKey, stock, newCantidad)
+            handleCantidadChange(productKey, newCantidad)
         } else if (key === "ArrowRight" || key === "ArrowLeft" || key === "ArrowUp" || key === "ArrowDown") {
             const rowIndex = colores.indexOf(productKey.split('|-|')[0]);
             const colIndex = talles.indexOf(productKey.split('|-|')[1]);
@@ -146,7 +144,7 @@ function GrillaProductoPedido({ articulo, onConfirmarProducto, tipoPedidor, onBo
                                         <input
                                             type="text"
                                             defaultValue={cantidad}
-                                            onKeyDown={(e) => handleKeyDown(e, productKey, stock)}
+                                            onKeyDown={(e) => handleKeyDown(e, productKey)}
                                             ref={inputRefs[productKey]}
                                         />
                                         <span className="stock-label">&nbsp;({stock})</span>

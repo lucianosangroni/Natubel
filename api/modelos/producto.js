@@ -8,13 +8,6 @@ const Producto = sequelize.define(
         stock: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            validate: {
-                isPositive: function(value) {
-                    if(value < 0) {
-                        throw new Error("No se puede tener stock negativo")
-                    }
-                }
-            }
         },
         talle: {
             type: DataTypes.STRING,
