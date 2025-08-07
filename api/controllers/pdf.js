@@ -1040,11 +1040,11 @@ const getRemitoLody = async (req, res) => {
         doc.moveTo(430, 15).lineTo(612, 15).stroke('black');
         doc.moveTo(430, 0).lineTo(430, 15).stroke('black');
 
-        doc.fontSize(10).fillColor("black").text('REMITO N°: ' + remito.numero_remito, 15, 10);
-        doc.fontSize(10).fillColor("black").text('PEDIDO N°: ' + pedido.numero_pedido, 100, 10);
-        doc.fontSize(10).fillColor("black").text('RAZON SOCIAL: ' + persona.nombre, 15, 40)
-        doc.fontSize(10).fillColor("black").text('Direc. de Entrega: ' + persona.direccion, 15, 70)
-        doc.fontSize(10).fillColor("black").text('CUIT: ' + persona.cuit_cuil, 15, 100)
+        doc.fontSize(11).fillColor("black").font('Helvetica-Bold').text('REMITO N°: ' + remito.numero_remito, 15, 10);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('PEDIDO N°: ' + pedido.numero_pedido, 100, 11);
+        doc.fontSize(11).fillColor("black").font('Helvetica-Bold').text('RAZON SOCIAL: ' + persona.nombre, 15, 40)
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('Direc. de Entrega: ' + persona.direccion, 15, 70)
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('CUIT: ' + persona.cuit_cuil, 15, 100)
 
         const subtotal = cupon ? pedido.precio_total / (1 - cupon.descuento / 100) : pedido.precio_total;
 

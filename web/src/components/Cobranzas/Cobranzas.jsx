@@ -10,6 +10,10 @@ const Cobranzas = () => {
     const { isInitialLoading, clientesData, proveedoresData, imputacionesData, facturasData, pagosData } = useData()
     const [selectedInfo, setSelectedInfo] = useState("Cobranzas")
     const [imputaciones, setImputaciones] = useState([])
+    const [imputacionesFiltradas, setImputacionesFiltradas] = useState([])
+    const [proveedoresFiltrados, setProveedoresFiltrados] = useState([])
+    const [clientesFiltrados, setClientesFiltrados] = useState([])
+    const [filtroPersona, setFiltroPersona] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -55,7 +59,34 @@ const Cobranzas = () => {
         }).sort((a, b) => Number(b.numero_imputacion) - Number(a.numero_imputacion));
 
         setImputaciones(detailedImputaciones)
+        setImputacionesFiltradas(detailedImputaciones)
+        setProveedoresFiltrados(proveedoresData)
+        setClientesFiltrados(clientesData)
     }, [imputacionesData]);
+
+    useEffect(() => {
+        if(imputaciones.length <= 0) return
+
+        const newImputacionesFiltradas = imputaciones.filter((imp) =>
+            imp.persona.toLowerCase().includes(filtroPersona.toLowerCase())
+        );
+
+        const newProveedoresFiltrados = proveedoresData.filter((prov) => 
+            prov.nombre.toLowerCase().includes(filtroPersona.toLowerCase())
+        );
+
+        const newClientesFiltrados = clientesData.filter((cli) => 
+            cli.nombre.toLowerCase().includes(filtroPersona.toLowerCase())
+        );
+
+        setImputacionesFiltradas(newImputacionesFiltradas)
+        setProveedoresFiltrados(newProveedoresFiltrados)
+        setClientesFiltrados(newClientesFiltrados)
+    }, [filtroPersona]);
+
+    const handleSeletedInfoChange = (value) => {
+        setSelectedInfo(value)
+    }
 
     const formatearFecha = (fechaDateTime) => {
         const fecha = new Date(fechaDateTime);
@@ -87,10 +118,10 @@ const Cobranzas = () => {
             {(isInitialLoading) && <Loading/>}
             <NavbarAdm selected={'Cobranzas'}/>
 
-            <div style={{marginTop: "5.5rem", display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <div style={{marginTop: "5.5rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px"}}>
                 <select
                     value={selectedInfo}
-                    onChange={(e) => setSelectedInfo(e.target.value)}
+                    onChange={(e) => handleSeletedInfoChange(e.target.value)}
                 >
                     <option key={"Cobranzas"} value={"Cobranzas"}>
                         Cobranzas
@@ -99,6 +130,20 @@ const Cobranzas = () => {
                         Cuentas Corrientes
                     </option>
                 </select>
+
+                <input
+                    type="text"
+                    placeholder="Buscar cliente o proveedor..."
+                    value={filtroPersona}
+                    onChange={(e) => setFiltroPersona(e.target.value)}
+                    style={{
+                        padding: "6px",
+                        fontSize: "14px",
+                        width: "300px",
+                        borderRadius: "4px",
+                        border: "1px solid #ccc"
+                    }}
+                />
             </div>
 
             {selectedInfo === "Cobranzas" && (
@@ -118,7 +163,7 @@ const Cobranzas = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {imputaciones.map((imputacion, index) => (
+                                    {imputacionesFiltradas.map((imputacion, index) => (
                                         <tr key={index}>
                                             <td>{imputacion.numero_imputacion}</td>
                                             <td>{imputacion.fecha}</td>
@@ -153,7 +198,7 @@ const Cobranzas = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {[...proveedoresData].sort((a, b) => a.nombre.localeCompare(b.nombre)).map((proveedor, index) => (
+                                    {[...proveedoresFiltrados].sort((a, b) => a.nombre.localeCompare(b.nombre)).map((proveedor, index) => (
                                         <tr key={index}>
                                             <td>{proveedor.nombre}</td>
                                             <td>{proveedor.email}</td>
@@ -180,7 +225,7 @@ const Cobranzas = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {[...clientesData].sort((a, b) => a.nombre.localeCompare(b.nombre)).map((cliente, index) => (
+                                    {[...clientesFiltrados].sort((a, b) => a.nombre.localeCompare(b.nombre)).map((cliente, index) => (
                                         <tr key={index}>
                                             <td>{cliente.nombre}</td>
                                             <td>{cliente.email}</td>

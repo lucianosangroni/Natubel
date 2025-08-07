@@ -500,435 +500,445 @@ const Estadisticas = () => {
         <>
             {(isInitialLoading) && <Loading/>}
             <NavbarAdm selected={'Estadisticas'}/>
-            <div style={{marginTop: "5.5rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px"}}>
-                {opcionesMeses.length > 0 && (
-                    <select
-                        value={selectedMonthYear}
-                        onChange={(e) => setSelectedMonthYear(e.target.value)}
-                    >
-                        {opcionesMeses.map((opcion) => (
-                            <option key={opcion.value} value={opcion.value}>
-                                {opcion.label}
-                            </option>
-                        ))}
-                    </select>
-                )}
-                
-                <select value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)}>
-                    <option value="mixto">Mixto</option>
-                    {marcasData.map((marca) => (
-                        <option key={marca.id} value={marca.id}>
-                            {marca.nombre}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            {localStorage.getItem("username") !== "gamarrafranco56@gmail.com" ? (
+                <>
+                    <div style={{marginTop: "5.5rem", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                        <h1>Este usuario no tiene permitido ver esta pantalla</h1>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div style={{marginTop: "5.5rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px"}}>
+                        {opcionesMeses.length > 0 && (
+                            <select
+                                value={selectedMonthYear}
+                                onChange={(e) => setSelectedMonthYear(e.target.value)}
+                            >
+                                {opcionesMeses.map((opcion) => (
+                                    <option key={opcion.value} value={opcion.value}>
+                                        {opcion.label}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
 
-            <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
-
-            <div style={{display: "flex", alignItems: "center", justifyContent: "space-evenly", gap: "7px"}}>
-                <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
-                    <span style={{ fontWeight: "bold" }}>TOTAL MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMinorista.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
-                    <span style={{ fontWeight: "bold" }}>TOTAL MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMayorista.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
-                    <span style={{ fontWeight: "bold" }}>TOTAL DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(dataDistribuidor.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
-                    <span style={{ fontWeight: "bold" }}>TOTAL DE MARCA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataDeMarca.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
-                    <span style={{ fontWeight: "bold" }}>TOTAL 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(data5.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
-                    <span style={{ fontWeight: "bold" }}>TOTAL 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(data10.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
-                    <span style={{ fontWeight: "bold", marginLeft: "10px" }}>SUBTOTAL: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMinorista.reduce((acc, pedido) => acc + pedido.monto, 0) + dataMayorista.reduce((acc, pedido) => acc + pedido.monto, 0) + dataDistribuidor.reduce((acc, pedido) => acc + pedido.monto, 0) + dataDeMarca.reduce((acc, pedido) => acc + pedido.monto, 0) + data5.reduce((acc, pedido) => acc + pedido.monto, 0) + data10.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
-                </div>
-                {selectedMarca !== "mixto" ? (
-                    <>
-                        <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
-                            <span style={{ fontWeight: "bold" }}>GANANCIA MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinorista)} ({porcentajeMinorista}%)</span></span>
-                            <span style={{ fontWeight: "bold" }}>GANANCIA MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMayorista)} ({porcentajeMayorista}%)</span></span>
-                            <span style={{ fontWeight: "bold" }}>GANANCIA DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDistribuidor)} ({porcentajeDistribuidor}%)</span></span>
-                            <span style={{ fontWeight: "bold" }}>GANANCIA DE MARCA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDeMarca)} ({porcentajeDeMarca}%)</span></span>
-                            <span style={{ fontWeight: "bold" }}>GANANCIA 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia5)} ({porcentaje5}%)</span></span>
-                            <span style={{ fontWeight: "bold" }}>GANANCIA 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia10)} ({porcentaje10}%)</span></span>
-                            <span style={{ fontWeight: "bold", marginLeft: "10px" }}>SUBTOTAL: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinorista + gananciaMayorista + gananciaDistribuidor + gananciaDeMarca + ganancia5 + ganancia10)}</span></span>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
-                            <span style={{ fontWeight: "bold" }}>GANANCIA MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinoristaMixto)}</span></span>
-                            <span style={{ fontWeight: "bold" }}>GANANCIA MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMayoristaMixto)}</span></span>
-                            <span style={{ fontWeight: "bold" }}>GANANCIA DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDistribuidorMixto)}</span></span>
-                            <span style={{ fontWeight: "bold" }}>GANANCIA DE MARCA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDeMarcaMixto)}</span></span>
-                            <span style={{ fontWeight: "bold" }}>GANANCIA 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia5Mixto)}</span></span>
-                            <span style={{ fontWeight: "bold" }}>GANANCIA 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia10Mixto)}</span></span>
-                            <span style={{ fontWeight: "bold", marginLeft: "10px" }}>SUBTOTAL: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinoristaMixto + gananciaMayoristaMixto + gananciaDistribuidorMixto + ganancia5Mixto + ganancia10Mixto)}</span></span>
-                        </div>
-                    </>
-                )}
-                <div style={{display: "flex", flexDirection: "column", gap: "7px", alignItems: "center"}}>
-                    <span style={{ fontWeight: "bold" }}>GANANCIA TOTAL</span>
-                    <div style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "10px"}}>
-                        <span style={{ fontWeight: "bold" }}>desde</span>
-                        <select
-                            value={selectedMonthYearGananciaTotalInicial}
-                            onChange={(e) => setSelectedMonthYearGananciaTotalInicial(e.target.value)}
-                        >
-                            {opcionesMeses.map((opcion) => (
-                                <option key={opcion.value} value={opcion.value}>
-                                    {opcion.label}
-                                </option>
-                            ))}
-                        </select>
-                        <span style={{ fontWeight: "bold" }}>hasta</span>
-                        <select
-                            value={selectedMonthYearGananciaTotalFinal}
-                            onChange={(e) => setSelectedMonthYearGananciaTotalFinal(e.target.value)}
-                        >
-                            {opcionesMeses.map((opcion) => (
-                                <option key={opcion.value} value={opcion.value}>
-                                    {opcion.label}
+                        <select value={selectedMarca} onChange={(e) => handleChangeMarca(e.target.value)}>
+                            <option value="mixto">Mixto</option>
+                            {marcasData.map((marca) => (
+                                <option key={marca.id} value={marca.id}>
+                                    {marca.nombre}
                                 </option>
                             ))}
                         </select>
                     </div>
-                    <div style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "10px"}}>
-                        <span style={{ fontWeight: "bold" }}>para</span>
-                        <select
-                            value={tipoGananciaTotal}
-                            onChange={(e) => setTipoGananciaTotal(e.target.value)}
-                        >
-                            <option key={"Marca actual"} value={"Marca actual"}>
-                                la Marca Actual
-                            </option>
-                            <option key={"Todas las marcas"} value={"Todas las marcas"}>
-                                Todas las Marcas
-                            </option>
-                        </select>
+                        
+                    <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                        
+                    <div style={{display: "flex", alignItems: "center", justifyContent: "space-evenly", gap: "7px"}}>
+                        <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
+                            <span style={{ fontWeight: "bold" }}>TOTAL MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMinorista.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                            <span style={{ fontWeight: "bold" }}>TOTAL MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMayorista.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                            <span style={{ fontWeight: "bold" }}>TOTAL DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(dataDistribuidor.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                            <span style={{ fontWeight: "bold" }}>TOTAL DE MARCA: <span style={{fontWeight: "normal"}}>${formatearNumero(dataDeMarca.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                            <span style={{ fontWeight: "bold" }}>TOTAL 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(data5.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                            <span style={{ fontWeight: "bold" }}>TOTAL 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(data10.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                            <span style={{ fontWeight: "bold", marginLeft: "10px" }}>SUBTOTAL: <span style={{fontWeight: "normal"}}>${formatearNumero(dataMinorista.reduce((acc, pedido) => acc + pedido.monto, 0) + dataMayorista.reduce((acc, pedido) => acc + pedido.monto, 0) + dataDistribuidor.reduce((acc, pedido) => acc + pedido.monto, 0) + dataDeMarca.reduce((acc, pedido) => acc + pedido.monto, 0) + data5.reduce((acc, pedido) => acc + pedido.monto, 0) + data10.reduce((acc, pedido) => acc + pedido.monto, 0))}</span></span>
+                        </div>
+                        {selectedMarca !== "mixto" ? (
+                            <>
+                                <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
+                                    <span style={{ fontWeight: "bold" }}>GANANCIA MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinorista)} ({porcentajeMinorista}%)</span></span>
+                                    <span style={{ fontWeight: "bold" }}>GANANCIA MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMayorista)} ({porcentajeMayorista}%)</span></span>
+                                    <span style={{ fontWeight: "bold" }}>GANANCIA DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDistribuidor)} ({porcentajeDistribuidor}%)</span></span>
+                                    <span style={{ fontWeight: "bold" }}>GANANCIA DE MARCA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDeMarca)} ({porcentajeDeMarca}%)</span></span>
+                                    <span style={{ fontWeight: "bold" }}>GANANCIA 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia5)} ({porcentaje5}%)</span></span>
+                                    <span style={{ fontWeight: "bold" }}>GANANCIA 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia10)} ({porcentaje10}%)</span></span>
+                                    <span style={{ fontWeight: "bold", marginLeft: "10px" }}>SUBTOTAL: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinorista + gananciaMayorista + gananciaDistribuidor + gananciaDeMarca + ganancia5 + ganancia10)}</span></span>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div style={{display: "flex", flexDirection: "column", gap: "7px"}}>
+                                    <span style={{ fontWeight: "bold" }}>GANANCIA MINORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinoristaMixto)}</span></span>
+                                    <span style={{ fontWeight: "bold" }}>GANANCIA MAYORISTA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMayoristaMixto)}</span></span>
+                                    <span style={{ fontWeight: "bold" }}>GANANCIA DISTRIBUIDOR: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDistribuidorMixto)}</span></span>
+                                    <span style={{ fontWeight: "bold" }}>GANANCIA DE MARCA: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaDeMarcaMixto)}</span></span>
+                                    <span style={{ fontWeight: "bold" }}>GANANCIA 5%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia5Mixto)}</span></span>
+                                    <span style={{ fontWeight: "bold" }}>GANANCIA 10%: <span style={{fontWeight: "normal"}}>${formatearNumero(ganancia10Mixto)}</span></span>
+                                    <span style={{ fontWeight: "bold", marginLeft: "10px" }}>SUBTOTAL: <span style={{fontWeight: "normal"}}>${formatearNumero(gananciaMinoristaMixto + gananciaMayoristaMixto + gananciaDistribuidorMixto + ganancia5Mixto + ganancia10Mixto)}</span></span>
+                                </div>
+                            </>
+                        )}
+                        <div style={{display: "flex", flexDirection: "column", gap: "7px", alignItems: "center"}}>
+                            <span style={{ fontWeight: "bold" }}>GANANCIA TOTAL</span>
+                            <div style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "10px"}}>
+                                <span style={{ fontWeight: "bold" }}>desde</span>
+                                <select
+                                    value={selectedMonthYearGananciaTotalInicial}
+                                    onChange={(e) => setSelectedMonthYearGananciaTotalInicial(e.target.value)}
+                                >
+                                    {opcionesMeses.map((opcion) => (
+                                        <option key={opcion.value} value={opcion.value}>
+                                            {opcion.label}
+                                        </option>
+                                    ))}
+                                </select>
+                                <span style={{ fontWeight: "bold" }}>hasta</span>
+                                <select
+                                    value={selectedMonthYearGananciaTotalFinal}
+                                    onChange={(e) => setSelectedMonthYearGananciaTotalFinal(e.target.value)}
+                                >
+                                    {opcionesMeses.map((opcion) => (
+                                        <option key={opcion.value} value={opcion.value}>
+                                            {opcion.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div style={{display: "flex", alignItems: "center", justifyContent: "center", gap: "10px"}}>
+                                <span style={{ fontWeight: "bold" }}>para</span>
+                                <select
+                                    value={tipoGananciaTotal}
+                                    onChange={(e) => setTipoGananciaTotal(e.target.value)}
+                                >
+                                    <option key={"Marca actual"} value={"Marca actual"}>
+                                        la Marca Actual
+                                    </option>
+                                    <option key={"Todas las marcas"} value={"Todas las marcas"}>
+                                        Todas las Marcas
+                                    </option>
+                                </select>
+                            </div>
+                            <span style={{ fontWeight: "normal" }}>${formatearNumero(gananciaTotal)}</span>
+                        </div>
                     </div>
-                    <span style={{ fontWeight: "normal" }}>${formatearNumero(gananciaTotal)}</span>
-                </div>
-            </div>
+                                
+                    {dataMinorista.length > 0 && (
+                    <>
+                        <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                        <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                                "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                                sans-serif`}}>Minorista</h2>
+                        <div className="tableDivContainer">
+                            <table {...getTablePropsMin()} className="tableContainer">
+                                <thead>
+                                    {headerGroupsMin.map((headerGroups) => (
+                                        <tr {...headerGroups.getHeaderGroupProps()}>
+                                            {headerGroups.headers.map((columns) => (
+                                                <th {...columns.getHeaderProps(columns)}>
+                                                    {columns.render("Header")}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </thead>
+                                <tbody {...getTableBodyPropsMin()}>
+                                    {pageMin.map((row) => {
+                                        prepareRowMin(row);
+                                        return (
+                                            <tr {...row.getRowProps()}>
+                                                {row.cells.map((cell) => {
+                                                    return (
+                                                        <td {...cell.getCellProps()}>
+                                                            {cell.render("Cell")}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="paginacion">
+                            <button onClick={() => previousPageMin()} disabled={!canPreviousPageMin}>
+                                <FontAwesomeIcon icon={faArrowLeft} />
+                            </button>
+                            <span>
+                                Pagina{" "}
+                                <strong>
+                                    {pageIndexMin + 1} de {pageOptionsMin.length}
+                                </strong>{" "}
+                            </span>
+                            <button onClick={() => nextPageMin()} disabled={!canNextPageMin}>
+                                <FontAwesomeIcon icon={faArrowRight} />
+                            </button>
+                        </div>
+                    </>
+                    )}
 
-            {dataMinorista.length > 0 && (
-            <>
-                <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
-                <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                        sans-serif`}}>Minorista</h2>
-                <div className="tableDivContainer">
-                    <table {...getTablePropsMin()} className="tableContainer">
-                        <thead>
-                            {headerGroupsMin.map((headerGroups) => (
-                                <tr {...headerGroups.getHeaderGroupProps()}>
-                                    {headerGroups.headers.map((columns) => (
-                                        <th {...columns.getHeaderProps(columns)}>
-                                            {columns.render("Header")}
-                                        </th>
+                    {dataMayorista.length > 0 && (
+                    <>
+                        <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                        <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                                "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                                sans-serif`}}>Mayorista</h2>
+                        <div className="tableDivContainer">
+                            <table {...getTablePropsMay()} className="tableContainer">
+                                <thead>
+                                    {headerGroupsMay.map((headerGroups) => (
+                                        <tr {...headerGroups.getHeaderGroupProps()}>
+                                            {headerGroups.headers.map((columns) => (
+                                                <th {...columns.getHeaderProps(columns)}>
+                                                    {columns.render("Header")}
+                                                </th>
+                                            ))}
+                                        </tr>
                                     ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody {...getTableBodyPropsMin()}>
-                            {pageMin.map((row) => {
-                                prepareRowMin(row);
-                                return (
-                                    <tr {...row.getRowProps()}>
-                                        {row.cells.map((cell) => {
-                                            return (
-                                                <td {...cell.getCellProps()}>
-                                                    {cell.render("Cell")}
-                                                </td>
-                                            );
-                                        })}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="paginacion">
-                    <button onClick={() => previousPageMin()} disabled={!canPreviousPageMin}>
-                        <FontAwesomeIcon icon={faArrowLeft} />
-                    </button>
-                    <span>
-                        Pagina{" "}
-                        <strong>
-                            {pageIndexMin + 1} de {pageOptionsMin.length}
-                        </strong>{" "}
-                    </span>
-                    <button onClick={() => nextPageMin()} disabled={!canNextPageMin}>
-                        <FontAwesomeIcon icon={faArrowRight} />
-                    </button>
-                </div>
-            </>
-            )}
-            
-            {dataMayorista.length > 0 && (
-            <>
-                <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
-                <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                        sans-serif`}}>Mayorista</h2>
-                <div className="tableDivContainer">
-                    <table {...getTablePropsMay()} className="tableContainer">
-                        <thead>
-                            {headerGroupsMay.map((headerGroups) => (
-                                <tr {...headerGroups.getHeaderGroupProps()}>
-                                    {headerGroups.headers.map((columns) => (
-                                        <th {...columns.getHeaderProps(columns)}>
-                                            {columns.render("Header")}
-                                        </th>
+                                </thead>
+                                <tbody {...getTableBodyPropsMay()}>
+                                    {pageMay.map((row) => {
+                                        prepareRowMay(row);
+                                        return (
+                                            <tr {...row.getRowProps()}>
+                                                {row.cells.map((cell) => {
+                                                    return (
+                                                        <td {...cell.getCellProps()}>
+                                                            {cell.render("Cell")}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="paginacion">
+                            <button onClick={() => previousPageMay()} disabled={!canPreviousPageMay}>
+                                <FontAwesomeIcon icon={faArrowLeft} />
+                            </button>
+                            <span>
+                                Pagina{" "}
+                                <strong>
+                                    {pageIndexMay + 1} de {pageOptionsMay.length}
+                                </strong>{" "}
+                            </span>
+                            <button onClick={() => nextPageMay()} disabled={!canNextPageMay}>
+                                <FontAwesomeIcon icon={faArrowRight} />
+                            </button>
+                        </div>
+                    </>
+                    )}
+                    {dataDistribuidor.length > 0 && (
+                    <>
+                        <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                        <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                                "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                                sans-serif`}}>Distribuidor</h2>
+                        <div className="tableDivContainer">
+                            <table {...getTablePropsDist()} className="tableContainer">
+                                <thead>
+                                    {headerGroupsDist.map((headerGroups) => (
+                                        <tr {...headerGroups.getHeaderGroupProps()}>
+                                            {headerGroups.headers.map((columns) => (
+                                                <th {...columns.getHeaderProps(columns)}>
+                                                    {columns.render("Header")}
+                                                </th>
+                                            ))}
+                                        </tr>
                                     ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody {...getTableBodyPropsMay()}>
-                            {pageMay.map((row) => {
-                                prepareRowMay(row);
-                                return (
-                                    <tr {...row.getRowProps()}>
-                                        {row.cells.map((cell) => {
-                                            return (
-                                                <td {...cell.getCellProps()}>
-                                                    {cell.render("Cell")}
-                                                </td>
-                                            );
-                                        })}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="paginacion">
-                    <button onClick={() => previousPageMay()} disabled={!canPreviousPageMay}>
-                        <FontAwesomeIcon icon={faArrowLeft} />
-                    </button>
-                    <span>
-                        Pagina{" "}
-                        <strong>
-                            {pageIndexMay + 1} de {pageOptionsMay.length}
-                        </strong>{" "}
-                    </span>
-                    <button onClick={() => nextPageMay()} disabled={!canNextPageMay}>
-                        <FontAwesomeIcon icon={faArrowRight} />
-                    </button>
-                </div>
-            </>
-            )}
-            {dataDistribuidor.length > 0 && (
-            <>
-                <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
-                <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                        sans-serif`}}>Distribuidor</h2>
-                <div className="tableDivContainer">
-                    <table {...getTablePropsDist()} className="tableContainer">
-                        <thead>
-                            {headerGroupsDist.map((headerGroups) => (
-                                <tr {...headerGroups.getHeaderGroupProps()}>
-                                    {headerGroups.headers.map((columns) => (
-                                        <th {...columns.getHeaderProps(columns)}>
-                                            {columns.render("Header")}
-                                        </th>
+                                </thead>
+                                <tbody {...getTableBodyPropsDist()}>
+                                    {pageDist.map((row) => {
+                                        prepareRowDist(row);
+                                        return (
+                                            <tr {...row.getRowProps()}>
+                                                {row.cells.map((cell) => {
+                                                    return (
+                                                        <td {...cell.getCellProps()}>
+                                                            {cell.render("Cell")}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="paginacion">
+                            <button onClick={() => previousPageDist()} disabled={!canPreviousPageDist}>
+                                <FontAwesomeIcon icon={faArrowLeft} />
+                            </button>
+                            <span>
+                                Pagina{" "}
+                                <strong>
+                                    {pageIndexDist + 1} de {pageOptionsDist.length}
+                                </strong>{" "}
+                            </span>
+                            <button onClick={() => nextPageDist()} disabled={!canNextPageDist}>
+                                <FontAwesomeIcon icon={faArrowRight} />
+                            </button>
+                        </div>
+                    </>
+                    )}
+                    {dataDeMarca.length > 0 && (
+                    <>
+                        <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                        <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                                "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                                sans-serif`}}>De Marca</h2>
+                        <div className="tableDivContainer">
+                            <table {...getTablePropsDeMarca()} className="tableContainer">
+                                <thead>
+                                    {headerGroupsDeMarca.map((headerGroups) => (
+                                        <tr {...headerGroups.getHeaderGroupProps()}>
+                                            {headerGroups.headers.map((columns) => (
+                                                <th {...columns.getHeaderProps(columns)}>
+                                                    {columns.render("Header")}
+                                                </th>
+                                            ))}
+                                        </tr>
                                     ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody {...getTableBodyPropsDist()}>
-                            {pageDist.map((row) => {
-                                prepareRowDist(row);
-                                return (
-                                    <tr {...row.getRowProps()}>
-                                        {row.cells.map((cell) => {
-                                            return (
-                                                <td {...cell.getCellProps()}>
-                                                    {cell.render("Cell")}
-                                                </td>
-                                            );
-                                        })}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="paginacion">
-                    <button onClick={() => previousPageDist()} disabled={!canPreviousPageDist}>
-                        <FontAwesomeIcon icon={faArrowLeft} />
-                    </button>
-                    <span>
-                        Pagina{" "}
-                        <strong>
-                            {pageIndexDist + 1} de {pageOptionsDist.length}
-                        </strong>{" "}
-                    </span>
-                    <button onClick={() => nextPageDist()} disabled={!canNextPageDist}>
-                        <FontAwesomeIcon icon={faArrowRight} />
-                    </button>
-                </div>
-            </>
-            )}
-            {dataDeMarca.length > 0 && (
-            <>
-                <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
-                <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                        sans-serif`}}>De Marca</h2>
-                <div className="tableDivContainer">
-                    <table {...getTablePropsDeMarca()} className="tableContainer">
-                        <thead>
-                            {headerGroupsDeMarca.map((headerGroups) => (
-                                <tr {...headerGroups.getHeaderGroupProps()}>
-                                    {headerGroups.headers.map((columns) => (
-                                        <th {...columns.getHeaderProps(columns)}>
-                                            {columns.render("Header")}
-                                        </th>
+                                </thead>
+                                <tbody {...getTableBodyPropsDeMarca()}>
+                                    {pageDeMarca.map((row) => {
+                                        prepareRowDeMarca(row);
+                                        return (
+                                            <tr {...row.getRowProps()}>
+                                                {row.cells.map((cell) => {
+                                                    return (
+                                                        <td {...cell.getCellProps()}>
+                                                            {cell.render("Cell")}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="paginacion">
+                            <button onClick={() => previousPageDeMarca()} disabled={!canPreviousPageDeMarca}>
+                                <FontAwesomeIcon icon={faArrowLeft} />
+                            </button>
+                            <span>
+                                Pagina{" "}
+                                <strong>
+                                    {pageIndexDeMarca + 1} de {pageOptionsDeMarca.length}
+                                </strong>{" "}
+                            </span>
+                            <button onClick={() => nextPageDeMarca()} disabled={!canNextPageDeMarca}>
+                                <FontAwesomeIcon icon={faArrowRight} />
+                            </button>
+                        </div>
+                    </>
+                    )}
+                    {data5.length > 0 && (
+                    <>
+                        <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                        <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                                "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                                sans-serif`}}>5%</h2>
+                        <div className="tableDivContainer">
+                            <table {...getTableProps5()} className="tableContainer">
+                                <thead>
+                                    {headerGroups5.map((headerGroups) => (
+                                        <tr {...headerGroups.getHeaderGroupProps()}>
+                                            {headerGroups.headers.map((columns) => (
+                                                <th {...columns.getHeaderProps(columns)}>
+                                                    {columns.render("Header")}
+                                                </th>
+                                            ))}
+                                        </tr>
                                     ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody {...getTableBodyPropsDeMarca()}>
-                            {pageDeMarca.map((row) => {
-                                prepareRowDeMarca(row);
-                                return (
-                                    <tr {...row.getRowProps()}>
-                                        {row.cells.map((cell) => {
-                                            return (
-                                                <td {...cell.getCellProps()}>
-                                                    {cell.render("Cell")}
-                                                </td>
-                                            );
-                                        })}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="paginacion">
-                    <button onClick={() => previousPageDeMarca()} disabled={!canPreviousPageDeMarca}>
-                        <FontAwesomeIcon icon={faArrowLeft} />
-                    </button>
-                    <span>
-                        Pagina{" "}
-                        <strong>
-                            {pageIndexDeMarca + 1} de {pageOptionsDeMarca.length}
-                        </strong>{" "}
-                    </span>
-                    <button onClick={() => nextPageDeMarca()} disabled={!canNextPageDeMarca}>
-                        <FontAwesomeIcon icon={faArrowRight} />
-                    </button>
-                </div>
-            </>
-            )}
-            {data5.length > 0 && (
-            <>
-                <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
-                <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                        sans-serif`}}>5%</h2>
-                <div className="tableDivContainer">
-                    <table {...getTableProps5()} className="tableContainer">
-                        <thead>
-                            {headerGroups5.map((headerGroups) => (
-                                <tr {...headerGroups.getHeaderGroupProps()}>
-                                    {headerGroups.headers.map((columns) => (
-                                        <th {...columns.getHeaderProps(columns)}>
-                                            {columns.render("Header")}
-                                        </th>
+                                </thead>
+                                <tbody {...getTableBodyProps5()}>
+                                    {page5.map((row) => {
+                                        prepareRow5(row);
+                                        return (
+                                            <tr {...row.getRowProps()}>
+                                                {row.cells.map((cell) => {
+                                                    return (
+                                                        <td {...cell.getCellProps()}>
+                                                            {cell.render("Cell")}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="paginacion">
+                            <button onClick={() => previousPage5()} disabled={!canPreviousPage5}>
+                                <FontAwesomeIcon icon={faArrowLeft} />
+                            </button>
+                            <span>
+                                Pagina{" "}
+                                <strong>
+                                    {pageIndex5 + 1} de {pageOptions5.length}
+                                </strong>{" "}
+                            </span>
+                            <button onClick={() => nextPage5()} disabled={!canNextPage5}>
+                                <FontAwesomeIcon icon={faArrowRight} />
+                            </button>
+                        </div>
+                    </>
+                    )}
+                    {data10.length > 0 && (
+                    <>
+                        <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
+                        <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                                "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+                                sans-serif`}}>10%</h2>
+                        <div className="tableDivContainer">
+                            <table {...getTableProps10()} className="tableContainer">
+                                <thead>
+                                    {headerGroups10.map((headerGroups) => (
+                                        <tr {...headerGroups.getHeaderGroupProps()}>
+                                            {headerGroups.headers.map((columns) => (
+                                                <th {...columns.getHeaderProps(columns)}>
+                                                    {columns.render("Header")}
+                                                </th>
+                                            ))}
+                                        </tr>
                                     ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody {...getTableBodyProps5()}>
-                            {page5.map((row) => {
-                                prepareRow5(row);
-                                return (
-                                    <tr {...row.getRowProps()}>
-                                        {row.cells.map((cell) => {
-                                            return (
-                                                <td {...cell.getCellProps()}>
-                                                    {cell.render("Cell")}
-                                                </td>
-                                            );
-                                        })}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="paginacion">
-                    <button onClick={() => previousPage5()} disabled={!canPreviousPage5}>
-                        <FontAwesomeIcon icon={faArrowLeft} />
-                    </button>
-                    <span>
-                        Pagina{" "}
-                        <strong>
-                            {pageIndex5 + 1} de {pageOptions5.length}
-                        </strong>{" "}
-                    </span>
-                    <button onClick={() => nextPage5()} disabled={!canNextPage5}>
-                        <FontAwesomeIcon icon={faArrowRight} />
-                    </button>
-                </div>
-            </>
-            )}
-            {data10.length > 0 && (
-            <>
-                <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
-                <h2 style={{marginBottom: "0", textAlign: "center", fontSize: "30px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-                        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-                        sans-serif`}}>10%</h2>
-                <div className="tableDivContainer">
-                    <table {...getTableProps10()} className="tableContainer">
-                        <thead>
-                            {headerGroups10.map((headerGroups) => (
-                                <tr {...headerGroups.getHeaderGroupProps()}>
-                                    {headerGroups.headers.map((columns) => (
-                                        <th {...columns.getHeaderProps(columns)}>
-                                            {columns.render("Header")}
-                                        </th>
-                                    ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody {...getTableBodyProps10()}>
-                            {page10.map((row) => {
-                                prepareRow10(row);
-                                return (
-                                    <tr {...row.getRowProps()}>
-                                        {row.cells.map((cell) => {
-                                            return (
-                                                <td {...cell.getCellProps()}>
-                                                    {cell.render("Cell")}
-                                                </td>
-                                            );
-                                        })}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="paginacion">
-                    <button onClick={() => previousPage10()} disabled={!canPreviousPage10}>
-                        <FontAwesomeIcon icon={faArrowLeft} />
-                    </button>
-                    <span>
-                        Pagina{" "}
-                        <strong>
-                            {pageIndex10 + 1} de {pageOptions10.length}
-                        </strong>{" "}
-                    </span>
-                    <button onClick={() => nextPage10()} disabled={!canNextPage10}>
-                        <FontAwesomeIcon icon={faArrowRight} />
-                    </button>
-                </div>
-            </>
-            )}
-            <Button onClick={() => setIsModalPorcentajesOpen(true)} id="btnDescargarStock" style={{right: "10px", width: "145px"}}>Porcentajes</Button>
-            {isModalPorcentajesOpen && (
-                <ModalPorcentajes
-                    onClose={() => setIsModalPorcentajesOpen(false)}
-                />
+                                </thead>
+                                <tbody {...getTableBodyProps10()}>
+                                    {page10.map((row) => {
+                                        prepareRow10(row);
+                                        return (
+                                            <tr {...row.getRowProps()}>
+                                                {row.cells.map((cell) => {
+                                                    return (
+                                                        <td {...cell.getCellProps()}>
+                                                            {cell.render("Cell")}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="paginacion">
+                            <button onClick={() => previousPage10()} disabled={!canPreviousPage10}>
+                                <FontAwesomeIcon icon={faArrowLeft} />
+                            </button>
+                            <span>
+                                Pagina{" "}
+                                <strong>
+                                    {pageIndex10 + 1} de {pageOptions10.length}
+                                </strong>{" "}
+                            </span>
+                            <button onClick={() => nextPage10()} disabled={!canNextPage10}>
+                                <FontAwesomeIcon icon={faArrowRight} />
+                            </button>
+                        </div>
+                    </>
+                    )}
+                    <Button onClick={() => setIsModalPorcentajesOpen(true)} id="btnDescargarStock" style={{right: "10px", width: "145px"}}>Porcentajes</Button>
+                    {isModalPorcentajesOpen && (
+                        <ModalPorcentajes
+                            onClose={() => setIsModalPorcentajesOpen(false)}
+                        />
+                    )}
+                </>
             )}
         </>
     );
