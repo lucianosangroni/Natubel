@@ -9,7 +9,7 @@ import Loading from "../Common/Loading";
 import { useData } from "../../context/DataContext";
 
 const CargarPedido = () => {
-  const { articulosData, marcasData, clientesData, proveedoresData, refreshArticulos, isInitialLoading } = useData()
+  const { articulosData, marcasData, clientesData, proveedoresData, refreshArticulos, isInitialLoading, refreshPedidosAdd, refreshFacturasAddNew } = useData()
   const [data, setData] = useState(articulosData);
   const [clientes, setClientes] = useState(clientesData);
   const [proveedores, setProveedores] = useState(proveedoresData);
@@ -257,10 +257,17 @@ const CargarPedido = () => {
     const productos = getProductos();
     const creador = localStorage.getItem("username");
     let tipo_precio = null;
+    let persona_nombre = null
+    let tipo_pedido = null
 
     if (tipoPedidor === "cliente") {
       const clienteSeleccionado = clientes.find(cliente => cliente.persona_id === selectedPedidor);
       tipo_precio = clienteSeleccionado ? clienteSeleccionado.tipo_cliente : null
+      persona_nombre = clienteSeleccionado.nombre
+      tipo_pedido = "CLIENTE"
+    } else {
+      persona_nombre = proveedores.find(prov => prov.id === selectedPedidor).nombre
+      tipo_pedido = "PROVEEDOR"
     }
 
     const requestData = {
@@ -295,6 +302,124 @@ const CargarPedido = () => {
       .then((result) => {
         if(result.message === 'Pedido creado con éxito') {
           actualizarStock();
+
+          const hoy = new Date();
+          const fechaHoyFormateada = `${hoy.getDate()}/${hoy.getMonth() + 1}/${hoy.getFullYear() % 100}`;
+
+          const articulosPedidoRefresh = []
+          const productosPedidoRefresh = []
+
+          for (const art of data) {
+            for (const prod of productos) {
+              const match = art.productos.find(p => p.id === prod.producto_id)
+              if(match) {
+                const newProd = {
+                  articulo_id: match.articulo_id,
+                  numero_articulo: art.numero_articulo,
+                  color: match.color,
+                  talle: match.talle,
+                  createdAt: match.createdAt,
+                  updatedAt: match.updatedAt,
+                  flag_activo: true,
+                  id: match.id,
+                  stock: match.stock,
+                  productos_x_pedido: {cantidad: prod.cantidad, precio_unitario: prod.precio_unitario}
+                }
+
+                productosPedidoRefresh.push(newProd)
+              }
+            }
+          }
+
+          for(const prod of productosPedidoRefresh) {
+            const existingArt = articulosPedidoRefresh.find(a => a.id === prod.articulo_id);
+
+            if (existingArt) {} else {
+              const articuloIndex = articulosData.findIndex(
+                  (item) => item.id === prod.articulo_id
+              )
+
+              const tallesDesordenados = Array.from(new Set(articulosData[articuloIndex].productos.map((producto) => producto.talle)));
+              const coloresDesordenados = Array.from(new Set(articulosData[articuloIndex].productos.map((producto) => producto.color)));
+
+              const talles = tallesDesordenados.sort((a, b) => {
+                  const rangoRegex = /^(\d+)\/(\d+)(?:\s+.*)?$/i;
+                  const parseRango = (x) => {
+                      const match = x.match(rangoRegex);
+                      if (!match) return null;
+                      return {
+                          start: parseInt(match[1]),
+                          end: parseInt(match[2]),
+                          texto: x.substring(match[0].length).trim(),
+                      };
+                  };
+                  const rangoA = parseRango(a);
+                  const rangoB = parseRango(b);
+                  if (!isNaN(a) && !isNaN(b)) {
+                      return a - b;
+                  } else if (rangoA && rangoB) {
+                      return rangoA.start - rangoB.start;
+                  }
+              
+                  const talleOrden = { 's': 1, 'm': 2, 'l': 3, 'xl': 4, 'xxl': 5, 'xxxl': 6, 'xxxxl': 7, 'xxxxxl': 8 };
+                  return talleOrden[a.toLowerCase()] - talleOrden[b.toLowerCase()];
+              });
+          
+              const colores = coloresDesordenados.sort((a, b) => a.localeCompare(b, 'es', {ignorePunctuation: true}));
+
+              const newArt = {
+                id: prod.articulo_id,
+                colores: colores,
+                talles: talles,
+                numero_articulo: prod.numero_articulo,
+                precio_unitario: prod.productos_x_pedido.precio_unitario,
+              }
+
+              articulosPedidoRefresh.push(newArt)
+            }
+          }
+
+          articulosPedidoRefresh.sort((articuloA, articuloB) => {
+              const numeroA = parseInt(articuloA.numero_articulo);
+              const numeroB = parseInt(articuloB.numero_articulo);
+          
+              if (numeroA !== numeroB) {
+                  return numeroA - numeroB;
+              } else {
+                  const letrasA = articuloA.numero_articulo.replace(/^\d+\s*/, '');
+                  const letrasB = articuloB.numero_articulo.replace(/^\d+\s*/, '');
+              
+                  return letrasA.localeCompare(letrasB);
+              }
+          });
+
+          const newPedido = {
+            numero_pedido: result.numero_pedido,
+            fecha: fechaHoyFormateada,
+            persona_nombre: persona_nombre,
+            estado: "PEDIDO",
+            precio_total: precio_total,
+            tipo: tipo_pedido,
+            razon_cancelado: null,
+            cupon_id: null,
+            flag_de_marca: marcaDelPedido !== "todas",
+            tipo_precio: tipo_precio,
+            articulos: articulosPedidoRefresh,
+            productos: productosPedidoRefresh,
+            creador: creador
+          }
+
+          refreshPedidosAdd(newPedido)
+
+          const newFac = {
+            ...result.factura,
+            fecha: result.factura.fecha ? new Date(result.factura.fecha).toISOString().split('T')[0] : null,
+            persona_nombre: persona_nombre,
+            numero_factura: result.factura.numero_factura ?? null
+          };
+
+          refreshFacturasAddNew(newFac)
+
           setSelectedPedidor("");
           setTipoPedidor("cliente");
           setFiltroBusqueda("");

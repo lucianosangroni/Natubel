@@ -598,6 +598,11 @@ export const DataProviderAdmin = ({ children }) => {
         setRemitosData(remitos)
     }
 
+    const refreshPedidosAdd = (newPedido) => {
+        const pedidosDataActualizados = [...pedidosData, newPedido].sort((a, b) => b.numero_pedido - a.numero_pedido);
+        setPedidosData(pedidosDataActualizados)
+    }
+
     const refreshObservacionesPedido = (numero_pedido, nuevoTexto) => {
         const pedidosDataActualizados = pedidosData.map(pedido => 
             pedido.numero_pedido === numero_pedido
@@ -627,6 +632,11 @@ export const DataProviderAdmin = ({ children }) => {
         });
     }
 
+    const refreshFacturasAddNew = (newFactura) => {
+        const facturasDataActualizadas = [...facturasData, newFactura]
+        setFacturasData(facturasDataActualizadas)
+    }
+
     const refreshFacturasAdd = (facturas) => {
         setFacturasData(facturas)
     }
@@ -648,6 +658,198 @@ export const DataProviderAdmin = ({ children }) => {
             })
         );
     }
+    
+    const refreshPedidoEditado = (pedido_id, articulos, productosIniciales) => {
+        const pedido = pedidosData.find(p => p.numero_pedido === pedido_id)
+        const factura = facturasData.find(f => f.pedido_id === pedido_id)
+        const remito = remitosData.find(r => r.pedido_id === pedido.id)
+        const cliente = clientesData.find(c => c.nombre === pedido.persona_nombre)
+
+        /*console.log(pedido)
+        console.log(factura)
+        console.log(cliente)
+        console.log(articulos)
+        console.log(productosIniciales)
+        console.log(articulosData)*/
+
+        const tipo_precio = cliente.tipo_cliente
+
+        const productosNada = []
+        const productosSumarStock = []
+        const productosRestarStock = []
+        const productosAdd = []
+        const productosRemove = []
+
+        for (const articulo of articulos) {
+            for (const [productKey, cantidad] of Object.entries(articulo.cantidades)) {
+                const [color, talle] = productKey.split('|-|');
+
+                const artCorrespondiente = articulosData.find(a => a.id === articulo.id)
+                const productoExistente = artCorrespondiente.productos.find(p => p.color === color && p.talle === talle)
+                
+                if(productoExistente) {
+                    const producto = productosIniciales.find(p => p.id === productoExistente.id)
+                    if(producto) {
+                        if(cantidad === producto.cantidad) {
+                            const prod = {
+                                id: producto.id,
+                                articulo_id: productoExistente.articulo_id
+                            }
+
+                            productosNada.push(prod)
+                        } else if (cantidad > producto.cantidad) {
+                            const prod = {
+                                id: producto.id,
+                                cantidad: cantidad - producto.cantidad,
+                                articulo_id: productoExistente.articulo_id
+                            }
+
+                            productosRestarStock.push(prod)
+                        } else if (cantidad < producto.cantidad) {
+                            const prod = {
+                                id: producto.id,
+                                cantidad: producto.cantidad - cantidad,
+                                articulo_id: productoExistente.articulo_id
+                            }
+
+                            productosSumarStock.push(prod)
+                        }
+                    } else {
+                        const prod = {
+                            id: productoExistente.id,
+                            cantidad: cantidad,
+                            articulo_id: productoExistente.articulo_id
+                        }
+
+                        productosAdd.push(prod)
+                    }
+                }
+            }
+        }
+
+        for(const productoInicial of productosIniciales) {
+            const enProductosNada = productosNada.find(prod => prod.id === productoInicial.id)
+            const enProductosSumarStock = productosSumarStock.find(prod => prod.id === productoInicial.id)
+            const enProductosRestarStock = productosRestarStock.find(prod => prod.id === productoInicial.id)
+            const enProductosAdd = productosAdd.find(prod => prod.id === productoInicial.id)
+            
+            if (!enProductosNada && !enProductosSumarStock && !enProductosRestarStock && !enProductosAdd) {
+                for (const artData of articulosData) {
+                    const productoExistente = artData.productos.find(p => p.id === productoInicial.id)
+
+                    if(productoExistente) {
+                        const prod = {
+                            id: productoInicial.id,
+                            cantidad: productoInicial.cantidad,
+                            articulo_id: productoExistente.articulo_id
+                        }
+
+                        productosRemove.push(prod);
+                    }
+                } 
+            }
+        }
+
+        const newArticulosData = [...articulosData]
+        const productosPedido = [...pedido.productos]
+
+        for (const prod of productosSumarStock) {
+            const art = newArticulosData.find(a => a.id === prod.articulo_id)
+            const productoPedidoCorrespondiente = productosPedido.find(p => p.id === prod.id)
+            productoPedidoCorrespondiente.stock = productoPedidoCorrespondiente.stock + prod.cantidad
+            productoPedidoCorrespondiente.productos_x_pedido.cantidad -= prod.cantidad
+
+            for(const prodArt of art.productos) {
+                if(prod.id === prodArt.id) {
+                    prodArt.stock = prodArt.stock + prod.cantidad
+                }
+            }
+        }
+        
+        for (const prod of productosRestarStock) {
+            const art = newArticulosData.find(a => a.id === prod.articulo_id)
+            const productoPedidoCorrespondiente = productosPedido.find(p => p.id === prod.id)
+            productoPedidoCorrespondiente.stock = productoPedidoCorrespondiente.stock - prod.cantidad
+            productoPedidoCorrespondiente.productos_x_pedido.cantidad += prod.cantidad
+
+
+            for(const prodArt of art.productos) {
+                if(prod.id === prodArt.id) {
+                    prodArt.stock = prodArt.stock - prod.cantidad
+                }
+            }
+        }
+        
+        for (const prod of productosAdd) {
+            const art = newArticulosData.find(a => a.id === prod.articulo_id)
+            const precio_unitario = tipo_precio === "MINORISTA" ? art.precio_minorista : tipo_precio === "MAYORISTA" ? art.precio_mayorista : art.precio_distribuidor
+
+            for(const prodArt of art.productos) {
+                if(prod.id === prodArt.id) {
+                    const newProd = {
+                        articulo_id: prod.articulo_id,
+                        color: prodArt.color,
+                        createdAt: prodArt.createdAt,
+                        flag_activo: prodArt.flag_activo,
+                        id: prod.id,
+                        stock: prodArt.stock - prod.cantidad,
+                        talle: prodArt.talle,
+                        updatedAt: prodArt.updatedAt,
+                        productos_x_pedido: {
+                            cantidad: prod.cantidad,
+                            precio_unitario: precio_unitario
+                        }
+                    }
+
+                    productosPedido.push(newProd)
+
+                    prodArt.stock = prodArt.stock - prod.cantidad
+                }
+            }
+        }
+        
+        for (const prod of productosRemove) {
+            const art = newArticulosData.find(a => a.id === prod.articulo_id)
+
+            const productoIndex = productosPedido.findIndex(p => p.id === prod.id)
+            if(productoIndex !== -1){
+                productosPedido.splice(productoIndex, 1)
+            }
+
+            for(const prodArt of art.productos) {
+                if(prod.id === prodArt.id) {
+                    prodArt.stock = prodArt.stock + prod.cantidad
+                }
+            }
+        }
+
+        pedido.productos = productosPedido
+
+        let precio_total = 0
+
+        for(const productoFinal of productosPedido) {
+            const precioProducto = productoFinal.productos_x_pedido.cantidad * productoFinal.productos_x_pedido.precio_unitario
+
+            precio_total += precioProducto
+        }
+
+        if(pedido.cupon_id) {
+            const cupon = cuponesData.find(c => c.id === pedido.cupon_id)
+            precio_total = precio_total * (1 - cupon.descuento / 100)
+        }
+
+        pedido.precio_total = precio_total
+
+        let nuevoMontoFactura = precio_total
+
+        if(remito) {
+            nuevoMontoFactura = precio_total * (1 - remito.descuento / 100);
+        }
+        
+        factura.monto = nuevoMontoFactura
+
+        setArticulosData(newArticulosData)
+    }
 
     const refreshPedidoCancelado = (pedido_id) => {
         const pedido = pedidosData.find(
@@ -663,10 +865,14 @@ export const DataProviderAdmin = ({ children }) => {
                 matchingProduct.stock += producto.productos_x_pedido.cantidad
             }
         }
+
+        const matchingFactura = facturasData.find(f => f.pedido_id === pedido_id)
+
+        matchingFactura.flag_cancelada = true
     }
 
     return (
-        <DataContext.Provider value={{ imputacionesData, pedidosData, clientesData, proveedoresData, facturasData, remitosData, categoriasData, pagosData, porcentajesData, refreshPorcentajes, refreshObservacionesPedido, refreshPagos, refreshFacturasAdd, marcasData, cuponesData, refreshCupones, articulosData, refreshRemitos, refreshFacturas, refreshData, addImputaciones, montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading, refreshConfig, refreshCategorias, refreshMarcas, refreshArticulos, refreshProveedores, refreshClientes, refreshPedidos, refreshPedidoCancelado}}>
+        <DataContext.Provider value={{ imputacionesData, pedidosData, clientesData, proveedoresData, facturasData, remitosData, categoriasData, pagosData, porcentajesData, refreshPedidosAdd, refreshPedidoEditado, refreshFacturasAddNew, refreshPorcentajes, refreshObservacionesPedido, refreshPagos, refreshFacturasAdd, marcasData, cuponesData, refreshCupones, articulosData, refreshRemitos, refreshFacturas, refreshData, addImputaciones, montoMinimoMayorista, montoMinimoDistribuidor, isInitialLoading, refreshConfig, refreshCategorias, refreshMarcas, refreshArticulos, refreshProveedores, refreshClientes, refreshPedidos, refreshPedidoCancelado}}>
             {children}
         </DataContext.Provider>
     );

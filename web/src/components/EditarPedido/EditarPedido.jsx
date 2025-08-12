@@ -11,7 +11,7 @@ import { Button } from "react-bootstrap";
 import { apiUrl, bearerToken } from "../../config/config";
 
 const EditarPedido = () => {
-    const { isInitialLoading, pedidosData, articulosData, marcasData, cuponesData } = useData()
+    const { isInitialLoading, pedidosData, articulosData, marcasData, cuponesData, refreshPedidoEditado } = useData()
     const { numero_pedido } = useParams();
     const [ articulosDataActualizados, setArticulosDataActualizados ] = useState([])
     const [ articulosDataActualizadosInit, setArticulosDataActualizadosInit ] = useState([])
@@ -376,6 +376,7 @@ const EditarPedido = () => {
                 alert(result.message)
 
                 if(result.message === "Pedido editado con éxito") {
+                    refreshPedidoEditado(pedido.numero_pedido, articulos, productosIniciales)
                     navigate(`/admin/pedidos`);
                 }
             })
