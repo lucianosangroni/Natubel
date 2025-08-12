@@ -13,8 +13,6 @@ const getItems = async (req, res) => {
 
 const createItem = async (req, res) => {
     try {
-        console.log("ajugnujainhgsau")
-
         req = matchedData(req);
 
         const { monto, numero_factura, persona_id, fecha, pedido_id } = req

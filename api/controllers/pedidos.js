@@ -91,8 +91,10 @@ const createItem = async (req, res) => {
             }
         };
         
+        let newFactura = null
+
         if(!es_proveedor) {
-            facturaModel.create
+            newFactura = await facturaModel.create
             (
                 {
                     persona_id,
@@ -106,7 +108,7 @@ const createItem = async (req, res) => {
                 const numeroFacturaValido = parseInt(numero_factura);
 
                 if (!isNaN(numeroFacturaValido) && !isNaN(montoValido) && numeroFacturaValido > 0 && montoValido > 0) {
-                    facturaModel.create
+                    newFactura = await facturaModel.create
                     (
                         {
                             persona_id,
@@ -120,7 +122,7 @@ const createItem = async (req, res) => {
             }
         }
 
-        res.status(201).json({ message: 'Pedido creado con éxito', numero_pedido: nuevoPedido.numero_pedido });
+        res.status(201).json({ message: 'Pedido creado con éxito', numero_pedido: nuevoPedido.numero_pedido, factura: newFactura });
     } catch(e) {
         console.log("Error al crear el pedido: ", e)
         res.status(500).json({ message: 'Error al crear el pedido' });

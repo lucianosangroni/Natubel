@@ -834,21 +834,21 @@ const getRemitoNatubel = async (req, res) => {
 
         doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
 
-        doc.fontSize(10).fillColor("black").text('RAZON SOCIAL:', 15, 15)
-        doc.fontSize(10).fillColor("black").text(persona.nombre, 102, 15)
-        doc.moveTo(100, 25).lineTo(300, 25).stroke('black');
-        doc.fontSize(10).fillColor("black").text('CUIT:', 15, 45)
-        doc.fontSize(10).fillColor("black").text(persona.cuit_cuil, 102, 45)
-        doc.moveTo(100, 55).lineTo(300, 55).stroke('black');
+        doc.fontSize(11).fillColor("black").font('Helvetica-Bold').text('RAZON SOCIAL:', 15, 15)
+        doc.fontSize(11).fillColor("black").font('Helvetica-Bold').text(persona.nombre, 105, 15)
+        doc.moveTo(105, 25).lineTo(300, 25).stroke('black');
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('CUIT:', 15, 45)
+        doc.fontSize(10).fillColor("black").text(persona.cuit_cuil, 105, 45)
+        doc.moveTo(105, 55).lineTo(300, 55).stroke('black');
         doc.fontSize(10).fillColor("black").text('Direc. de Entrega:', 15, 75)
-        doc.fontSize(10).fillColor("black").text(persona.direccion, 102, 75)
-        doc.moveTo(100, 85).lineTo(300, 85).stroke('black');
+        doc.fontSize(10).fillColor("black").text(persona.direccion, 105, 75)
+        doc.moveTo(105, 85).lineTo(300, 85).stroke('black');
 
         doc.rect(380, 14, 200, 15).fillAndStroke('dimgray', 'black');
         doc.fontSize(8).fillColor("white").text('DOCUMENTO NO VALIDO COMO FACTURA', 399, 19);
-        doc.fontSize(8).fillColor("black").text('Remito N°: ' + remito.numero_remito, (580 - 380 - doc.widthOfString('Remito N°: ' + remito.numero_remito)) / 2 + 380, 37);
+        doc.fontSize(10).fillColor("black").font('Helvetica-Bold').text('Remito N°: ' + remito.numero_remito, (580 - 380 - doc.widthOfString('Remito N°: ' + remito.numero_remito)) / 2 + 380, 36);
         doc.rect(380, 49, 200, 15).fillAndStroke('dimgray', 'black');
-        doc.fontSize(8).fillColor("white").text('FECHA', 416, 54);
+        doc.fontSize(8).fillColor("white").font('Helvetica').text('FECHA', 416, 54);
         doc.fontSize(8).fillColor("white").text('VENCIMIENTO', 502, 54);
         const fechaPedido = new Date(pedido.createdAt);
         const fechaPedidoFormateada = `${fechaPedido.getDate()}/${fechaPedido.getMonth() + 1}/${fechaPedido.getFullYear() % 100}`;
@@ -1041,7 +1041,7 @@ const getRemitoLody = async (req, res) => {
         doc.moveTo(430, 0).lineTo(430, 15).stroke('black');
 
         doc.fontSize(11).fillColor("black").font('Helvetica-Bold').text('REMITO N°: ' + remito.numero_remito, 15, 10);
-        doc.fontSize(10).fillColor("black").font('Helvetica').text('PEDIDO N°: ' + pedido.numero_pedido, 110, 11);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('PEDIDO N°: ' + pedido.numero_pedido, 115, 11);
         doc.fontSize(11).fillColor("black").font('Helvetica-Bold').text('RAZON SOCIAL: ' + persona.nombre, 15, 40)
         doc.fontSize(10).fillColor("black").font('Helvetica').text('Direc. de Entrega: ' + persona.direccion, 15, 70)
         doc.fontSize(10).fillColor("black").font('Helvetica').text('CUIT: ' + persona.cuit_cuil, 15, 100)
@@ -1215,8 +1215,8 @@ const getRemitoMaxima = async (req, res) => {
         doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
 
         doc.fontSize(8).fillColor("black").text('DOCUMENTO NO VALIDO COMO FACTURA', 15, 11);
-        doc.fontSize(10).fillColor("black").text('REMITO N°: ' + remito.numero_remito, 200, 10);
-        doc.fontSize(10).fillColor("black").text('PEDIDO N°: ' + pedido.numero_pedido, 285, 10);
+        doc.fontSize(11).fillColor("black").font('Helvetica-Bold').text('REMITO N°: ' + remito.numero_remito, 190, 9);
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('PEDIDO N°: ' + pedido.numero_pedido, 285, 10);
         const fechaPedido = new Date(pedido.createdAt);
         const fechaPedidoFormateada = `${fechaPedido.getDate()}/${fechaPedido.getMonth() + 1}/${fechaPedido.getFullYear() % 100}`;
         doc.fontSize(10).fillColor("black").text(`FECHA: ${fechaPedidoFormateada}`, 380, 10);
@@ -1226,15 +1226,15 @@ const getRemitoMaxima = async (req, res) => {
 
         doc.moveTo(0, 25).lineTo(612, 25).stroke('black');
 
-        doc.fontSize(10).fillColor("black").text('RAZON SOCIAL:', 15, 40)
-        doc.fontSize(10).fillColor("black").text(persona.nombre, 102, 40)
-        doc.moveTo(100, 50).lineTo(300, 50).stroke('black');
-        doc.fontSize(10).fillColor("black").text('CUIT:', 15, 70)
-        doc.fontSize(10).fillColor("black").text(persona.cuit_cuil, 102, 70)
-        doc.moveTo(100, 80).lineTo(300, 80).stroke('black');
+        doc.fontSize(11).fillColor("black").font('Helvetica-Bold').text('RAZON SOCIAL:', 15, 40)
+        doc.fontSize(11).fillColor("black").font('Helvetica-Bold').text(persona.nombre, 105, 40)
+        doc.moveTo(105, 50).lineTo(300, 50).stroke('black');
+        doc.fontSize(10).fillColor("black").font('Helvetica').text('CUIT:', 15, 70)
+        doc.fontSize(10).fillColor("black").text(persona.cuit_cuil, 105, 70)
+        doc.moveTo(105, 80).lineTo(300, 80).stroke('black');
         doc.fontSize(10).fillColor("black").text('Direc. de Entrega:', 15, 100)
-        doc.fontSize(10).fillColor("black").text(persona.direccion, 102, 100)
-        doc.moveTo(100, 110).lineTo(300, 110).stroke('black');
+        doc.fontSize(10).fillColor("black").text(persona.direccion, 105, 100)
+        doc.moveTo(105, 110).lineTo(300, 110).stroke('black');
 
         const subtotal = cupon ? pedido.precio_total / (1 - cupon.descuento / 100) : pedido.precio_total;
 
