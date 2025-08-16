@@ -180,7 +180,7 @@ const Imputacion = () => {
                     <hr style={{border: "none", height: "1px", backgroundColor: "gray", margin: "10px 0"}}/>
 
                     <div style={{display: "flex", alignItems: "center", marginTop: "0", marginBottom: "0"}}>
-                        <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                        <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "end", paddingRight: "6rem"}}>
                             <div style={{display: "flex", flexDirection: "column", gap: "7px", width: "fit-content", justifyContent: "center"}}>
                                 <span style={{ fontWeight: "bold" }}>CLIENTE: <span style={{fontWeight: "normal"}}>{imputacion.personaNombre}</span></span>
                                 <span style={{ fontWeight: "bold" }}>FECHA: <span style={{fontWeight: "normal"}}>{imputacion.fecha}</span></span>
@@ -189,7 +189,7 @@ const Imputacion = () => {
                                 <span style={{ fontWeight: "bold" }}>MONTO SOBRANTE: <span style={{fontWeight: "normal"}}>${formatearNumero(imputacion.montoSobrante)}</span></span>
                             </div>
                         </div>
-                        <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                        <div style={{width: "50%", display: "flex", alignItems: "center", overflowX: "auto"}}>
                             <Button onClick={handleHistorial} className="btnRemito">Historial</Button>
                             <Button onClick={handleCuentaCorriente} className="btnRemito">Cuenta Corriente</Button>
                             <Button onClick={generarPdfImputacion} className="btnRemito">PDF Cobranza</Button>

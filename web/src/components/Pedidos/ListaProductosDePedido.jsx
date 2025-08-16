@@ -161,7 +161,9 @@ function ListaProductosDePedido({ pedido, onCambiarEstado, onActualizarObservaci
       <>
         {isLoading && <Loading/>}
         <div className="table-productos-contenedor">
-          <ListaArticulos articulos={pedido.articulos} onArticuloClick={handleArticuloClick} selectedArticulo={selectedArticulo}/>
+          <div>
+            <ListaArticulos articulos={pedido.articulos} onArticuloClick={handleArticuloClick} selectedArticulo={selectedArticulo}/>
+          </div>
 
           {selectedArticulo && (
               <GrillaProductosDePedido

@@ -283,7 +283,7 @@ const HistorialCuentaCorriente = () => {
             <div className="fixedCuentaCorriente">
                 {persona && (
                     <div style={{width: "100%"}}>
-                        <h1 style={{marginTop: "0", marginBottom: "0", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        <h1 style={{whiteSpace: "nowrap", marginTop: "0", marginBottom: "0", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
                             "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                             sans-serif`}}>
                             Historial de {persona.nombre}

@@ -54,6 +54,8 @@
 .navbar-links {
   display: flex;
   gap: 2rem;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .navbar-link {
@@ -89,14 +91,17 @@
 /* LISTA DE CLIENTES */
 
 .tableDivContainer {
-  display: flex;
+  /*display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center;*/
+  width: 100%;
+  overflow-x: auto;
 }
 
 .tableContainer {
   border: 1px solid #000000;
-  margin: 1rem;
+  width: max-content;   /* se expande al tamaño del contenido */
+  margin: 1rem auto; 
 }
 
 .tableContainer th {
@@ -121,7 +126,8 @@
 
 .tableContainerSinPaginacion {
   border: 1px solid #000000;
-  margin: 1rem;
+  width: max-content;
+  margin: 1rem auto; 
 }
 
 .tableContainerSinPaginacion th {
@@ -151,14 +157,14 @@
 /* LISTA DE PEDIDOS */
 
 .tableDivContainerPedidos {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .tableContainerPedidos {
   border: 1px solid #000000;
-  margin: 1rem;
+  width: max-content;
+  margin: 1rem auto; 
 }
 
 .tableContainerPedidos th {
@@ -543,6 +549,18 @@
   bottom: 20px;
 }
 
+.btnArticulos {
+  width: 145px !important;
+  height: 4rem !important;
+  background-color: #dcd9d9 !important;
+  color: #000000 !important;
+  font-weight: bold !important;
+  border: 1px solid #000 !important;
+  padding: 0.5rem !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+}
+
 .btnRemito {
   height: 4rem;
   background-color: #dcd9d9 !important;
@@ -910,7 +928,8 @@
 .pedido-edit-titulo {
   text-align: center;
   background-color: #dcd9d9;
-  width: 20%;
+  display: inline-block;
+  white-space: nowrap;
   padding: 0.7rem;
   border: 1px solid #000;
   border-radius: 0.5rem;

@@ -26,6 +26,7 @@ const ListadoProductos = () => {
   const [isMarcasModalOpen, setIsMarcasModalOpen] = useState(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
+  const [isProductoModalOpen, setIsProductoModalOpen] = useState(false)
   const [isCuponesModalOpen, setIsCuponesModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate();
@@ -284,6 +285,10 @@ const ListadoProductos = () => {
     setIsConfigModalOpen(true)
   }
 
+  const handleModalProducto = () => {
+    setIsProductoModalOpen(true)
+  }
+
   const generarPDFCliente = (marcaElegida, flagSinStock) => {
     setIsLoading(true);
     
@@ -537,13 +542,17 @@ const ListadoProductos = () => {
           />
         )}
         
-        <Button onClick={handleCategorias} id="btnDescargarStock" style={{right: "180px", width: "145px"}}>Categorias</Button>
-        <Button onClick={handleMarcas} id="btnDescargarStock" style={{right: "340px", width: "145px"}}>Marcas</Button>
-        <Button onClick={handlePrecios} id="btnDescargarStock" style={{right: "500px" , width: "145px"}}>Precios</Button>
-        <Button onClick={() => handleAbrirModalStock("Admin")} id="btnDescargarStock" style={{right: "660px", width: "145px"}}>Stock Admin</Button>
-        <Button onClick={() => handleAbrirModalStock("Cliente")} id="btnDescargarStock" style={{right: "820px", width: "145px"}}>Stock Cliente</Button>
-        <Button onClick={handleCupones} id="btnDescargarStock" style={{right: "980px", width: "145px"}}>Cupones</Button>   
-        <Button onClick={handleConfig} id="btnDescargarStock" style={{right: "1140px", width: "145px"}}>Configuración</Button>
+        <div style={{position: "fixed", bottom: "20px", right: "20px", display: "flex", flexDirection: "row-reverse", gap: "10px", overflowX: "auto", maxWidth: "calc(100% - 40px)"}}>
+            <Button onClick={handleModalProducto} className="btnArticulos">Agregar Articulo</Button>
+            <Button onClick={handleCategorias} className="btnArticulos">Categorias</Button>
+            <Button onClick={handleMarcas} className="btnArticulos">Marcas</Button>
+            <Button onClick={handlePrecios} className="btnArticulos">Precios</Button>
+            <Button onClick={() => handleAbrirModalStock("Admin")} className="btnArticulos">Stock Admin</Button>
+            <Button onClick={() => handleAbrirModalStock("Cliente")} className="btnArticulos">Stock Cliente</Button>
+            <Button onClick={handleCupones} className="btnArticulos">Cupones</Button>   
+            <Button onClick={handleConfig} className="btnArticulos">Configuración</Button>
+        </div>
+
         {isCategoriasModalOpen && (
         <ModalCategorias
           data={categorias}
@@ -586,7 +595,10 @@ const ListadoProductos = () => {
           />
         )}
 
-        <ModalProducto categorias={categorias} marcas={marcas} onAddProducto={handleAddArticulo} />
+        {isProductoModalOpen && (
+          <ModalProducto categorias={categorias} marcas={marcas} onAddProducto={handleAddArticulo} onClose={() => setIsProductoModalOpen(false)}/>
+        )}
+        
       </div>
     </>
   );

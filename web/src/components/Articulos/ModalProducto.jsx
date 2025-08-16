@@ -1,8 +1,7 @@
 import { useState, useRef } from "react";
 import { Modal, Button, Form, FormControl } from "react-bootstrap";
 
-function ModalProducto({ onAddProducto, categorias, marcas }) {
-  const [show, setShow] = useState(false);
+function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
   const [newProduct, setNewProduct] = useState({
     numero_articulo: "",
     categoria: [""],
@@ -22,9 +21,8 @@ function ModalProducto({ onAddProducto, categorias, marcas }) {
   const handleClose = () => {
     setSelectedFiles([])
     setPreviewImages([])
-    setShow(false);
+    onClose()
   }
-  const handleShow = () => setShow(true);
 
   const handleSelectFiles = () => {
     fileInputRef.current.click();
@@ -171,12 +169,8 @@ function ModalProducto({ onAddProducto, categorias, marcas }) {
 
   return (
     <>
-      <button style={{width: "145px"}}onClick={handleShow} className="agregarArticulo abajoDerecha">
-        Agregar Articulo
-      </button>
-
       <Modal
-        show={show}
+        show={true}
         onHide={handleClose}
         backdrop="static"
         keyboard={false}

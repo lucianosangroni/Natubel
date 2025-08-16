@@ -413,7 +413,9 @@ const EditarPedido = () => {
                         <section className="contenedor-tabla-grilla-editar-pedido">
                             <p className="pedido-edit-titulo">Pedido Original</p>
                             <div className="display-flex">
-                                <ListaArticulos articulos={pedido.articulos} onArticuloClick={handleArticuloClickOriginal} selectedArticulo={selectedArticuloOriginal}/>
+                                <div>
+                                    <ListaArticulos articulos={pedido.articulos} onArticuloClick={handleArticuloClickOriginal} selectedArticulo={selectedArticuloOriginal}/>
+                                </div>
                                 {selectedArticuloOriginal && (
                                     <GrillaProductosDePedido
                                     articulo={selectedArticuloOriginal}
@@ -442,7 +444,9 @@ const EditarPedido = () => {
                             <div className="display-flex">
                                 {productosConfirmados.length > 0 && (
                                     <>
-                                        <ListaArticulos articulos={articulosConfirmados} onArticuloClick={handleArticuloClickEditado} selectedArticulo={selectedArticuloEditado}/>
+                                        <div>
+                                            <ListaArticulos articulos={articulosConfirmados} onArticuloClick={handleArticuloClickEditado} selectedArticulo={selectedArticuloEditado}/>
+                                        </div>
                                         {selectedArticuloEditado && (
                                             <GrillaProductosDePedido
                                             articulo={selectedArticuloEditado}

@@ -862,7 +862,7 @@ const CuentaCorriente = () => {
             <div className="fixedCuentaCorriente">
                 {persona && (
                     <div style={{width: "100%"}}>
-                        <h1 style={{marginTop: "0", marginBottom: "0", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+                        <h1 style={{whiteSpace: "nowrap", marginTop: "0", marginBottom: "0", textAlign: "center", fontSize: "40px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
                             "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                             sans-serif`}}>
                             Cuenta Corriente de {persona.nombre}
@@ -895,7 +895,7 @@ const CuentaCorriente = () => {
                                     <span style={{ fontWeight: "bold" }}>{montoRestanteFactura - totalPagadoFactura >= 0 ? "SALDO DEUDOR: " : "SALDO ACREEDOR: "}<span style={{ fontWeight: "normal" }}>${formatearNumero(Math.abs(montoRestanteFactura - totalPagadoFactura))}</span></span>
                                 </div> 
                             </div>
-                            <div style={{width: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            <div style={{width: "50%", display: "flex", alignItems: "center", overflowX: "auto"}}>
                                 <Button onClick={handleHistorial} className="btnRemito">Historial</Button>
                                 {!flagCliente && (
                                     <Button onClick={() => setIsFacturaModalOpen(true)} className="btnRemito" style={{whiteSpace: "nowrap"}}>Agregar Factura</Button>
@@ -985,8 +985,8 @@ const CuentaCorriente = () => {
                         "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
                         sans-serif`}}>Facturas</h2>
 
-                        <div style={{display: "flex", justifyContent: "space-evenly", alignItems: "flex-start"}}>
-                            <div className="tableDivContainer">
+                        <div style={{display: "flex", justifyContent: "center", gap: "10px"}}>
+                            <div className="tableDivContainer" style={{maxWidth: "700px"}}>
                                 <table className="tableContainerSinPaginacion">
                                     <thead>
                                         <tr>
@@ -1039,7 +1039,7 @@ const CuentaCorriente = () => {
                                 </table>
                             </div>        
 
-                            <div style={{ minWidth: "20%",}}>
+                            <div style={{width: "400px"}}>
                                 {flagCliente && (
                                     <h2 style={{marginTop: "1rem", marginBottom: "0", textAlign: "center", fontSize: "20px", fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
                                     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
