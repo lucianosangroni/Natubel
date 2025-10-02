@@ -423,6 +423,7 @@ const CargarPedido = () => {
           setSelectedPedidor("");
           setTipoPedidor("cliente");
           setFiltroBusqueda("");
+          setSelectedMarca("todas")
           setSelectedProduct(data[0]);
           setMontoFactura("")
           setNumeroFactura("")
