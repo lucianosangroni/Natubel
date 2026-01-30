@@ -7,7 +7,7 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
-//app.use(express.static("storage"));
+app.use('/storage', express.static('/var/www/147.93.36.247/storage'));
 
 const puerto = process.env.PORT || 3001
 

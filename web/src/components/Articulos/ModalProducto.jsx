@@ -58,7 +58,7 @@ function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
       newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
 
       if (newProduct.marca !== null && newProduct.numero_articulo && newProduct.categoria.length > 0 && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
-        const addProduct = {...newProduct, imagens: []}
+        const addProduct = {...newProduct, imagens: selectedFiles}
         onAddProducto(addProduct);
         setNewProduct({
           numero_articulo: "",
@@ -371,7 +371,7 @@ function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
               </Button>
             </Form.Group>
             </div>
-            {/*<Form.Group>
+            <Form.Group>
               <input
                 type="file"
                 ref={fileInputRef}
@@ -390,7 +390,6 @@ function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
               ))}
               </div>
             </Form.Group>
-            */}
           </Form>
         </Modal.Body>
         <Modal.Footer>

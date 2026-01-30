@@ -103,7 +103,7 @@ const ListadoProductos = () => {
           precio_distribuidor: newArticulo.precio_distribuidor,
           precio_de_marca: precioDeMarca,
           productos: result.productos,
-          imagens: []
+          imagens: result.imagenes
         };
         const dataActualizada = [...data, newArticuloData];
         

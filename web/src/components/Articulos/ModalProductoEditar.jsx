@@ -71,12 +71,12 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
         productos: articulo.productos,
         talles,
         colores,
-        imagens: []
+        imagens: articulo.imagens
       }
     );
 
     setSelectedFiles([])
-    setOldFiles([])
+    setOldFiles(articulo.imagens)
     setPreviewImages([])
   }, [articulo]);
 
@@ -128,7 +128,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
       editProduct.categoria = editProduct.categoria.filter((cat) => cat.toString().trim() !== "");
 
       if (editProduct.numero_articulo && editProduct.categoria.length > 0 && editProduct.precio_minorista && editProduct.precio_mayorista && editProduct.precio_distribuidor && editProduct.precio_de_marca && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
-        const imagenesRemove = []//articulo.imagens.filter(imagen => !oldFiles.map(file => file.id).includes(imagen.id)).map(imagen => imagen.id)
+        const imagenesRemove = articulo.imagens.filter(imagen => !oldFiles.map(file => file.id).includes(imagen.id)).map(imagen => imagen.id)
         const editProductData = {...editProduct, imagenesAdd: selectedFiles, imagenesRemove}
         onEditProducto(editProductData);
         handleClose();
@@ -433,7 +433,6 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
                </Button>
             </Form.Group>
          </div>
-         {/** 
          <Form.Group>
               <input
                 type="file"
@@ -459,7 +458,6 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
               ))}
               </div>
             </Form.Group>
-            */}
           </Form>
         </Modal.Body>
         <Modal.Footer>
