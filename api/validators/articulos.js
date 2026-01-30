@@ -2,6 +2,7 @@ const { check, validationResult  } = require("express-validator")
 
 const validatorCreateItem = [
     check("numero_articulo").exists().isString().notEmpty(),
+    check("enBenka").exists().isBoolean(),
     check("categorias").exists().isArray({ min: 1 }).custom((categorias) => categorias.every((categoria) => Number.isInteger(categoria))),
     check("descripcion").exists().isString(),
     check("precio_mayorista").exists().isFloat().custom((precio) => precio >= 0),
@@ -23,6 +24,7 @@ const validatorCreateItem = [
 
 const validatorUpdateItem = [
     check("numero_articulo").exists().isString().notEmpty(),
+    check("enBenka").exists().isBoolean(),
     check("categorias").exists().isArray({ min: 1 }).custom((categorias) => categorias.every((categoria) => Number.isInteger(categoria))),
     check("descripcion").exists().isString(),
     check("precio_mayorista").exists().isFloat().custom((precio) => precio >= 0),

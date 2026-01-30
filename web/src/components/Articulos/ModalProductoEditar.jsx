@@ -6,6 +6,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
   const [editProduct, setEditProduct] = useState(
     {
     numero_articulo: articulo.numero_articulo,
+    enBenka: articulo.enBenka,
     categoria: articulo.categoria.map((cat) => cat.id),
     marca: articulo.marca_id,
     descripcion: articulo.descripcion,
@@ -59,6 +60,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
       {
         id: articulo.id,
         numero_articulo: articulo.numero_articulo,
+        enBenka: articulo.enBenka,
         categoria: articulo.categoria.map((cat) => cat.id),
         marca: articulo.marca_id,
         descripcion: articulo.descripcion,
@@ -256,6 +258,27 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
                   });
                 }}
               />
+            </Form.Group>
+            <Form.Group>
+                <Form.Label>Incluir articulo en benkalenceria.com</Form.Label>
+                <div>
+                    <Form.Check
+                        inline
+                        type="radio"
+                        label="Sí"
+                        name="benkaOption"
+                        checked={editProduct.enBenka === true}
+                        onChange={() => setEditProduct({...editProduct, enBenka: true})}
+                    />
+                    <Form.Check
+                        inline
+                        type="radio"
+                        label="No"
+                        name="benkaOption"
+                        checked={editProduct.enBenka === false}
+                        onChange={() => setEditProduct({...editProduct, enBenka: false})}
+                    />
+                </div>
             </Form.Group>
             <Form.Group>
               <Form.Label className="boton-categoria">Categorias</Form.Label>

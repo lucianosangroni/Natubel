@@ -4,6 +4,7 @@ import { Modal, Button, Form, FormControl } from "react-bootstrap";
 function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
   const [newProduct, setNewProduct] = useState({
     numero_articulo: "",
+    enBenka: true,
     categoria: [""],
     marca: null,
     descripcion: "",
@@ -61,6 +62,7 @@ function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
         onAddProducto(addProduct);
         setNewProduct({
           numero_articulo: "",
+          enBenka: true,
           categoria: [""],
           marca: null,
           descripcion: "",
@@ -192,6 +194,27 @@ function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
                   });
                 }}
               />
+            </Form.Group>
+            <Form.Group>
+                <Form.Label>Incluir articulo en benkalenceria.com</Form.Label>
+                <div>
+                    <Form.Check
+                        inline
+                        type="radio"
+                        label="Sí"
+                        name="benkaOption"
+                        checked={newProduct.enBenka === true}
+                        onChange={() => setNewProduct({...newProduct, enBenka: true})}
+                    />
+                    <Form.Check
+                        inline
+                        type="radio"
+                        label="No"
+                        name="benkaOption"
+                        checked={newProduct.enBenka === false}
+                        onChange={() => setNewProduct({...newProduct, enBenka: false})}
+                    />
+                </div>
             </Form.Group>
             <Form.Group>
               <Form.Label className="boton-categoria">Categorias</Form.Label>

@@ -66,7 +66,8 @@ export const DataProvider = ({ children }) => {
                         }
                         return response.json();
                     })
-                    .then(articulosData => {
+                    .then(articulosDataSinFiltroEnBenka => {
+                        const articulosData = articulosDataSinFiltroEnBenka.filter(art => art.enBenka)
                         const coloresConStock = Array.from(new Set(articulosData.flatMap(articulo => articulo.productos.filter(producto => producto.stock > 0).map(producto => producto.color))));
                         const tallesConStock = Array.from(new Set(articulosData.flatMap(articulo => articulo.productos.filter(producto => producto.stock > 0).map(producto => producto.talle))));
                         const articulosConStock = articulosData.filter(articulo => articulo.productos.some(producto => producto.stock > 0));

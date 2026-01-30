@@ -59,6 +59,7 @@ const ListadoProductos = () => {
     const formData = new FormData();
 
     formData.append('numero_articulo', newArticulo.numero_articulo);
+    formData.append('enBenka', newArticulo.enBenka);
     const categoriasInt = newArticulo.categoria.map((categoria) => parseInt(categoria, 10));
     formData.append('categorias', JSON.stringify(categoriasInt));
     formData.append('marca_id', parseInt(newArticulo.marca));
@@ -94,6 +95,7 @@ const ListadoProductos = () => {
         const newArticuloData = {
           id: result.id,
           numero_articulo: newArticulo.numero_articulo,
+          enBenka: newArticulo.enBenka,
           categoria: categoriasNewArticulo,
           descripcion: newArticulo.descripcion,
           precio_minorista: newArticulo.precio_minorista,
@@ -130,6 +132,7 @@ const ListadoProductos = () => {
     const formData = new FormData();
 
     formData.append('numero_articulo', editProduct.numero_articulo);
+    formData.append('enBenka', editProduct.enBenka);
     const categoriasInt = editProduct.categoria.map((categoria) => parseInt(categoria, 10));
     formData.append('categorias', JSON.stringify(categoriasInt));
     formData.append('marca_id', parseInt(editProduct.marca));
@@ -169,6 +172,7 @@ const ListadoProductos = () => {
         const editArticuloData = {
           id: editProduct.id,
           numero_articulo: editProduct.numero_articulo,
+          enBenka: editProduct.enBenka,
           marca_id: parseInt(editProduct.marca),
           categoria: categoriasEditArticulo,
           descripcion: editProduct.descripcion,

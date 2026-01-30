@@ -10,6 +10,10 @@ const Articulo = sequelize.define(
             allowNull: false,
             unique: true
         },
+        enBenka: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+        },
         descripcion: {
             type: DataTypes.TEXT,
         },
