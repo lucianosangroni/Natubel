@@ -41,7 +41,12 @@ const Articulo = sequelize.define(
         flag_mostrar: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
-        }
+        },
+        ml_item_id: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            unique: true,
+        },
     },
     {
         tableName: "articulo",

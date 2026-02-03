@@ -1,6 +1,6 @@
 import ModalProductoEditar from "./ModalProductoEditar";
 
-function GrillaProducto({ onEditProducto, onDeleteProducto, articulo, categorias, marcas }) {
+function GrillaProducto({ onEditProducto, onDeleteProducto, onPublicarEnMl, articulo, categorias, marcas }) {
     const tallesDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
     const coloresDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
   
@@ -49,6 +49,10 @@ function GrillaProducto({ onEditProducto, onDeleteProducto, articulo, categorias
         onDeleteProducto(articulo)
     }
 
+    const handlePublicarEnMl = () => {
+      onPublicarEnMl(articulo)
+    }
+
     return (
       <>
       <div className="table-container">
@@ -84,6 +88,15 @@ function GrillaProducto({ onEditProducto, onDeleteProducto, articulo, categorias
         <button onClick={() => handleDeleteArticulo()}  className="agregar-producto-grilla" style={{ marginTop: '2rem' }}> 
             Eliminar Articulo
         </button>
+        {articulo.ml_item_id ? (
+          <button disabled className="agregar-producto-grilla" style={{ marginTop: '2rem', cursor: "default", color: "green"}}>
+            Publicado en Mercado Libre
+          </button>
+        ) : (
+          <button onClick={() => handlePublicarEnMl()}  className="agregar-producto-grilla" style={{ marginTop: '2rem' }}> 
+            Publicar en Mercado Libre
+          </button>
+        )}
       </div>
       </>
     );

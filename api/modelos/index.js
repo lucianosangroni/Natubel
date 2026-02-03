@@ -16,7 +16,8 @@ const modelos = {
     pagoModel: require("./pago"),
     imputacionModel: require("./imputacion"),
     cuponModel: require("./cupon"),
-    porcentajeModel: require("./porcentaje")
+    porcentajeModel: require("./porcentaje"),
+    mlTokenModel: require("./ml_token"),
 }
 
 module.exports = modelos

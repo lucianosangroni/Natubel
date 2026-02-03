@@ -21,6 +21,11 @@ const Producto = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: true,
         },
+        ml_product_id: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            unique: true,
+        },
     },
     {
         tableName: "producto",

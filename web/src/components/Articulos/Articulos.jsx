@@ -237,6 +237,57 @@ const ListadoProductos = () => {
     }
   };
 
+  const handlePublicarEnMl = (articulo) => {
+    const shouldPublicar = window.confirm(
+      `¿Estas seguro que deseas publicar el articulo ${articulo.numero_articulo}?`
+    );
+
+    if(shouldPublicar) {
+      setIsLoading(true)
+
+      fetch(`${apiUrl}/ml/${articulo.id}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      })
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al publicar articulo, intente nuevamente");
+          throw new Error("Error en la solicitud POST");
+        }
+        return response.json();
+      })
+      .then((result) => {
+        if(result.need_auth){
+          window.location.href = result.auth_url
+          setIsLoading(false)
+          return
+        }
+
+        if(result.message === "Articulo publicado con éxito") {
+          const articuloActualizado = {...articulo, ml_item_id: result.ml_item_id}
+
+          const updatedData = data.map((a) =>
+            a.id === articuloActualizado.id
+              ? articuloActualizado
+              : a
+          );
+
+          setData(updatedData);
+          refreshArticulos(updatedData)
+        }
+        
+        alert(result.message)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud POST:", error);
+        setIsLoading(false)
+      });
+    }
+  }
+
   const handleArticuloClick = (product) => {
     setSelectedProduct(product);
   };
@@ -541,6 +592,7 @@ const ListadoProductos = () => {
             articulo={selectedProduct}
             onEditProducto={handleEditProducto}
             onDeleteProducto={handleDeleteProducto}
+            onPublicarEnMl={handlePublicarEnMl}
             categorias={categorias}
             marcas={marcas}
           />

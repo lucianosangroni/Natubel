@@ -1,6 +1,6 @@
-const { where } = require("sequelize");
-const { pedidoModel, productoXPedidoModel, productoModel, personaModel, articuloModel, facturaModel } = require("../modelos");
+const { pedidoModel, productoXPedidoModel, productoModel, articuloModel, facturaModel } = require("../modelos");
 const { matchedData } = require("express-validator");
+const { getTokenMl } = require("../controllers/mercadolibre")
 
 const getItems = async (req, res) => {
     try {
@@ -71,7 +71,8 @@ const createItem = async (req, res) => {
             )
 
             const productoAActualizar = await productoModel.findOne({
-                where: { id: producto.producto_id }
+                where: { id: producto.producto_id },
+                include: [{ model: articuloModel }]
             });
 
             if (productoAActualizar) {
@@ -88,6 +89,36 @@ const createItem = async (req, res) => {
                         where: { id: productoAActualizar.id }
                     }
                 )
+
+                if (productoAActualizar.articulo.ml_item_id && productoAActualizar.ml_product_id) {
+                    try {
+                        const response = await fetch(
+                            `https://api.mercadolibre.com/items/${productoAActualizar.articulo.ml_item_id}/variations`,
+                            {
+                                method: 'PUT',
+                                headers: {
+                                    'Authorization': `Bearer ${getTokenMl()}`,
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    variations: [
+                                        {
+                                            id: productoAActualizar.ml_product_id,
+                                            available_quantity: nuevoStock >= 0 ? nuevoStock : 0
+                                        }
+                                    ]
+                                })
+                            }
+                        );
+                    
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            console.error(`Error actualizando stock ML:`, errorData);
+                        }
+                    } catch (err) {
+                        console.error(`Error sincronizando con ML:`, err.message);
+                    }
+                }
             }
         };
         
