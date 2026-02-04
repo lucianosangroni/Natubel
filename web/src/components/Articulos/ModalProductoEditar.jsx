@@ -125,13 +125,9 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
     if(selectedFiles.length + oldFiles.length > 8) {
       alert("Solo se permite un máximo de 8 imagenes");
     } else {
-      
-
       editProduct.categoria = editProduct.categoria.filter((cat) => cat.toString().trim() !== "");
 
-      console.log(JSON.parse(JSON.stringify(editProduct)))
-
-      if (editProduct.numero_articulo && editProduct.categoria.length > 0 && editProduct.precio_minorista && editProduct.precio_mayorista && editProduct.precio_distribuidor && editProduct.precio_de_marca && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
+      if (editProduct.numero_articulo && editProduct.categoria.length > 0 && editProduct.precio_minorista !== null && editProduct.precio_mayorista !== null && editProduct.precio_distribuidor !== null && editProduct.precio_de_marca !== null && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
         const imagenesRemove = articulo.imagens.filter(imagen => !oldFiles.map(file => file.id).includes(imagen.id)).map(imagen => imagen.id)
         const editProductData = {...editProduct, imagenesAdd: selectedFiles, imagenesRemove}
         onEditProducto(editProductData);
