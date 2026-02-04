@@ -16,7 +16,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
     precio_de_marca: articulo.precio_de_marca,
     talles: [],
     colores: [],
-    imagens: []
+    imagens: articulo.imagens
     }
   );
 
