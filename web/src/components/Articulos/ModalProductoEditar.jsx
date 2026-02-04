@@ -22,7 +22,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
 
   const fileInputRef = useRef(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [oldFiles, setOldFiles] = useState([])
+  const [oldFiles, setOldFiles] = useState(articulo.imagens)
   const [previewImages, setPreviewImages] = useState([]);
 
   const tallesDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
@@ -56,6 +56,8 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
   const colores = coloresDesordenados.sort((a, b) => a.localeCompare(b, 'es', {ignorePunctuation: true}));
 
   useEffect(() => {
+    console.log(articulo.imagens)
+
     setEditProduct(
       {
         id: articulo.id,
@@ -82,12 +84,12 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
 
   const handleClose = () => {
     setSelectedFiles([])
+    setOldFiles([])
     setPreviewImages([])
     setShow(false);
   }
   const handleShow = () => {
     setShow(true);
-    setOldFiles([])
   }
 
   const handleSelectFiles = () => {
@@ -101,6 +103,8 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
 
     const previews = Array.from(files).map((file) => URL.createObjectURL(file));
     setPreviewImages([...previewImages, ...previews]);
+
+    console.log([...previewImages, ...previews])
   };
 
   const removeOldFile = (index) => {
