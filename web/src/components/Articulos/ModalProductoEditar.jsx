@@ -125,6 +125,8 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
     if(selectedFiles.length + oldFiles.length > 8) {
       alert("Solo se permite un máximo de 8 imagenes");
     } else {
+      console.log(editProduct)
+
       editProduct.categoria = editProduct.categoria.filter((cat) => cat.toString().trim() !== "");
 
       if (editProduct.numero_articulo && editProduct.categoria.length > 0 && editProduct.precio_minorista && editProduct.precio_mayorista && editProduct.precio_distribuidor && editProduct.precio_de_marca && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
