@@ -1,6 +1,7 @@
 const { sequelize } = require("../config/dbConnect")
 const { DataTypes } = require("sequelize")
 const Marca = require("./marca")
+const Producto = require("./producto")
 
 const Articulo = sequelize.define(
     "articulo",

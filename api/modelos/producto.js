@@ -34,6 +34,4 @@ const Producto = sequelize.define(
     }
 )
 
-Articulo.hasMany(Producto, {foreignKey: "articulo_id"})
-
 module.exports = Producto;

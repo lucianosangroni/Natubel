@@ -20,4 +20,6 @@ const modelos = {
     mlTokenModel: require("./ml_token"),
 }
 
+require("./associations")
+
 module.exports = modelos
