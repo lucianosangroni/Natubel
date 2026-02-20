@@ -1,4 +1,4 @@
-const { articuloModel, productoModel, mlTokenModel, imagenModel } = require("../modelos");
+const { articuloModel, productoModel, mlTokenModel, imagenModel, marcaModel } = require("../modelos");
 
 const getFirstToken = async (req, res) => {
     const code = req.query.code
@@ -60,9 +60,10 @@ const createItem = async (req, res) => {
         const articulo_id = req.params.id
 
         const articulo = await articuloModel.findByPk(articulo_id, {
-            include: {
-                model: productoModel,
-            }
+            include: [
+                { model: productoModel },
+                { model: marcaModel }
+            ]
         })
 
         if(!articulo){
@@ -74,59 +75,62 @@ const createItem = async (req, res) => {
         });
         const pictures = imagenes.map(img => ({ source: img.url }));
 
-        const body = {
-            title: articulo.numero_articulo,
-            category_id: "MLA1196", 
-            price: articulo.precio_minorista,
-            currency_id: "ARS",
-            available_quantity: 0,
-            buying_mode: "buy_it_now",
-            listing_type_id: "gold_special",
-            condition: "new",
+        let ml_item_id_data = null
 
-            variations: articulo.productos.map(p => ({
-                attribute_combinations: [
+        for (const p of articulo.productos) {
+            const body = {
+                family_name: "Producto temporal - No Comprar - articulo " + articulo.numero_articulo,
+                category_id: "MLA377250",
+                site_id: "MLA",
+                currency_id: "ARS",
+                buying_mode: "buy_it_now",
+                listing_type_id: "gold_special",
+                condition: "new",
+                available_quantity: p.stock >= 0 ? p.stock : 0,
+                price: articulo.precio_minorista,
+
+                pictures,
+
+                attributes: [
+                    { id: "BRAND", value_name: articulo.marca.nombre },
+                    { id: "MODEL", value_name: "Air Zoom " + articulo.numero_articulo },
+                    { id: "GENDER", value_name: "Mujer" },
                     { id: "COLOR", value_name: p.color },
-                    { id: "SIZE", value_name: p.talle }
+                    { id: "SIZE", value_name: p.talle },
+                    { id: "EMPTY_GTIN_REASON", value_name: "El producto no tiene código registrado" },
+                    { id: "IS_KIT", value_name: "No" },
+                    { id: 'SELLER_PACKAGE_HEIGHT', value_name: '5 cm' },
+                    { id: 'SELLER_PACKAGE_WIDTH',  value_name: '30 cm' },
+                    { id: 'SELLER_PACKAGE_LENGTH', value_name: '40 cm' },
+                    { id: 'SELLER_PACKAGE_WEIGHT', value_name: '500 g' }
                 ],
-                available_quantity: p.stock >= 0 ? p.stock : 0
-            })),
+            };
 
-            pictures
-        };
-        
-        const response = await fetch("https://api.mercadolibre.com/items", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${tokenML}`
-            },
-            body: JSON.stringify(body)
-        })
+            const response = await fetch("https://api.mercadolibre.com/items", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${tokenML}`
+                },
+                body: JSON.stringify(body)
+            })
 
-        if (!response.ok) {
-            const err = await response.text()
-            console.log("Error al crear la publicacion: ", err)
-            res.status(500).json({ message: `Error al crear la publicacion: ${err}` });
-        }
-
-        const data = await response.json()
-        
-        await articulo.update({
-            ml_item_id: data.id
-        })
-
-        for (const variation of data.variations || []) {
-            const color = variation.attribute_combinations.find(a => a.id === "COLOR")?.value_name;
-            const talle = variation.attribute_combinations.find(a => a.id === "SIZE")?.value_name;
-
-            const producto = articulo.productos.find(p => p.color === color && p.talle === talle);
-            if (producto) {
-                await producto.update({ ml_product_id: variation.id });
+            if (!response.ok) {
+                const err = await response.text()
+                console.log("Error al crear la publicacion: ", err)
+                return res.status(500).json({ message: `Error al crear la publicacion: ${err}` });
             }
+
+            const data = await response.json()
+
+            ml_item_id_data = data.family_id
+
+            await p.update({ ml_product_id: data.id });
         }
 
-        res.status(201).json({ message: 'Articulo publicado con éxito', ml_item_id: data.id });
+        await articulo.update({ml_item_id: ml_item_id_data})
+
+        res.status(201).json({ message: 'Articulo publicado con éxito', ml_item_id: ml_item_id_data });
     } catch(e) {
         console.log("Error al crear la publicacion: ", e)
         res.status(500).json({ message: 'Error al crear la publicacion' });
@@ -209,21 +213,13 @@ const responderWebhook = async (req, res) => {
         
             // Recorrer cada producto de la orden
             for (const item of order.order_items) {
-                const mlItemId = item.item.id;
-                const mlVariationId = item.item.variation_id;
-                const cantidadVendida = item.quantity;
-            
                 // Buscar producto en tu DB por artículo y variante
                 const productoDB = await productoModel.findOne({
-                    include: [{
-                        model: articuloModel,
-                        where: { ml_item_id: mlItemId }
-                    }],
-                    where: { ml_product_id: mlVariationId }
+                    where: { ml_product_id: item.item.id }
                 });
             
                 if (productoDB) {
-                    const nuevoStock = productoDB.stock - cantidadVendida;
+                    const nuevoStock = productoDB.stock - item.quantity;
                     await productoModel.update({ stock: nuevoStock }, { where: { id: productoDB.id } });
                 }
             }

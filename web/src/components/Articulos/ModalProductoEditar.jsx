@@ -56,8 +56,6 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
   const colores = coloresDesordenados.sort((a, b) => a.localeCompare(b, 'es', {ignorePunctuation: true}));
 
   useEffect(() => {
-    console.log(articulo.imagens)
-
     setEditProduct(
       {
         id: articulo.id,
@@ -103,8 +101,6 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
 
     const previews = Array.from(files).map((file) => URL.createObjectURL(file));
     setPreviewImages([...previewImages, ...previews]);
-
-    console.log([...previewImages, ...previews])
   };
 
   const removeOldFile = (index) => {
