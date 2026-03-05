@@ -12,6 +12,7 @@ function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
     precio_mayorista: "",
     precio_distribuidor: "",
     precio_de_marca: "",
+    precio_ml: "",
     talles: [""],
     colores: [""],
   });
@@ -70,6 +71,7 @@ function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
           precio_mayorista: "",
           precio_distribuidor: "",
           precio_de_marca: "",
+          precio_ml: "",
           talles: [""],
           colores: [""],
         });
@@ -325,6 +327,19 @@ function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
                   setNewProduct({
                     ...newProduct,
                     precio_de_marca: e.target.value,
+                  });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Precio MercadoLibre</Form.Label>
+              <Form.Control
+                type="text"
+                value={newProduct.precio_ml}
+                onChange={(e) => {
+                  setNewProduct({
+                    ...newProduct,
+                    precio_ml: e.target.value,
                   });
                 }}
               />

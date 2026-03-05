@@ -14,6 +14,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
     precio_mayorista: articulo.precio_mayorista,
     precio_distribuidor: articulo.precio_distribuidor,
     precio_de_marca: articulo.precio_de_marca,
+    precio_ml: articulo.precio_ml,
     talles: [],
     colores: [],
     imagens: articulo.imagens
@@ -68,6 +69,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
         precio_mayorista: articulo.precio_mayorista,
         precio_distribuidor: articulo.precio_distribuidor,
         precio_de_marca: articulo.precio_de_marca,
+        precio_ml: articulo.precio_ml,
         productos: articulo.productos,
         talles,
         colores,
@@ -127,7 +129,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
     } else {
       editProduct.categoria = editProduct.categoria.filter((cat) => cat.toString().trim() !== "");
 
-      if (editProduct.numero_articulo && editProduct.categoria.length > 0 && editProduct.precio_minorista !== null && editProduct.precio_mayorista !== null && editProduct.precio_distribuidor !== null && editProduct.precio_de_marca !== null && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
+      if (editProduct.numero_articulo && editProduct.categoria.length > 0 && editProduct.precio_minorista !== null && editProduct.precio_mayorista !== null && editProduct.precio_distribuidor !== null && editProduct.precio_de_marca !== null && editProduct.precio_ml !== null && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
         const imagenesRemove = articulo.imagens.filter(imagen => !oldFiles.map(file => file.id).includes(imagen.id)).map(imagen => imagen.id)
         const editProductData = {...editProduct, imagenesAdd: selectedFiles, imagenesRemove}
         onEditProducto(editProductData);
@@ -387,6 +389,19 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
                     setEditProduct({
                     ...editProduct,
                     precio_de_marca: e.target.value,
+                  });
+                }}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Precio MercadoLibre</Form.Label>
+              <Form.Control
+                type="text"
+                value={editProduct.precio_ml}
+                onChange={(e) => {
+                    setEditProduct({
+                    ...editProduct,
+                    precio_ml: e.target.value,
                   });
                 }}
               />

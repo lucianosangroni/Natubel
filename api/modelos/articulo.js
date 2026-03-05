@@ -33,6 +33,11 @@ const Articulo = sequelize.define(
             allowNull: false,
             defaultValue: 0,
         },
+        precio_ml: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+            defaultValue: 0,
+        },
         flag_activo: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,

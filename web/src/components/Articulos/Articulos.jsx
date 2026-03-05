@@ -56,6 +56,9 @@ const ListadoProductos = () => {
     let precioDeMarca = parseFloat(newArticulo.precio_de_marca);
     precioDeMarca = isNaN(precioDeMarca) ? 0 : precioDeMarca;
 
+    let precioML = parseFloat(newArticulo.precio_ml);
+    precioML = isNaN(precioML) ? 0 : precioML;
+
     const formData = new FormData();
 
     formData.append('numero_articulo', newArticulo.numero_articulo);
@@ -68,6 +71,7 @@ const ListadoProductos = () => {
     formData.append('precio_mayorista', parseFloat(newArticulo.precio_mayorista));
     formData.append('precio_distribuidor', parseFloat(newArticulo.precio_distribuidor));
     formData.append('precio_de_marca', precioDeMarca);
+    formData.append('precio_ml', precioML);
     formData.append('talles', JSON.stringify(newArticulo.talles));
     formData.append('colores', JSON.stringify(newArticulo.colores));
 
@@ -102,6 +106,7 @@ const ListadoProductos = () => {
           precio_mayorista: newArticulo.precio_mayorista,
           precio_distribuidor: newArticulo.precio_distribuidor,
           precio_de_marca: precioDeMarca,
+          precio_ml: precioML,
           productos: result.productos,
           imagens: result.imagenes
         };
@@ -141,6 +146,7 @@ const ListadoProductos = () => {
     formData.append('precio_mayorista', parseFloat(editProduct.precio_mayorista));
     formData.append('precio_distribuidor', parseFloat(editProduct.precio_distribuidor));
     formData.append('precio_de_marca', parseFloat(editProduct.precio_de_marca));
+    formData.append('precio_ml', parseFloat(editProduct.precio_ml));
     formData.append('talles', JSON.stringify(editProduct.talles));
     formData.append('colores', JSON.stringify(editProduct.colores));
     formData.append('productos', JSON.stringify(productos));
@@ -180,6 +186,7 @@ const ListadoProductos = () => {
           precio_mayorista: editProduct.precio_mayorista,
           precio_distribuidor: editProduct.precio_distribuidor,
           precio_de_marca: editProduct.precio_de_marca,
+          precio_ml: editProduct.precio_ml,
           productos: result.productos,
           imagens: nuevasImagenes,
         };

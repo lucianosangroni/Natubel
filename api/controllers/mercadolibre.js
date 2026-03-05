@@ -87,7 +87,7 @@ const createItem = async (req, res) => {
                 listing_type_id: "gold_special",
                 condition: "new",
                 available_quantity: p.stock >= 0 ? p.stock : 0,
-                price: articulo.precio_minorista,
+                price: articulo.precio_ml,
 
                 pictures,
 

@@ -91,13 +91,15 @@ const createItem = async (req, res) => {
                 )
 
                 if (productoAActualizar.articulo.ml_item_id && productoAActualizar.ml_product_id) {
+                    const tokenML = await getTokenMl()
+
                     try {
                         const response = await fetch(
                             `https://api.mercadolibre.com/items/${productoAActualizar.ml_product_id}`,
                             {
                                 method: 'PUT',
                                 headers: {
-                                    'Authorization': `Bearer ${getTokenMl()}`,
+                                    'Authorization': `Bearer ${tokenML}`,
                                     'Content-Type': 'application/json'
                                 },
                                 body: JSON.stringify({available_quantity: nuevoStock >= 0 ? nuevoStock : 0})

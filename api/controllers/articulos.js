@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { Op } = require('sequelize');
+const { getTokenMl } = require("../controllers/mercadolibre")
 
 const getItems = async (req, res) => {
     try {
@@ -54,7 +55,7 @@ const getItems = async (req, res) => {
 
 const createItem = async (req, res) => {
     try {
-        const { numero_articulo, enBenka, categorias: categoriasString, marca_id, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, precio_de_marca, talles: tallesString, colores: coloresString } = req.body
+        const { numero_articulo, enBenka, categorias: categoriasString, marca_id, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, precio_de_marca, precio_ml, talles: tallesString, colores: coloresString } = req.body
         const imagenes = []
         const categorias = JSON.parse(categoriasString);
         const talles = JSON.parse(tallesString);
@@ -85,7 +86,8 @@ const createItem = async (req, res) => {
                 precio_mayorista,
                 precio_minorista,
                 precio_distribuidor,
-                precio_de_marca
+                precio_de_marca,
+                precio_ml,
             }
         )
 
@@ -137,7 +139,7 @@ const createItem = async (req, res) => {
 const updateItem = async (req, res) => {
     try {
         const articulo_id = req.params.id
-        const { numero_articulo, enBenka, categorias: categoriasString, marca_id, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, precio_de_marca, productos: productosString, talles: tallesString, colores: coloresString, imagenesRemove: imagenesRemoveString } = req.body
+        const { numero_articulo, enBenka, categorias: categoriasString, marca_id, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, precio_de_marca, precio_ml, productos: productosString, talles: tallesString, colores: coloresString, imagenesRemove: imagenesRemoveString } = req.body
         const imagenesAdd = []
         const imagenesRemove = JSON.parse(imagenesRemoveString)
         const categorias = JSON.parse(categoriasString);
@@ -166,6 +168,41 @@ const updateItem = async (req, res) => {
             return res.status(404).json({ message: 'Articulo no encontrado' });
         }
 
+        if(articuloExiste.ml_item_id !== null && articuloExiste.precio_ml !== articulo.precio_ml) {
+            const tokenML = await getTokenMl()
+
+            const productosML = await productoModel.findAll({
+                where: { articulo_id: articulo_id }
+            })
+
+            for (const p of productosML) {
+                if (!p.ml_product_id) continue
+
+                const response = await fetch(
+                    `https://api.mercadolibre.com/items/${p.ml_product_id}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            'Authorization': `Bearer ${tokenML}`,
+                        },
+                        body: JSON.stringify({
+                            price: precio_ml
+                        })
+                    }
+                )
+            
+                if (!response.ok) {
+                    const err = await response.text()
+                    console.log("Error actualizando precio ML:", err)
+                
+                    return res.status(500).json({
+                        message: "Error actualizando precio en MercadoLibre"
+                    })
+                }
+            }
+        }
+
         await articuloModel.update
         (
             {
@@ -176,7 +213,8 @@ const updateItem = async (req, res) => {
                 precio_mayorista,
                 precio_minorista,
                 precio_distribuidor,
-                precio_de_marca
+                precio_de_marca,
+                precio_ml,
             }, 
             {
             where: { id: articulo_id }
