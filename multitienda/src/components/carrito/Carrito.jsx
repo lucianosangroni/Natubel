@@ -58,11 +58,20 @@ const Carrito = () => {
   }, [tipoPrecios]);
 
   const ordenarProductos = (a, b) => {
-    const obtenerNumero = numArticulo => parseInt(numArticulo.match(/\d+/)[0]);
-    const obtenerLetra = numArticulo => {
-      const letra = (numArticulo.match(/[A-Za-z]/) || [])[0];
-      return letra ? letra.toUpperCase() : letra;
+    const obtenerNumero = (numArticulo) => {
+      if (!numArticulo) return 0;
+
+      const match = numArticulo.match(/\d+/);
+      return match ? parseInt(match[0]) : 0;
     };
+
+    const obtenerLetra = (numArticulo) => {
+      if (!numArticulo) return null;
+
+      const match = numArticulo.match(/[A-Za-z]+/);
+      return match ? match[0].toUpperCase() : null;
+    };
+
     const ordenLetras = { 'UNICO': 0, 'E': 1, 'S': 2, 'M': 3, 'L': 4, 'XL': 5, 'XXL': 6, 'XXXL': 7, 'XXXXL': 8, 'XXXXXL': 9 };
 
     const numeroA = obtenerNumero(a.numero_articulo)
@@ -98,7 +107,7 @@ const Carrito = () => {
         return -1;
       }
 
-      return ordenLetras[talleA] - ordenLetras[talleB];
+      return (ordenLetras[talleA] ?? 999) - (ordenLetras[talleB] ?? 999);
     }
     
     const colorA = a.color.toUpperCase()
