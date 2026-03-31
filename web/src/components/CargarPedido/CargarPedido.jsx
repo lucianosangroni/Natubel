@@ -89,6 +89,13 @@ const CargarPedido = () => {
             return;
         }
     }
+    
+    console.log("---------------")
+    console.log(data)
+
+    console.log(cantidadesArticuloActual)
+    console.log(productosConfirmados)
+    console.log(marcaId)
 
     setCantidadesArticuloActual({});
     setSelectedMarca(marcaId);
@@ -440,7 +447,7 @@ const CargarPedido = () => {
   };
 
   const actualizarStock = () => {
-    const newData = [...data];
+    const newData = [...articulosData];
 
     for (const articulo of productosConfirmados) {
       const articuloIndex = newData.findIndex(
