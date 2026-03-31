@@ -89,13 +89,6 @@ const CargarPedido = () => {
             return;
         }
     }
-    
-    console.log("---------------")
-    console.log(data)
-
-    console.log(cantidadesArticuloActual)
-    console.log(productosConfirmados)
-    console.log(marcaId)
 
     setCantidadesArticuloActual({});
     setSelectedMarca(marcaId);
