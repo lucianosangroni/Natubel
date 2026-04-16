@@ -97,7 +97,7 @@ const createItem = async (req, res) => {
                     { id: "SIZE", value_name: p.talle },
                     { id: "EMPTY_GTIN_REASON", value_name: "El producto no tiene código registrado" },
 
-                    { id: "MODEL", value_name: "Air Zoom " + articulo.numero_articulo },
+                    { id: "MODEL", value_name: articulo.marca.nombre },
                     { id: "GENDER", value_name: "Mujer" },
                     { id: "IS_KIT", value_name: "No" },
                     { id: 'SELLER_PACKAGE_HEIGHT', value_name: '5 cm' },
