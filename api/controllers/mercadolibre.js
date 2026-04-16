@@ -137,6 +137,33 @@ const createItem = async (req, res) => {
     }
 };
 
+const desvincularItem = async (req, res) => {
+    try {
+        const articulo_id = req.params.id
+
+        const articulo = await articuloModel.findByPk(articulo_id, {
+            include: [
+                { model: productoModel }
+            ]
+        })
+
+        if(!articulo){
+            return res.status(404).json({ message: 'Articulo no encontrado' });
+        }
+
+        for (const p of articulo.productos) {
+            await p.update({ ml_product_id: null });
+        }
+
+        await articulo.update({ml_item_id: null})
+
+        res.status(201).json({ message: 'Articulo desvinculado con éxito' });
+    } catch(e) {
+        console.log("Error al crear la publicacion: ", e)
+        res.status(500).json({ message: 'Error al desvincular la publicacion' });
+    }
+}
+
 function buildAuthUrl() {
     return `https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=${process.env.ML_CLIENT_ID}&redirect_uri=${process.env.ML_REDIRECT_URI}`
 }
@@ -230,5 +257,4 @@ const responderWebhook = async (req, res) => {
     }
 }
 
-
-module.exports = { getFirstToken, createItem, getTokenMl, responderWebhook };
+module.exports = { getFirstToken, createItem, desvincularItem, getTokenMl, responderWebhook };

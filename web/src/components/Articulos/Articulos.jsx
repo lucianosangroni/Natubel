@@ -295,6 +295,51 @@ const ListadoProductos = () => {
     }
   }
 
+  const handleDevincularEnMl = (articulo) => {
+    const shouldDesvincular = window.confirm(
+      `¿Estas seguro que deseas desvincular el articulo ${articulo.numero_articulo} de su publicación en MercadoLibre? Esto te permitirá volver a crear su pulbicación pero no eliminará la publicación ya existente en MercadoLibre, deberá ser borrada manualmente en MercadoLibre.`
+    );
+
+    if(shouldDesvincular) {
+      setIsLoading(true)
+
+      fetch(`${apiUrl}/ml/${articulo.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      })
+      .then((response) => {
+        if (!response.ok) {
+          alert("Error al publicar articulo, intente nuevamente");
+          throw new Error("Error en la solicitud POST");
+        }
+        return response.json();
+      })
+      .then((result) => {
+        if(result.message === "Articulo desvinculado con éxito") {
+          const articuloActualizado = {...articulo, ml_item_id: null}
+
+          const updatedData = data.map((a) =>
+            a.id === articuloActualizado.id
+              ? articuloActualizado
+              : a
+          );
+
+          setData(updatedData);
+          refreshArticulos(updatedData)
+        }
+        
+        alert(result.message)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud PUT:", error);
+        setIsLoading(false)
+      });
+    }
+  }
+
   const handleArticuloClick = (product) => {
     setSelectedProduct(product);
   };
@@ -600,6 +645,7 @@ const ListadoProductos = () => {
             onEditProducto={handleEditProducto}
             onDeleteProducto={handleDeleteProducto}
             onPublicarEnMl={handlePublicarEnMl}
+            onDesvincularEnMl={handleDevincularEnMl}
             categorias={categorias}
             marcas={marcas}
           />

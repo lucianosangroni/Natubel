@@ -1,6 +1,6 @@
 import ModalProductoEditar from "./ModalProductoEditar";
 
-function GrillaProducto({ onEditProducto, onDeleteProducto, onPublicarEnMl, articulo, categorias, marcas }) {
+function GrillaProducto({ onEditProducto, onDeleteProducto, onPublicarEnMl, onDesvincularEnMl, articulo, categorias, marcas }) {
     const tallesDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.talle)));
     const coloresDesordenados = Array.from(new Set(articulo.productos.map((producto) => producto.color)));
   
@@ -53,6 +53,10 @@ function GrillaProducto({ onEditProducto, onDeleteProducto, onPublicarEnMl, arti
       onPublicarEnMl(articulo)
     }
 
+    const handleDesvincularEnMl = () => {
+      onDesvincularEnMl(articulo)
+    }
+
     return (
       <>
       <div className="table-container">
@@ -89,9 +93,14 @@ function GrillaProducto({ onEditProducto, onDeleteProducto, onPublicarEnMl, arti
             Eliminar Articulo
         </button>
         {articulo.ml_item_id ? (
-          <button disabled className="agregar-producto-grilla" style={{ marginTop: '2rem', cursor: "default", color: "green"}}>
-            Publicado en Mercado Libre
-          </button>
+          <>
+            <button disabled className="agregar-producto-grilla" style={{ marginTop: '2rem', cursor: "default", color: "green"}}>
+              Publicado en Mercado Libre
+            </button>
+            <button onClick={() => handleDesvincularEnMl()} className="agregar-producto-grilla" style={{ marginTop: '2rem', color: "red"}}>
+              Desvincular en Mercado Libre
+            </button>
+          </>
         ) : (
           <button onClick={() => handlePublicarEnMl()}  className="agregar-producto-grilla" style={{ marginTop: '2rem' }}> 
             Publicar en Mercado Libre
