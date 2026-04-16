@@ -93,15 +93,15 @@ const createItem = async (req, res) => {
 
                 attributes: [
                     { id: "BRAND", value_name: articulo.marca.nombre },
+                    { id: "MODEL", value_name: articulo.marca.nombre },
+                    { id: "GENDER", value_name: articulo.genero },
                     { id: "COLOR", value_name: p.color },
                     { id: "SIZE", value_name: p.talle },
-                    { id: "EMPTY_GTIN_REASON", value_name: "El producto no tiene código registrado" },
-                    { id: "MODEL", value_name: articulo.marca.nombre },
-                    
-                    { id: "GENDER", value_name: "Mujer" },
-
-
-                    
+                    { id: 'SELLER_PACKAGE_HEIGHT', value_name: '15 cm' },
+                    { id: 'SELLER_PACKAGE_WIDTH',  value_name: '15 cm' },
+                    { id: 'SELLER_PACKAGE_LENGTH', value_name: '15 cm' },
+                    { id: 'SELLER_PACKAGE_WEIGHT', value_name: '500 g' },
+                    { id: "EMPTY_GTIN_REASON", value_name: "El producto no tiene código registrado" }
                 ],
             };
 

@@ -55,7 +55,7 @@ const getItems = async (req, res) => {
 
 const createItem = async (req, res) => {
     try {
-        const { numero_articulo, enBenka, categorias: categoriasString, marca_id, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, precio_de_marca, precio_ml, talles: tallesString, colores: coloresString } = req.body
+        const { numero_articulo, enBenka, categorias: categoriasString, marca_id, genero, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, precio_de_marca, precio_ml, talles: tallesString, colores: coloresString } = req.body
         const imagenes = []
         const categorias = JSON.parse(categoriasString);
         const talles = JSON.parse(tallesString);
@@ -82,6 +82,7 @@ const createItem = async (req, res) => {
                 numero_articulo,
                 enBenka,
                 marca_id,
+                genero,
                 descripcion,
                 precio_mayorista,
                 precio_minorista,
@@ -139,7 +140,7 @@ const createItem = async (req, res) => {
 const updateItem = async (req, res) => {
     try {
         const articulo_id = req.params.id
-        const { numero_articulo, enBenka, categorias: categoriasString, marca_id, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, precio_de_marca, precio_ml, productos: productosString, talles: tallesString, colores: coloresString, imagenesRemove: imagenesRemoveString } = req.body
+        const { numero_articulo, enBenka, categorias: categoriasString, marca_id, genero, descripcion, precio_mayorista, precio_minorista, precio_distribuidor, precio_de_marca, precio_ml, productos: productosString, talles: tallesString, colores: coloresString, imagenesRemove: imagenesRemoveString } = req.body
         const imagenesAdd = []
         const imagenesRemove = JSON.parse(imagenesRemoveString)
         const categorias = JSON.parse(categoriasString);
@@ -210,6 +211,7 @@ const updateItem = async (req, res) => {
                 enBenka,
                 descripcion,
                 marca_id,
+                genero,
                 precio_mayorista,
                 precio_minorista,
                 precio_distribuidor,

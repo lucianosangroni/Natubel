@@ -16,6 +16,10 @@ const Articulo = sequelize.define(
         descripcion: {
             type: DataTypes.TEXT,
         },
+        genero: {
+            type: DataTypes.ENUM('Hombre', 'Mujer', 'Sin género', 'Niños', 'Niñas', 'Bebés'),
+            defaultValue: 'Sin género'
+        },
         precio_mayorista: {
             type: DataTypes.FLOAT,
             allowNull: false,
