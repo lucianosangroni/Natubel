@@ -96,10 +96,8 @@ const createItem = async (req, res) => {
                     { id: "COLOR", value_name: p.color },
                     { id: "SIZE", value_name: p.talle },
                     { id: "EMPTY_GTIN_REASON", value_name: "El producto no tiene código registrado" },
-
                     { id: "MODEL", value_name: articulo.marca.nombre },
-                    { id: "GENDER", value_name: "Mujer" },
-                    { id: "IS_KIT", value_name: "No" },
+
                     { id: 'SELLER_PACKAGE_HEIGHT', value_name: '5 cm' },
                     { id: 'SELLER_PACKAGE_WIDTH',  value_name: '30 cm' },
                     { id: 'SELLER_PACKAGE_LENGTH', value_name: '40 cm' },
