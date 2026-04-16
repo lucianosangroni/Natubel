@@ -100,11 +100,8 @@ const createItem = async (req, res) => {
                     
                     { id: "GENDER", value_name: "Mujer" },
 
+
                     
-                    { id: 'SELLER_PACKAGE_HEIGHT', value_name: '5 cm' },
-                    { id: 'SELLER_PACKAGE_WIDTH',  value_name: '30 cm' },
-                    { id: 'SELLER_PACKAGE_LENGTH', value_name: '40 cm' },
-                    { id: 'SELLER_PACKAGE_WEIGHT', value_name: '500 g' }
                 ],
             };
 
