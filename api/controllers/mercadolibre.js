@@ -46,6 +46,35 @@ const getFirstToken = async (req, res) => {
     }
 }
 
+const getCategoria = async (req, res) => {
+    try {
+        const filtro = req.query.filtro
+
+        const tokenML = await getTokenMl()
+
+        const response = await fetch(`https://api.mercadolibre.com/sites/MLA/domain_discovery/search?q=${filtro}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${tokenML}`
+            },
+        })
+
+        if (!response.ok) {
+            const err = await response.text()
+            console.log("Error al buscar la categoria: ", err)
+            return res.status(500).json({ message: `Error al buscar la categoria: ${err}` });
+        }
+
+        const data = await response.json()
+
+        res.status(200).json({ catOptions: data });
+    } catch(e) {
+        console.log("Error al buscar la categoria: ", e)
+        res.status(500).json({ message: 'Error al buscar la categoria' });
+    }
+}
+
 const createItem = async (req, res) => {
     try {
         const tokenML = await getTokenMl()
@@ -58,6 +87,8 @@ const createItem = async (req, res) => {
         }
 
         const articulo_id = req.params.id
+
+        const { categoria, atributos } = req.body
 
         const articulo = await articuloModel.findByPk(articulo_id, {
             include: [
@@ -77,28 +108,16 @@ const createItem = async (req, res) => {
 
         let ml_item_id_data = null
 
-        const responseCat = await fetch(`https://api.mercadolibre.com/sites/MLA/domain_discovery/search?q=${articulo.descripcion}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${tokenML}`
-            },
-        })
-
-        if (!responseCat.ok) {
-            const err = await responseCat.text()
-            console.log("Error al crear la publicacion: ", err)
-            return res.status(500).json({ message: `Error al crear la publicacion: ${err}` });
-        }
-
-        const dataCat = await responseCat.json()
-
-        const category_id = dataCat[0].category_id
-
         for (const p of articulo.productos) {
+            const atributosFinales = [
+                ...atributos,
+                { id: "COLOR", value_name: p.color },
+                { id: "SIZE", value_name: p.talle }
+            ];
+
             const body = {
                 family_name: "Producto temporal - No Comprar - articulo " + articulo.numero_articulo,
-                category_id: category_id,
+                category_id: categoria,
                 site_id: "MLA",
                 currency_id: "ARS",
                 buying_mode: "buy_it_now",
@@ -109,18 +128,7 @@ const createItem = async (req, res) => {
 
                 pictures,
 
-                attributes: [
-                    { id: "BRAND", value_name: articulo.marca.nombre },
-                    { id: "MODEL", value_name: articulo.marca.nombre },
-                    { id: "GENDER", value_name: articulo.genero },
-                    { id: "COLOR", value_name: p.color },
-                    { id: "SIZE", value_name: p.talle },
-                    { id: 'SELLER_PACKAGE_HEIGHT', value_name: '15 cm' },
-                    { id: 'SELLER_PACKAGE_WIDTH',  value_name: '15 cm' },
-                    { id: 'SELLER_PACKAGE_LENGTH', value_name: '15 cm' },
-                    { id: 'SELLER_PACKAGE_WEIGHT', value_name: '500 g' },
-                    { id: "EMPTY_GTIN_REASON", value_name: "El producto no tiene código registrado" }
-                ],
+                attributes: atributosFinales
             };
 
             const response = await fetch("https://api.mercadolibre.com/items", {
@@ -274,4 +282,4 @@ const responderWebhook = async (req, res) => {
     }
 }
 
-module.exports = { getFirstToken, createItem, desvincularItem, getTokenMl, responderWebhook };
+module.exports = { getFirstToken, getCategoria, createItem, desvincularItem, getTokenMl, responderWebhook };

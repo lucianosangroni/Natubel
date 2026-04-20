@@ -6,6 +6,8 @@ import ModalMarcas from "./ModalMarcas";
 import ModalConfig from "./ModalConfig";
 import ModalStock from "./ModalStock";
 import ModalCupones from "./ModalCupones";
+import ModalMlCat from "./ModalMlCat";
+import ModalMlAtributos from "./ModalMlAtributos";
 import ListaArticulos from "../Common/ListaArticulos";
 import GrillaProducto from "./GrillaProducto";
 import { apiUrl, bearerToken } from "../../config/config";
@@ -27,6 +29,9 @@ const ListadoProductos = () => {
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
   const [isProductoModalOpen, setIsProductoModalOpen] = useState(false)
+  const [isMlCatModalOpen, setIsMlCatModalOpen] = useState(false)
+  const [isMlAtributosModalOpen, setIsMlAtributosModalOpen] = useState(false)
+  const [mlCat, setMlCat] = useState(null)
   const [isCuponesModalOpen, setIsCuponesModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate();
@@ -248,24 +253,40 @@ const ListadoProductos = () => {
     }
   };
 
-  const handlePublicarEnMl = (articulo) => {
-    const shouldPublicar = window.confirm(
-      `¿Estas seguro que deseas publicar el articulo ${articulo.numero_articulo}?`
-    );
+  const handlePublicarEnMl = () => {
+    setIsMlCatModalOpen(true);
+  }
+  
+  const handleConfirmarMlCat = (categoria) => {
+    setIsMlAtributosModalOpen(true)
+    setMlCat(categoria)
+  }
 
-    if(shouldPublicar) {
-      setIsLoading(true)
+  const handlePublicarArticuloMl = (atributos) => {
+    const atributosParsed = atributos.map(a => ({
+        id: a.id,
+        value_name: a.respuestaNatubel
+    }));
 
-      fetch(`${apiUrl}/ml/${articulo.id}`, {
+    const requestData = {
+        atributos: atributosParsed,
+        categoria: mlCat
+    };
+
+    setIsLoading(true)
+
+    fetch(`${apiUrl}/ml/${selectedProduct.id}`, {
         method: "POST",
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${bearerToken}`,
         },
+        body: JSON.stringify(requestData)
       })
       .then((response) => {
         if (!response.ok) {
           alert("Error al publicar articulo, intente nuevamente");
-          throw new Error(`Error en la solicitud POST: ${response.json().message}`);
+          throw new Error(`Error en la solicitud POST`);
         }
         return response.json();
       })
@@ -277,7 +298,7 @@ const ListadoProductos = () => {
         }
 
         if(result.message === "Articulo publicado con éxito") {
-          const articuloActualizado = {...articulo, ml_item_id: result.ml_item_id}
+          const articuloActualizado = {...selectedProduct, ml_item_id: result.ml_item_id}
 
           const updatedData = data.map((a) =>
             a.id === articuloActualizado.id
@@ -287,6 +308,7 @@ const ListadoProductos = () => {
 
           setData(updatedData);
           refreshArticulos(updatedData)
+          setMlCat(null)
         }
         
         alert(result.message)
@@ -296,7 +318,11 @@ const ListadoProductos = () => {
         console.error("Error en la solicitud POST:", error);
         setIsLoading(false)
       });
-    }
+  }
+
+  const handleMlAtributosClose = () => {
+    setIsMlAtributosModalOpen(false)
+    setMlCat(null)
   }
 
   const handleDevincularEnMl = (articulo) => {
@@ -710,6 +736,14 @@ const ListadoProductos = () => {
 
         {isProductoModalOpen && (
           <ModalProducto categorias={categorias} marcas={marcas} onAddProducto={handleAddArticulo} onClose={() => setIsProductoModalOpen(false)}/>
+        )}
+
+        {isMlCatModalOpen && (
+          <ModalMlCat articulo={selectedProduct} onClose={() => setIsMlCatModalOpen(false)} onConfirmarMlCat={handleConfirmarMlCat}/>
+        )}
+
+        {isMlAtributosModalOpen && (
+          <ModalMlAtributos categoria={mlCat} onClose={handleMlAtributosClose} onPublicarArticuloMl={handlePublicarArticuloMl}/>
         )}
         
       </div>

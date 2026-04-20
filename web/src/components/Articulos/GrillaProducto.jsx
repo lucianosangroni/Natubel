@@ -50,7 +50,7 @@ function GrillaProducto({ onEditProducto, onDeleteProducto, onPublicarEnMl, onDe
     }
 
     const handlePublicarEnMl = () => {
-      onPublicarEnMl(articulo)
+      onPublicarEnMl()
     }
 
     const handleDesvincularEnMl = () => {
