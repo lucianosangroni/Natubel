@@ -265,7 +265,7 @@ const ListadoProductos = () => {
       .then((response) => {
         if (!response.ok) {
           alert("Error al publicar articulo, intente nuevamente");
-          throw new Error(`Error en la solicitud POST: ${response.message}`);
+          throw new Error(`Error en la solicitud POST: ${response.json().message}`);
         }
         return response.json();
       })
