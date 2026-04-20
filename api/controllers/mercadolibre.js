@@ -77,10 +77,28 @@ const createItem = async (req, res) => {
 
         let ml_item_id_data = null
 
+        const responseCat = await fetch(`https://api.mercadolibre.com/sites/MLA/domain_discovery/search?q=${articulo.descripcion}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${tokenML}`
+            },
+        })
+
+        if (!responseCat.ok) {
+            const err = await responseCat.text()
+            console.log("Error al crear la publicacion: ", err)
+            return res.status(500).json({ message: `Error al crear la publicacion: ${err}` });
+        }
+
+        const dataCat = await responseCat.json()
+
+        const category_id = dataCat[0].category_id
+
         for (const p of articulo.productos) {
             const body = {
                 family_name: "Producto temporal - No Comprar - articulo " + articulo.numero_articulo,
-                category_id: "MLA377250",
+                category_id: category_id,
                 site_id: "MLA",
                 currency_id: "ARS",
                 buying_mode: "buy_it_now",
