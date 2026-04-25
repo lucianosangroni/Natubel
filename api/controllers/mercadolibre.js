@@ -88,7 +88,7 @@ const createItem = async (req, res) => {
 
         const articulo_id = req.params.id
 
-        const { categoria, atributos } = req.body
+        const { dominio, categoria, atributos } = req.body
 
         const articulo = await articuloModel.findByPk(articulo_id, {
             include: [
@@ -101,6 +101,40 @@ const createItem = async (req, res) => {
             return res.status(404).json({ message: 'Articulo no encontrado' });
         }
 
+        const domainId = dominio.replace("MLA-", "");
+
+        const chartsResponse = await fetch("https://api.mercadolibre.com/catalog/charts/search?offset=0&limit=1", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${tokenML}`
+            },
+            body: JSON.stringify({
+                domain_id: domainId,
+                site_id: "MLA",
+                seller_id: 644556826,
+                attributes: [
+                    {
+                        id: "GENDER",
+                        values: [{ name: atributos.find(a => a.id === "GENDER")?.value_name }]
+                    },
+                    {
+                        id: "BRAND",
+                        values: [{ name: atributos.find(a => a.id === "BRAND")?.value_name }]
+                    }
+                ]
+            })
+        });
+
+        if (!chartsResponse.ok) {
+            const err = await chartsResponse.text()
+            console.log("Error al buscar guia de talles: ", err)
+            return res.status(500).json({ message: `Error al buscar guia de talles: ${err}` });
+        }
+
+        const chartsData = await chartsResponse.json()
+        const sizeGridId = chartsData?.charts?.[0]?.id || null;
+
         const imagenes = await imagenModel.findAll({
             where: { articulo_id: articulo.id }
         });
@@ -112,8 +146,20 @@ const createItem = async (req, res) => {
             const atributosFinales = [
                 ...atributos,
                 { id: "COLOR", value_name: p.color },
-                { id: "SIZE", value_name: p.talle }
+                { id: "SIZE", value_name: p.talle },
+                { id: 'SELLER_PACKAGE_HEIGHT', value_name: '15 cm' },
+                { id: 'SELLER_PACKAGE_WIDTH',  value_name: '15 cm' },
+                { id: 'SELLER_PACKAGE_LENGTH', value_name: '15 cm' },
+                { id: 'SELLER_PACKAGE_WEIGHT', value_name: '500 g' },
+                { id: "EMPTY_GTIN_REASON", value_name: "El producto no tiene código registrado" },
             ];
+
+            if (sizeGridId) {
+                atributosFinales.push({
+                    id: "SIZE_GRID_ID",
+                    value_id: sizeGridId
+                });
+            }
 
             const body = {
                 family_name: "Producto temporal - No Comprar - articulo " + articulo.numero_articulo,
@@ -130,6 +176,8 @@ const createItem = async (req, res) => {
 
                 attributes: atributosFinales
             };
+
+            console.log(body)
 
             const response = await fetch("https://api.mercadolibre.com/items", {
                 method: "POST",

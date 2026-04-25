@@ -81,7 +81,10 @@ function ModalMlCat({ articulo, onClose, onConfirmarMlCat }) {
                     </Form.Group>
                     {mlCatOptions.length >= 1 && (
                         <Form.Group style={{marginTop: ".7rem"}}>
-                            <select onChange={(e) => setMlCatSelected(e.target.value)}>
+                            <select onChange={(e) => {
+                                const selected = mlCatOptions.find(cat => cat.category_id === e.target.value);
+                                setMlCatSelected(selected);
+                            }}>
                                 <option value="">Seleccionar categoría</option>
                                 {mlCatOptions.map((cat) => (
                                     <option key={cat.category_id} value={cat.category_id}>
@@ -100,7 +103,7 @@ function ModalMlCat({ articulo, onClose, onConfirmarMlCat }) {
                     >
                         Cerrar
                     </Button>
-                    <Button id="botonNuevoCliente" variant="primary" onClick={handleConfirmar} disabled={!mlCatSelected?.trim()}>
+                    <Button id="botonNuevoCliente" variant="primary" onClick={handleConfirmar} disabled={!mlCatSelected}>
                         Confirmar Categoría
                     </Button>
                 </Modal.Footer>

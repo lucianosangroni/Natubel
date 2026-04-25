@@ -32,6 +32,7 @@ const ListadoProductos = () => {
   const [isMlCatModalOpen, setIsMlCatModalOpen] = useState(false)
   const [isMlAtributosModalOpen, setIsMlAtributosModalOpen] = useState(false)
   const [mlCat, setMlCat] = useState(null)
+  const [mlDom, setMlDom] = useState(null)
   const [isCuponesModalOpen, setIsCuponesModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate();
@@ -259,7 +260,8 @@ const ListadoProductos = () => {
   
   const handleConfirmarMlCat = (categoria) => {
     setIsMlAtributosModalOpen(true)
-    setMlCat(categoria)
+    setMlCat(categoria.category_id)
+    setMlDom(categoria.domain_id)
   }
 
   const handlePublicarArticuloMl = (atributos) => {
@@ -270,7 +272,8 @@ const ListadoProductos = () => {
 
     const requestData = {
         atributos: atributosParsed,
-        categoria: mlCat
+        categoria: mlCat,
+        dominio: mlDom
     };
 
     setIsLoading(true)
@@ -309,6 +312,7 @@ const ListadoProductos = () => {
           setData(updatedData);
           refreshArticulos(updatedData)
           setMlCat(null)
+          setMlDom(null)
         }
         
         alert(result.message)
@@ -323,6 +327,7 @@ const ListadoProductos = () => {
   const handleMlAtributosClose = () => {
     setIsMlAtributosModalOpen(false)
     setMlCat(null)
+    setMlDom(null)
   }
 
   const handleDevincularEnMl = (articulo) => {
