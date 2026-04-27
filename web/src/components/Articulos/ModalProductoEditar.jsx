@@ -9,7 +9,6 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
     enBenka: articulo.enBenka,
     categoria: articulo.categoria.map((cat) => cat.id),
     marca: articulo.marca_id,
-    genero: articulo.genero,
     descripcion: articulo.descripcion,
     precio_minorista: articulo.precio_minorista,
     precio_mayorista: articulo.precio_mayorista,
@@ -65,7 +64,6 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
         enBenka: articulo.enBenka,
         categoria: articulo.categoria.map((cat) => cat.id),
         marca: articulo.marca_id,
-        genero: articulo.genero,
         descripcion: articulo.descripcion,
         precio_minorista: articulo.precio_minorista,
         precio_mayorista: articulo.precio_mayorista,
@@ -131,7 +129,7 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
     } else {
       editProduct.categoria = editProduct.categoria.filter((cat) => cat.toString().trim() !== "");
 
-      if (editProduct.numero_articulo && editProduct.categoria.length > 0 && editProduct.genero !== null && editProduct.precio_minorista !== null && editProduct.precio_mayorista !== null && editProduct.precio_distribuidor !== null && editProduct.precio_de_marca !== null && editProduct.precio_ml !== null && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
+      if (editProduct.numero_articulo && editProduct.categoria.length > 0 && editProduct.precio_minorista !== null && editProduct.precio_mayorista !== null && editProduct.precio_distribuidor !== null && editProduct.precio_de_marca !== null && editProduct.precio_ml !== null && editProduct.talles.length > 0 && editProduct.colores.length > 0) {
         const imagenesRemove = articulo.imagens.filter(imagen => !oldFiles.map(file => file.id).includes(imagen.id)).map(imagen => imagen.id)
         const editProductData = {...editProduct, imagenesAdd: selectedFiles, imagenesRemove}
         onEditProducto(editProductData);
@@ -328,22 +326,6 @@ function ModalProductoEditar({ onEditProducto, articulo, categorias, marcas }) {
                       </option>
                   );
                 })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Género</Form.Label>
-              <Form.Control
-                as="select"
-                value={editProduct.genero}
-                onChange={(e) => {
-                  setEditProduct({ ...editProduct, genero: e.target.value });
-                }}>
-                <option value="Hombre">Hombre</option>
-                <option value="Mujer">Mujer</option>
-                <option value="Sin género">Sin género</option>
-                <option value="Niños">Niños</option>
-                <option value="Niñas">Niñas</option>
-                <option value="Bebés">Bebés</option>
               </Form.Control>
             </Form.Group>
             <Form.Group>

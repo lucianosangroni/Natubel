@@ -7,7 +7,6 @@ function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
     enBenka: true,
     categoria: [""],
     marca: null,
-    genero: null,
     descripcion: "",
     precio_minorista: "",
     precio_mayorista: "",
@@ -59,7 +58,7 @@ function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
       newProduct.talles = newProduct.talles.filter((talle) => talle.trim() !== "");
       newProduct.colores = newProduct.colores.filter((color) => color.trim() !== "");
 
-      if (newProduct.marca !== null && newProduct.genero !== null && newProduct.numero_articulo && newProduct.categoria.length > 0 && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
+      if (newProduct.marca !== null && newProduct.numero_articulo && newProduct.categoria.length > 0 && newProduct.precio_minorista && newProduct.precio_mayorista && newProduct.precio_distribuidor && newProduct.talles.length > 0 && newProduct.colores.length > 0) {
         const addProduct = {...newProduct, imagens: selectedFiles}
         onAddProducto(addProduct);
         setNewProduct({
@@ -67,7 +66,6 @@ function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
           enBenka: true,
           categoria: [""],
           marca: null,
-          genero: null,
           descripcion: "",
           precio_minorista: "",
           precio_mayorista: "",
@@ -265,23 +263,6 @@ function ModalProducto({ onClose, onAddProducto, categorias, marcas }) {
                       </option>
                   );
                 })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Género</Form.Label>
-              <Form.Control
-                as="select"
-                value={newProduct.genero}
-                onChange={(e) => {
-                  setNewProduct({ ...newProduct, genero: e.target.value });
-                }}>
-                <option value={null}>Seleccionar Género</option>
-                <option value="Hombre">Hombre</option>
-                <option value="Mujer">Mujer</option>
-                <option value="Sin género">Sin género</option>
-                <option value="Niños">Niños</option>
-                <option value="Niñas">Niñas</option>
-                <option value="Bebés">Bebés</option>
               </Form.Control>
             </Form.Group>
             <Form.Group>
