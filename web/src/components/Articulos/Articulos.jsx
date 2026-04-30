@@ -284,12 +284,16 @@ const ListadoProductos = () => {
         },
         body: JSON.stringify(requestData)
       })
-      .then((response) => {
+      .then(async (response) => {
+        const data = await response.json();
+
         if (!response.ok) {
-          alert("Error al publicar articulo, intente nuevamente");
+          console.log(data);
+          alert(data.message);
           throw new Error(`Error en la solicitud POST`);
         }
-        return response.json();
+      
+        return data;
       })
       .then((result) => {
         if(result.need_auth){

@@ -133,7 +133,7 @@ const createItem = async (req, res) => {
         }
 
         const chartsData = await chartsResponse.json()
-        const sizeGridId = chartsData?.charts?.[0]?.id || null;
+        const chart = chartsData.charts?.[0];
 
         const imagenes = await imagenModel.findAll({
             where: { articulo_id: articulo.id }
@@ -154,11 +154,11 @@ const createItem = async (req, res) => {
                 { id: "EMPTY_GTIN_REASON", value_name: "El producto no tiene código registrado" },
             ];
 
-            if (sizeGridId) {
-                atributosFinales.push({
-                    id: "SIZE_GRID_ID",
-                    value_id: sizeGridId
-                });
+            const row = chart?.rows?.find(r => r.attributes?.some(a => a.id === "SIZE" && a.values?.some(v => v.name === p.talle)));
+
+            if (chart?.id && row?.id) {
+                atributosFinales.push({ id: "SIZE_GRID_ID", value_name: String(chart.id) });
+                atributosFinales.push({ id: "SIZE_GRID_ROW_ID", value_name: String(row.id) });
             }
 
             const body = {
