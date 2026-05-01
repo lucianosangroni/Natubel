@@ -288,8 +288,8 @@ const ListadoProductos = () => {
         const data = await response.json();
 
         if (!response.ok) {
-          console.log(data);
           alert(data.message);
+          console.log(data.body)
           throw new Error(`Error en la solicitud POST`);
         }
       
