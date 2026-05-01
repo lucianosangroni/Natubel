@@ -154,7 +154,7 @@ const createItem = async (req, res) => {
                 { id: "EMPTY_GTIN_REASON", value_name: "El producto no tiene código registrado" },
             ];
 
-            const row = chart?.rows?.find(r => r.attributes?.some(a => a.id === "SIZE" && a.values?.some(v => v.name === p.talle)));
+            const row = chart?.rows?.find(r => r.attributes?.some(a => a.id === "SIZE" && a.values?.some(v => v.name === p.talle) || a.id === "FILTRABLE_SIZE" && a.values?.some(v => v.name === p.talle)));
 
             if (chart?.id && row?.id) {
                 atributosFinales.push({ id: "SIZE_GRID_ID", value_name: String(chart.id) });
@@ -176,8 +176,6 @@ const createItem = async (req, res) => {
 
                 attributes: atributosFinales
             };
-
-            console.log(body)
 
             const response = await fetch("https://api.mercadolibre.com/items", {
                 method: "POST",
