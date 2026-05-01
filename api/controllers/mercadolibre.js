@@ -153,14 +153,16 @@ const createItem = async (req, res) => {
                 { id: "EMPTY_GTIN_REASON", value_name: "El producto no tiene código registrado" },
             ];
 
-            const row = chart?.rows?.find(r => r.attributes?.some(a => a.id === "SIZE" && a.values?.some(v => v.name === p.talle) || a.id === "FILTRABLE_SIZE" && a.values?.some(v => v.name === p.talle)));
+            const row = chart?.rows?.find(r => r.attributes?.some(a => 
+                (a.id === "SIZE" && a.values?.some(v => v.name === p.talle)) ||
+                (a.id === "FILTRABLE_SIZE" && a.values?.some(v => v.name === p.talle))));
             
-
             if (chart?.id && row?.id) {
                 atributosFinales.push({ id: "SIZE_GRID_ID", value_name: String(chart.id) });
                 atributosFinales.push({ id: "SIZE_GRID_ROW_ID", value_name: String(row.id) });
-                const gridTalle = row.attributes.find(a => a.some(a => a.id === "SIZE")).values[0].name
 
+                const sizeAttr = row.attributes.find(a => a.id === "SIZE");
+                const gridTalle = sizeAttr?.values?.[0]?.name;
                 atributosFinales.push({ id: "SIZE", value_name: gridTalle })
             } else {
                 atributosFinales.push({ id: "SIZE", value_name: p.talle })
@@ -209,7 +211,7 @@ const createItem = async (req, res) => {
         res.status(201).json({ message: 'Articulo publicado con éxito', ml_item_id: ml_item_id_data });
     } catch(e) {
         console.log("Error al crear la publicacion: ", e)
-        res.status(500).json({ message: 'Error al crear la publicacion' });
+        res.status(500).json({message: e.message});
     }
 };
 
