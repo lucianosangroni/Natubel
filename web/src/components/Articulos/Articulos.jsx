@@ -288,7 +288,11 @@ const ListadoProductos = () => {
         const data = await response.json();
 
         if (!response.ok) {
-          alert(data.message);
+          alert("Error al crear publicación, verifica la consola para ver el error");
+          console.log("MENSAJE DE ERROR DE MERCADOLIBRE:")
+          console.log(data.message)
+          console.log("---------------------------------------")
+          console.log("DATOS ENVIADOS A MERCADOLIBRE:")
           console.log(data.body)
           throw new Error(`Error en la solicitud POST`);
         }
