@@ -126,14 +126,12 @@ const createItem = async (req, res) => {
             })
         });
 
-        if (!chartsResponse.ok) {
-            const err = await chartsResponse.text()
-            console.log("Error al buscar guia de talles: ", err)
-            return res.status(500).json({ message: `Error al buscar guia de talles: ${err}` });
-        }
+        let chart = null
 
-        const chartsData = await chartsResponse.json()
-        const chart = chartsData.charts?.[0];
+        if (chartsResponse.ok) {
+            const chartsData = await chartsResponse.json()
+            chart = chartsData.charts?.[0];
+        }
 
         const imagenes = await imagenModel.findAll({
             where: { articulo_id: articulo.id }
@@ -155,15 +153,19 @@ const createItem = async (req, res) => {
                 { id: "EMPTY_GTIN_REASON", value_name: "El producto no tiene código registrado" },
             ];
 
-            const row = chart?.rows?.find(r => r.attributes?.some(a => a.id === "SIZE" && a.values?.some(v => normalize(v.name) === normalize(p.talle)) || a.id === "FILTRABLE_SIZE" && a.values?.some(v => normalize(v.name) === normalize(p.talle))));
+            if (chart) {
+                const row = chart?.rows?.find(r => r.attributes?.some(a => a.id === "SIZE" && a.values?.some(v => normalize(v.name) === normalize(p.talle)) || a.id === "FILTRABLE_SIZE" && a.values?.some(v => normalize(v.name) === normalize(p.talle))));
             
-            if (chart?.id && row?.id) {
-                atributosFinales.push({ id: "SIZE_GRID_ID", value_name: String(chart.id) });
-                atributosFinales.push({ id: "SIZE_GRID_ROW_ID", value_name: String(row.id) });
+                if (chart?.id && row?.id) {
+                    atributosFinales.push({ id: "SIZE_GRID_ID", value_name: String(chart.id) });
+                    atributosFinales.push({ id: "SIZE_GRID_ROW_ID", value_name: String(row.id) });
 
-                const sizeAttr = row.attributes.find(a => a.id === "SIZE");
-                const gridTalle = sizeAttr?.values?.[0]?.name;
-                atributosFinales.push({ id: "SIZE", value_name: gridTalle })
+                    const sizeAttr = row.attributes.find(a => a.id === "SIZE");
+                    const gridTalle = sizeAttr?.values?.[0]?.name;
+                    atributosFinales.push({ id: "SIZE", value_name: gridTalle })
+                } else {
+                    atributosFinales.push({ id: "SIZE", value_name: p.talle })
+                }
             } else {
                 atributosFinales.push({ id: "SIZE", value_name: p.talle })
             }
