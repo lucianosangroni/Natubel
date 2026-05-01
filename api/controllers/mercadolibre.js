@@ -146,7 +146,6 @@ const createItem = async (req, res) => {
             const atributosFinales = [
                 ...atributos,
                 { id: "COLOR", value_name: p.color },
-                { id: "SIZE", value_name: p.talle },
                 { id: 'SELLER_PACKAGE_HEIGHT', value_name: '15 cm' },
                 { id: 'SELLER_PACKAGE_WIDTH',  value_name: '15 cm' },
                 { id: 'SELLER_PACKAGE_LENGTH', value_name: '15 cm' },
@@ -159,6 +158,8 @@ const createItem = async (req, res) => {
             if (chart?.id && row?.id) {
                 atributosFinales.push({ id: "SIZE_GRID_ID", value_name: String(chart.id) });
                 atributosFinales.push({ id: "SIZE_GRID_ROW_ID", value_name: String(row.id) });
+            } else {
+                atributosFinales.push({ id: "SIZE", value_name: p.talle })
             }
 
             const body = {
