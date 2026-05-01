@@ -260,6 +260,9 @@ const ListadoProductos = () => {
     setIsMlAtributosModalOpen(true)
     setMlCat(categoria.category_id)
     setMlDom(categoria.domain_id)
+    console.log("CATEGORIA DE MERCADOLIBRE:")
+    console.log(categoria)
+    console.log("---------------------------------------")
   }
 
   const handlePublicarArticuloMl = (atributos) => {
