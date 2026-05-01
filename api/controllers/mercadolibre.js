@@ -154,10 +154,14 @@ const createItem = async (req, res) => {
             ];
 
             const row = chart?.rows?.find(r => r.attributes?.some(a => a.id === "SIZE" && a.values?.some(v => v.name === p.talle) || a.id === "FILTRABLE_SIZE" && a.values?.some(v => v.name === p.talle)));
+            
 
             if (chart?.id && row?.id) {
                 atributosFinales.push({ id: "SIZE_GRID_ID", value_name: String(chart.id) });
                 atributosFinales.push({ id: "SIZE_GRID_ROW_ID", value_name: String(row.id) });
+                const gridTalle = row.attributes.find(a => a.some(a => a.id === "SIZE")).values[0].name
+
+                atributosFinales.push({ id: "SIZE", value_name: gridTalle })
             } else {
                 atributosFinales.push({ id: "SIZE", value_name: p.talle })
             }
