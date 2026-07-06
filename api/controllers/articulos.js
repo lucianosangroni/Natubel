@@ -168,7 +168,7 @@ const updateItem = async (req, res) => {
             return res.status(404).json({ message: 'Articulo no encontrado' });
         }
 
-        if(articuloExiste.ml_item_id !== null && articuloExiste.precio_ml !== articulo.precio_ml) {
+        if(articuloExiste.ml_item_id !== null && articuloExiste.precio_ml !== precio_ml) {
             const tokenML = await getTokenMl()
 
             const productosML = await productoModel.findAll({
