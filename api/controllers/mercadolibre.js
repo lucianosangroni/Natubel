@@ -133,14 +133,47 @@ const createItem = async (req, res) => {
             chart = chartsData.charts?.[0];
         }
 
+        const normalize = (str) => str?.toLowerCase().trim();
+
+        if(!chart) {
+            const tallesSinRepetir = [...new Set(articulo.productos.map(p => p.talle))]
+
+            const chartCreateResponse = await fetch("https://api.mercadolibre.com/catalog/charts", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${tokenML}`
+                },
+                body: JSON.stringify({
+                    domain_id: domainId,
+                    site_id: "MLA",
+                    type: "SPECIFIC",
+                    measure_type: "CLOTHING_MEASURE",
+                    attributes: [
+                        {
+                            id: "GENDER",
+                            values: [{ name: atributos.find(a => a.id === "GENDER")?.value_name }]
+                        },
+                        {
+                            id: "BRAND",
+                            values: [{ name: atributos.find(a => a.id === "BRAND")?.value_name }]
+                        }
+                    ],
+                    rows: tallesSinRepetir.map(t => ({attributes: [{ id: "SIZE", values: [{ name: t }]}, { id: "FILTRABLE_SIZE", values: [{ name: t }]}]}))
+                })
+            });
+
+            if (chartCreateResponse.ok) {
+                chart = await chartCreateResponse.json()
+            }
+        }
+
         const imagenes = await imagenModel.findAll({
             where: { articulo_id: articulo.id }
         });
         const pictures = imagenes.map(img => ({ source: img.url }));
 
         let ml_item_id_data = null
-
-        const normalize = (str) => str?.toLowerCase().trim();
 
         for (const p of articulo.productos) {
             const atributosFinales = [
@@ -153,19 +186,14 @@ const createItem = async (req, res) => {
                 { id: "EMPTY_GTIN_REASON", value_name: "El producto no tiene código registrado" },
             ];
 
-            if (chart) {
-                const row = chart?.rows?.find(r => r.attributes?.some(a => a.id === "SIZE" && a.values?.some(v => normalize(v.name) === normalize(p.talle)) || a.id === "FILTRABLE_SIZE" && a.values?.some(v => normalize(v.name) === normalize(p.talle))));
-            
-                if (chart?.id && row?.id) {
-                    atributosFinales.push({ id: "SIZE_GRID_ID", value_name: String(chart.id) });
-                    atributosFinales.push({ id: "SIZE_GRID_ROW_ID", value_name: String(row.id) });
-
-                    const sizeAttr = row.attributes.find(a => a.id === "SIZE");
-                    const gridTalle = sizeAttr?.values?.[0]?.name;
-                    atributosFinales.push({ id: "SIZE", value_name: gridTalle })
-                } else {
-                    atributosFinales.push({ id: "SIZE", value_name: p.talle })
-                }
+            const row = chart?.rows?.find(r => r.attributes?.some(a => a.id === "SIZE" && a.values?.some(v => normalize(v.name) === normalize(p.talle)) || a.id === "FILTRABLE_SIZE" && a.values?.some(v => normalize(v.name) === normalize(p.talle))));
+        
+            if (chart?.id && row?.id) {
+                atributosFinales.push({ id: "SIZE_GRID_ID", value_name: String(chart.id) });
+                atributosFinales.push({ id: "SIZE_GRID_ROW_ID", value_name: String(row.id) });
+                const sizeAttr = row.attributes.find(a => a.id === "SIZE");
+                const gridTalle = sizeAttr?.values?.[0]?.name;
+                atributosFinales.push({ id: "SIZE", value_name: gridTalle })
             } else {
                 atributosFinales.push({ id: "SIZE", value_name: p.talle })
             }
@@ -180,9 +208,7 @@ const createItem = async (req, res) => {
                 condition: "new",
                 available_quantity: p.stock >= 0 ? p.stock : 0,
                 price: articulo.precio_ml,
-
                 pictures,
-
                 attributes: atributosFinales
             };
 
@@ -200,7 +226,6 @@ const createItem = async (req, res) => {
                 console.log("Error al crear la publicacion: ", err)
                 return res.status(500).json({ message: `Error al crear la publicacion: ${err}`, body: body });
             }
-
             const data = await response.json()
 
             ml_item_id_data = data.family_id
