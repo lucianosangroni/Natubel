@@ -135,8 +135,6 @@ const createItem = async (req, res) => {
 
         const normalize = (str) => str?.toLowerCase().trim();
 
-        let chartCreateBody = null
-
         if(!chart) {
             const tallesSinRepetir = [...new Set(articulo.productos.map(p => p.talle))]
 
@@ -157,8 +155,6 @@ const createItem = async (req, res) => {
                 ],
                 rows: tallesSinRepetir.map(t => ({attributes: [{ id: "SIZE", values: [{ name: t }]}, { id: "FILTRABLE_SIZE", values: [{ name: t }]}]}))
             }
-
-            chartCreateBody = body
 
             const chartCreateResponse = await fetch("https://api.mercadolibre.com/catalog/charts", {
                 method: "POST",
