@@ -135,8 +135,30 @@ const createItem = async (req, res) => {
 
         const normalize = (str) => str?.toLowerCase().trim();
 
+        let chartCreateBody = null
+
         if(!chart) {
             const tallesSinRepetir = [...new Set(articulo.productos.map(p => p.talle))]
+
+            const body = {
+                domain_id: domainId,
+                site_id: "MLA",
+                type: "SPECIFIC",
+                measure_type: "CLOTHING_MEASURE",
+                attributes: [
+                    {
+                        id: "GENDER",
+                        values: [{ name: atributos.find(a => a.id === "GENDER")?.value_name }]
+                    },
+                    {
+                        id: "BRAND",
+                        values: [{ name: atributos.find(a => a.id === "BRAND")?.value_name }]
+                    }
+                ],
+                rows: tallesSinRepetir.map(t => ({attributes: [{ id: "SIZE", values: [{ name: t }]}, { id: "FILTRABLE_SIZE", values: [{ name: t }]}]}))
+            }
+
+            chartCreateBody = body
 
             const chartCreateResponse = await fetch("https://api.mercadolibre.com/catalog/charts", {
                 method: "POST",
@@ -144,28 +166,15 @@ const createItem = async (req, res) => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${tokenML}`
                 },
-                body: JSON.stringify({
-                    domain_id: domainId,
-                    site_id: "MLA",
-                    type: "SPECIFIC",
-                    measure_type: "CLOTHING_MEASURE",
-                    attributes: [
-                        {
-                            id: "GENDER",
-                            values: [{ name: atributos.find(a => a.id === "GENDER")?.value_name }]
-                        },
-                        {
-                            id: "BRAND",
-                            values: [{ name: atributos.find(a => a.id === "BRAND")?.value_name }]
-                        }
-                    ],
-                    rows: tallesSinRepetir.map(t => ({attributes: [{ id: "SIZE", values: [{ name: t }]}, { id: "FILTRABLE_SIZE", values: [{ name: t }]}]}))
-                })
+                body: JSON.stringify(body)
             });
 
-            if (chartCreateResponse.ok) {
-                chart = await chartCreateResponse.json()
+            if (!chartCreateResponse.ok) {
+                const err = await chartCreateResponse.text()
+                console.log("Error al crear la grilla: ", err)
+                return res.status(500).json({ message: `Error al crear la grilla: ${err}`, body: body });
             }
+            chart = await chartCreateResponse.json()
         }
 
         const imagenes = await imagenModel.findAll({
