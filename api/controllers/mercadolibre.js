@@ -230,7 +230,7 @@ const createItem = async (req, res) => {
             if (!response.ok) {
                 const err = await response.text()
                 console.log("Error al crear la publicacion: ", err)
-                return res.status(500).json({ message: `Error al crear la publicacion: ${err}`, body: body });
+                return res.status(500).json({ message: `AError al crear la publicacion: ${err}`, body: body });
             }
             const data = await response.json()
 
