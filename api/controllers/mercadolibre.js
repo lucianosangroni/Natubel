@@ -165,6 +165,8 @@ const createItem = async (req, res) => {
                 body: JSON.stringify(body)
             });
 
+            return res.status(500).json({message: `AAAAAAA ${chartCreateResponse.text()}`, body: body})
+
             if (!chartCreateResponse.ok) {
                 const err = await chartCreateResponse.text()
                 console.log("Error al crear la grilla: ", err)
