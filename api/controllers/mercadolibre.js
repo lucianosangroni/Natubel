@@ -135,7 +135,7 @@ const createItem = async (req, res) => {
 
         const normalize = (str) => str?.toLowerCase().trim();
 
-        if(!chart) {
+        if(chart !== null) {
             const tallesSinRepetir = [...new Set(articulo.productos.map(p => p.talle))]
 
             const body = {
@@ -165,13 +165,12 @@ const createItem = async (req, res) => {
                 body: JSON.stringify(body)
             });
 
-            return res.status(500).json({message: `AAAAAAA ${chartCreateResponse.text()}`, body: body})
-
             if (!chartCreateResponse.ok) {
                 const err = await chartCreateResponse.text()
                 console.log("Error al crear la grilla: ", err)
                 return res.status(500).json({ message: `Error al crear la grilla: ${err}`, body: body });
             }
+
             chart = await chartCreateResponse.json()
         }
 
