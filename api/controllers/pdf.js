@@ -886,7 +886,7 @@ const getRemitoNatubel = async (req, res) => {
         const subtotal = cupon ? pedido.precio_total / (1 - cupon.descuento / 100) : pedido.precio_total;
 
         for (const articulo of articulosAMostrar) {
-            doc.fontSize(10).fillColor("black").text(articulo.numero_articulo, 20, articuloHeight, { width: 46, ellipsis: true, lineBreak: false });
+            doc.fontSize(10).fillColor("black").text(articulo.numero_articulo, 20, articuloHeight, { width: 46, height: 12, ellipsis: true, lineBreak: false });
             const descripcion = articulo.descripcion
             if (descripcion === "") {
                 doc.fontSize(10).fillColor("black").text("-", 210, articuloHeight);
@@ -1078,7 +1078,7 @@ const getRemitoLody = async (req, res) => {
         let articuloHeight = 163;
 
         for (const articulo of articulosAMostrar) {
-            doc.fontSize(10).fillColor("black").text(articulo.numero_articulo, 20, articuloHeight, { width: 46, ellipsis: true, lineBreak: false });
+            doc.fontSize(10).fillColor("black").text(articulo.numero_articulo, 20, articuloHeight, { width: 46, height: 12, ellipsis: true, lineBreak: false });
             const descripcion = articulo.descripcion
             if (descripcion === "") {
                 doc.fontSize(10).fillColor("black").text("-", 70, articuloHeight);
@@ -1252,7 +1252,7 @@ const getRemitoMaxima = async (req, res) => {
         let articuloHeight = 163;
 
         for (const articulo of articulosAMostrar) {
-            doc.fontSize(10).fillColor("black").text(articulo.numero_articulo, 20, articuloHeight, { width: 46, ellipsis: true, lineBreak: false });
+            doc.fontSize(10).fillColor("black").text(articulo.numero_articulo, 20, articuloHeight, { width: 46, height: 12, ellipsis: true, lineBreak: false });
             const descripcion = articulo.descripcion
             if (descripcion === "") {
                 doc.fontSize(10).fillColor("black").text("-", 70, articuloHeight);
